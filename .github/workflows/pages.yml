@@ -1,0 +1,53 @@
+name: build-and-deploy
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: pages
+  cancel-in-progress: true
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pmtiles
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release download -R protomaps/go-pmtiles --pattern '*Linux_x86_64.tar.gz' -D /tmp
+          tar -xzf /tmp/*Linux_x86_64.tar.gz -C /tmp pmtiles
+          sudo mv /tmp/pmtiles /usr/local/bin/pmtiles
+          pmtiles version
+      - name: Find latest planet build
+        run: |
+          for i in $(seq 0 20); do
+            d=$(date -u -d "-$i day" +%Y%m%d)
+            if curl -sf -r 0-1 -o /dev/null "https://build.protomaps.com/$d.pmtiles"; then
+              echo "BUILD=$d" >> "$GITHUB_ENV"
+              echo "Using build $d"
+              break
+            fi
+          done
+      - name: Extract tiles
+        run: |
+          test -n "$BUILD" || { echo "No planet build found"; exit 1; }
+          mkdir -p site/tiles
+          cp index.html sw.js site/
+          pmtiles extract "https://build.protomaps.com/$BUILD.pmtiles" site/tiles/tbilisi.pmtiles --bbox=44.68,41.62,44.95,41.82
+          pmtiles extract "https://build.protomaps.com/$BUILD.pmtiles" site/tiles/georgia.pmtiles --bbox=39.9,41.0,46.8,43.7 --maxzoom=9
+          ls -la site/tiles
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+      - id: deployment
+        uses: actions/deploy-pages@v4
+        
