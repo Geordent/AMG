@@ -340,11 +340,13 @@ async function loadLocal() {
 await loadLocal();
 
 // ---------- тайлы ----------
-maplibregl.addProtocol('amg', async (params, abort) => {
-  const m = /amg:\/\/(\d+)\/(\d+)\/(\d+)/.exec(params.url);
+// Два независимых tile-источника: базовая Грузия (z0–9, выше — overzoom) и детальный
+// Тбилиси (z10–15, только в своём bbox). Протоколы НЕ переключаются по зуму глобально,
+// поэтому вне bbox Тбилиси базовый слой продолжает показываться (раньше исчезал).
+const tileProtocol = pack => async (params, abort) => {
+  const m = /(\d+)\/(\d+)\/(\d+)/.exec(params.url);
   const z = +m[1], x = +m[2], y = +m[3];
-  const p = z <= PACKS[0].maxz ? PACKS[0] : PACKS[1];
-  const inst = p.local || (state.offlineOnly ? null : p.remote);
+  const inst = pack.local || (state.offlineOnly ? null : pack.remote);
   if (!inst) return { data: new Uint8Array() };
   try {
     const r = await inst.getZxy(z, x, y, abort && abort.signal);
@@ -356,7 +358,9 @@ maplibregl.addProtocol('amg', async (params, abort) => {
     state.lastError = String(e && e.message || e);
     return { data: new Uint8Array() };
   }
-});
+};
+maplibregl.addProtocol('amgbase', tileProtocol(PACKS[0]));
+maplibregl.addProtocol('amgdetail', tileProtocol(PACKS[1]));
 
 // ---------- стиль ----------
 // SITE как географический источник; label/icon/status/count вычисляются из связанных ARTWORK.
@@ -575,17 +579,43 @@ function amgLabels(ls) {
   });
 }
 function buildStyle() {
-  const base = amgLabels(layers('protomaps', namedFlavor(state.flavor), { lang: state.lang }));
+  const ATTR = '<a href="https://protomaps.com">Protomaps</a> © <a href="https://openstreetmap.org">OpenStreetMap</a>';
+  // Клон набора слоёв Protomaps с привязкой к конкретному vector-source (background — без source).
+  const proto = src => amgLabels(layers('protomaps', namedFlavor(state.flavor), { lang: state.lang }))
+    .map(l => l.type === 'background' ? { ...l } : { ...l, source: src });
+  const theme = ls => state.flavor === 'light' ? amgTheme(ls) : ls;
+  const base = theme(proto('protomaps_base'));                // Грузия z0–9 (+ overzoom выше)
+  const detail = theme(proto('protomaps_detail'))             // Тбилиси z10–15
+    .filter(l => l.type !== 'background')
+    .map(l => ({ ...l, id: l.id + '-detail', minzoom: Math.max(10, Number(l.minzoom) || 0) }));
+  let outLayers = [...base, ...detail];
+  const sources = {
+    protomaps_base: { type:'vector', tiles:['amgbase://{z}/{x}/{y}'], minzoom:0, maxzoom:9, attribution: ATTR },
+    protomaps_detail: { type:'vector', tiles:['amgdetail://{z}/{x}/{y}'], minzoom:10, maxzoom:15, attribution: ATTR },
+  };
+  // ONLINE-фолбэк: raster basemap (keyless) под векторной картой. Показывается там, где локальные
+  // PMTiles не дают тайла (напр. вне Тбилиси при zoom>9). В offlineOnly не подключается.
+  if (!state.offlineOnly) {
+    sources.osm = {
+      type:'raster', tileSize:256, minzoom:0, maxzoom:19,
+      tiles:[
+        'https://a.tile.openstreetmap.org/{z}/{x}/{y}.png',
+        'https://b.tile.openstreetmap.org/{z}/{x}/{y}.png',
+        'https://c.tile.openstreetmap.org/{z}/{x}/{y}.png',
+      ],
+      attribution:'© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    };
+    const raster = { id:'amg-online-basemap', type:'raster', source:'osm', minzoom:0, maxzoom:19, paint:{ 'raster-opacity':1 } };
+    const bg = outLayers.findIndex(l => l.id === 'background');
+    outLayers = bg >= 0 ? outLayers.slice(0, bg + 1).concat([raster], outLayers.slice(bg + 1)) : [raster, ...outLayers];
+  }
   return {
     version: 8,
     glyphs: GLYPHS,
     sprite: SPRITE + state.flavor,
-    sources: {
-      protomaps: { type:'vector', tiles:['amg://{z}/{x}/{y}'], minzoom:0, maxzoom:15,
-        attribution:'<a href="https://protomaps.com">Protomaps</a> © <a href="https://openstreetmap.org">OpenStreetMap</a>' },
-    },
+    sources,
     // «Светлая» = фирменная AMG-тема; остальные flavor остаются стандартными Protomaps.
-    layers: state.flavor === 'light' ? amgTheme(base) : base,
+    layers: outLayers,
   };
 }
 
@@ -762,7 +792,7 @@ async function setupCatalogLayers() {
   for (const layer of siteLayers) if (!map.getLayer(layer.id)) map.addLayer(layer);
   // Транспорт (метро/вокзалы/автовокзалы/аэропорты/переправы) — поверх базовой карты и маркеров.
   if (!map.getLayer('amg-transit')) map.addLayer({
-    id:'amg-transit', type:'symbol', source:'protomaps', 'source-layer':'pois',
+    id:'amg-transit', type:'symbol', source:'protomaps_base', 'source-layer':'pois',
     filter:['in', ['get','kind'], ['literal', TRANSIT_KINDS]],
     layout:{ 'icon-image': TRANSIT_ICON, 'icon-size':1.15, 'icon-allow-overlap':true, 'icon-ignore-placement':true,
       'text-field':['coalesce',['get','name:'+state.lang],['get','name:en'],['get','name']],
