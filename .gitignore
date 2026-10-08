@@ -1,0 +1,17 @@
+# Office temp/lock files (e.g. "~$...docx")
+~$*
+
+# OS cruft
+.DS_Store
+Thumbs.db
+
+# Local scratch / artefacts (repo root only; production data/docs/scripts are tracked)
+/list.txt
+/list1.txt
+/mozaic.txt
+/markers-preview.png
+/*.docx
+/зафиксировал оба решения в памяти.txt
+
+# Stray duplicate of the canonical workflow (.github/workflows/pages.yml)
+/pages.yml

@@ -1,0 +1,18 @@
+[
+  { "id": "src-0001", "type": "map", "title": "OpenStreetMap", "url": "https://www.openstreetmap.org/", "license": "ODbL 1.0", "updated": "2026-10-08" },
+  { "id": "src-0002", "type": "wiki", "title": "Wikimedia Commons", "url": "https://commons.wikimedia.org/", "license": "varies per file", "updated": "2026-10-08" },
+  { "id": "src-0003", "type": "wiki", "title": "Wikipedia", "url": "https://www.wikipedia.org/", "license": "CC BY-SA 4.0", "updated": "2026-10-08" },
+  { "id": "src-0005", "type": "festival", "title": "Tbilisi Mural Fest", "url": "https://tbilisimuralfest.com/", "license": "", "updated": "2026-10-08" },
+  { "id": "src-0006", "type": "map", "title": "Tbilisi Mural Fest map (Google My Maps)", "url": "https://www.google.com/maps/d/viewer?mid=1ab40anDsPbdJe4hsuncN5zrh3pfkVDls", "license": "", "updated": "2026-10-08" },
+  { "id": "src-0007", "type": "media", "title": "Madloba", "url": "https://madloba.info/", "license": "", "updated": "2026-10-08" },
+  { "id": "src-0008", "type": "catalog", "title": "GeoAIR - Soviet Period Mosaics in Georgia (map)", "url": "https://www.google.com/maps/d/viewer?mid=1h7Gon_pwYMQGIdnvsi9rTjTJyKw", "license": "", "updated": "2026-10-08" },
+  { "id": "src-0009", "type": "catalog", "title": "GeoAIR - Late Soviet Modernism in Georgia (map)", "url": "https://www.google.com/maps/d/viewer?mid=1h7Gon_pwYMQGIdnvsi9rTjTJyKw", "license": "", "updated": "2026-10-08" },
+  { "id": "src-0010", "type": "official", "title": "Visit Batumi", "url": "https://visitbatumi.com/", "license": "", "updated": "2026-10-08" },
+  { "id": "src-0011", "type": "official", "title": "Visit Georgia Online", "url": "https://visitgeorgia.online/", "license": "", "updated": "2026-10-08" },
+  {"id": "src-0012", "type": "official", "title": "Georgia Travel", "url": "https://georgia.travel/", "license": "", "updated": "2026-10-08"},
+  {"id": "src-0013", "type": "other", "title": "Street Art Cities", "url": "https://streetartcities.com/", "license": "", "updated": "2026-10-08"},
+  {"id": "src-0014", "type": "media", "title": "GraffitiStreet", "url": "https://graffitistreet.com/", "license": "", "updated": "2026-10-08"},
+  {"id": "src-0015", "type": "media", "title": "Red Fedora Diary", "url": "https://redfedoradiary.com/", "license": "", "updated": "2026-10-08"},
+  {"id": "src-0016", "type": "media", "title": "Mapcarta", "url": "https://mapcarta.com/", "license": "", "updated": "2026-10-08"},
+  {"id": "src-0017", "type": "artist", "title": "Tina Chertova (artist website)", "url": "https://www.chertovatina.com", "license": "", "updated": "2026-10-08"}
+]

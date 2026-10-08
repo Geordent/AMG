@@ -41,6 +41,7 @@ jobs:
           test -n "$BUILD" || { echo "No planet build found"; exit 1; }
           mkdir -p site/tiles
           cp index.html sw.js site/
+          cp -r data site/
           pmtiles extract "https://build.protomaps.com/$BUILD.pmtiles" site/tiles/tbilisi.pmtiles --bbox=44.68,41.62,44.95,41.82
           pmtiles extract "https://build.protomaps.com/$BUILD.pmtiles" site/tiles/georgia.pmtiles --bbox=39.9,41.0,46.8,43.7 --maxzoom=9
           ls -la site/tiles

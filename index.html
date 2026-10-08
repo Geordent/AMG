@@ -3,15 +3,19 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>AMG, проба карты Тбилиси</title>
+<title>ArtMap Georgia</title>
 <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@5/dist/maplibre-gl.css">
 <style>
   html, body { margin:0; height:100%; font-family:system-ui,-apple-system,"Segoe UI",sans-serif; color:#2a2622; }
   #map { position:absolute; inset:0; }
-  #bar { position:absolute; left:8px; right:8px; top:calc(8px + env(safe-area-inset-top,0px)); display:flex; gap:6px; z-index:5; }
+  /* Верхний overlay — нормальный flex-стек (без хардкод top:64/112) */
+  #topui { position:absolute; left:0; right:0; top:calc(8px + env(safe-area-inset-top,0px)); z-index:6;
+    display:flex; flex-direction:column; gap:6px; padding:0 8px; pointer-events:none; }
+  #topui > #bar, #topui > #chips { pointer-events:auto; }
+  #bar { display:flex; gap:6px; }
   #bar select, #bar button { font-size:14px; padding:9px 10px; border-radius:10px; border:1px solid #d8d1c6; background:#fff; color:#2a2622; }
   #bar button { margin-left:auto; background:#d9552b; border-color:#d9552b; color:#fff; font-weight:600; }
-  #sheet { position:absolute; left:0; right:0; bottom:0; z-index:6; background:#fff; border-radius:16px 16px 0 0; box-shadow:0 -6px 24px rgba(0,0,0,.2); padding:14px 16px calc(14px + env(safe-area-inset-bottom,0px)); max-height:75%; overflow-y:auto; }
+  #sheet { position:absolute; left:0; right:0; bottom:0; z-index:20; background:#fff; border-radius:16px 16px 0 0; box-shadow:0 -6px 24px rgba(0,0,0,.2); padding:14px 16px calc(14px + env(safe-area-inset-bottom,0px)); max-height:75%; overflow-y:auto; }
   #sheet[hidden], #toast[hidden] { display:none; }
   #sheet h2 { margin:0 0 8px; font-size:18px; }
   .row { display:flex; align-items:center; gap:8px; font-size:14px; margin:6px 0 10px; }
@@ -24,21 +28,137 @@
   .btn { flex:1; padding:10px; border-radius:10px; border:1px solid #d8d1c6; background:#fff; font-size:14px; }
   .btn.p { background:#d9552b; border-color:#d9552b; color:#fff; }
   .small { font-size:12px; color:#7a7268; margin:6px 0 10px; }
-  #toast { position:absolute; left:12px; right:12px; bottom:calc(16px + env(safe-area-inset-bottom,0px)); z-index:7; background:#2a2622; color:#fff; padding:10px 14px; border-radius:10px; font-size:13px; }
-  .fatal { position:absolute; inset:0; z-index:9; background:#faf7f2; padding:24px; font-size:15px; }
+  #toast { position:absolute; left:12px; right:12px; bottom:calc(16px + env(safe-area-inset-bottom,0px)); z-index:40; background:#2a2622; color:#fff; padding:10px 14px; border-radius:10px; font-size:13px; }
+  .fatal { position:absolute; inset:0; z-index:60; background:#faf7f2; padding:24px; font-size:15px; }
+  .amg-pop { font-size:13px; line-height:1.4; color:#2a2622; }
+  .amg-pop .amg-title { font-weight:700; font-size:16px; margin:0 0 4px; padding-right:14px; }
+  .amg-pop .amg-tags { display:flex; flex-wrap:wrap; gap:4px; margin:2px 0 6px; }
+  .amg-tag { display:inline-block; font-size:11px; padding:2px 8px; border-radius:10px; background:#f2ede4; color:#5b5147; white-space:nowrap; }
+  .amg-tag.cat { background:#fbe9e2; color:#b8431c; }
+  .amg-tag.type { background:#eef0f4; color:#4a5568; }
+  .amg-tag.st.st-active { background:#e3f0e4; color:#2f7d32; }
+  .amg-tag.st.st-uncertain { background:#efefef; color:#7a7a7a; }
+  .amg-tag.st.st-damaged { background:#fbeed2; color:#b06a00; }
+  .amg-tag.st.st-replaced { background:#efe7f6; color:#6a45a3; }
+  .amg-tag.st.st-removed { background:#f8e1e1; color:#b32626; }
+  .amg-pop .amg-meta { color:#6b6258; font-size:12px; margin:1px 0; }
+  .amg-pop .amg-addr { color:#3f382f; }
+  .amg-pop .amg-desc { margin:4px 0; }
+  .amg-pop .amg-src { font-size:11px; color:#7a7268; margin-top:3px; }
+  .amg-pop .amg-src a { color:#a2543a; }
+  .amg-pop .amg-src-text { color:#7a7268; }   /* generic source = plain provenance, не ссылка */
+  .amg-detail .amg-actions { border-top:1px solid #eee; margin-top:12px; padding-top:10px; }   /* Навигация отделена от Источников */
+  .amg-pop .amg-role { color:#a89f93; }
+  .amg-src-all { margin-top:10px; border-top:1px solid #eee; padding-top:8px; }
+  .amg-srcgrp { font-size:11px; color:#7a7268; margin:3px 0; line-height:1.4; }
+  .amg-srcgrp-h { font-weight:600; color:#5b5147; }
+  .amg-pop .amg-actions { display:flex; flex-wrap:wrap; gap:6px; margin:8px 0; }
+  .amg-btn { flex:1 1 auto; text-align:center; font-size:12px; padding:8px 10px; border-radius:10px; border:1px solid #d8d1c6; background:#fff; color:#2a2622; text-decoration:none; white-space:nowrap; cursor:pointer; }
+  .amg-btn.primary { background:#d9552b; border-color:#d9552b; color:#fff; font-weight:600; }
+  .amg-btn.ghost { background:#fff; color:#a2543a; }
+  .amg-pop .amg-art { border-top:1px solid #eee; padding-top:8px; margin-top:8px; }
+  .amg-pop .amg-arts .amg-art:first-child { border-top:0; padding-top:0; margin-top:0; }
+  .amg-pop .amg-art-title { font-weight:600; font-size:14px; }
+  .amg-pop .amg-empty { color:#7a7268; font-size:12px; }
+  .amg-media { margin:8px 0; }
+  .amg-media-frame { position:relative; width:100%; aspect-ratio:4/3; max-height:220px; border-radius:10px; overflow:hidden; background:#f2ede4; display:flex; align-items:center; justify-content:center; }
+  .amg-media-frame img { width:100%; height:100%; object-fit:cover; display:block; }
+  .amg-media-fallback { display:none; font-size:12px; color:#a2543a; text-align:center; padding:12px; text-decoration:none; }
+  .amg-media-error .amg-media-frame img { display:none; }
+  .amg-media-error .amg-media-fallback { display:block; }
+  .amg-attr { font-size:11px; color:#7a7268; margin-top:3px; line-height:1.35; }
+  .amg-attr a { color:#a2543a; }
+  @media (max-width:520px) { .amg-media-frame { max-height:200px; } }
+  .maplibregl-popup { z-index:8; }
+  .maplibregl-popup-content { border-radius:14px; padding:12px 14px; box-shadow:0 6px 24px rgba(0,0,0,.2); max-height:70vh; overflow-y:auto; }
+  @media (max-width:520px) { .maplibregl-popup-content { max-width:92vw; } }
+  #card { position:fixed; left:0; right:0; bottom:0; z-index:20; background:#fff; border-radius:16px 16px 0 0; box-shadow:0 -6px 24px rgba(0,0,0,.25); padding:14px 14px 18px; max-height:72vh; overflow-y:auto; -webkit-overflow-scrolling:touch; touch-action:pan-y; }
+  #card::before { content:''; position:absolute; top:6px; left:50%; transform:translateX(-50%); width:40px; height:4px; border-radius:2px; background:#e3ddd3; }
+  #card[hidden] { display:none; }
+  #card .amg-head { margin-top:6px; }
+  #card .amg-card-close { position:absolute; top:8px; right:10px; width:30px; height:30px; border:0; border-radius:50%; background:#f2ede4; color:#5b5147; font-size:18px; line-height:1; cursor:pointer; }
+  @media (min-width:769px) { #card { display:none !important; } }
+  #detail { position:fixed; inset:0; z-index:30; background:transparent; pointer-events:none; }
+  #detail[hidden] { display:none; }
+  #detail .amg-detail { position:absolute; top:0; right:0; height:100%; width:min(440px,92vw); background:#fff; overflow-y:auto; -webkit-overflow-scrolling:touch; padding:16px 16px calc(16px + env(safe-area-inset-bottom,0px)); box-shadow:-8px 0 30px rgba(0,0,0,.25); pointer-events:auto; }
+  #detail .amg-detail-close { position:absolute; top:12px; right:12px; width:32px; height:32px; border:0; border-radius:50%; background:#f2ede4; color:#5b5147; font-size:18px; line-height:1; cursor:pointer; }
+  #detail .amg-detail .amg-title { padding-right:38px; }
+  #detail .amg-detail-gallery { display:grid; grid-template-columns:repeat(2,1fr); gap:6px; margin:10px 0; }
+  #detail .amg-detail-gallery .amg-media { margin:0; }
+  #detail .amg-detail-gallery .amg-media-frame { aspect-ratio:1/1; max-height:none; }
+  #detail .amg-detail-art { border-top:1px solid #eee; padding-top:10px; margin-top:10px; }
+  #detail .amg-detail-art:first-child { border-top:0; padding-top:0; margin-top:0; }
+  @media (max-width:600px) { #detail .amg-detail { left:0; right:0; width:auto; } }
+  #brand { align-self:flex-start; pointer-events:none;
+    background:rgba(255,255,255,.92); border:1px solid #e6e0d6; border-radius:12px; padding:6px 12px;
+    box-shadow:0 2px 8px rgba(0,0,0,.08); max-width:min(72vw,380px); }
+  #brand .wm { font-size:16px; font-weight:700; color:#d9552b; line-height:1.1; letter-spacing:.2px; }
+  #brand .tag { font-size:11px; color:#6b6258; line-height:1.15; margin-top:2px; }
+  #chips { display:flex; gap:6px; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none; padding-bottom:2px; }
+  #chips::-webkit-scrollbar { display:none; }
+  #chips .chip { flex:0 0 auto; font-size:13px; padding:7px 11px; border-radius:16px; border:1px solid #d8d1c6;
+    background:#fff; color:#2a2622; white-space:nowrap; cursor:pointer; font-family:inherit; }
+  #chips .chip.on { background:#d9552b; border-color:#d9552b; color:#fff; font-weight:600; }
+  #chips .chip .cnt { opacity:.65; font-size:11px; margin-left:2px; }
+  #chips .chip.on .cnt { opacity:.9; }
+  #chips .chip-x { display:inline-block; margin-left:4px; font-weight:700; }
+  /* Touch devices: увеличенные цели (desktop appearance не меняется) */
+  @media (pointer: coarse) {
+    #bar select, #bar button { min-height:44px; }
+    #chips .chip { min-height:44px; padding:10px 14px; }
+    .amg-btn { min-height:44px; padding:11px 12px; }
+    #card .amg-card-close { width:44px; height:44px; font-size:22px; }
+    #detail .amg-detail-close { width:44px; height:44px; font-size:22px; }
+    .maplibregl-ctrl-group button { width:44px; height:44px; }
+  }
+  /* --- Step 2: shared scrim + mobile menu --- */
+  #scrim { position:fixed; inset:0; z-index:18; background:rgba(20,20,20,.35); }
+  #scrim[hidden] { display:none; }
+  #menuBtn { position:absolute; top:0; right:8px; display:none; align-items:center; justify-content:center;
+    width:44px; height:44px; border:1px solid #e0d8cc; border-radius:12px; background:rgba(255,255,255,.95);
+    color:#2a2622; box-shadow:0 4px 12px rgba(43,38,34,.08); pointer-events:auto; cursor:pointer; }
+  #menu { position:fixed; left:0; right:0; bottom:0; z-index:20; background:#fff; border-radius:16px 16px 0 0;
+    box-shadow:0 -6px 24px rgba(0,0,0,.2); padding:16px 16px calc(16px + env(safe-area-inset-bottom,0px)); max-height:80%; overflow-y:auto; }
+  #menu[hidden] { display:none; }
+  #menu::before { content:''; position:absolute; top:6px; left:50%; transform:translateX(-50%); width:40px; height:4px; border-radius:2px; background:#e3ddd3; }
+  #menu #bar { flex-wrap:wrap; margin-top:6px; }
+  /* Mobile shell: capability-based. pointer:coarse — сразу (без вспышки); html.is-mobile — фолбэк по ширине */
+  @media (pointer: coarse) {
+    #topui > #bar { display:none; }
+    #menuBtn { display:flex; width:48px; height:48px; }
+    #menu #bar select, #menu #bar button { min-height:44px; }
+  }
+  html.is-mobile #topui > #bar { display:none; }
+  html.is-mobile #menuBtn { display:flex; }
+  #rotateHint { position:fixed; left:50%; transform:translateX(-50%); bottom:calc(14px + env(safe-area-inset-bottom,0px)); z-index:15;
+    display:flex; align-items:center; gap:10px; max-width:calc(100vw - 24px);
+    background:rgba(42,38,34,.94); color:#fff; padding:10px 12px; border-radius:12px; font-size:13px; box-shadow:0 6px 20px rgba(0,0,0,.25); }
+  #rotateHint[hidden] { display:none; }
+  #rotateHint button { border:0; background:transparent; color:#fff; font-size:18px; line-height:1; cursor:pointer; padding:4px; }
 </style>
 </head>
 <body>
 <div id="map"></div>
-<div id="bar">
-  <select id="flavor"></select>
-  <select id="lang">
-    <option value="ru">Русский</option>
-    <option value="ka">ქართული</option>
-    <option value="en">English</option>
-  </select>
-  <button id="btnPacks">Офлайн</button>
+<div id="topui">
+  <div id="brand">
+    <div class="wm">ArtMap Georgia</div>
+    <div class="tag">Карта искусства и необычных городских объектов Грузии</div>
+  </div>
+  <button id="menuBtn" type="button" aria-label="Меню">
+    <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke="#2a2622" stroke-width="2" stroke-linecap="round"/></svg>
+  </button>
+  <div id="bar">
+    <select id="flavor"></select>
+    <select id="lang">
+      <option value="ru">Русский</option>
+      <option value="ka">ქართული</option>
+      <option value="en">English</option>
+    </select>
+    <button id="btnPacks">Офлайн</button>
+  </div>
+  <div id="chips"></div>
 </div>
+<div id="scrim" hidden></div>
 <div id="sheet" hidden>
   <h2>Офлайн карта</h2>
   <label class="row"><input type="checkbox" id="offlineOnly"> Только скачанное (проверка без сети)</label>
@@ -46,7 +166,11 @@
   <div class="small" id="usage"></div>
   <div class="btns"><button class="btn" id="btnClose">Закрыть</button></div>
 </div>
+<div id="menu" hidden></div>
 <div id="toast" hidden></div>
+<div id="rotateHint" hidden><span class="rh-text"></span><button type="button" id="rhClose" aria-label="×">×</button></div>
+<div id="card" hidden></div>
+<div id="detail" hidden></div>
 
 <script type="module">
 let maplibregl, PMTiles, layers, namedFlavor;
@@ -64,20 +188,128 @@ if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catc
 
 const GLYPHS = 'https://protomaps.github.io/basemaps-assets/fonts/{fontstack}/{range}.pbf';
 const SPRITE = 'https://protomaps.github.io/basemaps-assets/sprites/v4/';
-const FLAVORS = { light:'Светлая', dark:'Тёмная', grayscale:'Серая', white:'Белая' };
+const FLAVORS = { light:'AMG', dark:'Тёмная', grayscale:'Серая', white:'Белая' };
 // Файлы карты собирает GitHub Actions и кладёт рядом со страницей, поэтому CORS не мешает
 const PACKS = [
   { id:'base',    title:'Вся Грузия, обзор', url:'tiles/georgia.pmtiles', minz:0,  maxz:9,  local:null },
   { id:'tbilisi', title:'Тбилиси, детально', url:'tiles/tbilisi.pmtiles', minz:10, maxz:15, local:null },
 ];
 PACKS.forEach(p => p.remote = new PMTiles(p.url));
-const state = { flavor:'light', lang:'ru', offlineOnly:false, lastError:'' };
+const state = { flavor:'light', lang:'ru', offlineOnly:false, lastError:'', categories:null };
 
-// Тестовые точки (координаты приблизительные, это проба карты, а не каталог)
-const MURALS = { type:'FeatureCollection', features: [
-  ['Aphe & Noah',44.7935,41.7013],['Dante, Ваке',44.7660,41.7098],['Andreas von Chrzanowski',44.7955,41.7108],
-  ['Масхарашвили',44.8060,41.7190],['Monkeybird',44.8120,41.6960],['Fabrika',44.8093,41.7118],['Мать и дитя',44.8160,41.6940]
-].map(([title,lng,lat]) => ({ type:'Feature', properties:{ title }, geometry:{ type:'Point', coordinates:[lng,lat] } })) };
+// ---------- каталог (Stage 0 data) ----------
+// SITE = физическое место (GeoJSON), ARTWORK связан с местом через site_id.
+const catalog = {
+  sites: [], siteById: new Map(), artworksBySite: new Map(),
+  artists: new Map(), sources: new Map(), cities: new Map(),
+};
+let catalogError = null;
+
+// Локализация: выбранный язык → en → ru → ka → первый непустой.
+const LANG_ORDER = { ru:['ru','en','ka'], en:['en','ru','ka'], ka:['ka','en','ru'] };
+function pick(loc) {
+  if (!loc || typeof loc !== 'object') return '';
+  for (const k of (LANG_ORDER[state.lang] || LANG_ORDER.ru)) {
+    const v = loc[k]; if (typeof v === 'string' && v.trim()) return v.trim();
+  }
+  for (const k of Object.keys(loc)) { const v = loc[k]; if (typeof v === 'string' && v.trim()) return v.trim(); }
+  return '';
+}
+
+const LB = {
+  untitled:   { ru:'Без названия', en:'Untitled', ka:'უსათაურო' },
+  artist:     { ru:'Художник', en:'Artist', ka:'მხატვარი' },
+  access:     { ru:'Доступ', en:'Access', ka:'წვდომა' },
+  visibleYes: { ru:'видно снаружи', en:'visible from outside', ka:'გარედან ჩანს' },
+  visibleNo:  { ru:'не видно снаружи', en:'not visible from outside', ka:'გარედან არ ჩანს' },
+  sources:    { ru:'Источники', en:'Sources', ka:'წყაროები' },
+  route:      { ru:'Маршрут', en:'Route', ka:'მარშრუტი' },
+  noArtworks: { ru:'Нет произведений', en:'No artworks', ka:'ნამუშევრები არ არის' },
+  catalogFail:{ ru:'Каталог не загрузился: ', en:'Catalog failed to load: ', ka:'კატალოგი ვერ ჩაიტვირთა: ' },
+  works:      { ru:'работ', en:'works', ka:'ნამუშევარი' },
+  category:   { ru:'Категория', en:'Category', ka:'კატეგორია' },
+  year:       { ru:'Год', en:'Year', ka:'წელი' },
+  detail:     { ru:'Подробнее', en:'Details', ka:'დეტალურად' },
+  detailHint: { ru:'Подробная карточка скоро', en:'Detail view coming soon', ka:'დეტალური ხედი მალე' },
+  photo:      { ru:'Фото', en:'Photo', ka:'ფოტო' },
+  photoAlt:   { ru:'Фото объекта', en:'Photo of the object', ka:'ობიექტის ფოტო' },
+  photoFail:  { ru:'Фото недоступно', en:'Photo unavailable', ka:'ფოტო მიუწვდომელია' },
+  credit:     { ru:'Credit', en:'Credit', ka:'Credit' },
+  source:     { ru:'Источник', en:'Source', ka:'წყარო' },
+  srcObject:  { ru:'Объект', en:'Object', ka:'ობიექტი' },
+  srcPhoto:   { ru:'Фото', en:'Photos', ka:'ფოტოები' },
+  srcCatalog: { ru:'Каталог / проект', en:'Catalog / project', ka:'კატალოგი / პროექტი' },
+  srcProv:    { ru:'Провенанс', en:'Provenance', ka:'წარმომავლობა' },
+};
+const TYPE_LABELS = {
+  mural:{ru:'Мурал',en:'Mural',ka:'მურალი'}, street_art:{ru:'Стрит-арт',en:'Street art',ka:'სტრიტ-არტი'},
+  mosaic:{ru:'Мозаика',en:'Mosaic',ka:'მოზაიკა'}, monument:{ru:'Монумент',en:'Monument',ka:'მონუმენტი'},
+  sculpture:{ru:'Скульптура',en:'Sculpture',ka:'სკულპტურა'}, installation:{ru:'Инсталляция',en:'Installation',ka:'ინსტალაცია'},
+  architectural_art:{ru:'Архитектурное искусство',en:'Architectural art',ka:'არქიტექტურული ხელოვნება'},
+  monumental_art:{ru:'Монументальное искусство',en:'Monumental art',ka:'მონუმენტური ხელოვნება'}, other:{ru:'Другое',en:'Other',ka:'სხვა'},
+};
+const STATUS_LABELS = {
+  active:{ru:'Активно',en:'Active',ka:'აქტიური'}, removed:{ru:'Утрачено',en:'Removed',ka:'მოხსნილი'},
+  damaged:{ru:'Повреждено',en:'Damaged',ka:'დაზიანებული'}, replaced:{ru:'Заменено',en:'Replaced',ka:'შეცვლილი'},
+  uncertain:{ru:'Не подтверждено',en:'Uncertain',ka:'გაურკვეველი'},
+};
+const ACCESS_LABELS = {
+  public:{ru:'Свободный',en:'Public',ka:'საჯარო'}, courtyard:{ru:'Двор',en:'Courtyard',ka:'ეზო'},
+  restricted:{ru:'Ограниченный',en:'Restricted',ka:'შეზღუდული'}, private:{ru:'Частная территория',en:'Private',ka:'კერძო'},
+  ticket_required:{ru:'По билету',en:'Ticket required',ka:'ბილეთით'}, permission_required:{ru:'По разрешению',en:'Permission required',ka:'ნებართვით'},
+};
+const ROLE_LABELS = {
+  identity:{ru:'идентификация',en:'identity',ka:'იდენტიფიკაცია'}, location:{ru:'место',en:'location',ka:'ლოკაცია'},
+  artist:{ru:'художник',en:'artist',ka:'მხატვარი'}, year:{ru:'год',en:'year',ka:'წელი'},
+  photo:{ru:'фото',en:'photo',ka:'ფოტო'}, description:{ru:'описание',en:'description',ka:'აღწერა'},
+};
+const labelOf = (dict, key) => (dict[key] ? pick(dict[key]) : key);
+function categoryLabel(key) { const c = CATEGORIES.find(x => x.key === key); return c ? pick(c.label) : ''; }
+function worksLabel(n) {
+  const l = state.lang;
+  if (l === 'en') return `${n} ${n === 1 ? 'work' : 'works'}`;
+  if (l === 'ka') return `${n} ნამუშევარი`;
+  const m10 = n % 10, m100 = n % 100;
+  const word = (m10 === 1 && m100 !== 11) ? 'работа' : (m10 >= 2 && m10 <= 4 && (m100 < 12 || m100 > 14)) ? 'работы' : 'работ';
+  return `${n} ${word}`;
+}
+
+// Внешний маршрут: без собственного routing. Основной провайдер первый, остальные — альтернативы.
+const ROUTE_PROVIDERS = [
+  { id:'yandex', name:'Яндекс Карты', url:(lat,lng) => `https://yandex.com/maps/?rtext=~${lat},${lng}&rtt=pd` },
+  { id:'google', name:'Google Maps', url:(lat,lng) => `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=walking` },
+  { id:'apple',  name:'Apple Maps',  url:(lat,lng) => `https://maps.apple.com/?daddr=${lat},${lng}&dirflg=w` },
+  // OSM — только навигация по координатам (честная карта), НЕ object page/evidence.
+  { id:'osm',    name:'OpenStreetMap', url:(lat,lng) => `https://www.openstreetmap.org/?mlat=${lat}&mlon=${lng}#map=17/${lat}/${lng}` },
+];
+
+const STATUS_RANK = { active:0, uncertain:1, damaged:2, replaced:3, removed:4 };
+function siteStatus(arts) {
+  for (const s of ['active','uncertain','damaged','replaced','removed']) if (arts.some(a => a.status === s)) return s;
+  return 'uncertain';
+}
+
+async function loadCatalog() {
+  const get = p => fetch(p).then(r => { if (!r.ok) throw new Error(p + ' → HTTP ' + r.status); return r.json(); });
+  const [sites, artworks, artists, sources, cities] = await Promise.all([
+    get('data/sites.geojson'), get('data/artworks.json'), get('data/artists.json'),
+    get('data/sources.json'), get('data/cities.json'),
+  ]);
+  catalog.sites = sites.features || [];
+  catalog.siteById = new Map(catalog.sites.map(f => [f.properties.id, f]));
+  catalog.artists = new Map(artists.map(a => [a.id, a]));
+  catalog.sources = new Map(sources.map(s => [s.id, s]));
+  catalog.cities = new Map(Object.entries(cities));
+  for (const a of artworks) {
+    if (!catalog.artworksBySite.has(a.site_id)) catalog.artworksBySite.set(a.site_id, []);
+    catalog.artworksBySite.get(a.site_id).push(a);
+  }
+  for (const arr of catalog.artworksBySite.values()) {
+    arr.sort((a, b) => (STATUS_RANK[a.status] - STATUS_RANK[b.status]) || ((b.year || 0) - (a.year || 0)));
+  }
+}
+try { await loadCatalog(); }
+catch (e) { catalogError = e.message || String(e); console.warn('catalog load failed', e); }
 
 // ---------- хранилище файлов карты ----------
 const dbp = new Promise((res, rej) => {
@@ -118,20 +350,232 @@ maplibregl.addProtocol('amg', async (params, abort) => {
     const r = await inst.getZxy(z, x, y, abort && abort.signal);
     return { data: r ? new Uint8Array(r.data) : new Uint8Array() };
   } catch (e) {
-    if (!(abort && abort.signal && abort.signal.aborted)) state.lastError = String(e && e.message || e);
+    // Отменённый запрос НЕ должен кэшироваться как пустой тайл — иначе при возврате
+    // на этот зум остаётся «дырка». Пробрасываем ошибку, MapLibre перезапросит позже.
+    if (abort && abort.signal && abort.signal.aborted) throw e;
+    state.lastError = String(e && e.message || e);
     return { data: new Uint8Array() };
   }
 });
 
 // ---------- стиль ----------
-const muralLayers = [
-  { id:'murals-halo', type:'circle', source:'murals', paint:{ 'circle-radius':11, 'circle-color':'#ffffff', 'circle-opacity':.9 } },
-  { id:'murals', type:'circle', source:'murals', paint:{ 'circle-radius':7, 'circle-color':'#d9552b', 'circle-stroke-width':2, 'circle-stroke-color':'#ffffff' } },
-  { id:'murals-label', type:'symbol', source:'murals', minzoom:13,
-    layout:{ 'text-field':['get','title'], 'text-font':['Noto Sans Medium'], 'text-size':12, 'text-offset':[0,1.3], 'text-anchor':'top' },
+// SITE как географический источник; label/icon/status/count вычисляются из связанных ARTWORK.
+// Цвет/форма маркера = ТИП (семейство), статус показывается отдельным бейджем.
+const FAMILY_OF_TYPE = {
+  mural:'mural', street_art:'street_art', mosaic:'mosaic',
+  sculpture:'sculpture', monument:'sculpture',
+  installation:'installation', other:'artifact',
+  architectural_art:'architectural', monumental_art:'architectural',
+  artifact:'artifact',
+};
+// UI-категории: 7 чипов, multi-select (OR). `other` и `artifact` → Heritage / Other.
+const CATEGORIES = [
+  { key:'mural',        label:{ru:'Муралы',en:'Murals',ka:'მურალები'}, types:['mural'] },
+  { key:'street_art',   label:{ru:'Стрит-арт',en:'Street Art',ka:'სტრიტ-არტი'}, types:['street_art'] },
+  { key:'mosaic',       label:{ru:'Мозаики',en:'Mosaics',ka:'მოზაიკები'}, types:['mosaic'] },
+  { key:'sculpture',    label:{ru:'Скульптуры и монументы',en:'Sculptures & Monuments',ka:'სკულპტურები და მონუმენტები'}, types:['sculpture','monument'] },
+  { key:'architecture', label:{ru:'Архитектура',en:'Architecture',ka:'არქიტექტურა'}, types:['architectural_art','monumental_art'] },
+  { key:'installation', label:{ru:'Арт-объекты и инсталляции',en:'Art Objects & Installations',ka:'არტ-ობიექტები და ინსტალაციები'}, types:['installation'] },
+  { key:'other',        label:{ru:'Наследие и другое',en:'Heritage & Other',ka:'მემკვიდრეობა და სხვა'}, types:['other','artifact'] },
+];
+const CATEGORY_OF_TYPE = {};
+for (const c of CATEGORIES) for (const t of c.types) CATEGORY_OF_TYPE[t] = c.key;
+const ALL_LABEL = { ru:'Все', en:'All', ka:'ყველა' };
+const RESET_LABEL = { ru:'Сбросить', en:'Reset', ka:'გადატვირთვა' };
+// Категорийный фильтр — Strategy B: фильтруем ДАННЫЕ source «sites» (setData), нативная
+// кластеризация MapLibre пересчитывает кластеры автоматически. setFilter для категорий не нужен.
+// state.categories: null = All; Set = выбранные категории; пустой Set = ничего не показано.
+// SITE относится к ОДНОЙ категории — по основной (первой) работе.
+const SINGLETON = ['!', ['has','point_count']];
+const COUNT_EXTRA = ['>', ['get','count'], 1];
+function selectedSiteFeatures() {
+  const fc = siteFeatures();                                  // полный набор SITE (All)
+  if (state.categories === null) return fc;
+  if (!state.categories.size) return { type:'FeatureCollection', features: [] };
+  return { type:'FeatureCollection',
+    features: fc.features.filter(f => state.categories.has(f.properties.cat)) };
+}
+function applyCategoryFilter() {
+  const src = map.getSource('sites');
+  if (src) src.setData(selectedSiteFeatures());
+}
+// Приоритет отрисовки: редкие категории (скульптура/наследие) — выше массовых (мозаики).
+const FAMILY_PRIO = { mosaic:1, mural:2, street_art:3, installation:3, architectural:5, sculpture:7, artifact:7 };
+function siteFeatures() {
+  return { type:'FeatureCollection', features: catalog.sites.map(f => {
+    const p = f.properties;
+    const arts = catalog.artworksBySite.get(p.id) || [];
+    const label = pick(p.name) || (arts[0] ? pick(arts[0].title) : '');
+    const family = arts[0] ? (FAMILY_OF_TYPE[arts[0].type] || 'installation') : 'installation';
+    const cat = arts[0] ? (CATEGORY_OF_TYPE[arts[0].type] || '') : '';
+    return { type:'Feature', geometry:f.geometry,
+      properties:{ ...p, label, icon:'icon-' + family, cat, count:arts.length,
+        status:siteStatus(arts), prio: FAMILY_PRIO[family] || 3 } };
+  }) };
+}
+// Кластеры SITE (native MapLibre). Добавляются ПЕРВЫМИ → лежат ниже singleton-маркеров.
+const clusterLayers = [
+  { id:'sites-clusters', type:'circle', source:'sites', filter:['has','point_count'],
+    paint:{ 'circle-color':'#d9552b', 'circle-opacity':0.92,
+      'circle-stroke-color':'#ffffff', 'circle-stroke-width':2,
+      'circle-radius':['step',['get','point_count'], 14, 10, 18, 50, 24, 200, 30] } },
+  { id:'sites-cluster-count', type:'symbol', source:'sites', filter:['has','point_count'],
+    layout:{ 'text-field':['get','point_count_abbreviated'], 'text-font':['Noto Sans Medium'],
+      'text-size':12, 'text-allow-overlap':true, 'text-ignore-placement':true },
+    paint:{ 'text-color':'#ffffff' } },
+];
+// Singleton-слои: только развёрнутые SITE (никогда на кластере).
+const siteLayers = [
+  { id:'sites', type:'symbol', source:'sites', filter:SINGLETON,
+    layout:{ 'icon-image':['get','icon'], 'icon-size':1.1, 'icon-allow-overlap':true, 'icon-ignore-placement':true,
+      'symbol-sort-key':['get','prio'] },
+    paint:{} },
+  { id:'sites-status', type:'symbol', source:'sites', filter:SINGLETON,
+    layout:{ 'icon-image':['concat','badge-',['get','status']], 'icon-size':0.9, 'icon-offset':[15,-15],
+      'icon-allow-overlap':true, 'icon-ignore-placement':true, 'symbol-sort-key':['get','prio'] },
+    paint:{} },
+  // ×N: несколько ARTWORK на одном SITE (только singleton, никогда на кластере).
+  { id:'sites-count-bg', type:'circle', source:'sites', filter:['all', SINGLETON, COUNT_EXTRA],
+    paint:{ 'circle-radius':9, 'circle-color':'#d9552b', 'circle-stroke-color':'#ffffff', 'circle-stroke-width':2,
+      'circle-translate':[16,16], 'circle-translate-anchor':'viewport' } },
+  { id:'sites-count', type:'symbol', source:'sites', filter:['all', SINGLETON, COUNT_EXTRA],
+    layout:{ 'text-field':['concat','×',['to-string',['get','count']]], 'text-font':['Noto Sans Medium'], 'text-size':10,
+      'text-offset':[1.6,1.6], 'text-anchor':'center', 'text-allow-overlap':true, 'text-ignore-placement':true, 'text-padding':0 },
+    paint:{ 'text-color':'#ffffff' } },
+  { id:'sites-label', type:'symbol', source:'sites', minzoom:12, filter:SINGLETON,
+    layout:{ 'text-field':['coalesce',['get','label'],''], 'text-font':['Noto Sans Medium'], 'text-size':12, 'text-offset':[0,1.9], 'text-anchor':'top', 'text-optional':true },
     paint:{ 'text-color':'#7a2d12', 'text-halo-color':'#ffffff', 'text-halo-width':1.5 } },
 ];
+// --- AMG «Тёплая открытка»: тёплая земля, сочная зелень, бирюзовая вода, ---
+// --- оранжевые дороги, коричневые подписи. Runtime-перекраска слоёв Protomaps; ---
+// --- PMTiles source, tile generation, SW и offline не меняются. ---
+const AMG_PAL = {
+  land:'#F6EEDD', land2:'#EFE2C8', urban:'#F0E0CB',
+  forest:'#67B74B', grass:'#B4E094', sand:'#F7E2B0', snow:'#F4FAFF',
+  water:'#34B7DB', river:'#63CDE3',
+  building:'#EFDCC6', buildingEdge:'#E0C6A8',
+  roadMajor:'#F5B95F', roadMajorEdge:'#E4A24A',
+  roadPrimary:'#FAE4B8', roadPrimaryEdge:'#EED9AC',
+  roadMid:'#FBEBCB', roadMidEdge:'#EEDFBE',
+  roadMinor:'#FFFDF7', roadMinorEdge:'#F1EADC',
+  rail:'#C9A98A',
+  boundary:'#C97B4A',
+  label:'#5A4A3A', labelHalo:'#FFFDF7', waterLabel:'#16788F',
+};
+// Игривые POI-иконки вместо «унылых» дефолтных (fallback — родная sprite Protomaps).
+const AMG_POI_ICONS = ['match', ['get', 'kind'],
+  'park', 'amg-poi-park', 'garden', 'amg-poi-park', 'national_park', 'amg-poi-park',
+  'peak', 'amg-poi-peak', 'viewpoint', 'amg-poi-peak',
+  'attraction', 'amg-poi-star', 'theme_park', 'amg-poi-star', 'archaeological_site', 'amg-poi-star',
+  'monument', 'amg-poi-monument', 'memorial', 'amg-poi-monument',
+  'museum', 'amg-poi-museum', 'art_gallery', 'amg-poi-museum',
+  'place_of_worship', 'amg-poi-church',
+  'castle', 'amg-poi-castle',
+  'cafe', 'amg-poi-coffee',
+  'fast_food', 'amg-poi-khinkali', 'restaurant', 'amg-poi-khachapuri',
+  'bar', 'amg-poi-wine', 'pub', 'amg-poi-wine', 'winery', 'amg-poi-wine',
+  'beach', 'amg-poi-beach',
+  'swimming_pool', 'amg-poi-pool',
+  'campground', 'amg-poi-camp',
+  'hotel', 'amg-poi-hotel',
+  'marina', 'amg-poi-boat', 'ferry_terminal', 'amg-poi-boat',
+  'railway_station', 'amg-poi-transport', 'bus_station', 'amg-poi-transport', 'station', 'amg-poi-transport',
+  ['get', 'kind']];
+// Транспорт для туристов: метро/вокзалы/автовокзалы/аэропорты/переправы — отдельным слоем поверх базовой карты.
+const TRANSIT_KINDS = ['station','railway_station','subway','metro','bus_station','bus','ferry_terminal','ferry','harbor','aerodrome','airport','airfield'];
+// Официальный знак метро Тбилиси — красная «M» (#e72400). В тайлах метро и ж/д
+// помечены одинаково (kind=station), поэтому метро определяем по названию станции.
+const METRO_NAMES = ['Akhmetelis Teatri','Sarajishvili','Guramishvili','Ghrmaghele','Didube','Gotsiridze','Nadzaladevi',
+  'Station Square','Sadguris Moedani','Marjanishvili','Rustaveli','Liberty Square','Avlabari','Aragveli','Isani',
+  'Samgori','Varketili','Tsereteli','Technical University','Medical University','Delisi','Vazha-Pshavela',
+  'State University','Sakhelmtsipo Universiteti'];
+const METRO_TEST = ['any', ...METRO_NAMES.map(n => ['in', n, ['coalesce', ['get','name:en'], '']])];
+const TRANSIT_ICON = ['match', ['get', 'kind'],
+  'aerodrome', 'amg-transit-air', 'airport', 'amg-transit-air', 'airfield', 'amg-transit-air',
+  'bus_station', 'amg-transit-bus', 'bus', 'amg-transit-bus',
+  'ferry_terminal', 'amg-transit-ferry', 'ferry', 'amg-transit-ferry', 'harbor', 'amg-transit-ferry',
+  'subway', 'amg-transit-metro', 'metro', 'amg-transit-metro',
+  'station', ['case', METRO_TEST, 'amg-transit-metro', 'amg-transit-train'],
+  'amg-transit-train'];
+function amgTheme(ls) {
+  const P = AMG_PAL;
+  const themed = ls.map(l => {
+    const id = String(l.id || '').toLowerCase();
+    const sl = String(l['source-layer'] || '').toLowerCase();
+    const key = id + ' ' + sl;
+    const paint = { ...(l.paint || {}) };
+    if (l.type === 'background') { paint['background-color'] = P.land; return { ...l, paint }; }
+    if (l.type === 'fill') {
+      if (/building/.test(key)) { paint['fill-color'] = P.building; paint['fill-outline-color'] = P.buildingEdge; paint['fill-opacity'] = 0.96; return { ...l, paint }; }
+      if (/water|ocean|sea|lake|bay/.test(key)) { paint['fill-color'] = P.water; return { ...l, paint }; }
+      if (/glacier|ice|snow/.test(key)) { paint['fill-color'] = P.snow; return { ...l, paint }; }
+      if (/forest|wood|tree/.test(key)) { paint['fill-color'] = P.forest; return { ...l, paint }; }
+      if (/grass|meadow|park|garden|golf|pitch/.test(key)) { paint['fill-color'] = P.grass; return { ...l, paint }; }
+      if (/sand|beach|desert/.test(key)) { paint['fill-color'] = P.sand; return { ...l, paint }; }
+      if (/residential|urban|commercial|industrial|suburb|neighbourhood/.test(key)) { paint['fill-color'] = P.urban; return { ...l, paint }; }
+      if (/landcover|landuse|earth|natural|terrain/.test(key)) { paint['fill-color'] = P.land2; return { ...l, paint }; }
+      return l;
+    }
+    if (l.type === 'line') {
+      if (/casing/.test(key)) {
+        const c = /highway|motorway|trunk/.test(key) ? P.roadMajorEdge
+                : /major|primary/.test(key) ? P.roadPrimaryEdge
+                : /secondary|tertiary/.test(key) ? P.roadMidEdge
+                : P.roadMinorEdge;
+        paint['line-color'] = c; return { ...l, paint };
+      }
+      if (/boundary|admin/.test(key)) { paint['line-color'] = P.boundary; if (paint['line-dasharray'] == null) paint['line-dasharray'] = [2, 2]; return { ...l, paint }; }
+      if (/rail/.test(key)) { paint['line-color'] = P.rail; return { ...l, paint }; }
+      if (/highway|motorway|trunk/.test(key)) { paint['line-color'] = P.roadMajor; return { ...l, paint }; }
+      if (/major|primary/.test(key)) { paint['line-color'] = P.roadPrimary; return { ...l, paint }; }
+      if (/secondary|tertiary/.test(key)) { paint['line-color'] = P.roadMid; return { ...l, paint }; }
+      if (/minor|service|residential|path|track|street|road|link|other|taxiway|runway|pier/.test(key)) { paint['line-color'] = P.roadMinor; return { ...l, paint }; }
+      if (/water|river|canal|stream|waterway/.test(key)) { paint['line-color'] = P.river; return { ...l, paint }; }
+      return l;
+    }
+    if (l.type === 'symbol') {
+      // Номера домов: включаем начиная с z15 (в тайлах адреса есть уже на z15), иначе слой скрыт до z18.
+      if (id === 'address_label') return { ...l, minzoom: 15,
+        layout: { ...(l.layout || {}), 'text-size': 11.5 },
+        paint: { ...paint, 'text-color': '#7a6a56', 'text-halo-color': '#ffffff', 'text-halo-width': 1.4 } };
+      paint['text-color'] = P.label; paint['text-halo-color'] = P.labelHalo; paint['text-halo-width'] = 1.7;
+      if (/water|marine|ocean/.test(key)) paint['text-color'] = P.waterLabel;
+      if (id === 'pois') return { ...l, paint, layout: { ...(l.layout || {}), 'icon-image': AMG_POI_ICONS } };
+      return { ...l, paint };
+    }
+    return l;
+  });
+  return themed;
+}
+// Локализация подписей стран/регионов по выбранному языку + удаление «Южной Осетии»
+// (редакционное решение проекта; применяется для всех flavor).
+function amgLabels(ls) {
+  const lc = state.lang || 'ru';
+  const NAMES = {
+    'Georgia':  { en:'Georgia',  ru:'Грузия',  ka:'საქართველო' },
+    'Abkhazia': { en:'Abkhazia', ru:'Абхазия', ka:'აფხაზეთი' },
+  };
+  // legacy-фильтры (как в исходных слоях) — исключаем «Южную Осетию» из подписей
+  const excl = f => ['all', ...(f ? [f] : []), ['!=','name:en','South Ossetia'], ['!=','name:en','Tskhinvali Region']];
+  const local = ['coalesce', ['get','name:'+lc], ['get','name:en'], ['get','name']];
+  const pick = fallback => ['case',
+    ['==', ['get','name:en'], 'Georgia'], NAMES.Georgia[lc],
+    ['==', ['get','name:en'], 'Abkhazia'], NAMES.Abkhazia[lc],
+    fallback];
+  return ls.map(l => {
+    if (l.id === 'places_country') {
+      return { ...l,
+        layout: { ...(l.layout||{}), 'text-field': ['format', pick(['coalesce', ['get','name:'+lc], ['get','name:en']]), {}] },
+        filter: excl(l.filter) };
+    }
+    if (l.id === 'places_region' || l.id === 'places_subplace') {
+      return { ...l, layout: { ...(l.layout||{}), 'text-field': pick(local) }, filter: excl(l.filter) };
+    }
+    return l;
+  });
+}
 function buildStyle() {
+  const base = amgLabels(layers('protomaps', namedFlavor(state.flavor), { lang: state.lang }));
   return {
     version: 8,
     glyphs: GLYPHS,
@@ -139,38 +583,675 @@ function buildStyle() {
     sources: {
       protomaps: { type:'vector', tiles:['amg://{z}/{x}/{y}'], minzoom:0, maxzoom:15,
         attribution:'<a href="https://protomaps.com">Protomaps</a> © <a href="https://openstreetmap.org">OpenStreetMap</a>' },
-      murals: { type:'geojson', data: MURALS },
     },
-    layers: [...layers('protomaps', namedFlavor(state.flavor), { lang: state.lang }), ...muralLayers],
+    // «Светлая» = фирменная AMG-тема; остальные flavor остаются стандартными Protomaps.
+    layers: state.flavor === 'light' ? amgTheme(base) : base,
   };
 }
 
-const map = new maplibregl.Map({ container:'map', style: buildStyle(), center:[44.80, 41.715], zoom:12, maxZoom:18, attributionControl:{ compact:true } });
+// Native gestures: pan / pinch / double-tap / tap остаются; вращение и наклон отключаем (north-up).
+const map = new maplibregl.Map({ container:'map', style: buildStyle(), center:[44.80, 41.715], zoom:12, maxZoom:18,
+  dragRotate:false, touchPitch:false, attributionControl:{ compact:true } });
+map.touchZoomRotate.disableRotation();  // pinch-zoom остаётся, two-finger rotate — нет
 map.addControl(new maplibregl.NavigationControl({ showCompass:false }), 'bottom-right');
 map.addControl(new maplibregl.GeolocateControl({ positionOptions:{ enableHighAccuracy:true }, trackUserLocation:true }), 'bottom-right');
 map.addControl(new maplibregl.ScaleControl({ unit:'metric' }), 'bottom-left');
-function popupHtml(f) {
-  const [lng, lat] = f.geometry.coordinates;
-  return '<b>' + f.properties.title + '</b><br>' + lat.toFixed(5) + ', ' + lng.toFixed(5) +
-    '<br><small>тестовая точка, координаты приблизительные</small><br>' +
-    '<a target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&destination=' + lat + ',' + lng + '&travelmode=walking">Маршрут</a>';
+window.amgMap = map; // read-only test/debug hook (no behavior change)
+
+// ---------- SVG-маркеры: тип цветом/формой, статус отдельным бейджем ----------
+// Наивный плоский стиль, 2-4 цвета, inline (без внешних ассетов).
+const ICON_SVGS = {
+  'icon-mural': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
+<path d="M6 40 C15 36 24 37 34 33" fill="none" stroke="#f0a43a" stroke-width="7" stroke-linecap="round"/>
+<path d="M6 40 C15 36 24 37 34 33" fill="none" stroke="#d9552b" stroke-width="2.4" stroke-linecap="round"/>
+<g transform="rotate(38 24 24)">
+<rect x="21" y="3" width="6" height="15" rx="3" fill="#c98a00" stroke="#3b332b" stroke-width="2"/>
+<rect x="19.5" y="17" width="9" height="5" rx="1.5" fill="#a7adb3" stroke="#3b332b" stroke-width="1.8"/>
+<path d="M19.5 22 h9 c0 6 -1.4 10.5 -4.5 14.5 c-3.1 -4 -4.5 -8.5 -4.5 -14.5 Z" fill="#d9552b" stroke="#3b332b" stroke-width="2" stroke-linejoin="round"/>
+</g></svg>`,
+  'icon-street_art': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
+<defs><clipPath id="amgcan"><rect x="14" y="16" width="16" height="24" rx="4"/></clipPath></defs>
+<g clip-path="url(#amgcan)">
+<rect x="14" y="16" width="16" height="4.8" fill="#e4614a"/><rect x="14" y="20.8" width="16" height="4.8" fill="#f0a43a"/>
+<rect x="14" y="25.6" width="16" height="4.8" fill="#f0c33a"/><rect x="14" y="30.4" width="16" height="4.8" fill="#67b74b"/>
+<rect x="14" y="35.2" width="16" height="4.8" fill="#2f6fb0"/></g>
+<rect x="14" y="16" width="16" height="24" rx="4" fill="none" stroke="#3b332b" stroke-width="2"/>
+<rect x="16.5" y="11" width="11" height="5.5" rx="2" fill="#c7ced5" stroke="#3b332b" stroke-width="1.8"/>
+<rect x="19.5" y="7" width="5" height="4.5" rx="1.2" fill="#3b332b"/>
+<g fill="none" stroke-linecap="round">
+<path d="M30 9.5 C33 8 35 8.5 38 6.5" stroke="#e4614a" stroke-width="1.6"/>
+<path d="M30.5 13 C33.5 12.4 35.5 13 38.5 12" stroke="#f0c33a" stroke-width="1.6"/>
+<path d="M31 16.5 C34 16.6 35.5 17.5 38 17.5" stroke="#2f6fb0" stroke-width="1.6"/>
+</g>
+<circle cx="31" cy="7.5" r="1.4" fill="#67b74b"/><circle cx="35" cy="5" r="1.1" fill="#e4614a"/><circle cx="36.5" cy="10" r="1.2" fill="#f0c33a"/><circle cx="34" cy="15.5" r="1.1" fill="#7e57c2"/></svg>`,
+  'icon-mosaic': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
+<rect x="6" y="6" width="36" height="36" rx="3" fill="#efe6d6" stroke="#3b332b" stroke-width="1.6"/>
+<g stroke="#3b332b" stroke-width="1.2" stroke-linejoin="round">
+<path d="M8.5 8.5 L21 9.5 L9.5 22 Z" fill="#2f6fb0"/>
+<path d="M23 8.5 L35 10.5 L34 20 L22 18.5 Z" fill="#f0c33a"/>
+<path d="M37 8.5 L41 9 L41 17 L36.5 18 Z" fill="#d9552b"/>
+<path d="M8.5 24 L20 23 L20 33 L9.5 36 Z" fill="#2f8f6b"/>
+<path d="M22 20.5 L34 20 L35 31 L21 32 Z" fill="#d9552b"/>
+<path d="M37 20 L41 19 L41 32.5 Z" fill="#2f6fb0"/>
+<path d="M9.5 38 L21 35 L22 41 L8.5 41 Z" fill="#f0c33a"/>
+<path d="M24 34 L36 33 L37 41 L23 41 Z" fill="#2f6fb0"/>
+<path d="M38 34 L41 35 L41 41 Z" fill="#2f8f6b"/>
+</g></svg>`,
+  'icon-sculpture': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
+<path d="M18 17 C15 18 14 22 14.5 25 C14.7 26.6 16.3 26.8 16.9 25.4 C17.6 23.6 17.4 21 19.5 19.6" fill="none" stroke="#3b332b" stroke-width="5" stroke-linecap="round"/>
+<path d="M18 17 C15 18 14 22 14.5 25 C14.7 26.6 16.3 26.8 16.9 25.4 C17.6 23.6 17.4 21 19.5 19.6" fill="none" stroke="#a2543a" stroke-width="3" stroke-linecap="round"/>
+<path d="M30 17 C33.5 18.5 34.5 22 33.5 26" fill="none" stroke="#3b332b" stroke-width="5" stroke-linecap="round"/>
+<path d="M30 17 C33.5 18.5 34.5 22 33.5 26" fill="none" stroke="#a2543a" stroke-width="3" stroke-linecap="round"/>
+<path d="M17 29.5 L17 41 L21.6 41 L22.6 32 L25.4 32 L26.4 41 L31 41 L31 29.5 Z" fill="#a2543a" stroke="#3b332b" stroke-width="1.8" stroke-linejoin="round"/>
+<path d="M18.4 16.5 C16.8 19 16.2 23 17 29.5 L31 29.5 C31.8 23 31.2 19 29.6 16.5 C27 14.2 21 14.2 18.4 16.5 Z" fill="#a2543a" stroke="#3b332b" stroke-width="1.8" stroke-linejoin="round"/>
+<path d="M18 15.5 L31.5 21" stroke="#3b332b" stroke-width="1.4" stroke-linecap="round"/>
+<circle cx="24" cy="10.5" r="4.2" fill="#a2543a" stroke="#3b332b" stroke-width="1.8"/>
+<rect x="14" y="41" width="20" height="4" rx="1" fill="#d9b48f" stroke="#3b332b" stroke-width="1.6"/></svg>`,
+  'icon-installation': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
+<circle cx="17" cy="15" r="6" fill="#7e57c2" stroke="#3b332b" stroke-width="2"/>
+<path d="M29 9 L38 21 L20 21 Z" fill="#c9b6f0" stroke="#3b332b" stroke-width="2" stroke-linejoin="round"/>
+<path d="M11 40 Q17 31 24 39 Q31 47 38 38" fill="none" stroke="#7e57c2" stroke-width="3" stroke-linecap="round"/></svg>`,
+  'icon-architectural': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
+<path d="M7 19 L24 6 L41 19 Z" fill="#EAD9B8" stroke="#3b332b" stroke-width="2" stroke-linejoin="round"/>
+<rect x="7" y="19" width="34" height="3.5" fill="#E4D3B6" stroke="#3b332b" stroke-width="1.8"/>
+<g stroke="#3b332b" stroke-width="1.6">
+<rect x="9" y="22.5" width="12" height="3.5" rx="1" fill="#F0D79A"/>
+<circle cx="9.6" cy="24.2" r="2.1" fill="#F0D79A"/><circle cx="20.4" cy="24.2" r="2.1" fill="#F0D79A"/>
+<rect x="12" y="26" width="6" height="12" fill="#F3E7D0"/>
+<rect x="27" y="22.5" width="12" height="3.5" rx="1" fill="#F0D79A"/>
+<circle cx="27.6" cy="24.2" r="2.1" fill="#F0D79A"/><circle cx="38.4" cy="24.2" r="2.1" fill="#F0D79A"/>
+<rect x="30" y="26" width="6" height="12" fill="#F3E7D0"/>
+</g>
+<line x1="15" y1="27" x2="15" y2="37" stroke="#C99A6B" stroke-width="1"/>
+<line x1="33" y1="27" x2="33" y2="37" stroke="#C99A6B" stroke-width="1"/>
+<rect x="8" y="38" width="32" height="4" rx="1" fill="#D9B48F" stroke="#3b332b" stroke-width="2"/></svg>`,
+  'icon-artifact': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
+<path d="M19 7 h10 v5 h-10 z" fill="#5b6b7a" stroke="#3b332b" stroke-width="1.5"/>
+<path d="M17 12 Q11 22 17 31 Q21 39 24 39 Q27 39 31 31 Q37 22 31 12 Z" fill="#5b6b7a" stroke="#3b332b" stroke-width="2"/>
+<rect x="17" y="38" width="14" height="4" rx="1" fill="#b8c4cf" stroke="#3b332b" stroke-width="1.5"/></svg>`,
+};
+// Статус-бейджи в стиле референса: круг с символом (✓ / ? / ! / ⇄ / ×).
+const BADGE_SVGS = {
+  'badge-active': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><circle cx="12" cy="12" r="10" fill="#ffffff" stroke="#2f7d32" stroke-width="2.4"/><path d="M7.5 12.5 l3 3 l6 -7" fill="none" stroke="#2f7d32" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  'badge-uncertain': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><circle cx="12" cy="12" r="10" fill="#ffffff" stroke="#8a8a8a" stroke-width="2.4"/><text x="12" y="16.6" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="700" fill="#8a8a8a">?</text></svg>`,
+  'badge-damaged': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><circle cx="12" cy="12" r="10" fill="#ffffff" stroke="#e08a00" stroke-width="2.4"/><path d="M12 7 v5.6" stroke="#e08a00" stroke-width="2.6" stroke-linecap="round"/><circle cx="12" cy="16.3" r="1.4" fill="#e08a00"/></svg>`,
+  'badge-replaced': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><circle cx="12" cy="12" r="10" fill="#ffffff" stroke="#7e57c2" stroke-width="2.4"/><path d="M6.5 10 h9.5 l-3 -3 M17.5 14 h-9.5 l3 3" fill="none" stroke="#7e57c2" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  'badge-removed': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><circle cx="12" cy="12" r="10" fill="#ffffff" stroke="#c62828" stroke-width="2.4"/><path d="M7.6 7.6 L16.4 16.4 M16.4 7.6 L7.6 16.4" stroke="#c62828" stroke-width="2.4" stroke-linecap="round"/></svg>`,
+};
+// Игривые POI-иконки AMG (без внешних ассетов). Fallback на родную sprite Protomaps.
+const POI_SVGS = {
+  'amg-poi-park': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48"><rect x="21" y="30" width="6" height="12" rx="2" fill="#8a5a2b" stroke="#3b332b" stroke-width="2"/><circle cx="24" cy="19" r="11" fill="#67B74B" stroke="#3b332b" stroke-width="2"/><circle cx="15" cy="24" r="7" fill="#7FC45C" stroke="#3b332b" stroke-width="2"/><circle cx="33" cy="24" r="7" fill="#7FC45C" stroke="#3b332b" stroke-width="2"/></svg>`,
+  'amg-poi-peak': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48"><path d="M5 40 L19 15 L27 27 L33 17 L43 40 Z" fill="#C9A06B" stroke="#3b332b" stroke-width="2" stroke-linejoin="round"/><path d="M19 15 L24 23 L14 23 Z" fill="#ffffff" stroke="#3b332b" stroke-width="1.5" stroke-linejoin="round"/><path d="M33 17 L37 24 L29 24 Z" fill="#ffffff" stroke="#3b332b" stroke-width="1.5" stroke-linejoin="round"/></svg>`,
+  'amg-poi-star': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48"><path d="M24 6 L29 18 L42 19 L32 27 L35 40 L24 33 L13 40 L16 27 L6 19 L19 18 Z" fill="#F2C14E" stroke="#3b332b" stroke-width="2" stroke-linejoin="round"/></svg>`,
+  'amg-poi-monument': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48"><rect x="12" y="40" width="24" height="4" rx="1" fill="#D9B48F" stroke="#3b332b" stroke-width="2"/><path d="M24 6 L31 40 L17 40 Z" fill="#E0C6A8" stroke="#3b332b" stroke-width="2" stroke-linejoin="round"/><path d="M24 16 L27 34 L21 34 Z" fill="#C99A6B"/></svg>`,
+  'amg-poi-museum': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48"><rect x="8" y="10" width="32" height="28" rx="2" fill="#F0D79A" stroke="#3b332b" stroke-width="2"/><circle cx="17" cy="19" r="3" fill="#F2A23C" stroke="#3b332b" stroke-width="1.5"/><path d="M11 34 L20 24 L27 31 L33 25 L37 34 Z" fill="#67B74B" stroke="#3b332b" stroke-width="1.5" stroke-linejoin="round"/></svg>`,
+  'amg-poi-church': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48"><rect x="14" y="22" width="20" height="18" fill="#EAD9B8" stroke="#3b332b" stroke-width="2"/><path d="M14 22 A10 10 0 0 1 34 22 Z" fill="#F0D79A" stroke="#3b332b" stroke-width="2"/><rect x="22" y="7" width="4" height="7" fill="#3b332b"/><path d="M24 5 V12 M21 8 H27" stroke="#3b332b" stroke-width="2" stroke-linecap="round"/><rect x="21" y="30" width="6" height="10" rx="1" fill="#8a5a2b" stroke="#3b332b" stroke-width="1.5"/></svg>`,
+  'amg-poi-castle': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48"><rect x="14" y="16" width="20" height="24" fill="#D9C4A3" stroke="#3b332b" stroke-width="2"/><path d="M14 16 h5 v4 h5 v-4 h5 v4 h5 v-4 h5 v6 H14 Z" fill="#E4D3B6" stroke="#3b332b" stroke-width="2" stroke-linejoin="round"/><rect x="21" y="30" width="6" height="10" rx="1" fill="#8a5a2b" stroke="#3b332b" stroke-width="1.5"/></svg>`,
+  'amg-poi-khinkali': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48"><path d="M24 14 C14 16 7 23 7 32 C7 39 14 42 24 42 C34 42 41 39 41 32 C41 23 34 16 24 14 Z" fill="#F0D9B5" stroke="#3b332b" stroke-width="2"/><g fill="none" stroke="#D9B98A" stroke-width="1.4" stroke-linecap="round"><path d="M24 17 C20 23 18.5 31 19 41"/><path d="M24 17 C28 23 29.5 31 29 41"/><path d="M24 17 C15 21 12 28 12.5 34"/><path d="M24 17 C33 21 36 28 35.5 34"/></g><path d="M24 14 C22.2 11 21.3 9 22.3 7.2 C23.3 5.5 25.2 5.6 25.8 7.4 C26.4 9.1 25.4 11.4 24 14 Z" fill="#E3C39A" stroke="#3b332b" stroke-width="1.6" stroke-linejoin="round"/></svg>`,
+  'amg-poi-coffee': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48"><rect x="26" y="14.5" width="21" height="3.6" rx="1.8" fill="#8a5a2b" stroke="#3b332b" stroke-width="1.6" transform="rotate(-16 36.5 16.3)"/><path d="M12 17 L30 17 L26 42 L16 42 Z" fill="#C97B4A" stroke="#3b332b" stroke-width="2" stroke-linejoin="round"/><path d="M13.6 20 L28.4 20 L26 42 L16 42 Z" fill="#5b3a24"/><ellipse cx="21" cy="17" rx="9" ry="2.6" fill="#B5673A" stroke="#3b332b" stroke-width="1.6"/><path d="M12 17 L12 14 L15.5 17 Z" fill="#C97B4A" stroke="#3b332b" stroke-width="1.4" stroke-linejoin="round"/><circle cx="19" cy="25" r="1.6" fill="#D9A45B"/><circle cx="23" cy="28" r="1.2" fill="#D9A45B"/><circle cx="20" cy="32" r="1.4" fill="#D9A45B"/></svg>`,
+  'amg-poi-khachapuri': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48"><path d="M6 28 C6 20 14 16 24 16 C34 16 42 20 42 28 C42 34 34 38 24 38 C14 38 6 34 6 28 Z" fill="#F2C98A" stroke="#3b332b" stroke-width="2"/><path d="M9 26 C15 22 33 22 39 26" fill="none" stroke="#D9A45B" stroke-width="2" stroke-linecap="round"/><ellipse cx="24" cy="29" rx="6" ry="4" fill="#FFF4D6" stroke="#3b332b" stroke-width="1.5"/><circle cx="24" cy="29" r="2.4" fill="#F2A23C" stroke="#3b332b" stroke-width="1.2"/></svg>`,
+  'amg-poi-wine': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48"><path d="M24 10 V16" stroke="#6a8f3a" stroke-width="2" stroke-linecap="round"/><path d="M24 14 C28 8 36 8 40 12 C36 16 30 16 24 14 Z" fill="#67B74B" stroke="#3b332b" stroke-width="1.5"/><circle cx="19" cy="21" r="5" fill="#7e57c2" stroke="#3b332b" stroke-width="1.5"/><circle cx="29" cy="21" r="5" fill="#7e57c2" stroke="#3b332b" stroke-width="1.5"/><circle cx="14" cy="29" r="5" fill="#6a45a3" stroke="#3b332b" stroke-width="1.5"/><circle cx="24" cy="29" r="5" fill="#7e57c2" stroke="#3b332b" stroke-width="1.5"/><circle cx="34" cy="29" r="5" fill="#6a45a3" stroke="#3b332b" stroke-width="1.5"/><circle cx="19" cy="37" r="5" fill="#6a45a3" stroke="#3b332b" stroke-width="1.5"/><circle cx="29" cy="37" r="5" fill="#7e57c2" stroke="#3b332b" stroke-width="1.5"/></svg>`,
+  'amg-poi-beach': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48"><path d="M6 22 A18 18 0 0 1 42 22 Z" fill="#E4614A" stroke="#3b332b" stroke-width="2"/><path d="M6 22 H42" stroke="#F2C14E" stroke-width="3"/><path d="M24 22 V40" stroke="#3b332b" stroke-width="3" stroke-linecap="round"/><path d="M10 34 Q24 29 38 34" fill="none" stroke="#E8D4A0" stroke-width="3" stroke-linecap="round"/></svg>`,
+  'amg-poi-pool': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48"><rect x="7" y="14" width="34" height="22" rx="4" fill="#BFE3F2" stroke="#3b332b" stroke-width="2"/><g fill="none" stroke="#34B7DB" stroke-width="2.5" stroke-linecap="round"><path d="M11 22 Q15 18 19 22 T27 22 T35 22"/><path d="M11 30 Q15 26 19 30 T27 30 T35 30"/></g></svg>`,
+  'amg-poi-camp': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48"><path d="M24 8 L40 40 H8 Z" fill="#7FA86B" stroke="#3b332b" stroke-width="2" stroke-linejoin="round"/><path d="M24 8 V40" stroke="#3b332b" stroke-width="1.5"/><path d="M24 40 L31 22 L24 18 Z" fill="#5f8450" stroke="#3b332b" stroke-width="1.2" stroke-linejoin="round"/></svg>`,
+  'amg-poi-hotel': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48"><rect x="7" y="24" width="34" height="12" rx="2" fill="#D9B48F" stroke="#3b332b" stroke-width="2"/><rect x="9" y="19" width="11" height="8" rx="2" fill="#F2E4D0" stroke="#3b332b" stroke-width="1.5"/><rect x="9" y="36" width="4" height="4" fill="#8a5a2b"/><rect x="35" y="36" width="4" height="4" fill="#8a5a2b"/></svg>`,
+  'amg-poi-boat': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48"><path d="M8 34 H40 L34 42 H14 Z" fill="#C99A6B" stroke="#3b332b" stroke-width="2" stroke-linejoin="round"/><path d="M24 6 V34" stroke="#3b332b" stroke-width="2" stroke-linecap="round"/><path d="M25 8 L38 30 H25 Z" fill="#F2F6F8" stroke="#3b332b" stroke-width="2" stroke-linejoin="round"/><path d="M23 12 L11 30 H23 Z" fill="#E8EDF0" stroke="#3b332b" stroke-width="2" stroke-linejoin="round"/></svg>`,
+  'amg-poi-transport': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48"><rect x="8" y="12" width="32" height="22" rx="4" fill="#F2A23C" stroke="#3b332b" stroke-width="2"/><rect x="12" y="16" width="9" height="7" rx="1.5" fill="#BFE3F2" stroke="#3b332b" stroke-width="1"/><rect x="27" y="16" width="9" height="7" rx="1.5" fill="#BFE3F2" stroke="#3b332b" stroke-width="1"/><circle cx="16" cy="37" r="3" fill="#3b332b"/><circle cx="32" cy="37" r="3" fill="#3b332b"/></svg>`,
+};
+// Бесшовные паттерны (128×128, степень двойки) для воды и «бумажного» зерна.
+const PATTERN_SVGS = {
+  'amg-water': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128"><rect width="128" height="128" fill="#34B7DB"/><g fill="none" stroke="#63CDE3" stroke-width="3" stroke-linecap="round"><path d="M0 32 Q16 16 32 32 T64 32 T96 32 T128 32"/><path d="M0 96 Q16 80 32 96 T64 96 T96 96 T128 96"/></g></svg>`,
+  'amg-paper': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128"><g fill="#8a6a3a" opacity="0.06"><circle cx="16" cy="20" r="1.5"/><circle cx="48" cy="12" r="1"/><circle cx="90" cy="30" r="1.6"/><circle cx="120" cy="18" r="1"/><circle cx="30" cy="60" r="1.2"/><circle cx="70" cy="52" r="1.5"/><circle cx="110" cy="70" r="1"/><circle cx="12" cy="90" r="1.4"/><circle cx="55" cy="100" r="1.2"/><circle cx="95" cy="110" r="1.6"/><circle cx="40" cy="120" r="1"/><circle cx="118" cy="118" r="1.2"/></g></svg>`,
+};
+// Транспортные иконки: цветной круг + белый символ (метро/поезд/автобус/самолёт/паром).
+const TRANSIT_SVGS = {
+  'amg-transit-metro': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48"><circle cx="24" cy="24" r="16" fill="#ffffff" stroke="#e72400" stroke-width="4"/><path d="M17 31 V17 h3.4 l3.6 7 3.6 -7 H31 V31 h-3.2 v-8.6 l-3.4 6.8 h-0.8 l-3.4 -6.8 V31 Z" fill="#e72400"/></svg>`,
+  'amg-transit-train': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48"><circle cx="24" cy="24" r="17" fill="#2f7d32" stroke="#3b332b" stroke-width="2.5"/><rect x="17" y="13.5" width="14" height="13" rx="3" fill="#ffffff"/><rect x="19" y="16.5" width="10" height="5" rx="1" fill="#2f7d32"/><circle cx="19.8" cy="29" r="2" fill="#ffffff"/><circle cx="28.2" cy="29" r="2" fill="#ffffff"/><path d="M20 33.5 h8" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round"/></svg>`,
+  'amg-transit-bus': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48"><circle cx="24" cy="24" r="17" fill="#2f6fb0" stroke="#3b332b" stroke-width="2.5"/><rect x="15" y="15" width="18" height="16" rx="3" fill="#ffffff"/><rect x="18" y="18" width="5" height="5" rx="1" fill="#2f6fb0"/><rect x="25" y="18" width="5" height="5" rx="1" fill="#2f6fb0"/><circle cx="19" cy="32" r="2" fill="#2f6fb0"/><circle cx="29" cy="32" r="2" fill="#2f6fb0"/></svg>`,
+  'amg-transit-air': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48"><circle cx="24" cy="24" r="17" fill="#2f8fb0" stroke="#3b332b" stroke-width="2.5"/><path d="M24 11.5 C25.5 11.5 26.1 13 26.1 14.7 L26.1 19.8 L34.5 25 L34.5 27 L26.1 24.8 L26.1 30 L29.2 32 L29.2 33.8 L24 32.1 L18.8 33.8 L18.8 32 L21.9 30 L21.9 24.8 L13.5 27 L13.5 25 L21.9 19.8 L21.9 14.7 C21.9 13 22.5 11.5 24 11.5 Z" fill="#ffffff"/></svg>`,
+  'amg-transit-ferry': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48"><circle cx="24" cy="24" r="17" fill="#1E9FB8" stroke="#3b332b" stroke-width="2.5"/><rect x="22" y="16" width="4" height="10" rx="1" fill="#ffffff"/><path d="M26 17.5 L33 25.5 H26 Z" fill="#ffffff"/><path d="M14 27 H34 L31 33.5 H17 Z" fill="#ffffff"/></svg>`,
+};
+function svgToImageData(svg, size) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => {
+      const c = document.createElement('canvas'); c.width = size; c.height = size;
+      const ctx = c.getContext('2d'); ctx.drawImage(img, 0, 0, size, size);
+      resolve(ctx.getImageData(0, 0, size, size));
+    };
+    img.onerror = () => reject(new Error('svg decode failed'));
+    img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+  });
 }
-map.on('click', 'murals', e => {
-  new maplibregl.Popup({ offset:12 }).setLngLat(e.features[0].geometry.coordinates)
-    .setHTML(popupHtml(e.features[0])).addTo(map);
+const ICON_DEFS = [
+  ...Object.entries(ICON_SVGS).map(([k, v]) => [k, v, 48, 2]),
+  ...Object.entries(BADGE_SVGS).map(([k, v]) => [k, v, 24, 2]),
+  ...Object.entries(POI_SVGS).map(([k, v]) => [k, v, 48, 2]),
+  ...Object.entries(TRANSIT_SVGS).map(([k, v]) => [k, v, 48, 2]),
+  ...Object.entries(PATTERN_SVGS).map(([k, v]) => [k, v, 128, 1]),
+];
+let iconsChain = Promise.resolve();
+function addCatalogIcons() {
+  iconsChain = iconsChain.then(async () => {
+    for (const [name, svg, size, pr] of ICON_DEFS) {
+      if (map.hasImage(name)) continue;
+      try { map.addImage(name, await svgToImageData(svg, size), { pixelRatio: pr }); } catch (_) {}
+    }
+  }).catch(() => {});
+  return iconsChain;
+}
+// Источник/слои каталога добавляем после загрузки стиля и после добавления иконок.
+// При setStyle (смена языка/темы) стиль пересобирается — style.load пересоздаёт слои и иконки.
+async function setupCatalogLayers() {
+  await addCatalogIcons();
+  // Паттерны применяем ПОСЛЕ addImage (иначе «image could not be loaded»). Только для AMG-темы.
+  if (state.flavor === 'light') {
+    try { if (map.getLayer('water')) map.setPaintProperty('water', 'fill-pattern', 'amg-water'); } catch (_) {}
+    try {
+      if (!map.getLayer('amg-paper')) {
+        map.addLayer({ id:'amg-paper', type:'background', paint:{ 'background-pattern':'amg-paper', 'background-opacity':0.5 } });
+        const firstSym = (map.getStyle().layers || []).find(l => l.type === 'symbol');
+        if (firstSym) map.moveLayer('amg-paper', firstSym.id);
+      }
+    } catch (_) {}
+  }
+  // SITE source с нативной кластеризацией; данные ставит applyCategoryFilter() ниже.
+  if (!map.getSource('sites')) map.addSource('sites', { type:'geojson', data: selectedSiteFeatures(),
+    cluster:true, clusterRadius:55, clusterMaxZoom:14 });
+  for (const layer of clusterLayers) if (!map.getLayer(layer.id)) map.addLayer(layer);
+  for (const layer of siteLayers) if (!map.getLayer(layer.id)) map.addLayer(layer);
+  // Транспорт (метро/вокзалы/автовокзалы/аэропорты/переправы) — поверх базовой карты и маркеров.
+  if (!map.getLayer('amg-transit')) map.addLayer({
+    id:'amg-transit', type:'symbol', source:'protomaps', 'source-layer':'pois',
+    filter:['in', ['get','kind'], ['literal', TRANSIT_KINDS]],
+    layout:{ 'icon-image': TRANSIT_ICON, 'icon-size':1.15, 'icon-allow-overlap':true, 'icon-ignore-placement':true,
+      'text-field':['coalesce',['get','name:'+state.lang],['get','name:en'],['get','name']],
+      'text-font':['Noto Sans Medium'], 'text-size':11, 'text-offset':[0,1.7], 'text-anchor':'top', 'text-optional':true },
+    paint:{ 'text-color':'#14324a', 'text-halo-color':'#ffffff', 'text-halo-width':1.8 } });
+  applyCategoryFilter();
+}
+let layersChain = Promise.resolve();
+const schedule = () => { layersChain = layersChain.then(setupCatalogLayers).catch(() => {}); };
+map.on('style.load', schedule);
+map.on('load', schedule);
+
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
+// Generic/home/root/Special:/search/My-Maps-viewer URL — НЕ объектная evidence-ссылка.
+function isGenericUrl(u) {
+  if (typeof u !== 'string') return true;
+  const s = u.trim(); if (!s) return true;
+  let host, path;
+  try { const x = new URL(s); host = x.hostname.toLowerCase().replace(/^www\./, ''); path = x.pathname || '/'; }
+  catch (_) { return true; }
+  if (path === '/' || path === '') return true;                       // bare root/home
+  if (host === 'wikipedia.org') return true;                          // portal, not article
+  if (/\/wiki\/main_page$/i.test(path)) return true;
+  if (/^\/wiki\/special:/i.test(path)) return true;
+  if (/maps\/d\/viewer/i.test(s)) return true;                        // My Maps viewer = source map
+  if (/[?&]search=/i.test(s) || /\/search\b/i.test(path)) return true;
+  if (host === 'github.com' && /^\/[^/]+\/[^/]+\/?$/i.test(path)) return true; // repo root
+  return false;
+}
+// Конкретный объектный URL: сначала у самой ref (url/direct_url), затем у source. Ничего не угадываем.
+function concreteSourceUrl(ref, s) {
+  for (const u of [ref && ref.url, ref && ref.direct_url, s && s.url]) {
+    if (typeof u === 'string' && u.trim() && !isGenericUrl(u)) return u.trim();
+  }
+  return '';
+}
+function sourceLinks(list) {
+  return (list || []).map(ref => {
+    const s = catalog.sources.get(ref.id); if (!s) return '';
+    const role = `<span class="amg-role">${esc(labelOf(ROLE_LABELS, ref.role))}</span>`;
+    const url = concreteSourceUrl(ref, s);
+    if (url) return `<a href="${esc(url)}" target="_blank" rel="noopener">${esc(s.title)}</a> ${role}`;
+    return `<span class="amg-src-text">${esc(s.title)}</span> ${role}`;   // plain provenance, не кликабельно
+  }).filter(Boolean).join(' · ');
+}
+function routeButtons(lat, lng) {
+  return ROUTE_PROVIDERS.map((p, i) => {
+    const cls = i === 0 ? 'amg-btn primary' : 'amg-btn';
+    const txt = i === 0 ? `${pick(LB.route)}: ${p.name}` : p.name;
+    return `<a class="${cls}" href="${esc(p.url(lat, lng))}" target="_blank" rel="noopener">${esc(txt)}</a>`;
+  }).join('');
+}
+// Preview media: first item with role "photo"/"detail"; never duplicated within one card
+// (shared `shown` Set of canonical urls). Never shows source_id/depicts/internal ids.
+function mediaHtml(list, shown) {
+  if (!Array.isArray(list) || !shown) return '';
+  const m = list.find(x => x && typeof x === 'object' && (x.role === 'photo' || x.role === 'detail') && x.url && !shown.has(x.url) && !isGenericUrl(x.url));
+  if (!m) return '';
+  shown.add(m.url);
+  const url = esc(m.url);
+  const direct = typeof m.direct_url === 'string' ? m.direct_url.trim() : '';
+  const parts = [];
+  if (m.author) parts.push(`<span class="amg-attr-author">${esc(m.author)}</span>`);
+  if (m.license) parts.push(m.license_url ? `<a href="${esc(m.license_url)}" target="_blank" rel="noopener">${esc(m.license)}</a>` : `<span>${esc(m.license)}</span>`);
+  if (m.attribution_required === true && m.credit) parts.push(`${esc(pick(LB.credit))}: ${esc(m.credit)}`);
+  parts.push(`<a href="${url}" target="_blank" rel="noopener">${esc(pick(LB.source))}</a>`);
+  const attr = `<figcaption class="amg-attr">${parts.join(' · ')}</figcaption>`;
+  const fallback = `<a class="amg-media-fallback" href="${url}" target="_blank" rel="noopener">${esc(pick(LB.photoFail))}</a>`;
+  const img = direct ? `<img data-media-img src="${esc(direct)}" loading="lazy" alt="${esc(pick(LB.photoAlt))}">` : '';
+  return `<figure class="amg-media${direct ? '' : ' amg-media-error'}">
+    <div class="amg-media-frame">${img}${fallback}</div>
+    ${attr}
+  </figure>`;
+}
+function wireMedia(root) {
+  if (!root) return;
+  root.querySelectorAll('img[data-media-img]').forEach(img => {
+    const fig = img.closest('.amg-media');
+    const fail = () => { if (fig) fig.classList.add('amg-media-error'); img.remove(); };
+    img.addEventListener('error', fail, { once: true });
+    if (img.complete && img.naturalWidth === 0) fail();
+  });
+}
+function artworkHtml(a, shown) {
+  const title = pick(a.title) || pick(LB.untitled);
+  const artists = (a.artist_ids || []).map(id => catalog.artists.get(id)?.name).filter(Boolean).join(', ');
+  const desc = pick(a.description);
+  const src = a.sources && a.sources.length ? `<div class="amg-src">${esc(pick(LB.sources))}: ${sourceLinks(a.sources)}</div>` : '';
+  const media = mediaHtml(a.media, shown);
+  const tags = [
+    a.type ? `<span class="amg-tag type">${esc(labelOf(TYPE_LABELS, a.type))}</span>` : '',
+    a.status ? `<span class="amg-tag st st-${esc(a.status)}">${esc(labelOf(STATUS_LABELS, a.status))}</span>` : '',
+    a.year != null ? `<span class="amg-tag year">${esc(a.year)}</span>` : '',
+  ].filter(Boolean).join('');
+  return `<div class="amg-art">
+    <div class="amg-art-title">${esc(title)}</div>
+    ${tags ? `<div class="amg-tags">${tags}</div>` : ''}
+    ${media}
+    ${artists ? `<div class="amg-meta">${esc(pick(LB.artist))}: ${esc(artists)}</div>` : ''}
+    ${desc ? `<div class="amg-desc">${esc(desc)}</div>` : ''}
+    ${src}
+  </div>`;
+}
+function mergedSources(lists) {
+  const seen = new Set(), out = [];
+  for (const list of lists) for (const s of (list || [])) {
+    if (!s || !s.id) continue;
+    const k = s.id + '|' + s.role;
+    if (!seen.has(k)) { seen.add(k); out.push(s); }
+  }
+  return out;
+}
+function shortText(t, n = 160) { return t && t.length > n ? t.slice(0, n - 1).trim() + '…' : t; }
+// Detail sources: dedupe by source id; group into Object / Photos / Catalog / Provenance.
+// Generic root URLs are shown as plain text (never presented as object-specific links).
+const CATALOG_SRC = new Set(['src-0004', 'src-0005', 'src-0006', 'src-0008', 'src-0009', 'src-0010', 'src-0011']);
+const OBJECT_SRC = new Set(['src-0002', 'src-0003', 'src-0007', 'src-0012', 'src-0013', 'src-0014', 'src-0015', 'src-0016']);
+const ROOT_URL_RE = /^https?:\/\/[^/]+\/?$/;
+function mediaFileName(u) { try { const p = decodeURIComponent(String(u).split('/wiki/')[1] || ''); return p.replace(/_/g, ' ').replace(/^File:/, ''); } catch { return 'File'; } }
+function detailSourcesHtml(site, arts) {
+  const ids = new Set();
+  for (const list of [site.sources, ...arts.map(a => a.sources)]) for (const r of (list || [])) if (r && r.id) ids.add(r.id);
+  const photo = [], seen = new Set();
+  for (const m of [...(site.media || []), ...arts.flatMap(a => a.media || [])]) {
+    if (m && m.url && !seen.has(m.url) && !isGenericUrl(m.url)) { seen.add(m.url); photo.push(`<a href="${esc(m.url)}" target="_blank" rel="noopener">${esc(mediaFileName(m.url))}</a>`); }
+  }
+  const cat = [], obj = [], prov = [];
+  for (const id of ids) {
+    const s = catalog.sources.get(id) || { title: id, url: '' };
+    const title = esc(s.title), u = s.url || '', concrete = !!u && !ROOT_URL_RE.test(u);
+    const asLink = concrete ? `<a href="${esc(u)}" target="_blank" rel="noopener">${title}</a>` : title;
+    if (CATALOG_SRC.has(id)) cat.push(u ? `<a href="${esc(u)}" target="_blank" rel="noopener">${title}</a>` : title);
+    else if (OBJECT_SRC.has(id)) obj.push(asLink);
+    else prov.push(asLink);
+  }
+  const grp = (key, items) => items.length ? `<div class="amg-srcgrp"><span class="amg-srcgrp-h">${esc(pick(LB[key]))}</span> ${items.join(' · ')}</div>` : '';
+  const out = grp('srcPhoto', photo) + grp('srcObject', obj) + grp('srcCatalog', cat) + grp('srcProv', prov);
+  return out ? `<div class="amg-src amg-src-all">${out}</div>` : '';
+}
+// Compact preview: ONE object, title shown once; full artwork list lives in Detail (#detail).
+function sitePopupHtml(siteId) {
+  const f = catalog.siteById.get(siteId);
+  if (!f) return '<b>—</b>';
+  const p = f.properties;
+  const [lng, lat] = f.geometry.coordinates;
+  const city = pick(catalog.cities.get(p.city) || {}) || p.city || '';
+  const arts = catalog.artworksBySite.get(siteId) || [];
+  const vis = p.visible_from_outside ? pick(LB.visibleYes) : pick(LB.visibleNo);
+  const name = pick(p.name);
+  const multi = arts.length > 1;
+  const first = arts[0] || null;
+  const title = (!multi && first) ? (pick(first.title) || name || pick(LB.untitled)) : (name || (first && pick(first.title)) || pick(LB.untitled));
+  const catKey = first ? (CATEGORY_OF_TYPE[first.type] || '') : '';
+  const status = arts.length ? siteStatus(arts) : (first ? first.status : '');
+  const year = (!multi && first) ? first.year : null;
+  const ids = multi ? [...new Set(arts.flatMap(a => a.artist_ids || []))] : (first ? (first.artist_ids || []) : []);
+  const artists = ids.map(id => catalog.artists.get(id)?.name).filter(Boolean).join(', ');
+  const desc = shortText(pick(p.description) || (first ? pick(first.description) : '') || '');
+  const addr = pick(p.address);
+  const landmark = [addr, city].filter(Boolean).join(', ');
+  const tags = [
+    catKey ? `<span class="amg-tag cat">${esc(categoryLabel(catKey))}</span>` : '',
+    status ? `<span class="amg-tag st st-${esc(status)}">${esc(labelOf(STATUS_LABELS, status))}</span>` : '',
+    year != null ? `<span class="amg-tag year">${esc(year)}</span>` : '',
+    multi ? `<span class="amg-tag cnt">${esc(worksLabel(arts.length))}</span>` : '',
+  ].filter(Boolean).join('');
+  const shown = new Set();
+  let media = mediaHtml(p.media, shown);
+  if (!media && !multi && first) media = mediaHtml(first.media, shown); // single-artwork fallback
+  const srcList = mergedSources([p.sources, ...arts.map(a => a.sources)]);
+  const src = srcList.length ? `<div class="amg-src">${esc(pick(LB.sources))}: ${sourceLinks(srcList)}</div>` : '';
+  return `<div class="amg-pop amg-preview">
+    <div class="amg-title">${esc(title)}</div>
+    ${tags ? `<div class="amg-tags">${tags}</div>` : ''}
+    ${artists ? `<div class="amg-meta">${esc(pick(LB.artist))}: ${esc(artists)}</div>` : ''}
+    ${desc ? `<div class="amg-desc">${esc(desc)}</div>` : ''}
+    ${landmark ? `<div class="amg-meta amg-addr">${esc(landmark)}</div>` : ''}
+    <div class="amg-meta">${esc(pick(LB.access))}: ${esc(labelOf(ACCESS_LABELS, p.access))} · ${esc(vis)}</div>
+    ${media}
+    ${src}
+    <div class="amg-actions">${routeButtons(lat, lng)}<button type="button" class="amg-btn ghost" data-detail="${esc(siteId)}">${esc(pick(LB.detail))}</button></div>
+  </div>`;
+}
+// Full detail panel content: all media (deduped) + full SITE + all artworks.
+function detailHtml(siteId) {
+  const f = catalog.siteById.get(siteId);
+  if (!f) return '<b>—</b>';
+  const p = f.properties;
+  const [lng, lat] = f.geometry.coordinates;
+  const city = pick(catalog.cities.get(p.city) || {}) || p.city || '';
+  const arts = catalog.artworksBySite.get(siteId) || [];
+  const vis = p.visible_from_outside ? pick(LB.visibleYes) : pick(LB.visibleNo);
+  const name = pick(p.name);
+  const first = arts[0] || null;
+  const catKey = first ? (CATEGORY_OF_TYPE[first.type] || '') : '';
+  const tags = [
+    catKey ? `<span class="amg-tag cat">${esc(categoryLabel(catKey))}</span>` : '',
+    arts.length ? `<span class="amg-tag st st-${esc(siteStatus(arts))}">${esc(labelOf(STATUS_LABELS, siteStatus(arts)))}</span>` : '',
+    `<span class="amg-tag cnt">${esc(worksLabel(arts.length))}</span>`,
+  ].filter(Boolean).join('');
+  const addr = pick(p.address);
+  const landmark = [addr, city].filter(Boolean).join(', ');
+  const siteDesc = pick(p.description);
+  const shown = new Set();
+  const gallery = [];
+  const allMedia = [...(p.media || []), ...arts.flatMap(a => a.media || [])];
+  for (let i = 0; i < allMedia.length; i++) { const one = mediaHtml(allMedia, shown); if (!one) break; gallery.push(one); }
+  const artsHtml = arts.length ? arts.map(a => {
+    const t = pick(a.title) || pick(LB.untitled);
+    const an = (a.artist_ids || []).map(id => catalog.artists.get(id)?.name).filter(Boolean).join(', ');
+    const d = pick(a.description);
+    const tg = [
+      a.type ? `<span class="amg-tag type">${esc(labelOf(TYPE_LABELS, a.type))}</span>` : '',
+      a.status ? `<span class="amg-tag st st-${esc(a.status)}">${esc(labelOf(STATUS_LABELS, a.status))}</span>` : '',
+      a.year != null ? `<span class="amg-tag year">${esc(a.year)}</span>` : '',
+    ].filter(Boolean).join('');
+    return `<div class="amg-detail-art">
+      <div class="amg-art-title">${esc(t)}</div>
+      ${tg ? `<div class="amg-tags">${tg}</div>` : ''}
+      ${an ? `<div class="amg-meta">${esc(pick(LB.artist))}: ${esc(an)}</div>` : ''}
+      ${d ? `<div class="amg-desc">${esc(d)}</div>` : ''}
+    </div>`;
+  }).join('') : `<div class="amg-empty">${esc(pick(LB.noArtworks))}</div>`;
+  return `<div class="amg-detail">
+    <button type="button" class="amg-detail-close" data-detail-close aria-label="×">×</button>
+    <div class="amg-title">${esc(name || (first && pick(first.title)) || pick(LB.untitled))}</div>
+    <div class="amg-tags">${tags}</div>
+    ${landmark ? `<div class="amg-meta amg-addr">${esc(landmark)}</div>` : ''}
+    <div class="amg-meta">${esc(pick(LB.access))}: ${esc(labelOf(ACCESS_LABELS, p.access))} · ${esc(vis)}</div>
+    ${siteDesc ? `<div class="amg-desc">${esc(siteDesc)}</div>` : ''}
+    ${gallery.length ? `<div class="amg-detail-gallery">${gallery.join('')}</div>` : ''}
+    <div class="amg-detail-arts">${artsHtml}</div>
+    ${detailSourcesHtml(p, arts)}
+  </div>`;
+}
+// ---------- Step 2: unified overlay manager (scrim + stack + map lock) ----------
+const Overlays = {
+  stack: [], els: {}, closer: {}, locked: false, prev: null,
+  register(id, el) { this.els[id] = el; },
+  setCloser(id, fn) { this.closer[id] = fn; },
+  isOpen(id) { return this.stack.indexOf(id) >= 0; },
+  show(id) { if (!this.els[id]) return; if (!this.isOpen(id)) this.stack.push(id); this.els[id].hidden = false; this.update(); },
+  hide(id) { this.stack = this.stack.filter(x => x !== id); if (this.els[id]) this.els[id].hidden = true; this.update(); },
+  closeTop() { const id = this.stack[this.stack.length - 1]; if (!id) return; (this.closer[id] || (() => this.hide(id)))(); },
+  closeAll() { while (this.stack.length) this.closeTop(); },
+  update() {
+    const on = this.stack.length > 0;
+    if (this.els.scrim) this.els.scrim.hidden = !on;
+    if (on) this.lock(); else this.unlock();
+  },
+  lock() {
+    if (this.locked) return;
+    const m = map, on = h => !!(h && h.isEnabled && h.isEnabled());
+    this.prev = { dragPan:on(m.dragPan), touchZoomRotate:on(m.touchZoomRotate), touchPitch:on(m.touchPitch),
+      doubleClickZoom:on(m.doubleClickZoom), scrollZoom:on(m.scrollZoom), boxZoom:on(m.boxZoom) };
+    for (const h of [m.dragPan, m.touchZoomRotate, m.touchPitch, m.doubleClickZoom, m.scrollZoom, m.boxZoom]) if (h && h.disable) h.disable();
+    this.locked = true;
+  },
+  unlock() {
+    if (!this.locked) return;
+    const m = map, p = this.prev || {};
+    const set = (h, v) => { if (h) (v ? h.enable() : h.disable()); };
+    set(m.dragPan, p.dragPan); set(m.touchZoomRotate, p.touchZoomRotate); set(m.touchPitch, p.touchPitch);
+    set(m.doubleClickZoom, p.doubleClickZoom); set(m.scrollZoom, p.scrollZoom); set(m.boxZoom, p.boxZoom);
+    this.locked = false;
+  },
+};
+Overlays.register('scrim', document.getElementById('scrim'));
+Overlays.register('menu', document.getElementById('menu'));
+Overlays.register('sheet', document.getElementById('sheet'));
+Overlays.register('card', document.getElementById('card'));
+Overlays.register('detail', document.getElementById('detail'));
+// scrim закрывает только по «тапу» (не по drag/свайпу, чтобы обычный жест не закрывал card)
+(function scrimTap() {
+  const s = document.getElementById('scrim');
+  if (!s) return;
+  let sx = 0, sy = 0, moved = false;
+  s.addEventListener('pointerdown', e => { sx = e.clientX; sy = e.clientY; moved = false; });
+  s.addEventListener('pointermove', e => { if (Math.abs(e.clientX - sx) > 10 || Math.abs(e.clientY - sy) > 10) moved = true; });
+  s.addEventListener('click', () => { if (!moved) Overlays.closeTop(); });
+})();
+
+// Mobile detection: capability (pointer:coarse) + width<=768 фолбэк (узкие десктоп-окна).
+// Так landscape-телефоны (ширина>768) остаются в mobile-шелле, desktop с мышью — в wide.
+const mqCoarse = window.matchMedia('(pointer: coarse)');
+const mqNarrow = window.matchMedia('(max-width: 768px)');
+const mqLand   = window.matchMedia('(orientation: landscape)');
+const mqShort  = window.matchMedia('(max-height: 500px)');
+const isMobileUI = () => mqCoarse.matches || mqNarrow.matches;
+function applyMobileClass() { document.documentElement.classList.toggle('is-mobile', isMobileUI()); }
+
+// Mobile menu: existing #bar перемещается в #menu (без дублей/новых id), обратно при wide.
+function relocateBar() {
+  const bar = document.getElementById('bar'), topui = document.getElementById('topui'), menu = document.getElementById('menu'), chips = document.getElementById('chips');
+  if (!bar || !topui || !menu) return;
+  if (isMobileUI()) { if (bar.parentElement !== menu) menu.appendChild(bar); }
+  else {
+    if (bar.parentElement !== topui) topui.insertBefore(bar, chips);
+    if (Overlays.isOpen('menu')) Overlays.hide('menu');
+  }
+}
+// Rotate hint: touch + landscape + малая высота → советуем портрет (неблокирующий, dismissible).
+function rotateDismissed() { try { return localStorage.getItem('amg-rotate-dismiss') === '1'; } catch (_) { return false; } }
+function updateRotateHint() {
+  const el = document.getElementById('rotateHint'); if (!el) return;
+  const show = mqCoarse.matches && mqLand.matches && mqShort.matches && !rotateDismissed();
+  if (show) { const t = el.querySelector('.rh-text'); if (t) t.textContent = pick({ ru:'Поверните телефон вертикально', en:'Rotate to portrait', ka:'დააბრუნეთ ვერტიკალურად' }); }
+  el.hidden = !show;
+}
+const menuBtn = document.getElementById('menuBtn');
+if (menuBtn) menuBtn.onclick = () => Overlays.show('menu');
+const rhClose = document.getElementById('rhClose');
+if (rhClose) rhClose.onclick = () => { try { localStorage.setItem('amg-rotate-dismiss', '1'); } catch (_) {} updateRotateHint(); };
+
+function applyLayoutMode() {
+  applyMobileClass(); relocateBar(); updateRotateHint();
+  if (!isMobileUI() && Overlays.isOpen('menu')) Overlays.hide('menu');
+}
+applyLayoutMode();
+for (const mq of [mqCoarse, mqNarrow, mqLand, mqShort]) {
+  if (mq.addEventListener) mq.addEventListener('change', applyLayoutMode);
+  else if (mq.addListener) mq.addListener(applyLayoutMode);
+}
+
+const isNarrow = () => isMobileUI();   // mobile → bottom-sheet card; wide/desktop → popup
+let cardSiteId = null;
+function renderCard(siteId) {
+  const c = document.getElementById('card');
+  c.innerHTML = `<button type="button" class="amg-card-close" data-card-close aria-label="×">×</button>${sitePopupHtml(siteId)}`;
+  c.hidden = false; cardSiteId = siteId;
+  c.scrollTop = 0;
+  wireMedia(c);
+  Overlays.show('card');
+}
+function closeCard() { const c = document.getElementById('card'); if (c) { c.hidden = true; c.innerHTML = ''; c.style.transform = ''; } cardSiteId = null; Overlays.hide('card'); }
+let detailSiteId = null;
+function renderDetail(siteId) {
+  const d = document.getElementById('detail');
+  if (!d) return;
+  d.innerHTML = detailHtml(siteId);
+  d.hidden = false;
+  detailSiteId = siteId;
+  d.querySelector('.amg-detail')?.scrollTo?.(0, 0);
+  wireMedia(d);
+  Overlays.show('detail');
+}
+function closeDetail() { const d = document.getElementById('detail'); if (d) { d.hidden = true; d.innerHTML = ''; } detailSiteId = null; Overlays.hide('detail'); }
+function openDetail(siteId) {
+  if (typeof window.amgOpenDetail === 'function') return window.amgOpenDetail(siteId);
+  renderDetail(siteId); // Popup/Card остаются под Detail (z-index) и снова доступны после Close
+}
+function clampPopup(popup) {
+  const el = popup.getElement();
+  if (!el) return;
+  const pad = 8, r = el.getBoundingClientRect();
+  let dx = 0, dy = 0;
+  if (r.left < pad) dx = pad - r.left;
+  if (r.top < pad) dy = pad - r.top;
+  if (r.right > innerWidth - pad) dx = (innerWidth - pad) - r.right;
+  if (r.bottom > innerHeight - pad) dy = (innerHeight - pad) - r.bottom;
+  if (dx || dy) el.style.transform = `${el.style.transform} translate(${Math.round(dx)}px, ${Math.round(dy)}px)`;
+}
+document.getElementById('card').addEventListener('click', ev => {
+  if (ev.target.closest('[data-card-close]')) return closeCard();
+  const b = ev.target.closest('[data-detail]');
+  if (b) openDetail(b.dataset.detail);
 });
-map.on('mouseenter', 'murals', () => map.getCanvas().style.cursor = 'pointer');
-map.on('mouseleave', 'murals', () => map.getCanvas().style.cursor = '');
+// Простой swipe-down dismiss для #card (без gesture library): только когда scrollTop===0 и движение вниз.
+(function cardSwipe() {
+  const c = document.getElementById('card');
+  if (!c || !('ontouchstart' in window)) return;
+  let startY = 0, tracking = false;
+  c.addEventListener('touchstart', e => {
+    if (c.scrollTop > 0 || e.touches.length !== 1) { tracking = false; return; }
+    startY = e.touches[0].clientY; tracking = true; c.style.transition = 'none';
+  }, { passive: true });
+  c.addEventListener('touchmove', e => {
+    if (!tracking) return;
+    const dy = e.touches[0].clientY - startY;
+    if (dy > 0) c.style.transform = 'translateY(' + dy + 'px)';
+  }, { passive: true });
+  c.addEventListener('touchend', e => {
+    if (!tracking) return;
+    tracking = false; c.style.transition = '';
+    const endY = e.changedTouches && e.changedTouches[0] ? e.changedTouches[0].clientY : startY;
+    c.style.transform = '';
+    if (endY - startY > 60) closeCard();
+  }, { passive: true });
+})();
+document.getElementById('detail').addEventListener('click', ev => {
+  if (ev.target.id === 'detail') return closeDetail(); // backdrop
+  if (ev.target.closest('[data-detail-close]')) return closeDetail();
+});
+document.addEventListener('keydown', ev => {
+  if (ev.key !== 'Escape') return;
+  if (Overlays.stack.length) Overlays.closeTop();   // detail (верх) → card/menu/sheet
+});
+// closers: закрывать через существующие функции (сброс состояния), не только hidden
+Overlays.setCloser('card', closeCard);
+Overlays.setCloser('detail', closeDetail);
+Overlays.setCloser('sheet', () => Overlays.hide('sheet'));
+Overlays.setCloser('menu', () => Overlays.hide('menu'));
+map.on('click', 'sites', e => {
+  const id = e.features[0].properties.id;
+  if (isNarrow()) return renderCard(id);
+  const pop = new maplibregl.Popup({ offset:14, maxWidth:'min(360px, calc(100vw - 24px))' })
+    .setLngLat(e.features[0].geometry.coordinates)
+    .setHTML(sitePopupHtml(id));
+  pop.on('open', () => requestAnimationFrame(() => clampPopup(pop)));
+  pop.addTo(map);
+  wireMedia(pop.getElement());
+  pop.getElement().addEventListener('click', ev => {
+    const b = ev.target.closest('[data-detail]');
+    if (b) openDetail(b.dataset.detail);
+  });
+});
+map.on('click', e => {
+  if (!isNarrow() || !cardSiteId || !map.getLayer('sites')) return;
+  if (!map.queryRenderedFeatures(e.point, { layers: ['sites'] }).length) closeCard();
+});
+map.on('mouseenter', 'sites', () => map.getCanvas().style.cursor = 'pointer');
+map.on('mouseleave', 'sites', () => map.getCanvas().style.cursor = '');
+// Cluster click → expand (getClusterExpansionZoom). Если зум не меняется — корректный no-op.
+map.on('click', 'sites-clusters', e => {
+  const f = e.features[0];
+  const src = map.getSource('sites');
+  if (!src) return;
+  const finish = z => {
+    const target = Math.min(z, map.getMaxZoom());
+    if (Math.abs(target - map.getZoom()) < 0.01) return;   // expansion не меняет зум → ничего
+    map.easeTo({ center: f.geometry.coordinates, zoom: target });
+  };
+  const r = src.getClusterExpansionZoom(f.properties.cluster_id);
+  if (r && typeof r.then === 'function') r.then(finish).catch(() => {});
+  else if (typeof r === 'function') r((err, z) => { if (!err) finish(z); });
+});
+map.on('mouseenter', 'sites-clusters', () => map.getCanvas().style.cursor = 'pointer');
+map.on('mouseleave', 'sites-clusters', () => map.getCanvas().style.cursor = '');
 
 // ---------- управление ----------
 const $ = id => document.getElementById(id);
 const toast = (t, ms = 5000) => { $('toast').textContent = t; $('toast').hidden = false; clearTimeout(toast.t); toast.t = setTimeout(() => $('toast').hidden = true, ms); };
+if (catalogError) toast(pick(LB.catalogFail) + catalogError, 9000);
 for (const [k, v] of Object.entries(FLAVORS)) $('flavor').insertAdjacentHTML('beforeend', `<option value="${k}">${v}</option>`);
 $('flavor').onchange = e => { state.flavor = e.target.value; map.setStyle(buildStyle()); };
-$('lang').onchange = e => { state.lang = e.target.value; map.setStyle(buildStyle()); };
+$('lang').onchange = e => { state.lang = e.target.value; map.setStyle(buildStyle()); renderChips(); updateRotateHint(); if (cardSiteId) renderCard(cardSiteId); if (detailSiteId) renderDetail(detailSiteId); };
 $('offlineOnly').onchange = e => { state.offlineOnly = e.target.checked; map.setStyle(buildStyle()); toast(state.offlineOnly ? 'Показываю только скачанное' : 'Снова можно читать карту из сети'); };
-$('btnPacks').onclick = () => { $('sheet').hidden = false; renderPacks(); };
-$('btnClose').onclick = () => $('sheet').hidden = true;
+$('btnPacks').onclick = () => { Overlays.hide('menu'); Overlays.show('sheet'); renderPacks(); };
+$('btnClose').onclick = () => Overlays.hide('sheet');
+
+// ---------- категории (чипы) ----------
+function categoryCounts() {
+  const counts = Object.fromEntries(CATEGORIES.map(c => [c.key, 0]));
+  for (const f of catalog.sites) {
+    const arts = catalog.artworksBySite.get(f.properties.id) || [];
+    const k = arts[0] && CATEGORY_OF_TYPE[arts[0].type];
+    if (k) counts[k]++;
+  }
+  counts._all = catalog.sites.length;
+  return counts;
+}
+function renderChips() {
+  const counts = categoryCounts();
+  const allOn = state.categories === null;
+  const active = state.categories || new Set();
+  let html = `<button class="chip${allOn ? ' on' : ''}" data-all>${esc(pick(ALL_LABEL))} <span class="cnt">${counts._all}</span>`;
+  if (!allOn) html += ` <span class="chip-x" data-reset title="${esc(pick(RESET_LABEL))}">×</span>`;
+  html += `</button>`;
+  for (const c of CATEGORIES) {
+    html += `<button class="chip${active.has(c.key) ? ' on' : ''}" data-cat="${c.key}">${esc(pick(c.label))} <span class="cnt">${counts[c.key] || 0}</span></button>`;
+  }
+  $('chips').innerHTML = html;
+}
+$('chips').onclick = e => {
+  if (e.target.closest('[data-reset]')) state.categories = null;                          // сброс → All
+  else if (e.target.closest('[data-all]')) state.categories = (state.categories === null) ? new Set() : null; // All ⇄ ничего
+  else {
+    const cat = e.target.closest('[data-cat]');
+    if (!cat) return;
+    const k = cat.dataset.cat;
+    if (state.categories === null) state.categories = new Set([k]);                        // выбор из All → только эта
+    else if (state.categories.has(k)) state.categories.delete(k);
+    else state.categories.add(k);
+  }
+  applyCategoryFilter();
+  renderChips();
+};
+renderChips();
+
 map.on('idle', () => { if (state.lastError) { toast('Ошибка карты, ' + state.lastError, 8000); state.lastError = ''; } });
 
 const mb = b => (b / 1048576).toFixed(1) + ' МБ';
