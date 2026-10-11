@@ -857,20 +857,36 @@ function isGenericUrl(u) {
   if (host === 'github.com' && /^\/[^/]+\/[^/]+\/?$/i.test(path)) return true; // repo root
   return false;
 }
+// Map / lookup link (OpenStreetMap coordinate, Google My Maps, Mapcarta, Google Maps /maps).
+// Policy: НЕ показываем ссылки на карты — наш проект сам карта; в чужой карте объект надо искать.
+function isMapUrl(u) {
+  if (typeof u !== 'string') return true;
+  const s = u.trim(); if (!s) return true;
+  let host, path;
+  try { const x = new URL(s); host = x.hostname.toLowerCase().replace(/^www\./, ''); path = x.pathname || '/'; }
+  catch (_) { return true; }
+  if (/maps\/d\/viewer/i.test(s)) return true;                        // Google My Maps
+  if (host === 'openstreetmap.org' || host.endsWith('.openstreetmap.org')) return true;
+  if (host === 'mapcarta.com' || host.endsWith('.mapcarta.com')) return true;
+  if (/^google\.[a-z.]+$/.test(host) && /^\/maps/.test(path)) return true;
+  return false;
+}
 // Конкретный объектный URL: сначала у самой ref (url/direct_url), затем у source. Ничего не угадываем.
 function concreteSourceUrl(ref, s) {
   for (const u of [ref && ref.url, ref && ref.direct_url, s && s.url]) {
-    if (typeof u === 'string' && u.trim() && !isGenericUrl(u)) return u.trim();
+    if (typeof u === 'string' && u.trim() && !isGenericUrl(u) && !isMapUrl(u)) return u.trim();
   }
   return '';
 }
+// Строка источников: только ПРИЦЕЛЬНЫЕ ссылки на объект (конкретный, не map/generic URL).
+// Ссылки на карты и источники без конкретной ссылки НЕ упоминаются вовсе.
 function sourceLinks(list) {
   return (list || []).map(ref => {
     const s = catalog.sources.get(ref.id); if (!s) return '';
-    const role = `<span class="amg-role">${esc(labelOf(ROLE_LABELS, ref.role))}</span>`;
     const url = concreteSourceUrl(ref, s);
-    if (url) return `<a href="${esc(url)}" target="_blank" rel="noopener">${esc(s.title)}</a> ${role}`;
-    return `<span class="amg-src-text">${esc(s.title)}</span> ${role}`;   // plain provenance, не кликабельно
+    if (!url || isMapUrl(url)) return '';
+    const role = `<span class="amg-role">${esc(labelOf(ROLE_LABELS, ref.role))}</span>`;
+    return `<a href="${esc(url)}" target="_blank" rel="noopener">${esc(s.title)}</a> ${role}`;
   }).filter(Boolean).join(' · ');
 }
 function routeButtons(lat, lng) {
@@ -915,7 +931,8 @@ function artworkHtml(a, shown) {
   const title = pick(a.title) || pick(LB.untitled);
   const artists = (a.artist_ids || []).map(id => catalog.artists.get(id)?.name).filter(Boolean).join(', ');
   const desc = pick(a.description);
-  const src = a.sources && a.sources.length ? `<div class="amg-src">${esc(pick(LB.sources))}: ${sourceLinks(a.sources)}</div>` : '';
+  const aLinks = sourceLinks(a.sources);
+  const src = aLinks ? `<div class="amg-src">${esc(pick(LB.sources))}: ${aLinks}</div>` : '';
   const media = mediaHtml(a.media, shown);
   const tags = [
     a.type ? `<span class="amg-tag type">${esc(labelOf(TYPE_LABELS, a.type))}</span>` : '',
@@ -948,23 +965,32 @@ const OBJECT_SRC = new Set(['src-0002', 'src-0003', 'src-0007', 'src-0012', 'src
 const ROOT_URL_RE = /^https?:\/\/[^/]+\/?$/;
 function mediaFileName(u) { try { const p = decodeURIComponent(String(u).split('/wiki/')[1] || ''); return p.replace(/_/g, ' ').replace(/^File:/, ''); } catch { return 'File'; } }
 function detailSourcesHtml(site, arts) {
-  const ids = new Set();
-  for (const list of [site.sources, ...arts.map(a => a.sources)]) for (const r of (list || [])) if (r && r.id) ids.add(r.id);
+  // Keep the refs per source id: a per-object concrete URL can live on the ref itself
+  // (e.g. Street Art Cities object_page -> /markers/<id>), not in the sources registry.
+  const byId = new Map();
+  for (const list of [site.sources, ...arts.map(a => a.sources)]) for (const r of (list || [])) {
+    if (!r || !r.id) continue;
+    const arr = byId.get(r.id) || []; arr.push(r); byId.set(r.id, arr);
+  }
+  // Фото-страницы (Wikimedia Commons File:) — прицельные, несут автора и лицензию.
   const photo = [], seen = new Set();
   for (const m of [...(site.media || []), ...arts.flatMap(a => a.media || [])]) {
     if (m && m.url && !seen.has(m.url) && !isGenericUrl(m.url)) { seen.add(m.url); photo.push(`<a href="${esc(m.url)}" target="_blank" rel="noopener">${esc(mediaFileName(m.url))}</a>`); }
   }
-  const cat = [], obj = [], prov = [];
-  for (const id of ids) {
+  // Прицельные ссылки на объект: только конкретный, не map/generic URL, который несёт сама привязка
+  // (напр. Street Art Cities /markers/<id>), либо конкретный URL реестра. Всё прочее и любые ссылки
+  // на карты НЕ показываем вовсе (наш проект сам карта).
+  const obj = [];
+  for (const [id, refs] of byId) {
     const s = catalog.sources.get(id) || { title: id, url: '' };
-    const title = esc(s.title), u = s.url || '', concrete = !!u && !ROOT_URL_RE.test(u);
-    const asLink = concrete ? `<a href="${esc(u)}" target="_blank" rel="noopener">${title}</a>` : title;
-    if (CATALOG_SRC.has(id)) cat.push(u ? `<a href="${esc(u)}" target="_blank" rel="noopener">${title}</a>` : title);
-    else if (OBJECT_SRC.has(id)) obj.push(asLink);
-    else prov.push(asLink);
+    const refUrl = refs.map(r => (r && typeof r.url === 'string') ? r.url.trim() : '').find(u => u && !isGenericUrl(u)) || '';
+    const regUrl = (s.url && !isGenericUrl(s.url)) ? s.url : '';
+    const url = refUrl || regUrl;
+    if (!url || isMapUrl(url)) continue;
+    obj.push(`<a href="${esc(url)}" target="_blank" rel="noopener">${esc(s.title)}</a>`);
   }
   const grp = (key, items) => items.length ? `<div class="amg-srcgrp"><span class="amg-srcgrp-h">${esc(pick(LB[key]))}</span> ${items.join(' · ')}</div>` : '';
-  const out = grp('srcPhoto', photo) + grp('srcObject', obj) + grp('srcCatalog', cat) + grp('srcProv', prov);
+  const out = grp('srcPhoto', photo) + grp('srcObject', obj);
   return out ? `<div class="amg-src amg-src-all">${out}</div>` : '';
 }
 // Compact preview: ONE object, title shown once; full artwork list lives in Detail (#detail).
@@ -998,7 +1024,8 @@ function sitePopupHtml(siteId) {
   let media = mediaHtml(p.media, shown);
   if (!media && !multi && first) media = mediaHtml(first.media, shown); // single-artwork fallback
   const srcList = mergedSources([p.sources, ...arts.map(a => a.sources)]);
-  const src = srcList.length ? `<div class="amg-src">${esc(pick(LB.sources))}: ${sourceLinks(srcList)}</div>` : '';
+  const pLinks = sourceLinks(srcList);
+  const src = pLinks ? `<div class="amg-src">${esc(pick(LB.sources))}: ${pLinks}</div>` : '';
   return `<div class="amg-pop amg-preview">
     <div class="amg-title">${esc(title)}</div>
     ${tags ? `<div class="amg-tags">${tags}</div>` : ''}

@@ -15,3 +15,7 @@ Thumbs.db
 
 # Stray duplicate of the canonical workflow (.github/workflows/pages.yml)
 /pages.yml
+
+# resolver artifacts (large / generated)
+scripts/.wikidata-georgia.json
+scripts/.wiki-*.json
