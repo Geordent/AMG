@@ -601,22 +601,82 @@ const siteLayers = [
     layout:{ 'text-field':['coalesce',['get','label'],''], 'text-font':['Noto Sans Medium'], 'text-size':12, 'text-offset':[0,1.9], 'text-anchor':'top', 'text-optional':true },
     paint:{ 'text-color':'#7a2d12', 'text-halo-color':'#ffffff', 'text-halo-width':1.5 } },
 ];
-// --- AMG «Тёплая открытка»: тёплая земля, сочная зелень, бирюзовая вода, ---
-// --- оранжевые дороги, коричневые подписи. Runtime-перекраска слоёв Protomaps; ---
-// --- PMTiles source, tile generation, SW и offline не меняются. ---
-const AMG_PAL = {
-  land:'#F6EEDD', land2:'#EFE2C8', urban:'#F0E0CB',
-  forest:'#67B74B', grass:'#B4E094', sand:'#F7E2B0', snow:'#F4FAFF',
-  water:'#34B7DB', river:'#63CDE3',
-  building:'#EFDCC6', buildingEdge:'#E0C6A8',
-  roadMajor:'#F5B95F', roadMajorEdge:'#E4A24A',
-  roadPrimary:'#FAE4B8', roadPrimaryEdge:'#EED9AC',
-  roadMid:'#FBEBCB', roadMidEdge:'#EEDFBE',
-  roadMinor:'#FFFDF7', roadMinorEdge:'#F1EADC',
-  rail:'#C9A98A',
-  boundary:'#C97B4A',
-  label:'#5A4A3A', labelHalo:'#FFFDF7', waterLabel:'#16788F',
+// --- Фирменные палитры AMG для ВСЕХ тем карты. ---
+// Runtime-перекраска слоёв Protomaps (и онлайн-деталей OpenFreeMap) под общий
+// дизайн-язык проекта: у каждой темы свой осмысленный набор цветов, а не сырой
+// дефолт Protomaps. PMTiles source, tile generation, SW и offline не меняются.
+// light — «Тёплая открытка», dark — «Ночь», grayscale — «Графит», white — «Бумага».
+const AMG_PALETTES = {
+  light: {
+    land:'#F6EEDD', land2:'#EFE2C8', urban:'#F0E0CB',
+    forest:'#67B74B', grass:'#B4E094', sand:'#F7E2B0', snow:'#F4FAFF',
+    water:'#34B7DB', river:'#63CDE3',
+    building:'#EFDCC6', buildingEdge:'#E0C6A8',
+    roadMajor:'#F5B95F', roadMajorEdge:'#E4A24A',
+    roadPrimary:'#FAE4B8', roadPrimaryEdge:'#EED9AC',
+    roadMid:'#FBEBCB', roadMidEdge:'#EEDFBE',
+    roadMinor:'#FFFDF7', roadMinorEdge:'#F1EADC',
+    rail:'#C9A98A',
+    boundary:'#C97B4A',
+    label:'#5A4A3A', labelHalo:'#FFFDF7', waterLabel:'#16788F',
+    houseLabel:'#7a6a56', siteLabel:'#7a2d12', transitLabel:'#14324a',
+    waterPattern:true, paper:true,
+  },
+  // «Ночь» — тёплый тёмный вариант фирменной темы (не инверсия): земля цвета
+  // угля, приглушённая зелень, глубокая бирюза, песочно-оранжевые дороги,
+  // светлые тёплые подписи.
+  dark: {
+    land:'#1C1B18', land2:'#24221D', urban:'#282520',
+    forest:'#2E4632', grass:'#3A4C2C', sand:'#3B3425', snow:'#5A6772',
+    water:'#143B4A', river:'#1C4E60',
+    building:'#332F28', buildingEdge:'#211E19',
+    roadMajor:'#C99A50', roadMajorEdge:'#7E6231',
+    roadPrimary:'#6E5C3E', roadPrimaryEdge:'#463B29',
+    roadMid:'#4C4434', roadMidEdge:'#332E25',
+    roadMinor:'#3B362C', roadMinorEdge:'#282420',
+    rail:'#5C554A',
+    boundary:'#8A6A4A',
+    label:'#E9E1D2', labelHalo:'#141310', waterLabel:'#7FC4DA',
+    houseLabel:'#CBC0AC', siteLabel:'#E9A06A', transitLabel:'#D8E4EE',
+    waterPattern:true, paper:false,
+  },
+  // «Графит» — элегантная нейтральная серая тема: светлая земля, белые дороги
+  // с серой обводкой, приглушённые парки, спокойная вода, тёмно-серые подписи.
+  grayscale: {
+    land:'#EDEDEB', land2:'#E4E4E1', urban:'#E7E6E3',
+    forest:'#CFD6CD', grass:'#DCE2D9', sand:'#E8E6DF', snow:'#FAFAFA',
+    water:'#C3CDD2', river:'#B4C3C9',
+    building:'#DEDDDA', buildingEdge:'#CAC9C5',
+    roadMajor:'#FFFFFF', roadMajorEdge:'#B6B5B1',
+    roadPrimary:'#F8F8F6', roadPrimaryEdge:'#C6C5C1',
+    roadMid:'#F2F2F0', roadMidEdge:'#CDCCC8',
+    roadMinor:'#FCFCFB', roadMinorEdge:'#D3D2CE',
+    rail:'#B4B2AC',
+    boundary:'#9C9A94',
+    label:'#464643', labelHalo:'#FBFBFA', waterLabel:'#586771',
+    houseLabel:'#6E6D69', siteLabel:'#8a3a1c', transitLabel:'#2C3A44',
+    waterPattern:true, paper:false,
+  },
+  // «Бумага» — минималистичная почти белая тема: чистая земля, лёгкая вода,
+  // тонкие дороги, мягкие здания, спокойные подписи.
+  white: {
+    land:'#FCFCFB', land2:'#F4F4F0', urban:'#F0F0EC',
+    forest:'#D9E7CF', grass:'#E7F0DD', sand:'#F5EFDE', snow:'#FFFFFF',
+    water:'#CEE7F0', river:'#BEE0EC',
+    building:'#EFEFEB', buildingEdge:'#E1E1DB',
+    roadMajor:'#EFC98A', roadMajorEdge:'#E2B66D',
+    roadPrimary:'#FBF3E2', roadPrimaryEdge:'#EFE6D2',
+    roadMid:'#FCFAF4', roadMidEdge:'#EFEADF',
+    roadMinor:'#FFFFFF', roadMinorEdge:'#ECE8DF',
+    rail:'#D7D2C7',
+    boundary:'#C9AE86',
+    label:'#6B6B66', labelHalo:'#FFFFFF', waterLabel:'#5FA6BC',
+    houseLabel:'#8a8478', siteLabel:'#9c4a24', transitLabel:'#274150',
+    waterPattern:true, paper:true,
+  },
 };
+const paletteOf = f => AMG_PALETTES[f] || AMG_PALETTES.light;
+const AMG_PAL = AMG_PALETTES.light; // обратная совместимость (онлайн-детали)
 // Игривые POI-иконки вместо «унылых» дефолтных (fallback — родная sprite Protomaps).
 const AMG_POI_ICONS = ['match', ['get', 'kind'],
   'park', 'amg-poi-park', 'garden', 'amg-poi-park', 'national_park', 'amg-poi-park',
@@ -652,8 +712,8 @@ const TRANSIT_ICON = ['match', ['get', 'kind'],
   'subway', 'amg-transit-metro', 'metro', 'amg-transit-metro',
   'station', ['case', METRO_TEST, 'amg-transit-metro', 'amg-transit-train'],
   'amg-transit-train'];
-function amgTheme(ls) {
-  const P = AMG_PAL;
+function amgTheme(ls, flavor) {
+  const P = paletteOf(flavor);
   const themed = ls.map(l => {
     const id = String(l.id || '').toLowerCase();
     const sl = String(l['source-layer'] || '').toLowerCase();
@@ -692,7 +752,7 @@ function amgTheme(ls) {
       // Номера домов: включаем начиная с z15 (в тайлах адреса есть уже на z15), иначе слой скрыт до z18.
       if (id === 'address_label') return { ...l, minzoom: 15,
         layout: { ...(l.layout || {}), 'text-size': 11.5 },
-        paint: { ...paint, 'text-color': '#7a6a56', 'text-halo-color': '#ffffff', 'text-halo-width': 1.4 } };
+        paint: { ...paint, 'text-color': P.houseLabel, 'text-halo-color': P.labelHalo, 'text-halo-width': 1.4 } };
       paint['text-color'] = P.label; paint['text-halo-color'] = P.labelHalo; paint['text-halo-width'] = 1.7;
       if (/water|marine|ocean/.test(key)) paint['text-color'] = P.waterLabel;
       if (id === 'pois') return { ...l, paint, layout: { ...(l.layout || {}), 'icon-image': AMG_POI_ICONS } };
@@ -734,7 +794,7 @@ function buildStyle() {
   // Клон набора слоёв Protomaps с привязкой к конкретному vector-source (background — без source).
   const proto = src => amgLabels(layers('protomaps', namedFlavor(state.flavor), { lang: state.lang }))
     .map(l => l.type === 'background' ? { ...l } : { ...l, source: src });
-  const theme = ls => state.flavor === 'light' ? amgTheme(ls) : ls;
+  const theme = ls => amgTheme(ls, state.flavor);
   const base = theme(proto('protomaps_base'));                // Грузия z0–9 (+ overzoom выше)
   const detail = theme(proto('protomaps_detail'))             // Тбилиси z10–15
     .filter(l => l.type !== 'background')
@@ -766,7 +826,7 @@ function buildStyle() {
 // transportation{class,brunnel,ramp}, transportation_name{class,name,name:*,ref},
 // building{}, place{class,name,name:*} (0–14), housenumber{housenumber} (14).
 function onlineDetailLayers() {
-  const P = AMG_PAL;
+  const P = paletteOf(state.flavor);
   const roadName  = ['coalesce', ['get', 'name:' + state.lang], ['get', 'name_en'], ['get', 'name']];
   const placeName = ['coalesce', ['get', 'name:' + state.lang], ['get', 'name_en'], ['get', 'name']];
   const lineGeom  = ['match', ['geometry-type'], ['LineString', 'MultiLineString'], true, false];
@@ -789,7 +849,7 @@ function onlineDetailLayers() {
     // идут ПОСЛЕ номеров домов, иначе housenumber вытесняет названия улиц (collision).
     { id:'ofm-housenumber', type:'symbol', source:'openmaptiles', 'source-layer':'housenumber', minzoom:14,
       layout:{ 'text-field':['coalesce', ['get','housenumber'], ''], 'text-font':['Noto Sans Regular'], 'text-size':10, 'text-optional':true },
-      paint:{ 'text-color':'#7a6a56', 'text-halo-color':'#ffffff', 'text-halo-width':1.3 } },
+      paint:{ 'text-color':P.houseLabel, 'text-halo-color':P.labelHalo, 'text-halo-width':1.3 } },
     { id:'ofm-road-name', type:'symbol', source:'openmaptiles', 'source-layer':'transportation_name', minzoom:11,
       filter:lineGeom,
       layout:{ 'text-field':roadName, 'text-font':['Noto Sans Regular'],
@@ -914,11 +974,12 @@ const POI_SVGS = {
   'amg-poi-boat': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48"><path d="M8 34 H40 L34 42 H14 Z" fill="#C99A6B" stroke="#3b332b" stroke-width="2" stroke-linejoin="round"/><path d="M24 6 V34" stroke="#3b332b" stroke-width="2" stroke-linecap="round"/><path d="M25 8 L38 30 H25 Z" fill="#F2F6F8" stroke="#3b332b" stroke-width="2" stroke-linejoin="round"/><path d="M23 12 L11 30 H23 Z" fill="#E8EDF0" stroke="#3b332b" stroke-width="2" stroke-linejoin="round"/></svg>`,
   'amg-poi-transport': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48"><rect x="8" y="12" width="32" height="22" rx="4" fill="#F2A23C" stroke="#3b332b" stroke-width="2"/><rect x="12" y="16" width="9" height="7" rx="1.5" fill="#BFE3F2" stroke="#3b332b" stroke-width="1"/><rect x="27" y="16" width="9" height="7" rx="1.5" fill="#BFE3F2" stroke="#3b332b" stroke-width="1"/><circle cx="16" cy="37" r="3" fill="#3b332b"/><circle cx="32" cy="37" r="3" fill="#3b332b"/></svg>`,
 };
-// Бесшовные паттерны (128×128, степень двойки) для воды и «бумажного» зерна.
+// Бесшовный «бумажный» паттерн (128×128, степень двойки) для светлых тем.
 const PATTERN_SVGS = {
-  'amg-water': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128"><rect width="128" height="128" fill="#34B7DB"/><g fill="none" stroke="#63CDE3" stroke-width="3" stroke-linecap="round"><path d="M0 32 Q16 16 32 32 T64 32 T96 32 T128 32"/><path d="M0 96 Q16 80 32 96 T64 96 T96 96 T128 96"/></g></svg>`,
   'amg-paper': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128"><g fill="#8a6a3a" opacity="0.06"><circle cx="16" cy="20" r="1.5"/><circle cx="48" cy="12" r="1"/><circle cx="90" cy="30" r="1.6"/><circle cx="120" cy="18" r="1"/><circle cx="30" cy="60" r="1.2"/><circle cx="70" cy="52" r="1.5"/><circle cx="110" cy="70" r="1"/><circle cx="12" cy="90" r="1.4"/><circle cx="55" cy="100" r="1.2"/><circle cx="95" cy="110" r="1.6"/><circle cx="40" cy="120" r="1"/><circle cx="118" cy="118" r="1.2"/></g></svg>`,
 };
+// Бесшовный паттерн воды, окрашенный под выбранную тему (генерируется в рантайме).
+const waterSvg = P => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128"><rect width="128" height="128" fill="${P.water}"/><g fill="none" stroke="${P.river}" stroke-width="3" stroke-linecap="round"><path d="M0 32 Q16 16 32 32 T64 32 T96 32 T128 32"/><path d="M0 96 Q16 80 32 96 T64 96 T96 96 T128 96"/></g></svg>`;
 // Транспортные иконки: цветной круг + белый символ (метро/поезд/автобус/самолёт/паром).
 const TRANSIT_SVGS = {
   'amg-transit-metro': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48"><circle cx="24" cy="24" r="16" fill="#ffffff" stroke="#e72400" stroke-width="4"/><path d="M17 31 V17 h3.4 l3.6 7 3.6 -7 H31 V31 h-3.2 v-8.6 l-3.4 6.8 h-0.8 l-3.4 -6.8 V31 Z" fill="#e72400"/></svg>`,
@@ -960,9 +1021,15 @@ function addCatalogIcons() {
 // При setStyle (смена языка/темы) стиль пересобирается — style.load пересоздаёт слои и иконки.
 async function setupCatalogLayers() {
   await addCatalogIcons();
-  // Паттерны применяем ПОСЛЕ addImage (иначе «image could not be loaded»). Только для AMG-темы.
-  if (state.flavor === 'light') {
-    try { if (map.getLayer('water')) map.setPaintProperty('water', 'fill-pattern', 'amg-water'); } catch (_) {}
+  const PAL = paletteOf(state.flavor);
+  // Паттерны применяем ПОСЛЕ addImage (иначе «image could not be loaded»). Для всех тем:
+  // вода — бесшовный паттерн в цветах выбранной палитры; «бумажное» зерно — только светлым.
+  if (PAL.waterPattern) {
+    const wp = 'amg-water-' + state.flavor;
+    try { if (!map.hasImage(wp)) map.addImage(wp, await svgToImageData(waterSvg(PAL), 128), { pixelRatio: 1 }); } catch (_) {}
+    try { if (map.getLayer('water')) map.setPaintProperty('water', 'fill-pattern', wp); } catch (_) {}
+  }
+  if (PAL.paper) {
     try {
       if (!map.getLayer('amg-paper')) {
         map.addLayer({ id:'amg-paper', type:'background', paint:{ 'background-pattern':'amg-paper', 'background-opacity':0.5 } });
@@ -976,6 +1043,8 @@ async function setupCatalogLayers() {
     cluster:true, clusterRadius:55, clusterMaxZoom:14 });
   for (const layer of clusterLayers) if (!map.getLayer(layer.id)) map.addLayer(layer);
   for (const layer of siteLayers) if (!map.getLayer(layer.id)) map.addLayer(layer);
+  // Подписи объектов каталога — в цветах текущей темы (иначе на тёмной теме не видны).
+  try { map.setPaintProperty('sites-label','text-color', PAL.siteLabel); map.setPaintProperty('sites-label','text-halo-color', PAL.labelHalo); } catch (_) {}
   // Транспорт (метро/вокзалы/автовокзалы/аэропорты/переправы) — поверх базовой карты и маркеров.
   if (!map.getLayer('amg-transit')) map.addLayer({
     id:'amg-transit', type:'symbol', source:'protomaps_base', 'source-layer':'pois',
@@ -983,7 +1052,7 @@ async function setupCatalogLayers() {
     layout:{ 'icon-image': TRANSIT_ICON, 'icon-size':1.15, 'icon-allow-overlap':true, 'icon-ignore-placement':true,
       'text-field':['coalesce',['get','name:'+state.lang],['get','name:en'],['get','name']],
       'text-font':['Noto Sans Medium'], 'text-size':11, 'text-offset':[0,1.7], 'text-anchor':'top', 'text-optional':true },
-    paint:{ 'text-color':'#14324a', 'text-halo-color':'#ffffff', 'text-halo-width':1.8 } });
+    paint:{ 'text-color':PAL.transitLabel, 'text-halo-color':PAL.labelHalo, 'text-halo-width':1.8 } });
   applyCategoryFilter();
   try { handleHash(); } catch (_) {}
 }
