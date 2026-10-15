@@ -292,9 +292,9 @@
     "status": "active",
     "replaced_by": null,
     "description": {
-      "en": "Pink face is a graffiti piece by the artist @vadik.fin in the Chugureti district of Tbilisi.",
-      "ru": "«Розовое лицо» (Pink face) — граффити художника @vadik.fin в районе Чугурети в Тбилиси.",
-      "ka": "„ვარდისფერი სახე“ (Pink face) — მხატვარ @vadik.fin-ის გრაფიტი თბილისის ჩუღურეთის რაიონში."
+      "en": "Pink face is a graffiti piece by the artist @vadik.fin in the Mtatsminda district of Tbilisi.",
+      "ru": "«Розовое лицо» (Pink face) — граффити художника @vadik.fin в районе Мтацминда в Тбилиси.",
+      "ka": "„ვარდისფერი სახე“ (Pink face) — მხატვარ @vadik.fin-ის გრაფიტი თბილისის მთაწმინდის რაიონში."
     },
     "sources": [
       {
@@ -323,9 +323,9 @@
     "status": "active",
     "replaced_by": null,
     "description": {
-      "en": "Frida Kahlo is a graffiti work in the Vake district of Tbilisi, named after the Mexican painter Frida Kahlo.",
-      "ru": "«Фрида Кало» — граффити в районе Ваке в Тбилиси, посвящённое мексиканской художнице Фриде Кало.",
-      "ka": "„ფრიდა კალო“ — გრაფიტი თბილისის ვაკის რაიონში, მექსიკელი მხატვრის ფრიდა კალოს სახელობის."
+      "en": "Frida Kahlo is a graffiti work in the Nadzaladevi district of Tbilisi, named after the Mexican painter Frida Kahlo.",
+      "ru": "«Фрида Кало» — граффити в районе Надзаладеви в Тбилиси, посвящённое мексиканской художнице Фриде Кало.",
+      "ka": "„ფრიდა კალო“ — გრაფიტი თბილისის ნაძალადევის რაიონში, მექსიკელი მხატვრის ფრიდა კალოს სახელობის."
     },
     "sources": [
       {
@@ -354,9 +354,9 @@
     "status": "active",
     "replaced_by": null,
     "description": {
-      "en": "A street-art piece in the Vake district of Tbilisi titled with the line 'And suddenly all the love songs were about you'.",
-      "ru": "Стрит-арт работа в районе Ваке в Тбилиси под названием «И вдруг все песни о любви были о тебе».",
-      "ka": "სტრიტ-არტის ნამუშევარი თბილისის ვაკის რაიონში სახელწოდებით „და უცებ ყველა სასიყვარულო სიმღერა შენზე იყო“."
+      "en": "A street-art piece in the Nadzaladevi district of Tbilisi titled with the line 'And suddenly all the love songs were about you'.",
+      "ru": "Стрит-арт работа в районе Надзаладеви в Тбилиси под названием «И вдруг все песни о любви были о тебе».",
+      "ka": "სტრიტ-არტის ნამუშევარი თბილისის ნაძალადევის რაიონში სახელწოდებით „და უცებ ყველა სასიყვარულო სიმღერა შენზე იყო“."
     },
     "sources": [
       {
@@ -385,9 +385,9 @@
     "status": "active",
     "replaced_by": null,
     "description": {
-      "en": "White cat is a graffiti work by the artist deroz_art in the Saburtalo district of Tbilisi.",
-      "ru": "«Белый кот» — граффити художника deroz_art в районе Сабуртало в Тбилиси.",
-      "ka": "„თეთრი კატა“ — მხატვარ deroz_art-ის გრაფიტი თბილისის საბურთალოს რაიონში."
+      "en": "White cat is a graffiti work by the artist deroz_art in the Mtatsminda district of Tbilisi.",
+      "ru": "«Белый кот» — граффити художника deroz_art в районе Мтацминда в Тбилиси.",
+      "ka": "„თეთრი კატა“ — მხატვარ deroz_art-ის გრაფიტი თბილისის მთაწმინდის რაიონში."
     },
     "sources": [
       {
@@ -1185,9 +1185,9 @@
     "status": "active",
     "replaced_by": null,
     "description": {
-      "en": "m2 is an art installation in the Saburtalo district of Tbilisi, recorded in OpenStreetMap.",
-      "ru": "«м2» — арт-инсталляция в районе Сабуртало в Тбилиси, отмеченная в OpenStreetMap.",
-      "ka": "„მ2“ — არტ-ინსტალაცია თბილისის საბურთალოს რაიონში, აღნიშნული OpenStreetMap-ში."
+      "en": "m2 is an art installation in the Didube district of Tbilisi, recorded in OpenStreetMap.",
+      "ru": "«м2» — арт-инсталляция в районе Дидубе в Тбилиси, отмеченная в OpenStreetMap.",
+      "ka": "„მ2“ — არტ-ინსტალაცია თბილისის დიდუბის რაიონში, აღნიშნული OpenStreetMap-ში."
     },
     "sources": [
       {
@@ -10081,9 +10081,9 @@
     "status": "uncertain",
     "replaced_by": null,
     "description": {
-      "en": "Artez's mural \"Growth\" is recorded at Saburtalo, Tbilisi. The work is catalogued in AMG's street-art inventory from Red Fedora Diary; Tbilisi Mural Fest map (Google My Maps).",
-      "ru": "Фреска Artez «Рост» записана в Сабуртало, Тбилиси. Работа каталогизирована в каталоге уличного искусства AMG из журнала Red Fedora Diary; Тбилиси Мурал Фест карта (Google My Maps).",
-      "ka": "თბილისში, საბურთალოზე ჩაწერილია არტესის ფრესკა \"ზრდა\". ნამუშევარი ჩამოთვლილია AMG-ის ქუჩის ხელოვნების ინვენტარში Red Fedora Diary-დან; თბილისის მურალ ფესტი რუკა (Google My Maps)."
+      "en": "Artez's mural \"Growth\" is recorded at Vake, Tbilisi. The work is catalogued in AMG's street-art inventory from Red Fedora Diary; Tbilisi Mural Fest map (Google My Maps).",
+      "ru": "Фреска Artez «Рост» записана в Ваке, Тбилиси. Работа каталогизирована в каталоге уличного искусства AMG из журнала Red Fedora Diary; Тбилиси Мурал Фест карта (Google My Maps).",
+      "ka": "თბილისში, ვაკეზე ჩაწერილია არტესის ფრესკა \"ზრდა\". ნამუშევარი ჩამოთვლილია AMG-ის ქუჩის ხელოვნების ინვენტარში Red Fedora Diary-დან; თბილისის მურალ ფესტი რუკა (Google My Maps)."
     },
     "sources": [
       {
@@ -16495,9 +16495,9 @@
     "status": "active",
     "replaced_by": null,
     "description": {
-      "en": "Dilk and Ferosone made Home for the second Niko festival in Tbilisi in 2019. On a wall listed simply as number 50 in the Varketili area, the mural is part of the festival's spread across the city's outskirts.",
-      "ru": "Dilk и Ferosone стали домом для второго фестиваля «Нико» в Тбилиси в 2019 году. На стене под номером 50 в районе Варкетили фреска является частью фестиваля на окраине города.",
-      "ka": "დილკმა და ფეროსონმა 2019 წელს თბილისში ნიკოს მეორე ფესტივალისთვის სახლი შექმნეს. კედელზე, რომელიც ჩამოთვლილია უბრალოდ 50 ნომერზე ვარკეთილის რაიონში, ფრესკა არის ფესტივალის ნაწილი, რომელიც გავრცელდა ქალაქის გარეუბანში."
+      "en": "Dilk and Ferosone made Home for the second Niko festival in Tbilisi in 2019. On a wall listed simply as number 50 in the Nadzaladevi area, the mural is part of the festival's spread across the city's outskirts.",
+      "ru": "Dilk и Ferosone стали домом для второго фестиваля «Нико» в Тбилиси в 2019 году. На стене под номером 50 в районе Надзаладеви фреска является частью фестиваля на окраине города.",
+      "ka": "დილკმა და ფეროსონმა 2019 წელს თბილისში ნიკოს მეორე ფესტივალისთვის სახლი შექმნეს. კედელზე, რომელიც ჩამოთვლილია უბრალოდ 50 ნომერზე ნაძალადევის რაიონში, ფრესკა არის ფესტივალის ნაწილი, რომელიც გავრცელდა ქალაქის გარეუბანში."
     },
     "sources": [
       {
