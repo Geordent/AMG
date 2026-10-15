@@ -13,11 +13,24 @@
     display:flex; flex-direction:column; gap:6px; padding:0 8px; pointer-events:none; }
   #topui > #bar, #topui > #chips { pointer-events:auto; }
   #bar { display:flex; gap:6px; }
-  #bar select, #bar button { font-size:14px; padding:9px 10px; border-radius:10px; border:1px solid #d8d1c6; background:#fff; color:#2a2622; }
-  #bar button { margin-left:auto; background:#d9552b; border-color:#d9552b; color:#fff; font-weight:600; }
+  #bar select, #bar button { font-size:14px; padding:9px 10px; border-radius:10px; border:1px solid #d8d1c6; background:#fff; color:#2a2622; cursor:pointer; }
+  #bar button#btnNearby { margin-left:auto; }
+  #bar button#btnPacks { margin-left:0; }
   #sheet { position:absolute; left:0; right:0; bottom:0; z-index:20; background:#fff; border-radius:16px 16px 0 0; box-shadow:0 -6px 24px rgba(0,0,0,.2); padding:14px 16px calc(14px + env(safe-area-inset-bottom,0px)); max-height:75%; overflow-y:auto; }
   #sheet[hidden], #toast[hidden] { display:none; }
   #sheet h2 { margin:0 0 8px; font-size:18px; }
+  /* --- «Что рядом» (UGC Этап 1) --- */
+  #nearby { position:absolute; left:0; right:0; bottom:0; z-index:20; background:#fff; border-radius:16px 16px 0 0; box-shadow:0 -6px 24px rgba(0,0,0,.2); padding:14px 16px calc(14px + env(safe-area-inset-bottom,0px)); max-height:78%; overflow-y:auto; -webkit-overflow-scrolling:touch; }
+  #nearby[hidden] { display:none; }
+  #nearby h2 { margin:0 0 8px; font-size:18px; }
+  #nearby .amg-near-radii { display:flex; gap:6px; margin:8px 0; }
+  #nearby .amg-near-radii button { flex:1; padding:9px 6px; border-radius:10px; border:1px solid #d8d1c6; background:#fff; color:#2a2622; font-size:13px; cursor:pointer; }
+  #nearby .amg-near-radii button.on { background:#d9552b; border-color:#d9552b; color:#fff; font-weight:600; }
+  #nearby .amg-near-note { font-size:12px; color:#6b6259; margin:4px 0 6px; }
+  #nearby .amg-near-row { display:flex; align-items:baseline; gap:8px; width:100%; text-align:left; padding:11px 4px; border:0; border-top:1px solid #eee; background:none; cursor:pointer; }
+  #nearby .amg-near-row:first-of-type { border-top:0; }
+  #nearby .amg-near-name { flex:1; font-size:14px; color:#2a2622; }
+  #nearby .amg-near-dist { font-size:12px; color:#a2543a; white-space:nowrap; }
   .row { display:flex; align-items:center; gap:8px; font-size:14px; margin:6px 0 10px; }
   .pack { border:1px solid #e6e0d6; border-radius:12px; padding:10px 12px; margin-bottom:10px; }
   .pack b { font-size:15px; }
@@ -41,13 +54,15 @@
   .amg-tag.st.st-damaged { background:#fbeed2; color:#b06a00; }
   .amg-tag.st.st-replaced { background:#efe7f6; color:#6a45a3; }
   .amg-tag.st.st-removed { background:#f8e1e1; color:#b32626; }
+  .amg-tag.vf { background:#dff3df; color:#1f7a35; font-weight:700; }
+  .amg-hint { font-size:11px; color:#7a7268; margin:2px 0 6px; line-height:1.35; }
   .amg-pop .amg-meta { color:#6b6258; font-size:12px; margin:1px 0; }
   .amg-pop .amg-addr { color:#3f382f; }
   .amg-pop .amg-desc { margin:4px 0; }
   .amg-pop .amg-src { font-size:11px; color:#7a7268; margin-top:3px; }
   .amg-pop .amg-src a { color:#a2543a; }
   .amg-pop .amg-src-text { color:#7a7268; }   /* generic source = plain provenance, не ссылка */
-  .amg-detail .amg-actions { border-top:1px solid #eee; margin-top:12px; padding-top:10px; }   /* Навигация отделена от Источников */
+  /* «Подробно» — только информация об объекте; навигация/действия живут на компактной карточке */
   .amg-pop .amg-role { color:#a89f93; }
   .amg-src-all { margin-top:10px; border-top:1px solid #eee; padding-top:8px; }
   .amg-srcgrp { font-size:11px; color:#7a7268; margin:3px 0; line-height:1.4; }
@@ -55,7 +70,67 @@
   .amg-pop .amg-actions { display:flex; flex-wrap:wrap; gap:6px; margin:8px 0; }
   .amg-btn { flex:1 1 auto; text-align:center; font-size:12px; padding:8px 10px; border-radius:10px; border:1px solid #d8d1c6; background:#fff; color:#2a2622; text-decoration:none; white-space:nowrap; cursor:pointer; }
   .amg-btn.primary { background:#d9552b; border-color:#d9552b; color:#fff; font-weight:600; }
+  .amg-btn.accent { background:#fbe9e2; border-color:#d9552b; color:#b8431c; font-weight:600; }   /* вторичный акцент: терракота-контур */
   .amg-btn.ghost { background:#fff; color:#a2543a; }
+  /* «Я здесь»: нейтральна в покое, зелёная галочка — ТОЛЬКО после подтверждения (не терракота, чтобы не путать с hover) */
+  .amg-here-block { margin:12px 0 2px; }
+  .amg-here-btn { width:100%; display:inline-flex; align-items:center; justify-content:center; gap:7px; }
+  .amg-here-btn .amg-here-ico { font-size:14px; line-height:1; }
+  .amg-here-btn .amg-here-ico.check { display:none; }
+  .amg-here-btn[data-state="confirmed"] { background:#2f7d52; border-color:#2f7d52; color:#fff; font-weight:600; }
+  .amg-here-btn[data-state="confirmed"] .amg-here-ico.pin { display:none; }
+  .amg-here-btn[data-state="confirmed"] .amg-here-ico.check { display:inline; }
+  .amg-here-btn[data-state="confirmed"]:hover { background:#276b46; border-color:#276b46; color:#fff; }
+  .amg-here-btn[data-state="checking"] { opacity:.65; cursor:progress; }
+  .amg-here-btn[data-state="miss"] { border-color:#e3b7a5; color:#b8431c; background:#fff; }
+  .amg-here-note { font-size:11px; color:#7a7268; margin:6px 2px 0; line-height:1.4; }
+  .amg-here-block[data-state="confirmed"] .amg-here-note { color:#2f7d52; }
+
+  /* ==== Design system: единая система кнопок + микровзаимодействия (UX-проход) ==== */
+  /* 1) единый переход для всех интерактивных элементов */
+  .amg-btn, .btn, #bar button, #bar select, #chips .chip,
+  #nearby .amg-near-radii button, #menuBtn,
+  #card .amg-card-close, #detail .amg-detail-close, #nearby .amg-near-row {
+    transition: transform .12s ease, box-shadow .2s ease,
+                background-color .18s ease, border-color .18s ease, color .18s ease, opacity .18s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+  /* 2) наведение (мышь): мягкий подъём + терракотовый оттенок */
+  .amg-btn:hover, .btn:hover, #nearby .amg-near-radii button:hover {
+    border-color:#d9552b; color:#b8431c; background:#fbe9e2;
+    transform: translateY(-1px); box-shadow: 0 4px 12px rgba(217,85,43,.18);
+  }
+  /* 3) нажатие/тап: вдавливание (работает и на тачскрине, где hover нет) */
+  .amg-btn:active, .btn:active, #bar button:active, #bar select:active,
+  #chips .chip:active, #nearby .amg-near-radii button:active, #menuBtn:active,
+  #card .amg-card-close:active, #detail .amg-detail-close:active, #nearby .amg-near-row:active {
+    transform: translateY(0) scale(.97); box-shadow: none;
+  }
+  /* 4) фокус с клавиатуры — заметное кольцо */
+  .amg-btn:focus-visible, .btn:focus-visible, #bar button:focus-visible, #bar select:focus-visible,
+  #chips .chip:focus-visible, #nearby .amg-near-radii button:focus-visible, #menuBtn:focus-visible,
+  #card .amg-card-close:focus-visible, #detail .amg-detail-close:focus-visible, #nearby .amg-near-row:focus-visible {
+    outline: 2px solid #d9552b; outline-offset: 2px;
+  }
+  /* 5) заполненные/активные состояния сохраняют свою заливку при наведении (не перебиваем оттенком) */
+  .amg-btn.primary:hover { background:#c8491f; border-color:#c8491f; color:#fff; }
+  .amg-btn.accent:hover  { background:#f7dccf; border-color:#c8491f; color:#a83c17; }
+  .chip.on:hover, #nearby .amg-near-radii button.on:hover { background:#c8491f; border-color:#c8491f; color:#fff; }
+  /* 6) у главной кнопки — лёгкая «приподнятость» и в покое */
+  .amg-btn.primary, .btn.p { box-shadow: 0 2px 8px rgba(217,85,43,.25); }
+  .amg-btn.primary:hover, .btn.p:hover { box-shadow: 0 6px 16px rgba(217,85,43,.30); }
+  /* 7) чипы и строки «рядом» */
+  #chips .chip:hover { border-color:#d9552b; color:#b8431c; }
+  #nearby .amg-near-row:hover { background:#faf4ee; }
+  #nearby .amg-near-row:hover .amg-near-name { color:#b8431c; }
+  /* 8) уважаем «уменьшить движение» */
+  @media (prefers-reduced-motion: reduce) {
+    .amg-btn, .btn, #bar button, #bar select, #chips .chip,
+    #nearby .amg-near-radii button, #menuBtn,
+    #card .amg-card-close, #detail .amg-detail-close, #nearby .amg-near-row { transition: none !important; }
+    .amg-btn:hover, .btn:hover, #nearby .amg-near-radii button:hover { transform: none; }
+    .amg-btn:active, .btn:active { transform: none; }
+  }
   .amg-pop .amg-art { border-top:1px solid #eee; padding-top:8px; margin-top:8px; }
   .amg-pop .amg-arts .amg-art:first-child { border-top:0; padding-top:0; margin-top:0; }
   .amg-pop .amg-art-title { font-weight:600; font-size:14px; }
@@ -154,6 +229,7 @@
       <option value="ka">ქართული</option>
       <option value="en">English</option>
     </select>
+    <button id="btnNearby">Рядом</button>
     <button id="btnPacks">Офлайн</button>
   </div>
   <div id="chips"></div>
@@ -171,6 +247,7 @@
 <div id="rotateHint" hidden><span class="rh-text"></span><button type="button" id="rhClose" aria-label="×">×</button></div>
 <div id="card" hidden></div>
 <div id="detail" hidden></div>
+<div id="nearby" hidden></div>
 
 <script type="module">
 let maplibregl, PMTiles, layers, namedFlavor;
@@ -240,6 +317,38 @@ const LB = {
   srcPhoto:   { ru:'Фото', en:'Photos', ka:'ფოტოები' },
   srcCatalog: { ru:'Каталог / проект', en:'Catalog / project', ka:'კატალოგი / პროექტი' },
   srcProv:    { ru:'Провенанс', en:'Provenance', ka:'წარმომავლობა' },
+  nearby:     { ru:'Рядом', en:'Nearby', ka:'ახლოს' },
+  nearTitle:  { ru:'Что рядом', en:'What’s nearby', ka:'რა არის ახლოს' },
+  locating:   { ru:'Определяю местоположение…', en:'Locating…', ka:'მდებარეობის განსაზღვრა…' },
+  locateFail: { ru:'Не удалось определить местоположение', en:'Could not determine location', ka:'მდებარეობა ვერ დგინდება' },
+  found:      { ru:'Найдено', en:'Found', ka:'ნაპოვნია' },
+  noNearby:   { ru:'В этом радиусе объектов нет', en:'No objects within this radius', ka:'ამ რადიუსში ობიექტები არ არის' },
+  walk:       { ru:'пешком', en:'on foot', ka:'ფეხით' },
+  min:        { ru:'мин', en:'min', ka:'წთ' },
+  hr:         { ru:'ч', en:'h', ka:'სთ' },
+  km:         { ru:'км', en:'km', ka:'კმ' },
+  m:          { ru:'м', en:'m', ka:'მ' },
+  radius:     { ru:'радиус', en:'radius', ka:'რადიუსი' },
+  share:      { ru:'Поделиться', en:'Share', ka:'გაზიარება' },
+  shareCopied:{ ru:'Ссылка скопирована', en:'Link copied', ka:'ბმული დაკოპირდა' },
+  close:      { ru:'Закрыть', en:'Close', ka:'დახურვა' },
+  here:       { ru:'Я здесь', en:'I’m here', ka:'აქ ვარ' },
+  hereSent:   { ru:'Я здесь ✓', en:'I’m here ✓', ka:'აქ ვარ ✓' },
+  hereFix:    { ru:'Точка не здесь — исправить', en:'Point is off — fix it', ka:'წერტილი სხვაგანაა — გასწორება' },
+  hereFixSent:{ ru:'Исправление отправлено ✓', en:'Correction sent ✓', ka:'გასწორება გაიგზავნა ✓' },
+  hereFixWhy: { ru:'Ты рядом, но не у самой метки. Если объект реально там, где ты стоишь — нажми, и мы поправим точку (после 3 согласных меток).', en:'You’re close but not at the marker. If the object is really where you stand — tap, and we’ll fix the point (after 3 agreeing marks).', ka:'ახლოს ხარ, მაგრამ არა ნიშანთან. თუ ობიექტი ნამდვილად იქაა, სადაც დგახარ — დააჭირე და გავასწორებთ (3 თანხმობის შემდეგ).' },
+  hereFixNote:{ ru:'Отправлено на исправление ✓ — точку перенесут, если так же отметят ещё 2 человека.', en:'Sent for correction ✓ — the point moves if 2 more mark it the same.', ka:'გასწორებაზე გაიგზავნა ✓ — წერტილი გადაადგილდება, თუ კიდევ 2 ასე მონიშნავს.' },
+  hereCheckingBtn:{ ru:'Проверяю…', en:'Checking…', ka:'ვამოწმებ…' },
+  hereNoteSent:{ ru:'Отправлено на подтверждение ✓ — координату финально подтвердит бот.', en:'Sent for confirmation ✓ — the bot finalizes the coordinate.', ka:'დადასტურებაზე გაიგზავნა ✓ — კოორდინატს ბოტი საბოლოოდ დაადასტურებს.' },
+  hereWhy:    { ru:'Нажми, только если ты стоишь у самого объекта — так ты подтверждаешь его координаты. Если метка неточна, приложение предложит исправить.', en:'Tap only if you are standing at the object — this confirms its coordinates. If the marker is off, the app offers to fix it.', ka:'დააჭირე მხოლოდ მაშინ, თუ ობიექტთან დგახარ — ასე ადასტურებ მის კოორდინატებს. თუ ნიშანი არაზუსტია, აპი გასწორებას შემოგთავაზებს.' },
+  hereChecking:{ ru:'Проверяю твоё положение…', en:'Checking your location…', ka:'ვამოწმებ შენს მდებარეობას…' },
+  hereHit:    { ru:'Ты у объекта ✓ — открываю подтверждение в Telegram', en:'You’re at the object ✓ — opening confirmation in Telegram', ka:'ობიექტთან ხარ ✓ — ვხსნი დადასტურებას Telegram-ში' },
+  hereFail:   { ru:'Не удалось определить местоположение', en:'Could not determine location', ka:'მდებარეობა ვერ დგინდება' },
+  hereNoGeo:  { ru:'Нет доступа к GPS — разреши геолокацию', en:'No GPS access — allow location', ka:'GPS-ზე წვდომა არ არის — დაუშვი მდებარეობა' },
+  hereManualWhy:{ ru:'Геолокация недоступна (превью). Отметь на карте, где ты стоишь — так проверишь поток без GPS.', en:'Location unavailable (preview). Mark on the map where you stand — test the flow without GPS.', ka:'მდებარეობა მიუწვდომელია (პრევიუ). რუკაზე მონიშნე სად დგახარ.' },
+  hereManualBtn:{ ru:'📍 Отметить моё место', en:'📍 Mark my spot', ka:'📍 მონიშნე ჩემი ადგილი' },
+  hereManualHint:{ ru:'Превью: нажми на карту в точке, где ты находишься', en:'Preview: tap the map where you are', ka:'პრევიუ: დააჭირე რუკას, სადაც ხარ' },
+  verified:   { ru:'Подтверждено', en:'Verified', ka:'დადასტურებულია' },
 };
 const TYPE_LABELS = {
   mural:{ru:'Мурал',en:'Mural',ka:'მურალი'}, street_art:{ru:'Стрит-арт',en:'Street art',ka:'სტრიტ-არტი'},
@@ -834,6 +943,7 @@ async function setupCatalogLayers() {
       'text-font':['Noto Sans Medium'], 'text-size':11, 'text-offset':[0,1.7], 'text-anchor':'top', 'text-optional':true },
     paint:{ 'text-color':'#14324a', 'text-halo-color':'#ffffff', 'text-halo-width':1.8 } });
   applyCategoryFilter();
+  try { handleHash(); } catch (_) {}
 }
 let layersChain = Promise.resolve();
 const schedule = () => { layersChain = layersChain.then(setupCatalogLayers).catch(() => {}); };
@@ -1019,6 +1129,7 @@ function sitePopupHtml(siteId) {
     status ? `<span class="amg-tag st st-${esc(status)}">${esc(labelOf(STATUS_LABELS, status))}</span>` : '',
     year != null ? `<span class="amg-tag year">${esc(year)}</span>` : '',
     multi ? `<span class="amg-tag cnt">${esc(worksLabel(arts.length))}</span>` : '',
+    verifiedBadge(siteId),
   ].filter(Boolean).join('');
   const shown = new Set();
   let media = mediaHtml(p.media, shown);
@@ -1035,7 +1146,7 @@ function sitePopupHtml(siteId) {
     <div class="amg-meta">${esc(pick(LB.access))}: ${esc(labelOf(ACCESS_LABELS, p.access))} · ${esc(vis)}</div>
     ${media}
     ${src}
-    <div class="amg-actions">${routeButtons(lat, lng)}<button type="button" class="amg-btn ghost" data-detail="${esc(siteId)}">${esc(pick(LB.detail))}</button></div>
+    <div class="amg-actions">${routeButtons(lat, lng)}<button type="button" class="amg-btn ghost" data-share="${esc(siteId)}">${esc(pick(LB.share))}</button><button type="button" class="amg-btn ghost" data-detail="${esc(siteId)}">${esc(pick(LB.detail))}</button></div>
   </div>`;
 }
 // Full detail panel content: all media (deduped) + full SITE + all artworks.
@@ -1054,6 +1165,7 @@ function detailHtml(siteId) {
     catKey ? `<span class="amg-tag cat">${esc(categoryLabel(catKey))}</span>` : '',
     arts.length ? `<span class="amg-tag st st-${esc(siteStatus(arts))}">${esc(labelOf(STATUS_LABELS, siteStatus(arts)))}</span>` : '',
     `<span class="amg-tag cnt">${esc(worksLabel(arts.length))}</span>`,
+    verifiedBadge(siteId),
   ].filter(Boolean).join('');
   const addr = pick(p.address);
   const landmark = [addr, city].filter(Boolean).join(', ');
@@ -1084,6 +1196,7 @@ function detailHtml(siteId) {
     <div class="amg-tags">${tags}</div>
     ${landmark ? `<div class="amg-meta amg-addr">${esc(landmark)}</div>` : ''}
     <div class="amg-meta">${esc(pick(LB.access))}: ${esc(labelOf(ACCESS_LABELS, p.access))} · ${esc(vis)}</div>
+    ${hereBlockHtml(siteId)}
     ${siteDesc ? `<div class="amg-desc">${esc(siteDesc)}</div>` : ''}
     ${gallery.length ? `<div class="amg-detail-gallery">${gallery.join('')}</div>` : ''}
     <div class="amg-detail-arts">${artsHtml}</div>
@@ -1127,6 +1240,7 @@ Overlays.register('menu', document.getElementById('menu'));
 Overlays.register('sheet', document.getElementById('sheet'));
 Overlays.register('card', document.getElementById('card'));
 Overlays.register('detail', document.getElementById('detail'));
+Overlays.register('nearby', document.getElementById('nearby'));
 // scrim закрывает только по «тапу» (не по drag/свайпу, чтобы обычный жест не закрывал card)
 (function scrimTap() {
   const s = document.getElementById('scrim');
@@ -1219,6 +1333,10 @@ function clampPopup(popup) {
 }
 document.getElementById('card').addEventListener('click', ev => {
   if (ev.target.closest('[data-card-close]')) return closeCard();
+  const h = ev.target.closest('[data-here]');
+  if (h) return iAmHere(h);
+  const sh = ev.target.closest('[data-share]');
+  if (sh) return shareSite(sh.dataset.share);
   const b = ev.target.closest('[data-detail]');
   if (b) openDetail(b.dataset.detail);
 });
@@ -1247,6 +1365,12 @@ document.getElementById('card').addEventListener('click', ev => {
 document.getElementById('detail').addEventListener('click', ev => {
   if (ev.target.id === 'detail') return closeDetail(); // backdrop
   if (ev.target.closest('[data-detail-close]')) return closeDetail();
+  const mp = ev.target.closest('[data-manual-pick]');
+  if (mp) return armManualPick();
+  const h = ev.target.closest('[data-here]');
+  if (h) return iAmHere(h);
+  const sh = ev.target.closest('[data-share]');
+  if (sh) return shareSite(sh.dataset.share);
 });
 document.addEventListener('keydown', ev => {
   if (ev.key !== 'Escape') return;
@@ -1258,6 +1382,7 @@ Overlays.setCloser('detail', closeDetail);
 Overlays.setCloser('sheet', () => Overlays.hide('sheet'));
 Overlays.setCloser('menu', () => Overlays.hide('menu'));
 map.on('click', 'sites', e => {
+  if (demoPick) return;
   const id = e.features[0].properties.id;
   if (isNarrow()) return renderCard(id);
   const pop = new maplibregl.Popup({ offset:14, maxWidth:'min(360px, calc(100vw - 24px))' })
@@ -1267,11 +1392,16 @@ map.on('click', 'sites', e => {
   pop.addTo(map);
   wireMedia(pop.getElement());
   pop.getElement().addEventListener('click', ev => {
+    const h = ev.target.closest('[data-here]');
+    if (h) return iAmHere(h);
+    const sh = ev.target.closest('[data-share]');
+    if (sh) return shareSite(sh.dataset.share);
     const b = ev.target.closest('[data-detail]');
     if (b) openDetail(b.dataset.detail);
   });
 });
 map.on('click', e => {
+  if (demoPick) return;
   if (!isNarrow() || !cardSiteId || !map.getLayer('sites')) return;
   if (!map.queryRenderedFeatures(e.point, { layers: ['sites'] }).length) closeCard();
 });
@@ -1279,6 +1409,7 @@ map.on('mouseenter', 'sites', () => map.getCanvas().style.cursor = 'pointer');
 map.on('mouseleave', 'sites', () => map.getCanvas().style.cursor = '');
 // Cluster click → expand (getClusterExpansionZoom). Если зум не меняется — корректный no-op.
 map.on('click', 'sites-clusters', e => {
+  if (demoPick) return;
   const f = e.features[0];
   const src = map.getSource('sites');
   if (!src) return;
@@ -1300,10 +1431,322 @@ const toast = (t, ms = 5000) => { $('toast').textContent = t; $('toast').hidden 
 if (catalogError) toast(pick(LB.catalogFail) + catalogError, 9000);
 for (const [k, v] of Object.entries(FLAVORS)) $('flavor').insertAdjacentHTML('beforeend', `<option value="${k}">${v}</option>`);
 $('flavor').onchange = e => { state.flavor = e.target.value; map.setStyle(buildStyle()); };
-$('lang').onchange = e => { state.lang = e.target.value; map.setStyle(buildStyle()); renderChips(); updateRotateHint(); if (cardSiteId) renderCard(cardSiteId); if (detailSiteId) renderDetail(detailSiteId); };
+$('lang').onchange = e => { state.lang = e.target.value; map.setStyle(buildStyle()); renderChips(); updateRotateHint(); applyStaticLabels(); if (Overlays.isOpen('nearby')) renderNearby(); if (cardSiteId) renderCard(cardSiteId); if (detailSiteId) renderDetail(detailSiteId); };
 $('offlineOnly').onchange = e => { state.offlineOnly = e.target.checked; map.setStyle(buildStyle()); toast(state.offlineOnly ? 'Показываю только скачанное' : 'Снова можно читать карту из сети'); };
 $('btnPacks').onclick = () => { Overlays.hide('menu'); Overlays.show('sheet'); renderPacks(); };
 $('btnClose').onclick = () => Overlays.hide('sheet');
+
+// ---------- UGC Этап 1: «Что рядом» + share + deep-link (только клиент, без сервера) ----------
+function applyStaticLabels() { const b = $('btnNearby'); if (b) b.textContent = pick(LB.nearby); }
+const NEARBY_RADII = [1000, 2000, 5000];
+const nearby = { lat:null, lng:null, radius:1000 };
+const WALK_M_PER_MIN = 83.3; // ≈5 км/ч
+function haversine(lat1, lon1, lat2, lon2) {
+  const R = 6371000, toRad = d => d * Math.PI / 180;
+  const dLat = toRad(lat2 - lat1), dLon = toRad(lon2 - lon1);
+  const a = Math.sin(dLat/2)**2 + Math.cos(toRad(lat1))*Math.cos(toRad(lat2))*Math.sin(dLon/2)**2;
+  return 2 * R * Math.asin(Math.min(1, Math.sqrt(a)));
+}
+const fmtDist = m => m < 950 ? `${Math.round(m)} ${pick(LB.m)}` : `${(m/1000).toFixed(1)} ${pick(LB.km)}`;
+const fmtWalk = m => `${Math.max(1, Math.round(m / WALK_M_PER_MIN))} ${pick(LB.min)}`;
+function siteTitle(f) {
+  const a = (catalog.artworksBySite.get(f.properties.id) || [])[0];
+  return pick(f.properties.name) || (a && pick(a.title)) || pick(LB.untitled);
+}
+function nearbyRows() {
+  if (nearby.lat == null) return [];
+  const out = [];
+  for (const f of catalog.sites) {
+    const [lng, lat] = f.geometry.coordinates;
+    const d = haversine(nearby.lat, nearby.lng, lat, lng);
+    if (d <= nearby.radius) out.push({ id:f.properties.id, title:siteTitle(f), d });
+  }
+  out.sort((a, b) => a.d - b.d);
+  return out;
+}
+function renderNearby() {
+  const box = $('nearby'); if (!box) return;
+  const radii = `<div class="amg-near-radii">` + NEARBY_RADII.map(r =>
+    `<button type="button" data-r="${r}" class="${r === nearby.radius ? 'on' : ''}">${r/1000} ${esc(pick(LB.km))}</button>`).join('') + `</div>`;
+  let body;
+  if (nearby.lat == null) body = `<div class="amg-near-note">${esc(pick(LB.locating))}</div>`;
+  else {
+    const rows = nearbyRows();
+    const note = `${esc(pick(LB.found))}: ${rows.length} · ${esc(pick(LB.radius))} ${nearby.radius/1000} ${esc(pick(LB.km))} · ${esc(pick(LB.walk))} ≈ 5 ${esc(pick(LB.km))}/${esc(pick(LB.hr))}`;
+    body = `<div class="amg-near-note">${note}</div>` + (rows.length
+      ? rows.slice(0, 40).map(r => `<button type="button" class="amg-near-row" data-near="${esc(r.id)}"><span class="amg-near-name">${esc(r.title)}</span><span class="amg-near-dist">${esc(fmtDist(r.d))} · ${esc(fmtWalk(r.d))}</span></button>`).join('')
+      : `<div class="amg-empty">${esc(pick(LB.noNearby))}</div>`);
+  }
+  box.innerHTML = `<h2>${esc(pick(LB.nearTitle))}</h2>${radii}${body}<div class="btns"><button class="btn" id="btnNearClose">${esc(pick(LB.close))}</button></div>`;
+  $('btnNearClose').onclick = () => Overlays.hide('nearby');
+  box.querySelectorAll('[data-r]').forEach(b => { b.onclick = () => { nearby.radius = +b.dataset.r; renderNearby(); }; });
+  box.querySelectorAll('[data-near]').forEach(b => { b.onclick = () => { Overlays.hide('nearby'); focusSite(b.dataset.near); }; });
+}
+function openNearby() {
+  Overlays.show('nearby');
+  renderNearby();
+  if (nearby.lat != null) return;
+  if (!navigator.geolocation) { toast(pick(LB.locateFail), 7000); return; }
+  navigator.geolocation.getCurrentPosition(
+    pos => { nearby.lat = pos.coords.latitude; nearby.lng = pos.coords.longitude; renderNearby(); },
+    () => { toast(pick(LB.locateFail), 7000); Overlays.hide('nearby'); },
+    { enableHighAccuracy:true, timeout:10000, maximumAge:60000 });
+}
+function focusSite(id) {
+  const f = catalog.siteById.get(id); if (!f) return;
+  const [lng, lat] = f.geometry.coordinates;
+  try { map.flyTo({ center:[lng, lat], zoom: Math.max(map.getZoom(), 16) }); } catch (_) {}
+  if (isNarrow()) renderCard(id); else openDetail(id);
+}
+function shareSite(id) {
+  const f = catalog.siteById.get(id); if (!f) return;
+  const url = location.origin + location.pathname + '#s=' + encodeURIComponent(id);
+  const title = siteTitle(f);
+  if (navigator.share) { navigator.share({ title, url }).catch(() => {}); return; }
+  const done = () => toast(pick(LB.shareCopied));
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(url).then(done, () => copyFallback(url, done));
+  else copyFallback(url, done);
+}
+function copyFallback(text, done) {
+  const ta = document.createElement('textarea'); ta.value = text;
+  ta.style.position = 'fixed'; ta.style.top = '-1000px'; ta.style.opacity = '0';
+  document.body.appendChild(ta); ta.focus(); ta.select();
+  try { if (document.execCommand('copy')) done(); } catch (_) {}
+  ta.remove();
+}
+function handleHash() {
+  const m = /#s=([^&]+)/.exec(location.hash || '');
+  if (!m) return;
+  const id = decodeURIComponent(m[1]);
+  if (catalog.siteById.get(id)) focusSite(id);
+}
+window.addEventListener('hashchange', handleHash);
+$('btnNearby').onclick = openNearby;
+applyStaticLabels();
+
+// ---------- UGC Этап 2: «Я здесь» (подтверждение координат) + фид подтверждений ----------
+// Конфиг — единственное, что нужно поменять при появлении хостинга бота.
+const AMG_BOT_USERNAME = 'amg_map_bot';   // ← username Telegram-бота (плейсхолдер до выбора хостинга)
+// Адаптивный допуск «попал» по точности точки (синхронизировано с contrib-lib.mjs PRECISION_TOLERANCE_M).
+const PRECISION_TOL_M = { exact: 60, building: 100, street: 250, approximate: 400 };
+const DEFAULT_TOL_M = 100;
+const tolFor = p => PRECISION_TOL_M[p] || DEFAULT_TOL_M;
+const CORRECT_MAX_M = 1500;               // до этой дистанции «промах» = кандидат на КОРРЕКЦИЮ точки
+const HERE_REFINE_RADIUS_M = 25;          // «уточнение координаты»: только плотные попадания
+const VERIFY_N = 3;                       // N разных аккаунтов → «подтверждено»
+const CONTRIB_URL = 'data/contributions.json';
+const contrib = new Map();                // siteId -> { status, count, lat, lng, refined }
+
+async function loadContributions() {
+  try {
+    const r = await fetch(CONTRIB_URL, { cache: 'no-store' });
+    if (!r.ok) return;
+    const j = await r.json();
+    for (const [id, v] of Object.entries((j && j.sites) || {})) contrib.set(id, v);
+  } catch (_) { /* фида ещё нет — сайт работает без бейджей */ }
+}
+await loadContributions();
+
+function verifiedBadge(siteId) {
+  const c = contrib.get(siteId);
+  if (!c || c.status !== 'verified') return '';
+  const n = c.count ? ' ' + c.count : '';
+  return `<span class="amg-tag vf">✓ ${esc(pick(LB.verified))}${esc(n)}</span>`;
+}
+
+// Компактный payload для deep-link: c|site-XXXX|lat|lng (confirm) или k|... (correct) → base64url.
+function b64url(s) { return btoa(s).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, ''); }
+function makeHerePayload(siteId, lat, lng, kind = 'c') { return b64url(`${kind === 'k' ? 'k' : 'c'}|${siteId}|${lat.toFixed(5)}|${lng.toFixed(5)}`); }
+
+function hereFarMsg(d) {
+  const dist = fmtDist(d);
+  if (state.lang === 'en') return `You are ${dist} from the object — move closer to confirm.`;
+  if (state.lang === 'ka') return `ობიექტიდან ${dist}-ში ხარ — დასადასტურებლად მიახლოვდი.`;
+  return `Ты в ${dist} от объекта — подойди ближе, чтобы подтвердить.`;
+}
+function hereFixOfferMsg(d) {
+  const dist = fmtDist(d);
+  if (state.lang === 'en') return `You are ${dist} from the marker. If the object is really where you stand, tap “Point is off — fix it”.`;
+  if (state.lang === 'ka') return `ნიშნიდან ${dist}-ში ხარ. თუ ობიექტი ნამდვილად იქაა, სადაც დგახარ — დააჭირე «გასწორებას».`;
+  return `Ты в ${dist} от метки. Если объект реально там, где ты стоишь — нажми «Точка не здесь — исправить».`;
+}
+
+// LAB-SIM: только в превью с ?sim=1 — имитирует ответ бота, чтобы визуально проверить поток.
+const sim = { on: !!window.__AMG_PREVIEW__ && new URLSearchParams(location.search).get('sim') === '1' };
+function simVote(siteId, kind = 'confirm') {
+  const cur = contrib.get(siteId) || { status: 'collecting', count: 0, correct_count: 0 };
+  if (kind === 'fix') {
+    cur.correct_count = (cur.correct_count || 0) + 1;
+    cur.status = cur.correct_count >= VERIFY_N ? 'corrected' : 'collecting';
+    toast(cur.status === 'corrected'
+      ? `ЛАБ-СИМ: порог ${VERIFY_N}/${VERIFY_N} достигнут → «Коррекция принята»`
+      : `ЛАБ-СИМ: голос на коррекцию ${cur.correct_count}/${VERIFY_N}`, 7000);
+  } else {
+    cur.count = (cur.count || 0) + 1;
+    cur.status = cur.count >= VERIFY_N ? 'verified' : 'collecting';
+    toast(cur.status === 'verified'
+      ? `ЛАБ-СИМ: порог ${VERIFY_N}/${VERIFY_N} достигнут → «Подтверждено»`
+      : `ЛАБ-СИМ: голос ${cur.count}/${VERIFY_N} (каждый клик = новый аккаунт)`, 7000);
+  }
+  contrib.set(siteId, cur);
+  if (cardSiteId === siteId) renderCard(siteId);
+  else if (detailSiteId === siteId) renderDetail(siteId);
+}
+
+// Состояние кнопки «Я здесь» на объект: idle (нейтрально, БЕЗ галочки) → confirmed (галочка + зелёный).
+// «Нажатость» появляется ТОЛЬКО после успешного подтверждения на месте; если не подтвердилось — нейтрально + причина.
+const hereState = new Map(); // siteId -> 'confirmed' | 'fix-sent'
+// Превью: ручное задание своего места тапом по карте (когда GPS недоступен/отклонён).
+let demoPos = null, demoPick = false, demoMarker = null;
+let hereLast = null;   // { siteId, lat, lng } — последняя позиция для коррекции (fix-offer → fix-sent)
+
+function hereBlockHtml(siteId) {
+  const st = hereState.get(siteId) || 'idle'; // idle, confirmed, fix-sent
+  const label = pick(LB[`here${st === 'confirmed' ? 'Sent' : st === 'fix-sent' ? 'FixSent' : ''}`] || LB.here);
+  const note  = pick(LB[`here${st === 'confirmed' ? 'NoteSent' : st === 'fix-sent' ? 'FixNote' : ''}`] || LB.hereWhy);
+  const btnClass = (st === 'confirmed' || st === 'fix-sent') ? 'amg-btn primary' : 'amg-btn ghost';
+  return `<div class="amg-here-block" data-here-block="${esc(siteId)}" data-state="${st}">
+    <button type="button" class="${btnClass} amg-here-btn" data-here="${esc(siteId)}" data-state="${st}">
+      <span class="amg-here-ico pin" aria-hidden="true">📍</span>
+      <span class="amg-here-ico check" aria-hidden="true">✓</span>
+      <span class="amg-here-txt">${esc(label)}</span>
+    </button>
+    <div class="amg-here-note">${esc(note)}</div>
+  </div>`;
+}
+
+function hereBtnSet(btn, state, note, payloadKind) {
+  if (!btn) return;
+  const id = btn.dataset.here;
+  const block = btn.closest('.amg-here-block');
+  const txt = btn.querySelector('.amg-here-txt');
+  const noteEl = block ? block.querySelector('.amg-here-note') : null;
+  btn.dataset.state = state;
+  if (block) block.dataset.state = state;
+  
+  let defLabel = LB.here, defNote = LB.hereWhy; // default
+  if (state === 'confirmed') { defLabel = LB.hereSent; defNote = LB.hereNoteSent; }
+  else if (state === 'fix-offer') { defLabel = LB.hereFix; defNote = LB.hereFixWhy; }
+  else if (state === 'fix-sent') { defLabel = LB.hereFixSent; defNote = LB.hereFixNote; }
+  else if (state === 'manual') { defLabel = LB.hereManualBtn; defNote = LB.hereManualWhy; }
+
+  if (state === 'checking') { btn.disabled = true; if (txt) txt.textContent = pick(LB.hereCheckingBtn); }
+  else if (state === 'confirmed') { btn.disabled = false; btn.classList.add('primary'); btn.classList.remove('ghost', 'accent'); if (txt) txt.textContent = pick(defLabel); if (id) hereState.set(id, 'confirmed'); }
+  else if (state === 'fix-sent') { btn.disabled = false; btn.classList.add('primary'); btn.classList.remove('ghost', 'accent'); if (txt) txt.textContent = pick(defLabel); if (id) hereState.set(id, 'fix-sent'); }
+  else if (state === 'fix-offer') { btn.disabled = false; btn.classList.add('accent'); btn.classList.remove('ghost'); if (txt) txt.textContent = pick(defLabel); if (id) hereState.delete(id); }
+  else if (state === 'manual') { btn.disabled = false; btn.classList.add('accent'); btn.classList.remove('ghost', 'primary'); if (txt) txt.textContent = pick(defLabel); if (id) hereState.delete(id); }
+  else { btn.disabled = false; btn.classList.add('ghost'); btn.classList.remove('primary', 'accent'); if (txt) txt.textContent = pick(defLabel); if (id) hereState.delete(id); }
+  if (noteEl) noteEl.textContent = note || pick(defNote);
+}
+
+function iAmHere(btn) {
+  const siteId = btn && btn.dataset ? btn.dataset.here : null;
+  if (!siteId) return;
+  const f = catalog.siteById.get(siteId); if (!f) return;
+  const lng = f.geometry.coordinates[0], lat = f.geometry.coordinates[1];
+
+  // Второй тап по кнопке в состоянии fix-offer = подтверждение коррекции (единый обработчик, без inline-onclick).
+  if (btn.dataset.state === 'fix-offer' && hereLast && hereLast.siteId === siteId) {
+    hereBtnSet(btn, 'checking');
+    const fixUrl = `https://t.me/${AMG_BOT_USERNAME}?start=${makeHerePayload(siteId, hereLast.lat, hereLast.lng, 'k')}`;
+    if (sim.on) { hereBtnSet(btn, 'fix-sent'); simVote(siteId, 'fix'); return; }
+    hereBtnSet(btn, 'fix-sent');
+    if (window.__AMG_PREVIEW__) { console.log('AMG-HERE-FIX-URL ' + fixUrl); if (window.__amgHereHook) window.__amgHereHook(fixUrl); toast('Превью: сформирована ссылка на коррекцию ' + fixUrl, 9000); return; }
+    toast(pick(LB.hereFixSent), 6000);
+    window.open(fixUrl, '_blank');
+    return;
+  }
+  if (btn.dataset.state === 'checking') return;
+
+  const finish = (gLat, gLng) => {
+    const precision = f.properties.precision; // 'building', 'street', 'exact', etc.
+    const tol = tolFor(precision);
+    const d = haversine(gLat, gLng, lat, lng);
+
+    if (d <= tol) {                          // ПОДТВЕРЖДЕНИЕ: пользователь у объекта
+      hereLast = null;
+      if (sim.on) { hereBtnSet(btn, 'confirmed'); simVote(siteId); return; }   // лаб-симуляция
+      const url = `https://t.me/${AMG_BOT_USERNAME}?start=${makeHerePayload(siteId, gLat, gLng, 'c')}`;
+      hereBtnSet(btn, 'confirmed');
+      if (window.__AMG_PREVIEW__) { console.log('AMG-HERE-URL ' + url); if (window.__amgHereHook) window.__amgHereHook(url); toast('Превью: сформирована ссылка ' + url, 9000); return; }
+      toast(pick(LB.hereHit), 6000);
+      window.open(url, '_blank');
+      return;
+    }
+
+    if (d > tol && d <= CORRECT_MAX_M) {    // КОРРЕКЦИЯ: промах, но в зоне коррекции (наша неточность)
+      const m = hereFixOfferMsg(d);
+      hereLast = { siteId, lat: gLat, lng: gLng };
+      hereBtnSet(btn, 'fix-offer', m);
+      toast(m, 9000);
+      return;
+    }
+
+    // Слишком далеко — это не наша неточность.
+    hereLast = null;
+    const m = hereFarMsg(d);
+    hereBtnSet(btn, 'miss', m);
+    toast(m, 9000);
+  };
+
+  // Превью: если GPS недоступен/отклонён — даём отметить своё место тапом по карте (без GPS).
+  const offerManual = () => {
+    hereBtnSet(btn, 'manual');
+    const block = btn.closest('.amg-here-block');
+    const noteEl = block ? block.querySelector('.amg-here-note') : null;
+    if (noteEl) noteEl.innerHTML = `${esc(pick(LB.hereManualWhy))} <button type="button" class="amg-btn accent" data-manual-pick="${esc(siteId)}">${esc(pick(LB.hereManualBtn))}</button>`;
+  };
+
+  if (demoPos) { hereBtnSet(btn, 'checking'); finish(demoPos.lat, demoPos.lng); return; }
+  if (!navigator.geolocation) {
+    if (window.__AMG_PREVIEW__) { offerManual(); return; }
+    hereBtnSet(btn, 'miss', pick(LB.hereNoGeo)); toast(pick(LB.hereNoGeo), 7000); return;
+  }
+  hereBtnSet(btn, 'checking');
+  navigator.geolocation.getCurrentPosition(pos => {
+    finish(pos.coords.latitude, pos.coords.longitude);
+  }, err => {
+    if (window.__AMG_PREVIEW__) { offerManual(); return; }
+    const m = err && err.code === 1 ? pick(LB.hereNoGeo) : pick(LB.locateFail);
+    hereBtnSet(btn, 'miss', m);
+    toast(m, 7000);
+  }, { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 });
+}
+
+// Превью: армируем режим «отметь место» — следующий тап по карте задаёт позицию.
+function armManualPick() {
+  demoPick = true;
+  toast(pick(LB.hereManualHint), 9000);
+  const c = map.getCanvas(); if (c) c.style.cursor = 'crosshair';
+}
+if (window.__AMG_PREVIEW__) {
+  window.__amgSetDemoPos = (lat, lng) => {   // test hook (превью): задать «моё место» программно
+    demoPos = { lat, lng };
+    if (demoMarker) { try { demoMarker.remove(); } catch (_) {} }
+    demoMarker = new maplibregl.Marker({ color: '#2f7d52' }).setLngLat([lng, lat]).addTo(map);
+    if (detailSiteId) { const hb = document.querySelector(`#detail .amg-here-btn[data-here="${detailSiteId}"]`); if (hb) iAmHere(hb); }
+  };
+  map.on('click', e => {
+    if (!demoPick) return;
+    demoPick = false;
+    const c = map.getCanvas(); if (c) c.style.cursor = '';
+    demoPos = { lat: e.lngLat.lat, lng: e.lngLat.lng };
+    if (demoMarker) { try { demoMarker.remove(); } catch (_) {} }
+    demoMarker = new maplibregl.Marker({ color: '#2f7d52' }).setLngLat([demoPos.lng, demoPos.lat]).addTo(map);
+    toast('Превью: моё место задано по карте', 7000);
+    if (detailSiteId) { const hb = document.querySelector(`#detail .amg-here-btn[data-here="${detailSiteId}"]`); if (hb) iAmHere(hb); }
+  });
+}
+
+
+
+if (sim.on) {
+  const b = document.createElement('div');
+  b.textContent = 'ЛАБ-СИМ: подтверждение координат (имитация бота)';
+  b.style.cssText = 'position:fixed;left:8px;top:56px;z-index:40;background:#111;color:#fff;font:11px/1.3 system-ui,sans-serif;padding:6px 8px;border-radius:8px;opacity:.9;pointer-events:none';
+  document.body.appendChild(b);
+}
+
 
 // ---------- категории (чипы) ----------
 function categoryCounts() {
