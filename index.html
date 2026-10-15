@@ -216,8 +216,8 @@
 <div id="map"></div>
 <div id="topui">
   <div id="brand">
-    <div class="wm">ArtMap Georgia</div>
-    <div class="tag">Карта искусства и необычных городских объектов Грузии</div>
+    <div class="wm" id="brandWm">ArtMap Georgia</div>
+    <div class="tag" id="brandTag">Карта искусства и необычных городских объектов Грузии</div>
   </div>
   <button id="menuBtn" type="button" aria-label="Меню">
     <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke="#2a2622" stroke-width="2" stroke-linecap="round"/></svg>
@@ -236,8 +236,8 @@
 </div>
 <div id="scrim" hidden></div>
 <div id="sheet" hidden>
-  <h2>Офлайн карта</h2>
-  <label class="row"><input type="checkbox" id="offlineOnly"> Только скачанное (проверка без сети)</label>
+  <h2 id="sheetTitle">Офлайн карта</h2>
+  <label class="row"><input type="checkbox" id="offlineOnly"> <span id="offlineOnlyLabel">Только скачанное (проверка без сети)</span></label>
   <div id="packs"></div>
   <div class="small" id="usage"></div>
   <div class="btns"><button class="btn" id="btnClose">Закрыть</button></div>
@@ -256,8 +256,13 @@ try {
   ({ PMTiles } = await import('https://esm.sh/pmtiles@4'));
   ({ layers, namedFlavor } = await import('https://esm.sh/@protomaps/basemaps@5'));
 } catch (e) {
+  // Раньше state/pick ещё не существует — выбираем язык напрямую по браузеру.
+  const _bl = (navigator.language || 'ru').slice(0, 2);
+  const _fatal = _bl === 'ka' ? 'რუკის ბიბლიოთეკები ვერ ჩაიტვირთა. პირველი გაშვებისას საჭიროა ინტერნეტი.'
+               : _bl === 'en' ? 'Failed to load map libraries. Internet is required on first launch.'
+               : 'Не удалось загрузить библиотеки карты. При первом запуске нужен интернет.';
   document.body.insertAdjacentHTML('beforeend',
-    '<div class="fatal">Не удалось загрузить библиотеки карты. При первом запуске нужен интернет.<br><br>' + e + '</div>');
+    '<div class="fatal">' + _fatal + '<br><br>' + e + '</div>');
   throw e;
 }
 
@@ -265,11 +270,17 @@ if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catc
 
 const GLYPHS = 'https://protomaps.github.io/basemaps-assets/fonts/{fontstack}/{range}.pbf';
 const SPRITE = 'https://protomaps.github.io/basemaps-assets/sprites/v4/';
-const FLAVORS = { light:'AMG', dark:'Тёмная', grayscale:'Серая', white:'Белая' };
+// Метки тем карты. «AMG» — имя фирменной темы (не переводится), остальные локализуются.
+const FLAVORS = {
+  light:     { ru:'AMG', en:'AMG', ka:'AMG' },
+  dark:      { ru:'Тёмная', en:'Dark', ka:'მუქი' },
+  grayscale: { ru:'Серая', en:'Gray', ka:'ნაცრისფერი' },
+  white:     { ru:'Белая', en:'White', ka:'თეთრი' },
+};
 // Файлы карты собирает GitHub Actions и кладёт рядом со страницей, поэтому CORS не мешает
 const PACKS = [
-  { id:'base',    title:'Вся Грузия, обзор', url:'tiles/georgia.pmtiles', minz:0,  maxz:9,  local:null },
-  { id:'tbilisi', title:'Тбилиси, детально', url:'tiles/tbilisi.pmtiles', minz:10, maxz:15, local:null },
+  { id:'base',    title:{ ru:'Вся Грузия, обзор', en:'All Georgia, overview', ka:'მთელი საქართველო, მიმოხილვა' }, url:'tiles/georgia.pmtiles', minz:0,  maxz:9,  local:null },
+  { id:'tbilisi', title:{ ru:'Тбилиси, детально', en:'Tbilisi, detailed', ka:'თბილისი, დეტალურად' }, url:'tiles/tbilisi.pmtiles', minz:10, maxz:15, local:null },
 ];
 PACKS.forEach(p => p.remote = new PMTiles(p.url));
 const state = { flavor:'light', lang:'ru', offlineOnly:false, lastError:'', categories:null };
@@ -349,6 +360,37 @@ const LB = {
   hereManualBtn:{ ru:'📍 Отметить моё место', en:'📍 Mark my spot', ka:'📍 მონიშნე ჩემი ადგილი' },
   hereManualHint:{ ru:'Превью: нажми на карту в точке, где ты находишься', en:'Preview: tap the map where you are', ka:'პრევიუ: დააჭირე რუკას, სადაც ხარ' },
   verified:   { ru:'Подтверждено', en:'Verified', ka:'დადასტურებულია' },
+  // --- статичная оболочка, бренд, офлайн-паки (добавлено: полное покрытие ru/en/ka) ---
+  brandTag:   { ru:'Карта искусства и необычных городских объектов Грузии', en:'A map of art and unusual urban objects of Georgia', ka:'საქართველოს ხელოვნებისა და უჩვეულო ურბანული ობიექტების რუკა' },
+  menu:       { ru:'Меню', en:'Menu', ka:'მენიუ' },
+  offline:    { ru:'Офлайн', en:'Offline', ka:'ოფლაინ' },
+  offlineMap: { ru:'Офлайн карта', en:'Offline map', ka:'ოფლაინ რუკა' },
+  offlineOnlyTxt:{ ru:'Только скачанное (проверка без сети)', en:'Downloaded only (offline check)', ka:'მხოლოდ ჩამოტვირთული (შემოწმება ქსელის გარეშე)' },
+  showDownloaded:{ ru:'Показываю только скачанное', en:'Showing downloaded only', ka:'ვაჩვენებ მხოლოდ ჩამოტვირთულს' },
+  showNetwork:{ ru:'Снова можно читать карту из сети', en:'Reading the map online again', ka:'ისევ შეიძლება რუკის ქსელიდან წაკითხვა' },
+  mapError:   { ru:'Ошибка карты, ', en:'Map error, ', ka:'რუკის შეცდომა, ' },
+  mbUnit:     { ru:'МБ', en:'MB', ka:'მბ' },
+  packAvail:  { ru:'доступен на сервере', en:'available on the server', ka:'სერვერზე ხელმისაწვდომია' },
+  packMissing:{ ru:'на сервере не найден, код ', en:'not found on the server, code ', ka:'სერვერზე ვერ მოიძებნა, კოდი ' },
+  packNoConn: { ru:'нет связи с сервером', en:'no connection to the server', ka:'სერვერთან კავშირი არ არის' },
+  packDownloaded:{ ru:'Скачано, ', en:'Downloaded, ', ka:'ჩამოტვირთულია, ' },
+  packNotDownloaded:{ ru:'Не скачано. Файл ', en:'Not downloaded. File ', ka:'არ არის ჩამოტვირთული. ფაილი ' },
+  btnUpdate:  { ru:'Обновить', en:'Update', ka:'განახლება' },
+  btnDownload:{ ru:'Скачать', en:'Download', ka:'ჩამოტვირთვა' },
+  btnDelete:  { ru:'Удалить', en:'Delete', ka:'წაშლა' },
+  usagePre:   { ru:'Занято в браузере ', en:'Used in the browser ', ka:'ბრაუზერში დაკავებულია ' },
+  usageOf:    { ru:' из ', en:' of ', ka:' / ' },
+  usagePost:  { ru:' (оценка браузера).', en:' (browser estimate).', ka:' (ბრაუზერის შეფასება).' },
+  busyDownload:{ ru:'Уже идёт загрузка', en:'A download is already running', ka:'ჩამოტვირთვა უკვე მიმდინარეობს' },
+  busyWait:   { ru:'Подожди окончания загрузки', en:'Wait for the download to finish', ka:'დაელოდე ჩამოტვირთვის დასრულებას' },
+  fetchingAssets:{ ru:'Скачиваю шрифты и значки...', en:'Downloading fonts and icons...', ka:'ვჩამოტვირთავ შრიფტებსა და ხატებს...' },
+  fileLc:     { ru:'файл ', en:'file ', ka:'ფაილი ' },
+  fileNotFound:{ ru:' не найден, код ', en:' not found, code ', ka:' ვერ მოიძებნა, კოდი ' },
+  downloadedPre:{ ru:'Скачано ', en:'Downloaded ', ka:'ჩამოტვირთულია ' },
+  downloadedOf:{ ru:' из ', en:' of ', ka:' / ' },
+  downloadedSuffix:{ ru:' скачано, ', en:' downloaded, ', ka:' ჩამოტვირთულია, ' },
+  downloadFail:{ ru:'Не удалось скачать, ', en:'Download failed, ', ka:'ჩამოტვირთვა ვერ მოხერხდა, ' },
+  deletedSuffix:{ ru:' удалено', en:' deleted', ka:' წაშლილია' },
 };
 const TYPE_LABELS = {
   mural:{ru:'Мурал',en:'Mural',ka:'მურალი'}, street_art:{ru:'Стрит-арт',en:'Street art',ka:'სტრიტ-არტი'},
@@ -385,11 +427,11 @@ function worksLabel(n) {
 
 // Внешний маршрут: без собственного routing. Основной провайдер первый, остальные — альтернативы.
 const ROUTE_PROVIDERS = [
-  { id:'yandex', name:'Яндекс Карты', url:(lat,lng) => `https://yandex.com/maps/?rtext=~${lat},${lng}&rtt=pd` },
-  { id:'google', name:'Google Maps', url:(lat,lng) => `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=walking` },
-  { id:'apple',  name:'Apple Maps',  url:(lat,lng) => `https://maps.apple.com/?daddr=${lat},${lng}&dirflg=w` },
+  { id:'yandex', name:{ ru:'Яндекс Карты', en:'Yandex Maps', ka:'Yandex Maps' }, url:(lat,lng) => `https://yandex.com/maps/?rtext=~${lat},${lng}&rtt=pd` },
+  { id:'google', name:{ ru:'Google Maps', en:'Google Maps', ka:'Google Maps' }, url:(lat,lng) => `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=walking` },
+  { id:'apple',  name:{ ru:'Apple Maps', en:'Apple Maps', ka:'Apple Maps' }, url:(lat,lng) => `https://maps.apple.com/?daddr=${lat},${lng}&dirflg=w` },
   // OSM — только навигация по координатам (честная карта), НЕ object page/evidence.
-  { id:'osm',    name:'OpenStreetMap', url:(lat,lng) => `https://www.openstreetmap.org/?mlat=${lat}&mlon=${lng}#map=17/${lat}/${lng}` },
+  { id:'osm',    name:{ ru:'OpenStreetMap', en:'OpenStreetMap', ka:'OpenStreetMap' }, url:(lat,lng) => `https://www.openstreetmap.org/?mlat=${lat}&mlon=${lng}#map=17/${lat}/${lng}` },
 ];
 
 const STATUS_RANK = { active:0, uncertain:1, damaged:2, replaced:3, removed:4 };
@@ -1002,7 +1044,7 @@ function sourceLinks(list) {
 function routeButtons(lat, lng) {
   return ROUTE_PROVIDERS.map((p, i) => {
     const cls = i === 0 ? 'amg-btn primary' : 'amg-btn';
-    const txt = i === 0 ? `${pick(LB.route)}: ${p.name}` : p.name;
+    const nm = pick(p.name); const txt = i === 0 ? `${pick(LB.route)}: ${nm}` : nm;
     return `<a class="${cls}" href="${esc(p.url(lat, lng))}" target="_blank" rel="noopener">${esc(txt)}</a>`;
   }).join('');
 }
@@ -1381,15 +1423,26 @@ Overlays.setCloser('card', closeCard);
 Overlays.setCloser('detail', closeDetail);
 Overlays.setCloser('sheet', () => Overlays.hide('sheet'));
 Overlays.setCloser('menu', () => Overlays.hide('menu'));
+// Держим ссылку на активный Popup, чтобы корректно перерисовывать его при смене языка.
+let popupRef = null, popupSiteId = null;
+function renderPopup() {
+  if (!popupRef || !popupSiteId) return;
+  popupRef.setHTML(sitePopupHtml(popupSiteId));
+  wireMedia(popupRef.getElement());
+  requestAnimationFrame(() => clampPopup(popupRef));
+}
 map.on('click', 'sites', e => {
   if (demoPick) return;
   const id = e.features[0].properties.id;
   if (isNarrow()) return renderCard(id);
+  if (popupRef) { try { popupRef.remove(); } catch (_) {} popupRef = null; popupSiteId = null; }
   const pop = new maplibregl.Popup({ offset:14, maxWidth:'min(360px, calc(100vw - 24px))' })
     .setLngLat(e.features[0].geometry.coordinates)
     .setHTML(sitePopupHtml(id));
   pop.on('open', () => requestAnimationFrame(() => clampPopup(pop)));
+  pop.on('close', () => { if (popupRef === pop) { popupRef = null; popupSiteId = null; } });
   pop.addTo(map);
+  popupRef = pop; popupSiteId = id;
   wireMedia(pop.getElement());
   pop.getElement().addEventListener('click', ev => {
     const h = ev.target.closest('[data-here]');
@@ -1429,15 +1482,34 @@ map.on('mouseleave', 'sites-clusters', () => map.getCanvas().style.cursor = '');
 const $ = id => document.getElementById(id);
 const toast = (t, ms = 5000) => { $('toast').textContent = t; $('toast').hidden = false; clearTimeout(toast.t); toast.t = setTimeout(() => $('toast').hidden = true, ms); };
 if (catalogError) toast(pick(LB.catalogFail) + catalogError, 9000);
-for (const [k, v] of Object.entries(FLAVORS)) $('flavor').insertAdjacentHTML('beforeend', `<option value="${k}">${v}</option>`);
+function renderFlavors() {
+  const sel = $('flavor'); if (!sel) return;
+  sel.innerHTML = '';
+  for (const k of Object.keys(FLAVORS)) sel.insertAdjacentHTML('beforeend', `<option value="${k}">${esc(pick(FLAVORS[k]))}</option>`);
+  sel.value = state.flavor;
+}
+renderFlavors();
 $('flavor').onchange = e => { state.flavor = e.target.value; map.setStyle(buildStyle()); };
-$('lang').onchange = e => { state.lang = e.target.value; map.setStyle(buildStyle()); renderChips(); updateRotateHint(); applyStaticLabels(); if (Overlays.isOpen('nearby')) renderNearby(); if (cardSiteId) renderCard(cardSiteId); if (detailSiteId) renderDetail(detailSiteId); };
-$('offlineOnly').onchange = e => { state.offlineOnly = e.target.checked; map.setStyle(buildStyle()); toast(state.offlineOnly ? 'Показываю только скачанное' : 'Снова можно читать карту из сети'); };
+$('lang').onchange = e => { state.lang = e.target.value; map.setStyle(buildStyle()); renderChips(); updateRotateHint(); applyStaticLabels(); if (Overlays.isOpen('nearby')) renderNearby(); if (cardSiteId) renderCard(cardSiteId); if (detailSiteId) renderDetail(detailSiteId); renderPopup(); };
+$('offlineOnly').onchange = e => { state.offlineOnly = e.target.checked; map.setStyle(buildStyle()); toast(state.offlineOnly ? pick(LB.showDownloaded) : pick(LB.showNetwork)); };
 $('btnPacks').onclick = () => { Overlays.hide('menu'); Overlays.show('sheet'); renderPacks(); };
 $('btnClose').onclick = () => Overlays.hide('sheet');
 
 // ---------- UGC Этап 1: «Что рядом» + share + deep-link (только клиент, без сервера) ----------
-function applyStaticLabels() { const b = $('btnNearby'); if (b) b.textContent = pick(LB.nearby); }
+// Единая точка локализации статичной оболочки: вызывается при загрузке и при смене языка.
+function applyStaticLabels() {
+  document.documentElement.lang = state.lang;                 // <html lang="…">
+  const T = (id, v) => { const el = $(id); if (el) el.textContent = v; };
+  T('btnNearby', pick(LB.nearby));
+  T('btnPacks', pick(LB.offline));
+  T('btnClose', pick(LB.close));
+  T('brandTag', pick(LB.brandTag));
+  T('sheetTitle', pick(LB.offlineMap));
+  T('offlineOnlyLabel', pick(LB.offlineOnlyTxt));
+  const mb = $('menuBtn'); if (mb) mb.setAttribute('aria-label', pick(LB.menu));
+  renderFlavors();
+  if (Overlays.isOpen('sheet')) renderPacks();
+}
 const NEARBY_RADII = [1000, 2000, 5000];
 const nearby = { lat:null, lng:null, radius:1000 };
 const WALK_M_PER_MIN = 83.3; // ≈5 км/ч
@@ -1787,33 +1859,33 @@ $('chips').onclick = e => {
 };
 renderChips();
 
-map.on('idle', () => { if (state.lastError) { toast('Ошибка карты, ' + state.lastError, 8000); state.lastError = ''; } });
+map.on('idle', () => { if (state.lastError) { toast(pick(LB.mapError) + state.lastError, 8000); state.lastError = ''; } });
 
-const mb = b => (b / 1048576).toFixed(1) + ' МБ';
+const mb = b => (b / 1048576).toFixed(1) + ' ' + pick(LB.mbUnit);
 let busy = null;
 
 async function probe(p) {
   try {
     const r = await fetch(p.url, { headers: { Range: 'bytes=0-15' }, cache: 'no-store' });
-    return r.ok ? 'доступен на сервере' : 'на сервере не найден, код ' + r.status;
-  } catch (e) { return 'нет связи с сервером'; }
+    return r.ok ? pick(LB.packAvail) : pick(LB.packMissing) + r.status;
+  } catch (e) { return pick(LB.packNoConn); }
 }
 
 async function renderPacks() {
   const box = $('packs'); box.innerHTML = '';
   for (const p of PACKS) {
     const el = document.createElement('div'); el.className = 'pack';
-    const st = p.local ? 'Скачано, ' + mb(p.size) : 'Не скачано. Файл ' + (await probe(p));
-    el.innerHTML = `<b>${p.title}</b><div class="st" id="st-${p.id}">${st}</div><div class="bar"><i id="pb-${p.id}"></i></div>
-      <div class="btns"><button class="btn p" id="dl-${p.id}">${p.local ? 'Обновить' : 'Скачать'}</button>
-      <button class="btn" id="rm-${p.id}">Удалить</button></div>`;
+    const st = p.local ? pick(LB.packDownloaded) + mb(p.size) : pick(LB.packNotDownloaded) + (await probe(p));
+    el.innerHTML = `<b>${pick(p.title)}</b><div class="st" id="st-${p.id}">${st}</div><div class="bar"><i id="pb-${p.id}"></i></div>
+      <div class="btns"><button class="btn p" id="dl-${p.id}">${p.local ? pick(LB.btnUpdate) : pick(LB.btnDownload)}</button>
+      <button class="btn" id="rm-${p.id}">${pick(LB.btnDelete)}</button></div>`;
     box.appendChild(el);
     $('dl-' + p.id).onclick = () => download(p);
     $('rm-' + p.id).onclick = () => remove(p);
   }
   if (navigator.storage && navigator.storage.estimate) {
     const e = await navigator.storage.estimate();
-    $('usage').textContent = 'Занято в браузере ' + mb(e.usage || 0) + ' из ' + mb(e.quota || 0) + ' (оценка браузера).';
+    $('usage').textContent = pick(LB.usagePre) + mb(e.usage || 0) + pick(LB.usageOf) + mb(e.quota || 0) + pick(LB.usagePost);
   }
 }
 
@@ -1831,36 +1903,36 @@ async function prefetchAssets() {
 }
 
 async function download(p) {
-  if (busy) return toast('Уже идёт загрузка');
+  if (busy) return toast(pick(LB.busyDownload));
   busy = p.id;
   try {
     if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => {});
-    $('st-' + p.id).textContent = 'Скачиваю шрифты и значки...';
+    $('st-' + p.id).textContent = pick(LB.fetchingAssets);
     await prefetchAssets();
     const r = await fetch(p.url, { cache: 'no-store' });
-    if (!r.ok) throw new Error('файл ' + p.url + ' не найден, код ' + r.status);
+    if (!r.ok) throw new Error(pick(LB.fileLc) + p.url + pick(LB.fileNotFound) + r.status);
     const total = +r.headers.get('content-length') || 0;
     const rd = r.body.getReader(), chunks = []; let got = 0;
     for (;;) {
       const { done, value } = await rd.read(); if (done) break;
       chunks.push(value); got += value.length;
       $('pb-' + p.id).style.width = (total ? got / total * 100 : 50) + '%';
-      $('st-' + p.id).textContent = 'Скачано ' + mb(got) + (total ? ' из ' + mb(total) : '');
+      $('st-' + p.id).textContent = pick(LB.downloadedPre) + mb(got) + (total ? pick(LB.downloadedOf) + mb(total) : '');
     }
     const blob = new Blob(chunks, { type:'application/octet-stream' });
     await idbPut('pack:' + p.id, blob);
     await loadLocal();
-    toast(p.title + ' скачано, ' + mb(blob.size));
+    toast(pick(p.title) + pick(LB.downloadedSuffix) + mb(blob.size));
     map.setStyle(buildStyle());
   } catch (e) {
-    toast('Не удалось скачать, ' + (e.message || e), 9000);
+    toast(pick(LB.downloadFail) + (e.message || e), 9000);
   } finally { busy = null; renderPacks(); }
 }
 
 async function remove(p) {
-  if (busy) return toast('Подожди окончания загрузки');
+  if (busy) return toast(pick(LB.busyWait));
   await idbDel('pack:' + p.id); await loadLocal();
-  toast(p.title + ' удалено'); renderPacks(); map.setStyle(buildStyle());
+  toast(pick(p.title) + pick(LB.deletedSuffix)); renderPacks(); map.setStyle(buildStyle());
 }
 
 </script>
