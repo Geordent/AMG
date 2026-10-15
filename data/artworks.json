@@ -229,6 +229,11 @@
     "year": null,
     "status": "active",
     "replaced_by": null,
+    "description": {
+      "en": "Ironcat is a street-art mural by the artist Goshaart in the old Kala quarter of Tbilisi's historic centre.",
+      "ru": "«Железный кот» (Ironcat) — мурал художника Goshaart в старом районе Кала в историческом центре Тбилиси.",
+      "ka": "„რკინის კატა“ (Ironcat) — მხატვარ Goshaart-ის სტრიტ-არტის მურალი თბილისის ისტორიული ცენტრის ძველ კალის უბანში."
+    },
     "sources": [
       {
         "id": "src-0001",
@@ -255,6 +260,11 @@
     "year": null,
     "status": "active",
     "replaced_by": null,
+    "description": {
+      "en": "Tbilisi Cat Power Station is a graffiti work by the artist Goshaart in the old town of Tbilisi, dated August 2023.",
+      "ru": "«Тбилисская кошачья электростанция» — граффити художника Goshaart в старом городе Тбилиси, датируется августом 2023 года.",
+      "ka": "„თბილისის კატა ელექტროსადგური“ — მხატვარ Goshaart-ის გრაფიტი თბილისის ძველ ქალაქში, დათარიღებული 2023 წლის აგვისტოთი."
+    },
     "sources": [
       {
         "id": "src-0001",
@@ -281,6 +291,11 @@
     "year": null,
     "status": "active",
     "replaced_by": null,
+    "description": {
+      "en": "Pink face is a graffiti piece by the artist @vadik.fin in the Chugureti district of Tbilisi.",
+      "ru": "«Розовое лицо» (Pink face) — граффити художника @vadik.fin в районе Чугурети в Тбилиси.",
+      "ka": "„ვარდისფერი სახე“ (Pink face) — მხატვარ @vadik.fin-ის გრაფიტი თბილისის ჩუღურეთის რაიონში."
+    },
     "sources": [
       {
         "id": "src-0001",
@@ -307,6 +322,11 @@
     "year": null,
     "status": "active",
     "replaced_by": null,
+    "description": {
+      "en": "Frida Kahlo is a graffiti work in the Vake district of Tbilisi, named after the Mexican painter Frida Kahlo.",
+      "ru": "«Фрида Кало» — граффити в районе Ваке в Тбилиси, посвящённое мексиканской художнице Фриде Кало.",
+      "ka": "„ფრიდა კალო“ — გრაფიტი თბილისის ვაკის რაიონში, მექსიკელი მხატვრის ფრიდა კალოს სახელობის."
+    },
     "sources": [
       {
         "id": "src-0001",
@@ -333,6 +353,11 @@
     "year": null,
     "status": "active",
     "replaced_by": null,
+    "description": {
+      "en": "A street-art piece in the Vake district of Tbilisi titled with the line 'And suddenly all the love songs were about you'.",
+      "ru": "Стрит-арт работа в районе Ваке в Тбилиси под названием «И вдруг все песни о любви были о тебе».",
+      "ka": "სტრიტ-არტის ნამუშევარი თბილისის ვაკის რაიონში სახელწოდებით „და უცებ ყველა სასიყვარულო სიმღერა შენზე იყო“."
+    },
     "sources": [
       {
         "id": "src-0001",
@@ -359,6 +384,11 @@
     "year": null,
     "status": "active",
     "replaced_by": null,
+    "description": {
+      "en": "White cat is a graffiti work by the artist deroz_art in the Saburtalo district of Tbilisi.",
+      "ru": "«Белый кот» — граффити художника deroz_art в районе Сабуртало в Тбилиси.",
+      "ka": "„თეთრი კატა“ — მხატვარ deroz_art-ის გრაფიტი თბილისის საბურთალოს რაიონში."
+    },
     "sources": [
       {
         "id": "src-0001",
@@ -822,6 +852,11 @@
     "year": 1955,
     "status": "active",
     "replaced_by": null,
+    "description": {
+      "en": "A residential building at 4 Dimitri Uznadze Street in Tbilisi, built in 1955 to a design by the architect M. Melia. Nine storeys high and in the Stalinist neoclassical style, it is a listed immovable monument of cultural heritage of Georgia.",
+      "ru": "Жилой дом на улице Димитрия Узнадзе, 4 в Тбилиси, построенный в 1955 году по проекту архитектора М. Мелиа. Девятиэтажное здание в стиле сталинского неоклассицизма — памятник культурного наследия Грузии.",
+      "ka": "საცხოვრებელი სახლი დიმიტრი უზნაძის ქუჩა 4-ში, თბილისში, აგებული 1955 წელს არქიტექტორ მ. მელიას პროექტით. ცხრასართულიანი შენობა სტალინური ნეოკლასიციზმის სტილში საქართველოს კულტურული მემკვიდრეობის უძრავი ძეგლია."
+    },
     "sources": [
       {
         "id": "src-0009",
@@ -850,6 +885,11 @@
     "year": 1960,
     "status": "active",
     "replaced_by": null,
+    "description": {
+      "en": "A residential building at 2 Dimitri Uznadze Street in Tbilisi, built in 1960 to a design by the architect Sh. Kavlashvili. Eleven storeys high, it is a listed immovable monument of cultural heritage of Georgia.",
+      "ru": "Жилой дом на улице Димитрия Узнадзе, 2 в Тбилиси, построенный в 1960 году по проекту архитектора Ш. Кавлашвили. Одиннадцатиэтажное здание — памятник культурного наследия Грузии.",
+      "ka": "საცხოვრებელი სახლი დიმიტრი უზნაძის ქუჩა 2-ში, თბილისში, აგებული 1960 წელს არქიტექტორ შ. კავლაშვილის პროექტით. თერთმეტსართულიანი შენობა საქართველოს კულტურული მემკვიდრეობის უძრავი ძეგლია."
+    },
     "sources": [
       {
         "id": "src-0009",
@@ -925,6 +965,11 @@
     "year": 1967,
     "status": "active",
     "replaced_by": null,
+    "description": {
+      "en": "The complex of the Georgian Agricultural Institute on the 13th kilometre of David Agmashenebeli Alley in Tbilisi, designed in 1967 by the architect Vladimer (Lado) Aleksi-Meskhishvili. The institute traces its history to 1929 and is continued today by the Agricultural University of Georgia.",
+      "ru": "Комплекс Грузинского сельскохозяйственного института на 13-м км Аллеи Давида Агмашенебели в Тбилиси, спроектированный в 1967 году архитектором Владимиром (Ладо) Алекси-Месхишвили. История института восходит к 1929 году; сегодня его продолжает Аграрный университет Грузии.",
+      "ka": "საქართველოს სასოფლო-სამეურნეო ინსტიტუტის კომპლექსი დავით აღმაშენებლის ხეივნის მე-13 კილომეტრზე, თბილისში, დაპროექტებული 1967 წელს არქიტექტორ ვლადიმერ (ლადო) ალექსი-მესხიშვილის მიერ. ინსტიტუტის ისტორია 1929 წლიდან იწყება; დღეს მას საქართველოს აგრარული უნივერსიტეტი აგრძელებს."
+    },
     "sources": [
       {
         "id": "src-0009",
@@ -1031,6 +1076,11 @@
     "year": null,
     "status": "active",
     "replaced_by": null,
+    "description": {
+      "en": "Rotation is a sculpture by the Georgian artist Tamara Kvesitadze on the Batumi seafront, near the House of Justice.",
+      "ru": "«Вращение» (Rotation) — скульптура грузинской художницы Тамары Квеситадзе на батумской набережной, возле Дома Юстиции.",
+      "ka": "„როტაცია“ (Rotation) — ქართველი მხატვრის თამარა კვესიტაძის ქანდაკება ბათუმის ბულვარზე, იუსტიციის სახლის მახლობლად."
+    },
     "sources": [
       {
         "id": "src-0007",
@@ -1053,6 +1103,11 @@
     "year": null,
     "status": "active",
     "replaced_by": null,
+    "description": {
+      "en": "A public-art object in Batumi: a sign that reads 'Where', recorded in OpenStreetMap as an artwork of the sculpture type.",
+      "ru": "Арт-объект в Батуми — знак с надписью «Where» («Где»), отмеченный в OpenStreetMap как скульптура.",
+      "ka": "ხელოვნების ობიექტი ბათუმში — აბრა წარწერით „Where“ („სად“), აღნიშნული OpenStreetMap-ში ქანდაკებად."
+    },
     "sources": [
       {
         "id": "src-0007",
@@ -1075,6 +1130,11 @@
     "year": null,
     "status": "active",
     "replaced_by": null,
+    "description": {
+      "en": "A sculpture on the Batumi seafront boulevard, recorded in OpenStreetMap under the name 'Researcher' ('Explorer'), part of the city's open-air collection along the promenade.",
+      "ru": "Скульптура на батумском бульваре, отмеченная в OpenStreetMap под названием «Researcher» («Исследователь»), часть коллекции скульптур под открытым небом на набережной Батуми.",
+      "ka": "ქანდაკება ბათუმის ბულვარზე, აღნიშნული OpenStreetMap-ში სახელწოდებით „Researcher“ („მკვლევარი“), ბათუმის სანაპიროს ღია ცის ქვეშ მდებარე ქანდაკებათა კოლექციის ნაწილი."
+    },
     "sources": [
       {
         "id": "src-0007",
@@ -1097,6 +1157,11 @@
     "year": null,
     "status": "active",
     "replaced_by": null,
+    "description": {
+      "en": "Grand Piano (როიალი) is a public-art installation in the old town of Tbilisi, recorded in OpenStreetMap as an artwork of the installation type.",
+      "ru": "«Фортепиано» (როიალი) — арт-инсталляция в старом городе Тбилиси, отмеченная в OpenStreetMap как инсталляция.",
+      "ka": "„პიანინო“ (როიალი) — არტ-ინსტალაცია თბილისის ძველ ქალაქში, აღნიშნული OpenStreetMap-ში ინსტალაციად."
+    },
     "sources": [
       {
         "id": "src-0001",
@@ -1119,6 +1184,11 @@
     "year": null,
     "status": "active",
     "replaced_by": null,
+    "description": {
+      "en": "m2 is an art installation in the Saburtalo district of Tbilisi, recorded in OpenStreetMap.",
+      "ru": "«м2» — арт-инсталляция в районе Сабуртало в Тбилиси, отмеченная в OpenStreetMap.",
+      "ka": "„მ2“ — არტ-ინსტალაცია თბილისის საბურთალოს რაიონში, აღნიშნული OpenStreetMap-ში."
+    },
     "sources": [
       {
         "id": "src-0001",
@@ -1141,6 +1211,11 @@
     "year": null,
     "status": "active",
     "replaced_by": null,
+    "description": {
+      "en": "The Bicycle Monument is a metal sculpture installed in 2011 in Tbilisi. It is attributed to the artist Jean Dupuy (1925-2021) and is known locally as 'Saakashvili's bicycle'.",
+      "ru": "«Памятник велосипеду» — металлическая скульптура, установленная в 2011 году в Тбилиси. Приписывается художнику Жану Дюпюи (1925–2021); в народе известна как «велосипед Саакашвили».",
+      "ka": "„ველოსიპედის ძეგლი“ — ლითონის ქანდაკება, დადგმული 2011 წელს თბილისში. მიეკუთვნება მხატვარ ჟან დიუპუის (1925–2021); ადგილობრივად ცნობილია როგორც „სააკაშვილის ველოსიპედი“."
+    },
     "sources": [
       {
         "id": "src-0001",
