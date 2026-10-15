@@ -185,6 +185,11 @@
     "year": null,
     "status": "active",
     "replaced_by": null,
+    "description": {
+      "en": "A pedestrian underpass beneath Baratashvili Bridge in central Tbilisi, used as an informal street-art gallery: its walls are covered with murals by local and visiting artists.",
+      "ru": "Пешеходный переход под мостом Бараташвили в центре Тбилиси служит неформальной галереей стрит-арта: его стены покрыты муралами местных и приезжих художников.",
+      "ka": "საფეხმავლო გადასასვლელი ბარათაშვილის ხიდის ქვეშ, თბილისის ცენტრში, არაფორმალური სტრიტ-არტის გალერეად გამოიყენება — კედლები ადგილობრივი და ჩამოსული მხატვრების მურალებითაა დაფარული."
+    },
     "sources": [
       {
         "id": "src-0001",
@@ -598,6 +603,11 @@
     "year": 1958,
     "status": "active",
     "replaced_by": null,
+    "description": {
+      "en": "Kartlis Deda — the Mother of Georgia — stands on Sololaki Hill above old Tbilisi. Created by the sculptor Elguja Amashukeli and erected in 1958 for the city's 1500th anniversary, the twenty-metre aluminium figure of a woman in Georgian national dress holds a cup of wine for friends and a sword for enemies.",
+      "ru": "«Картлис Деда» — «Мать Грузии» — стоит на Сололакском холме над старым Тбилиси. Создана скульптором Элгуджей Амашукели и установлена в 1958 году к 1500-летию города: двадцатиметровая алюминиевая фигура женщины в грузинском национальном платье держит чашу вина для друзей и меч для врагов.",
+      "ka": "„ქართლის დედა“ სოლოლაკის გორაზე დგას, ძველი თბილისის თავზე. იგი მოქანდაკე ელგუჯა ამაშუკელმა შექმნა და 1958 წელს, ქალაქის 1500 წლისთავზე აღიმართა; ქართულ ეროვნულ კაბაში გამოწყობილი ოცმეტრიანი ალუმინის ქალი მეგობრებს ღვინის ფიალას, მტრებს კი ხმალს უჭირავს."
+    },
     "sources": [
       {
         "id": "src-0001",
@@ -640,6 +650,11 @@
     "year": 2006,
     "status": "active",
     "replaced_by": null,
+    "description": {
+      "en": "The Freedom Monument on Tbilisi's central Freedom Square is a 35-metre granite column crowned by a golden statue of Saint George slaying the dragon — a gift to the city from its creator, the sculptor Zurab Tsereteli, unveiled in 2006.",
+      "ru": "Памятник Свободы на центральной площади Свободы в Тбилиси — 35-метровая гранитная колонна, увенчанная золотой статуей святого Георгия, поражающего дракона. Дар городу от скульптора Зураба Церетели, открыт в 2006 году.",
+      "ka": "თავისუფლების მონუმენტი თბილისის ცენტრალურ თავისუფლების მოედანზე 35-მეტრიანი გრანიტის სვეტია, რომელსაც ამშვენებს წმინდა გიორგის ოქროს ქანდაკება. ქალაქს იგი მოქანდაკე ზურაბ წერეთელმა აჩუქა და 2006 წელს გაიხსნა."
+    },
     "sources": [
       {
         "id": "src-0001",
@@ -682,6 +697,11 @@
     "year": 1985,
     "status": "active",
     "replaced_by": null,
+    "description": {
+      "en": "The Chronicle of Georgia (საქართველოს მატიანე) is a monumental complex by Zurab Tsereteli on Keeni Hill near the Tbilisi Sea, begun in 1985 and never fully completed. Sixteen pillars 30–35 metres tall carry reliefs of Georgian kings, queens and heroes above and scenes from the life of Christ below; beside them stand a grapevine cross of Saint Nino and a chapel.",
+      "ru": "«Летопись Грузии» (საქართველოს მატიანე) — монументальный комплекс Зураба Церетели на холме Кении у Тбилисского моря, начатый в 1985 году и так и не завершённый. Шестнадцать колонн высотой 30–35 м несут рельефы грузинских царей, цариц и героев вверху и сцены из жизни Христа внизу; рядом — крест святой Нино и часовня.",
+      "ka": "„საქართველოს მატიანე“ ზურაბ წერეთლის მონუმენტური კომპლექსია ქენიის გორაზე, თბილისის ზღვის მახლობლად; დაიწყო 1985 წელს და ბოლომდე არ დასრულებულა. თექვსმეტ 30–35-მეტრიან სვეტზე ზემოთ გამოსახულნი არიან ქართველი მეფეები, დედოფლები და გმირები, ქვემოთ — ქრისტეს ცხოვრების სცენები; გვერდით წმინდა ნინოს ვაზის ჯვარი და სამლოცველოა."
+    },
     "sources": [
       {
         "id": "src-0001",
@@ -722,6 +742,11 @@
     "year": null,
     "status": "active",
     "replaced_by": null,
+    "description": {
+      "en": "An equestrian monument to King Vakhtang I Gorgasali (5th–6th century) on the Metekhi cliff in Tbilisi, overlooking the Mtkvari river. Georgian tradition credits Vakhtang with founding the city.",
+      "ru": "Конный памятник царю Вахтангу I Горгасали (V–VI века) на скале Метехи в Тбилиси, над рекой Мтквари. Грузинское предание приписывает Вахтангу основание города.",
+      "ka": "მეფე ვახტანგ I გორგასლის ცხენოსანი ძეგლი მეტეხის კლდეზე, თბილისში, მტკვრის ზემოთ. ქართული ტრადიცია ქალაქის დაარსებას ვახტანგს მიაწერს."
+    },
     "sources": [
       {
         "id": "src-0001",
@@ -764,6 +789,11 @@
     "year": 2011,
     "status": "active",
     "replaced_by": null,
+    "description": {
+      "en": "A small bronze monument to Mimino, the pilot-hero of the beloved 1977 Soviet comedy-drama by Georgiy Daneliya starring Vakhtang Kikabidze. Tbilisi honours the film's character with this modest figure.",
+      "ru": "Небольшой бронзовый памятник Мимино — лётчику, герою любимой советской комедии 1977 года Георгия Данелии с Вахтангом Кикабидзе. Тбилиси отдаёт дань персонажу фильма этой скромной фигурой.",
+      "ka": "მცირე ბრინჯაოს ძეგლი მიმინოს — 1977 წლის საყვარელი საბჭოთა კომედიის (რეჟისორი გიორგი დანელია, მთავარ როლში ვახტანგ კიკაბიძე) გმირ-პილოტს. თბილისი ფილმის პერსონაჟს ამ მოკრძალებული ფიგურით პატივს მიაგებს."
+    },
     "sources": [
       {
         "id": "src-0001",
@@ -848,6 +878,11 @@
     "year": 1971,
     "status": "active",
     "replaced_by": null,
+    "description": {
+      "en": "The Georgian State Philharmonic in central Tbilisi is a concert organisation whose roots go back to 1905, when the Georgian Philharmonic Society was founded by leading musicians of the day. Its hall is one of the city's principal classical-music venues.",
+      "ru": "Грузинская государственная филармония в центре Тбилиси — концертная организация, ведущая историю с 1905 года, когда было основано Грузинское филармоническое общество. Её зал — одна из главных концертных площадок города.",
+      "ka": "საქართველოს სახელმწიფო ფილარმონია თბილისის ცენტრში საკონცერტო ორგანიზაციაა, რომლის ისტორიაც 1905 წლიდან იწყება, როცა ქართველმა მუსიკოსებმა საქართველოს ფილარმონიული საზოგადოება დააარსეს. მისი დარბაზი ქალაქის ერთ-ერთი მთავარი საკონცერტო სივრცეა."
+    },
     "sources": [
       {
         "id": "src-0009",
@@ -918,6 +953,11 @@
     "year": 1973,
     "status": "active",
     "replaced_by": null,
+    "description": {
+      "en": "The Tbilisi Chess Palace is a chess club and architectural landmark in Tbilisi and the country's chess centre; the building follows a design by the architect Vladimer (Lado) Aleksi-Meskhishvili.",
+      "ru": "Тбилисский шахматный дворец — шахматный клуб и архитектурный памятник в Тбилиси, центр грузинских шахмат; здание построено по проекту архитектора Владимира (Ладо) Алекси-Месхишвили.",
+      "ka": "თბილისის ჭადრაკის სასახლე საჭადრაკო კლუბი და არქიტექტურული ძეგლია თბილისში, საქართველოს ჭადრაკის ცენტრი; შენობა არქიტექტორ ვლადიმერ (ლადო) ალექსი-მესხიშვილის პროექტითაა აგებული."
+    },
     "sources": [
       {
         "id": "src-0009",
@@ -946,6 +986,11 @@
     "year": 2010,
     "status": "active",
     "replaced_by": null,
+    "description": {
+      "en": "Ali and Nino, previously named Man and Woman, is a kinetic sculpture and public-art installation by Tamara Kvesitadze on the Batumi seafront. Designed in 2007 and installed in 2010, it depicts two figures that slowly move through each other, a symbol of eternal love and mutual understanding across cultures and religions.",
+      "ru": "«Али и Нино» (первоначально «Мужчина и женщина») — кинетическая скульптура и объект паблик-арта Тамары Квеситадзе на батумской набережной. Создана в 2007 году, установлена в 2010-м: две фигуры медленно проходят сквозь друг друга — символ вечной любви и взаимопонимания поверх культур и религий.",
+      "ka": "„ალი და ნინო“ (თავდაპირველად „კაცი და ქალი“) თამარა კვესიტაძის კინეტიკური ქანდაკება და პაბლიკ-არტის ობიექტია ბათუმის ბულვარზე. 2007 წელს შეიქმნა, 2010 წელს დამონტაჟდა: ორი ფიგურა ნელა ერთმანეთში გაივლის — მარადიული სიყვარულისა და კულტურათა შორის ურთიერთგაგების სიმბოლო."
+    },
     "sources": [
       {
         "id": "src-0003",
@@ -1118,6 +1163,11 @@
     "year": null,
     "status": "active",
     "replaced_by": null,
+    "description": {
+      "en": "Armaziskhevi is one of the old districts of Mtskheta and was the residence of the eristavis (pitakhshs) — the rulers of Kartli. It lies west of Mtskheta at the confluence of the Armaziskhevi and the Mtkvari, and includes a medieval monastic complex, a fortress above the ravine, and settlement layers from the Late Bronze–Early Iron Age. Archaeological excavations were carried out here in 1937–1946.",
+      "ru": "Армазисхеви — один из старых районов Мцхеты и резиденция эриставов (питиахшей) — правителей Картли. Находится западнее Мцхеты, при впадении Армазисхеви в Мтквари; включает средневековый монастырский комплекс, крепость над ущельем и слои поселения поздней бронзы — раннего железа. Археологические раскопки велись здесь в 1937–1946 годах.",
+      "ka": "არმაზისხევი ძველი მცხეთის ერთ-ერთი უბანი და ქართლის ერისთავების (პიტიახშების) რეზიდენცია იყო. მდებარეობს მცხეთის დასავლეთით, არმაზისხევისა და მტკვრის შესართავთან; მოიცავს შუა საუკუნეების სამონასტრო კომპლექსს, ხევის თავზე ციხეს და გვიანდელი ბრინჯაო-ადრინდელი რკინის ხანის ნამოსახლარს. არქეოლოგიური გათხრები აქ 1937–1946 წლებში ჩატარდა."
+    },
     "sources": [
       {
         "id": "src-0001",
