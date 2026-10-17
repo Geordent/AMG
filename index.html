@@ -20,6 +20,19 @@
   #sheet { position:absolute; left:0; right:0; bottom:0; z-index:20; background:#fff; border-radius:16px 16px 0 0; box-shadow:0 -6px 24px rgba(0,0,0,.2); padding:14px 16px calc(14px + env(safe-area-inset-bottom,0px)); max-height:75%; overflow-y:auto; }
   #sheet[hidden], #toast[hidden] { display:none; }
   #sheet h2 { margin:0 0 8px; font-size:18px; }
+  /* --- Служебная строка: счётчик посещений + обратная связь (живёт в #bar; на мобиле уезжает в меню) --- */
+  #amgMeta { display:flex; align-items:center; gap:2px 10px; flex-wrap:wrap; font-size:12px; color:#6b6259; padding:0 2px; }
+  #amgMeta[hidden] { display:none; }
+  #amgHits { display:inline-flex; align-items:center; gap:4px; white-space:nowrap; }
+  #amgHits[hidden] { display:none; }
+  #amgHits b { font-weight:600; color:#3f382f; font-variant-numeric:tabular-nums; }
+  #amgFeedbackBtn { border:0; background:transparent; color:#a2543a; font-family:inherit; font-size:12px; padding:6px 2px; cursor:pointer; text-decoration:underline; text-underline-offset:2px; }
+  #feedback { position:absolute; left:0; right:0; bottom:0; z-index:20; background:#fff; border-radius:16px 16px 0 0; box-shadow:0 -6px 24px rgba(0,0,0,.2); padding:14px 16px calc(14px + env(safe-area-inset-bottom,0px)); max-height:75%; overflow-y:auto; }
+  #feedback[hidden] { display:none; }
+  #feedback h2 { margin:0 0 8px; font-size:18px; }
+  #feedback .small { font-size:12px; color:#6b6259; line-height:1.5; margin:0 0 4px; }
+  #feedback .btns { display:flex; gap:8px; flex-wrap:wrap; margin-top:12px; }
+  #feedback .btns .btn { flex:1 1 auto; text-align:center; text-decoration:none; display:inline-flex; align-items:center; justify-content:center; }
   /* --- «Что рядом» (UGC Этап 1) --- */
   #nearby { position:absolute; left:0; right:0; bottom:0; z-index:20; background:#fff; border-radius:16px 16px 0 0; box-shadow:0 -6px 24px rgba(0,0,0,.2); padding:14px 16px calc(14px + env(safe-area-inset-bottom,0px)); max-height:78%; overflow-y:auto; -webkit-overflow-scrolling:touch; }
   #nearby[hidden] { display:none; }
@@ -232,6 +245,10 @@
     </select>
     <button id="btnNearby">Рядом</button>
     <button id="btnPacks">Офлайн</button>
+    <div id="amgMeta" hidden>
+      <span id="amgHits" title="" hidden><span aria-hidden="true">👁</span>&nbsp;<b id="amgHitsN">—</b></span>
+      <button type="button" id="amgFeedbackBtn">Обратная связь</button>
+    </div>
   </div>
   <div id="chips"></div>
 </div>
@@ -249,6 +266,15 @@
 <div id="card" hidden></div>
 <div id="detail" hidden></div>
 <div id="nearby" hidden></div>
+<div id="feedback" hidden>
+  <h2 id="fbTitle">Обратная связь</h2>
+  <p class="small" id="fbText"></p>
+  <p class="small" id="fbHint"></p>
+  <div class="btns">
+    <a class="btn p" id="fbGh" href="https://github.com/Geordent/AMG/issues/new" target="_blank" rel="noopener">GitHub</a>
+    <button class="btn" id="fbClose" type="button">Закрыть</button>
+  </div>
+</div>
 
 <script type="module">
 let maplibregl, PMTiles, layers, namedFlavor;
@@ -272,7 +298,17 @@ try {
   throw e;
 }
 
-if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
+if ('serviceWorker' in navigator) {
+  // Была ли страница уже под управлением SW: только тогда смена контроллера = пришло обновление.
+  const hadSW = !!navigator.serviceWorker.controller;
+  navigator.serviceWorker.register('sw.js').catch(() => {});
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (!hadSW) return;
+    try { toast(pick({ ru:'Вышло обновление сайта — перезагрузите страницу, чтобы увидеть новое.',
+                       en:'A site update is available — reload the page to get it.',
+                       ka:'საიტის განახლებაა — გადატვირთეთ გვერდი.' }), 9000); } catch (_) {}
+  });
+}
 
 const GLYPHS = 'https://protomaps.github.io/basemaps-assets/fonts/{fontstack}/{range}.pbf';
 const SPRITE = 'https://protomaps.github.io/basemaps-assets/sprites/v4/';
@@ -349,6 +385,26 @@ const LB = {
   share:      { ru:'Поделиться', en:'Share', ka:'გაზიარება' },
   shareCopied:{ ru:'Ссылка скопирована', en:'Link copied', ka:'ბმული დაკოპირდა' },
   close:      { ru:'Закрыть', en:'Close', ka:'დახურვა' },
+  hitsTitle:  { ru:'Число посещений сайта', en:'Number of site visits', ka:'საიტის ვიზიტების რაოდენობა' },
+  feedback:   { ru:'Обратная связь', en:'Feedback', ka:'უკუკავშირი' },
+  fbText:     { ru:'Что-то не работает или есть предложение? Напишите нам — это помогает проекту.',
+                en:'Something is broken or you have an idea? Tell us — it helps the project.',
+                ka:'რაღაც არ მუშაობს ან გაქვთ წინადადება? მოგვწერეთ — ეს პროექტს ეხმარება.' },
+  fbHint:     { ru:'Откроется форма на GitHub с уже заполненными данными страницы и браузера. Нужен бесплатный аккаунт GitHub.',
+                en:'A GitHub form opens with the page and browser details already filled in. A free GitHub account is required.',
+                ka:'გაიხსნება GitHub-ის ფორმა უკვე შევსებული გვერდის და ბრაუზერის მონაცემებით. საჭიროა უფასო GitHub-ის ანგარიში.' },
+  fbOpen:     { ru:'Написать на GitHub', en:'Write on GitHub', ka:'დაწერეთ GitHub-ზე' },
+  fbIssueTitle:{ ru:'Отзыв о ArtMap Georgia', en:'Feedback on ArtMap Georgia', ka:'გამოხმაურება ArtMap Georgia-ზე' },
+  appError:   { ru:'Что-то пошло не так. Если карта не отвечает — перезагрузите страницу.',
+                en:'Something went wrong. If the map is unresponsive, reload the page.',
+                ka:'რაღაც შეცდომა მოხდა. თუ რუკა არ რეაგირებს — გადატვირთეთ გვერდი.' },
+  netOffline: { ru:'Нет сети — показываю только скачанные карты (если они есть).',
+                en:'You are offline — showing downloaded maps only (if any).',
+                ka:'ქსელი არ არის — ნაჩვენებია მხოლოდ ჩამოტვირთული რუკები (თუ არსებობს).' },
+  netOnline:  { ru:'Соединение восстановлено', en:'Connection restored', ka:'კავშირი აღდგა' },
+  updated:    { ru:'Вышло обновление сайта — перезагрузите страницу, чтобы увидеть новое.',
+                en:'A site update is available — reload the page to get it.',
+                ka:'საიტის განახლებაა — გადატვირთეთ გვერდი.' },
   here:       { ru:'Я здесь', en:'I’m here', ka:'აქ ვარ' },
   hereSent:   { ru:'Я здесь ✓', en:'I’m here ✓', ka:'აქ ვარ ✓' },
   hereFix:    { ru:'Точка не здесь — исправить', en:'Point is off — fix it', ka:'წერტილი სხვაგანაა — გასწორება' },
@@ -879,8 +935,18 @@ function onlineDetailLayers() {
 }
 
 // Native gestures: pan / pinch / double-tap / tap остаются; вращение и наклон отключаем (north-up).
-const map = new maplibregl.Map({ container:'map', style: buildStyle(), center:[44.80, 41.715], zoom:12, maxZoom:18,
-  dragRotate:false, touchPitch:false, attributionControl:{ compact:true } });
+let map;
+try {
+  map = new maplibregl.Map({ container:'map', style: buildStyle(), center:[44.80, 41.715], zoom:12, maxZoom:18,
+    dragRotate:false, touchPitch:false, attributionControl:{ compact:true } });
+} catch (e) {
+  // Пустой серый экран без объяснения — худший сценарий. Показываем текст и кнопку перезагрузки.
+  const t = pick({ ru:'Карта не запустилась.', en:'The map failed to start.', ka:'რუკა ვერ გაშვდა.' });
+  const b = pick({ ru:'Перезагрузить', en:'Reload', ka:'გადატვირთვა' });
+  document.body.insertAdjacentHTML('beforeend',
+    '<div class="fatal">' + t + '<br><br><button type="button" class="btn" onclick="location.reload()">' + b + '</button></div>');
+  throw e;
+}
 map.touchZoomRotate.disableRotation();  // pinch-zoom остаётся, two-finger rotate — нет
 map.addControl(new maplibregl.NavigationControl({ showCompass:false }), 'bottom-right');
 map.addControl(new maplibregl.GeolocateControl({ positionOptions:{ enableHighAccuracy:true }, trackUserLocation:true }), 'bottom-right');
@@ -1567,6 +1633,77 @@ map.on('mouseleave', 'sites-clusters', () => map.getCanvas().style.cursor = '');
 const $ = id => document.getElementById(id);
 const toast = (t, ms = 5000) => { $('toast').textContent = t; $('toast').hidden = false; clearTimeout(toast.t); toast.t = setTimeout(() => $('toast').hidden = true, ms); };
 if (catalogError) toast(pick(LB.catalogFail) + catalogError, 9000);
+
+// ---------- Служебное: счётчик посещений (простой, без аналитики) + обратная связь ----------
+// Счётчик — один внешний счётчик визитов (abacus.jasoncameron.dev). Никаких cookie,
+// идентификаторов и трекинга: только инкремент и чтение одного числа. Упал сервис —
+// счётчик просто не показывается, страница работает как обычно.
+const AMG_HITS = { ns:'geordent-amg', key:'visits', api:'https://abacus.jasoncameron.dev' };
+const AMG_FEEDBACK = { gh:'https://github.com/Geordent/AMG/issues/new' };
+function applyMetaLabels() {
+  const hits = $('amgHits'); if (hits) hits.title = pick(LB.hitsTitle);
+  const fb = $('amgFeedbackBtn'); if (fb) fb.textContent = pick(LB.feedback);
+  const t = $('fbTitle'); if (t) t.textContent = pick(LB.feedback);
+  const txt = $('fbText'); if (txt) txt.textContent = pick(LB.fbText);
+  const hint = $('fbHint'); if (hint) hint.textContent = pick(LB.fbHint);
+  const gh = $('fbGh'); if (gh) gh.textContent = pick(LB.fbOpen);
+  const cl = $('fbClose'); if (cl) cl.textContent = pick(LB.close);
+}
+function feedbackUrl() {
+  const title = pick(LB.fbIssueTitle);
+  const body = '\n\n---\nСтраница: ' + location.href + '\nБраузер: ' + navigator.userAgent + '\nЯзык: ' + state.lang;
+  return AMG_FEEDBACK.gh + '?title=' + encodeURIComponent(title) + '&body=' + encodeURIComponent(body);
+}
+async function initHits() {
+  const box = $('amgMeta'), el = $('amgHits'), num = $('amgHitsN');
+  if (!box || !el || !num) return;
+  box.hidden = false;                              // кнопка обратной связи видна всегда
+  let cached = 0, counted = false;
+  try {
+    cached = +sessionStorage.getItem('amg-hits') || 0;
+    counted = sessionStorage.getItem('amg-hits-counted') === '1';
+  } catch (_) {}
+  const show = v => { if (typeof v === 'number' && isFinite(v) && v >= 0) { num.textContent = v.toLocaleString('ru-RU'); el.hidden = false; } };
+  if (cached) show(cached);                        // показываем прошлое значение, пока идёт запрос
+  try {
+    // hit — один инкремент за сессию вкладки; повторные загрузки читают get (без накрутки)
+    const r = await fetch(AMG_HITS.api + '/' + (counted ? 'get' : 'hit') + '/' + AMG_HITS.ns + '/' + AMG_HITS.key,
+      { cache:'no-store', referrerPolicy:'no-referrer' });
+    if (!r.ok) return;
+    const j = await r.json();
+    if (j && typeof j.value === 'number') {
+      show(j.value);
+      try { sessionStorage.setItem('amg-hits', String(j.value)); sessionStorage.setItem('amg-hits-counted', '1'); } catch (_) {}
+    }
+  } catch (_) {}
+}
+Overlays.register('feedback', $('feedback'));
+Overlays.setCloser('feedback', () => Overlays.hide('feedback'));
+$('fbClose').onclick = () => Overlays.hide('feedback');
+$('amgFeedbackBtn').onclick = () => {
+  const gh = $('fbGh'); if (gh) gh.href = feedbackUrl();
+  Overlays.hide('menu'); Overlays.show('feedback');
+};
+applyMetaLabels();
+initHits();
+
+// ---------- Устойчивость: сбой не должен выглядеть как «мёртвый белый экран» ----------
+// Ловим необработанные ошибки/промисы и показываем человеку понятный текст вместо тишины.
+let _lastErrToast = 0;
+function _quietError(reason) {
+  const n = reason && reason.name;
+  return n === 'AbortError' || /abort/i.test(String((reason && reason.message) || ''));
+}
+function _reportAppError(reason) {
+  if (_quietError(reason)) return;                 // отменённые запросы карты — не ошибка для человека
+  const now = Date.now(); if (now - _lastErrToast < 10000) return;
+  _lastErrToast = now;
+  try { toast(pick(LB.appError), 8000); } catch (_) {}
+}
+window.addEventListener('error', e => _reportAppError(e.error || e.message));
+window.addEventListener('unhandledrejection', e => _reportAppError(e.reason));
+window.addEventListener('offline', () => { try { toast(pick(LB.netOffline), 6000); } catch (_) {} });
+window.addEventListener('online', () => { try { toast(pick(LB.netOnline), 4000); } catch (_) {} });
 function renderFlavors() {
   const sel = $('flavor'); if (!sel) return;
   sel.innerHTML = '';
@@ -1575,7 +1712,7 @@ function renderFlavors() {
 }
 renderFlavors();
 $('flavor').onchange = e => { state.flavor = e.target.value; map.setStyle(buildStyle()); };
-$('lang').onchange = e => { state.lang = e.target.value; map.setStyle(buildStyle()); renderChips(); updateRotateHint(); applyStaticLabels(); if (Overlays.isOpen('nearby')) renderNearby(); if (cardSiteId) renderCard(cardSiteId); if (detailSiteId) renderDetail(detailSiteId); renderPopup(); };
+$('lang').onchange = e => { state.lang = e.target.value; map.setStyle(buildStyle()); renderChips(); updateRotateHint(); applyStaticLabels(); if (Overlays.isOpen('nearby')) renderNearby(); if (cardSiteId) renderCard(cardSiteId); if (detailSiteId) renderDetail(detailSiteId); renderPopup(); try { applyMetaLabels(); } catch (_) {} };
 $('offlineOnly').onchange = e => { state.offlineOnly = e.target.checked; map.setStyle(buildStyle()); toast(state.offlineOnly ? pick(LB.showDownloaded) : pick(LB.showNetwork)); };
 $('btnPacks').onclick = () => { Overlays.hide('menu'); Overlays.show('sheet'); renderPacks(); };
 $('btnClose').onclick = () => Overlays.hide('sheet');
