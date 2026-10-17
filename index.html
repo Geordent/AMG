@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>ArtMap Georgia</title>
 <link rel="icon" href="data:,">
-<link rel="stylesheet" href="https://unpkg.com/maplibre-gl@5/dist/maplibre-gl.css">
+<link rel="stylesheet" href="vendor/maplibre-gl.css">
 <style>
   html, body { margin:0; height:100%; font-family:system-ui,-apple-system,"Segoe UI",sans-serif; color:#2a2622; }
   #map { position:absolute; inset:0; }
@@ -253,15 +253,20 @@
 <script type="module">
 let maplibregl, PMTiles, layers, namedFlavor;
 try {
-  ({ default: maplibregl } = await import('https://esm.sh/maplibre-gl@5'));
-  ({ PMTiles } = await import('https://esm.sh/pmtiles@4'));
-  ({ layers, namedFlavor } = await import('https://esm.sh/@protomaps/basemaps@5'));
+  // Библиотеки карты лежат рядом со страницей: vendor/map-bundle.js собран из точных
+  // версий (package.json + package-lock.json), внешний CDN в рантайме не нужен.
+  const MAP_LIBS = './vendor/map-bundle.js';
+  const mod = await import(MAP_LIBS);
+  maplibregl = mod.maplibregl;
+  PMTiles = mod.PMTiles;
+  layers = mod.layers;
+  namedFlavor = mod.namedFlavor;
 } catch (e) {
   // Раньше state/pick ещё не существует — выбираем язык напрямую по браузеру.
   const _bl = (navigator.language || 'ru').slice(0, 2);
-  const _fatal = _bl === 'ka' ? 'რუკის ბიბლიოთეკები ვერ ჩაიტვირთა. პირველი გაშვებისას საჭიროა ინტერნეტი.'
-               : _bl === 'en' ? 'Failed to load map libraries. Internet is required on first launch.'
-               : 'Не удалось загрузить библиотеки карты. При первом запуске нужен интернет.';
+  const _fatal = _bl === 'ka' ? 'რუკის ბიბლიოთეკები ვერ ჩაიტვირთა. გადატვირთეთ გვერდი.'
+               : _bl === 'en' ? 'Failed to load map libraries. Please reload the page.'
+               : 'Не удалось загрузить библиотеки карты. Перезагрузите страницу.';
   document.body.insertAdjacentHTML('beforeend',
     '<div class="fatal">' + _fatal + '<br><br>' + e + '</div>');
   throw e;

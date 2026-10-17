@@ -1,0 +1,18 @@
+{
+  "name": "amg-site",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "ArtMap Georgia — статический сайт. Зависимости нужны ТОЛЬКО для сборки vendor/map-bundle.js (без runtime-CDN).",
+  "scripts": {
+    "build:vendor": "node scripts/build-vendor.mjs"
+  },
+  "dependencies": {
+    "@protomaps/basemaps": "5.7.2",
+    "maplibre-gl": "5.24.0",
+    "pmtiles": "4.5.0"
+  },
+  "devDependencies": {
+    "esbuild": "0.25.10"
+  }
+}

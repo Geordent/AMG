@@ -19,3 +19,11 @@ Thumbs.db
 # resolver artifacts (large / generated)
 scripts/.wikidata-georgia.json
 scripts/.wiki-*.json
+
+# Локальные зависимости и собранный бандл карты.
+# Собираются в CI (npm ci && npm run build:vendor) и кладутся на сайт как vendor/.
+/node_modules/
+/vendor/
+
+# Локальные тайлы (собираются в CI через pmtiles extract)
+/tiles/

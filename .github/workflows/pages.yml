@@ -18,6 +18,16 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - name: Build vendored map libraries
+        # maplibre-gl / pmtiles / @protomaps/basemaps — из точных версий в lock-файле,
+        # в один vendor/map-bundle.js. Рантайм-зависимости от esm.sh/unpkg больше нет.
+        run: |
+          npm ci --no-audit --no-fund
+          npm run build:vendor
       - name: Install pmtiles
         env:
           GH_TOKEN: ${{ github.token }}
@@ -42,6 +52,11 @@ jobs:
           mkdir -p site/tiles
           cp index.html sw.js site/
           cp -r data site/
+          # vendor обязателен: без него страница не поднимет карту (guard ниже).
+          cp -r vendor site/
+          test -s site/vendor/map-bundle.js || { echo "FATAL: site/vendor/map-bundle.js missing"; exit 1; }
+          test -s site/vendor/maplibre-gl.css || { echo "FATAL: site/vendor/maplibre-gl.css missing"; exit 1; }
+          ! grep -q 'esm\.sh' site/index.html || { echo "FATAL: index.html still references esm.sh"; exit 1; }
           pmtiles extract "https://build.protomaps.com/$BUILD.pmtiles" site/tiles/tbilisi.pmtiles --bbox=44.68,41.62,44.95,41.82
           pmtiles extract "https://build.protomaps.com/$BUILD.pmtiles" site/tiles/georgia.pmtiles --bbox=39.9,41.0,46.8,43.7 --maxzoom=9
           ls -la site/tiles
