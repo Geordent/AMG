@@ -31,6 +31,10 @@
      иначе счётчик/обратная связь прятались в бургер-меню и их не находили. */
   #topui > #amgMeta { pointer-events:auto; align-self:flex-end; background:rgba(255,255,255,.94); border:1px solid #e0d8cc; border-radius:999px; padding:2px 10px; box-shadow:0 4px 12px rgba(43,38,34,.08); }
   #topui > #amgMeta #amgFeedbackBtn { font-size:13px; padding:8px 4px; }
+  /* Глаз (счётчик) — отдельной компактной пилюлей ПОД линией чипов, чтобы не рвать ряд кнопок */
+  #topui > #amgHits { pointer-events:auto; align-self:flex-end; background:rgba(255,255,255,.94); border:1px solid #e0d8cc;
+    border-radius:999px; padding:3px 11px; box-shadow:0 4px 12px rgba(43,38,34,.08); font-size:12px; color:#6b6259; }
+  #topui > #amgHits[hidden] { display:none; }
   #feedback { position:absolute; left:0; right:0; bottom:0; z-index:20; background:#fff; border-radius:16px 16px 0 0; box-shadow:0 -6px 24px rgba(0,0,0,.2); padding:14px 16px calc(14px + env(safe-area-inset-bottom,0px)); max-height:75%; overflow-y:auto; }
   #feedback[hidden] { display:none; }
   #feedback h2 { margin:0 0 8px; font-size:18px; }
@@ -49,6 +53,16 @@
   #nearby .amg-near-row:first-of-type { border-top:0; }
   #nearby .amg-near-name { flex:1; font-size:14px; color:#2a2622; }
   #nearby .amg-near-dist { font-size:12px; color:#a2543a; white-space:nowrap; }
+  /* --- диагностика геолокации: понятная причина вместо «не удалось» --- */
+  #nearby .amg-geo-fail { border:1px solid #e8d9cf; background:#fdf7f2; border-radius:12px; padding:10px 12px; margin:8px 0; }
+  #nearby .amg-geo-why { font-size:14px; line-height:1.4; color:#2a2622; }
+  #nearby .amg-geo-steps { margin:8px 0 4px; padding-left:20px; font-size:13px; line-height:1.45; color:#4a4238; }
+  #nearby .amg-geo-steps li { margin:4px 0; }
+  #nearby .amg-geo-btns { flex-wrap:wrap; margin-top:8px; }
+  #nearby .amg-geo-btns .btn { flex:1 1 45%; }
+  #nearby .amg-geo-diag { margin-top:8px; font-size:12px; color:#6b6259; }
+  #nearby .amg-geo-diag summary { cursor:pointer; }
+  #nearby .amg-geo-diag div { margin-top:4px; word-break:break-word; font-family:ui-monospace,Menlo,Consolas,monospace; font-size:11px; line-height:1.4; }
   .row { display:flex; align-items:center; gap:8px; font-size:14px; margin:6px 0 10px; }
   .pack { border:1px solid #e6e0d6; border-radius:12px; padding:10px 12px; margin-bottom:10px; }
   .pack b { font-size:15px; }
@@ -250,11 +264,12 @@
     <button id="btnNearby">Рядом</button>
     <button id="btnPacks">Офлайн</button>
     <div id="amgMeta" hidden>
-      <span id="amgHits" title="" hidden><span aria-hidden="true">👁</span>&nbsp;<b id="amgHitsN">—</b></span>
       <button type="button" id="amgFeedbackBtn">Обратная связь</button>
     </div>
   </div>
   <div id="chips"></div>
+  <!-- Глаз-счётчик: всегда в #topui, сразу под линией переключателей объектов -->
+  <span id="amgHits" title="" hidden><span aria-hidden="true">👁</span>&nbsp;<b id="amgHitsN">—</b></span>
 </div>
 <div id="scrim" hidden></div>
 <div id="sheet" hidden>
@@ -349,6 +364,15 @@ function pick(loc) {
   for (const k of Object.keys(loc)) { const v = loc[k]; if (typeof v === 'string' && v.trim()) return v.trim(); }
   return '';
 }
+// Для списков (шаги настройки): тот же порядок языков, но значение — массив строк.
+function pickList(loc) {
+  if (!loc || typeof loc !== 'object') return [];
+  for (const k of (LANG_ORDER[state.lang] || LANG_ORDER.ru)) {
+    const v = loc[k]; if (Array.isArray(v) && v.length) return v;
+  }
+  for (const k of Object.keys(loc)) { const v = loc[k]; if (Array.isArray(v) && v.length) return v; }
+  return [];
+}
 
 const LB = {
   untitled:   { ru:'Без названия', en:'Untitled', ka:'უსათაურო' },
@@ -378,6 +402,56 @@ const LB = {
   nearTitle:  { ru:'Что рядом', en:'What’s nearby', ka:'რა არის ახლოს' },
   locating:   { ru:'Определяю местоположение…', en:'Locating…', ka:'მდებარეობის განსაზღვრა…' },
   locateFail: { ru:'Не удалось определить местоположение', en:'Could not determine location', ka:'მდებარეობა ვერ დგინდება' },
+  // --- диагностика геолокации: причина + что именно нажать (ru/en/ka) ---
+  geoWhy_denied: { ru:'Браузеру запрещён доступ к геолокации для этого сайта. Разрешение выдаётся в настройках САЙТА внутри браузера, а не в системных настройках GPS.',
+    en:'The browser blocks location access for this site. That permission lives in the site settings inside the browser — not in the system GPS settings.',
+    ka:'ბრაუზერს ამ საიტისთვის მდებარეობაზე წვდომა აკრძალული აქვს. ნებართვა ბრაუზერის საიტის პარამეტრებშია, არა სისტემურ GPS პარამეტრებში.' },
+  geoWhy_timeout: { ru:'GPS не успел вернуть координаты — обычно в помещении, под землёй или если системный диалог разрешения долго висел открытым. Нажмите «Попробовать снова»: вторая попытка идёт по сети и быстрее.',
+    en:'GPS did not return coordinates in time — common indoors, underground, or if the permission dialog stayed open. Tap “Try again”: the second attempt uses network location and is faster.',
+    ka:'GPS-მა დროულად ვერ დააბრუნა კოორდინატები — ხშირია შენობაში, მიწისქვეშ ან თუ ნებართვის დიალოგი ღია დარჩა. დააჭირეთ „სცადეთ ხელახლა“: მეორე ცდა ქსელით მიდის და უფრო სწრაფია.' },
+  geoWhy_unavailable: { ru:'Телефон не отдал координаты: GPS выключен или нет сигнала, и сеть не помогла. Проверьте, что в системе включено «Местоположение», и попробуйте на открытом месте.',
+    en:'The device returned no coordinates: GPS is off or has no signal, and network location did not help. Make sure system Location is on and try again outdoors.',
+    ka:'მოწყობილობამ კოორდინატები არ დააბრუნა: GPS გამორთულია ან სიგნალი არ არის, ქსელმაც არ უშველა. შეამოწმეთ, რომ სისტემაში „მდებარეობა“ ჩართულია და სცადეთ ღია ადგილზე.' },
+  geoWhy_insecure: { ru:'Страница открыта не по https (или как локальный файл) — браузеры в таком режиме геолокацию не выдают вообще. Откройте https://geordent.github.io/AMG/',
+    en:'The page is not served over https (or is a local file) — browsers refuse geolocation entirely in that mode. Open https://geordent.github.io/AMG/',
+    ka:'გვერდი გახსნილია არა https-ით (ან ლოკალური ფაილია) — ბრაუზერები ასეთ რეჟიმში მდებარეობას საერთოდ არ აძლევენ. გახსენით https://geordent.github.io/AMG/' },
+  geoWhy_unsupported: { ru:'В этом браузере нет API геолокации. Откройте сайт в Chrome, Safari или Firefox.',
+    en:'This browser has no geolocation API. Open the site in Chrome, Safari or Firefox.',
+    ka:'ამ ბრაუზერს გეოლოკაციის API არ აქვს. გახსენით საიტი Chrome-ში, Safari-ში ან Firefox-ში.' },
+  geoWhy_unknown: { ru:'Не удалось получить координаты.', en:'Could not get coordinates.', ka:'კოორდინატები ვერ მივიღეთ.' },
+  geoStepsAndroid: {
+    ru:['Chrome: нажмите 🔒 (замок) слева от адреса → «Разрешения» / «Настройки сайта» → «Местоположение» → «Разрешить».',
+        'Или ⋮ → «Настройки» → «Настройки сайтов» → «Местоположение» → geordent.github.io → «Разрешить».',
+        'Проверьте, что в шторке включена «Локация» (Location), и обновите страницу.'],
+    en:['Chrome: tap the 🔒 (padlock) left of the address → “Permissions” / “Site settings” → “Location” → “Allow”.',
+        'Or ⋮ → “Settings” → “Site settings” → “Location” → geordent.github.io → “Allow”.',
+        'Make sure “Location” is on in the quick settings panel, then reload the page.'],
+    ka:['Chrome: დააჭირეთ 🔒-ს მისამართის მარცხნივ → „ნებართვები“ / „საიტის პარამეტრები“ → „მდებარეობა“ → „დაშვება“.',
+        'ან ⋮ → „პარამეტრები“ → „საიტების პარამეტრები“ → „მდებარეობა“ → geordent.github.io → „დაშვება“.',
+        'შეამოწმეთ, რომ პანელში „მდებარეობა“ ჩართულია და გადატვირთეთ გვერდი.'] },
+  geoStepsIOS: {
+    ru:['Safari: «Настройки» (iPhone) → «Safari» → «Местоположение» → «Разрешить» или «Спросить», затем обновите страницу.',
+        'Другой браузер на iPhone: ⋯ / aA → «Настройки сайта» → «Местоположение» → «Разрешить».',
+        'Проверьте: «Настройки» → «Конфиденциальность и безопасность» → «Службы геолокации» — включены, и Safari в списке разрешён.'],
+    en:['Safari: “Settings” (iPhone) → “Safari” → “Location” → “Allow” or “Ask”, then reload the page.',
+        'Another browser on iPhone: ⋯ / aA → “Website Settings” → “Location” → “Allow”.',
+        'Check “Settings” → “Privacy & Security” → “Location Services” is on and Safari is allowed.'],
+    ka:['Safari: „პარამეტრები“ (iPhone) → „Safari“ → „მდებარეობა“ → „დაშვება“ ან „კითხვა“, შემდეგ გადატვირთეთ გვერდი.',
+        'სხვა ბრაუზერი iPhone-ზე: ⋯ / aA → „საიტის პარამეტრები“ → „მდებარეობა“ → „დაშვება“.',
+        'შეამოწმეთ: „პარამეტრები“ → „კონფიდენციალურობა და უსაფრთხოება“ → „მდებარეობის სერვისები“ ჩართულია და Safari დაშვებულია.'] },
+  geoStepsDesktop: {
+    ru:['Нажмите 🔒 или ⓘ слева от адреса → «Настройки сайта» → «Местоположение» → «Разрешить» и обновите страницу.',
+        'Chrome: ⋮ → «Настройки» → «Конфиденциальность и безопасность» → «Настройки сайтов» → «Местоположение».',
+        'Проверьте, что геолокация включена в системе (Windows: «Параметры» → «Конфиденциальность» → «Расположение»).'],
+    en:['Click the 🔒 or ⓘ left of the address → “Site settings” → “Location” → “Allow”, then reload.',
+        'Chrome: ⋮ → “Settings” → “Privacy and security” → “Site settings” → “Location”.',
+        'Make sure location is on in the OS (Windows: “Settings” → “Privacy” → “Location”).'],
+    ka:['დააჭირეთ 🔒 ან ⓘ მისამართის მარცხნივ → „საიტის პარამეტრები“ → „მდებარეობა“ → „დაშვება“ და გადატვირთეთ.',
+        'Chrome: ⋮ → „პარამეტრები“ → „კონფიდენციალურობა და უსაფრთხოება“ → „საიტების პარამეტრები“ → „მდებარეობა“.',
+        'შეამოწმეთ, რომ გეოლოკაცია ჩართულია სისტემაში (Windows: „პარამეტრები“ → „კონფიდენციალურობა“ → „მდებარეობა“).'] },
+  geoRetry:   { ru:'Попробовать снова', en:'Try again', ka:'სცადეთ ხელახლა' },
+  geoDiag:    { ru:'Технические детали', en:'Technical details', ka:'ტექნიკური დეტალები' },
+  accuracy:   { ru:'точность', en:'accuracy', ka:'სიზუსტე' },
   found:      { ru:'Найдено', en:'Found', ka:'ნაპოვნია' },
   noNearby:   { ru:'В этом радиусе объектов нет', en:'No objects within this radius', ka:'ამ რადიუსში ობიექტები არ არის' },
   walk:       { ru:'пешком', en:'on foot', ka:'ფეხით' },
@@ -422,6 +496,9 @@ const LB = {
   hereHit:    { ru:'Ты у объекта ✓ — открываю подтверждение в Telegram', en:'You’re at the object ✓ — opening confirmation in Telegram', ka:'ობიექტთან ხარ ✓ — ვხსნი დადასტურებას Telegram-ში' },
   hereFail:   { ru:'Не удалось определить местоположение', en:'Could not determine location', ka:'მდებარეობა ვერ დგინდება' },
   hereNoGeo:  { ru:'Нет доступа к GPS — разреши геолокацию', en:'No GPS access — allow location', ka:'GPS-ზე წვდომა არ არის — დაუშვი მდებარეობა' },
+  hereNoGeoHint:{ ru:'Геолокация запрещена для этого сайта. Разрешите её: 🔒 слева от адреса → «Разрешения» → «Местоположение» → «Разрешить», затем обновите страницу.',
+    en:'Location is blocked for this site. Allow it: 🔒 left of the address → “Permissions” → “Location” → “Allow”, then reload the page.',
+    ka:'მდებარეობა ამ საიტისთვის აკრძალულია. დაუშვით: 🔒 მისამართის მარცხნივ → „ნებართვები“ → „მდებარეობა“ → „დაშვება“, შემდეგ გადატვირთეთ გვერდი.' },
   hereManualWhy:{ ru:'Геолокация недоступна (превью). Отметь на карте, где ты стоишь — так проверишь поток без GPS.', en:'Location unavailable (preview). Mark on the map where you stand — test the flow without GPS.', ka:'მდებარეობა მიუწვდომელია (პრევიუ). რუკაზე მონიშნე სად დგახარ.' },
   hereManualBtn:{ ru:'📍 Отметить моё место', en:'📍 Mark my spot', ka:'📍 მონიშნე ჩემი ადგილი' },
   hereManualHint:{ ru:'Превью: нажми на карту в точке, где ты находишься', en:'Preview: tap the map where you are', ka:'პრევიუ: დააჭირე რუკას, სადაც ხარ' },
@@ -1459,16 +1536,16 @@ function applyMobileClass() { document.documentElement.classList.toggle('is-mobi
 
 // Mobile menu: existing #bar перемещается в #menu (без дублей/новых id), обратно при wide.
 function relocateBar() {
-  const bar = document.getElementById('bar'), topui = document.getElementById('topui'), menu = document.getElementById('menu'), chips = document.getElementById('chips'), meta = document.getElementById('amgMeta');
+  const bar = document.getElementById('bar'), topui = document.getElementById('topui'), menu = document.getElementById('menu'), chips = document.getElementById('chips');
   if (!bar || !topui || !menu) return;
-  // Счётчик + «Обратная связь» НЕ прячем в бургер: на мобиле держим их в #topui (видимая «пилюля»).
+  // «Обратная связь» живёт внутри #bar: на мобиле #bar переезжает в бургер-меню (там ей и место —
+  // это не основной элемент), на широком экране остаётся в верхней панели.
+  // Глаз-счётчик (#amgHits) — всегда в #topui, под линией чипов, в разметке не двигается.
   if (isMobileUI()) {
     if (bar.parentElement !== menu) menu.appendChild(bar);
-    if (meta && meta.parentElement !== topui) topui.insertBefore(meta, chips);
   }
   else {
     if (bar.parentElement !== topui) topui.insertBefore(bar, chips);
-    if (meta && meta.parentElement !== bar) bar.appendChild(meta);
     if (Overlays.isOpen('menu')) Overlays.hide('menu');
   }
 }
@@ -1664,9 +1741,10 @@ function feedbackUrl() {
   return AMG_FEEDBACK.gh + '?title=' + encodeURIComponent(title) + '&body=' + encodeURIComponent(body);
 }
 async function initHits() {
-  const box = $('amgMeta'), el = $('amgHits'), num = $('amgHitsN');
-  if (!box || !el || !num) return;
-  box.hidden = false;                              // кнопка обратной связи видна всегда
+  const el = $('amgHits'), num = $('amgHitsN');
+  if (!el || !num) return;
+  el.hidden = false;                               // глаз-счётчик виден всегда (число подставится после ответа)
+  const metaEl = $('amgMeta'); if (metaEl) metaEl.hidden = false;  // кнопка «Обратная связь» в строке/меню
   let cached = 0, counted = false;
   try {
     cached = +sessionStorage.getItem('amg-hits') || 0;
@@ -1742,7 +1820,7 @@ function applyStaticLabels() {
   if (Overlays.isOpen('sheet')) renderPacks();
 }
 const NEARBY_RADII = [1000, 2000, 5000];
-const nearby = { lat:null, lng:null, radius:1000 };
+const nearby = { lat:null, lng:null, radius:1000, acc:null, err:null };
 const WALK_M_PER_MIN = 83.3; // ≈5 км/ч
 function haversine(lat1, lon1, lat2, lon2) {
   const R = 6371000, toRad = d => d * Math.PI / 180;
@@ -1769,13 +1847,14 @@ function nearbyRows() {
 }
 function renderNearby() {
   const box = $('nearby'); if (!box) return;
-  const radii = `<div class="amg-near-radii">` + NEARBY_RADII.map(r =>
+  const radii = nearby.lat == null ? '' : `<div class="amg-near-radii">` + NEARBY_RADII.map(r =>
     `<button type="button" data-r="${r}" class="${r === nearby.radius ? 'on' : ''}">${r/1000} ${esc(pick(LB.km))}</button>`).join('') + `</div>`;
   let body;
-  if (nearby.lat == null) body = `<div class="amg-near-note">${esc(pick(LB.locating))}</div>`;
+  if (nearby.lat == null) body = nearby.err ? geoFailHtml(nearby.err) : `<div class="amg-near-note">${esc(pick(LB.locating))}</div>`;
   else {
     const rows = nearbyRows();
-    const note = `${esc(pick(LB.found))}: ${rows.length} · ${esc(pick(LB.radius))} ${nearby.radius/1000} ${esc(pick(LB.km))} · ${esc(pick(LB.walk))} ≈ 5 ${esc(pick(LB.km))}/${esc(pick(LB.hr))}`;
+    const accTxt = (typeof nearby.acc === 'number' && isFinite(nearby.acc)) ? ` · ${esc(pick(LB.accuracy))} ±${Math.round(nearby.acc)} ${esc(pick(LB.m))}` : '';
+    const note = `${esc(pick(LB.found))}: ${rows.length} · ${esc(pick(LB.radius))} ${nearby.radius/1000} ${esc(pick(LB.km))} · ${esc(pick(LB.walk))} ≈ 5 ${esc(pick(LB.km))}/${esc(pick(LB.hr))}${accTxt}`;
     body = `<div class="amg-near-note">${note}</div>` + (rows.length
       ? rows.slice(0, 40).map(r => `<button type="button" class="amg-near-row" data-near="${esc(r.id)}"><span class="amg-near-name">${esc(r.title)}</span><span class="amg-near-dist">${esc(fmtDist(r.d))} · ${esc(fmtWalk(r.d))}</span></button>`).join('')
       : `<div class="amg-empty">${esc(pick(LB.noNearby))}</div>`);
@@ -1784,16 +1863,99 @@ function renderNearby() {
   $('btnNearClose').onclick = () => Overlays.hide('nearby');
   box.querySelectorAll('[data-r]').forEach(b => { b.onclick = () => { nearby.radius = +b.dataset.r; renderNearby(); }; });
   box.querySelectorAll('[data-near]').forEach(b => { b.onclick = () => { Overlays.hide('nearby'); focusSite(b.dataset.near); }; });
+  const retry = box.querySelector('[data-geo-retry]');
+  if (retry) retry.onclick = () => { nearby.err = null; runNearbyLocate(); };
+}
+// --- Геолокация: вместо «не удалось» — причина + путь в настройках для этого телефона/браузера ---
+let geoPermState = null, geoLastCode = null;
+const geoIsIOS = () => /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+const geoIsAndroid = () => /Android/i.test(navigator.userAgent);
+function geoStepsFor(kind) {
+  if (kind === 'insecure' || kind === 'unsupported') return [];
+  if (geoIsIOS()) return pickList(LB.geoStepsIOS);
+  if (geoIsAndroid()) return pickList(LB.geoStepsAndroid);
+  return pickList(LB.geoStepsDesktop);
+}
+function geoFailHtml(kind) {
+  const why = pick(LB['geoWhy_' + kind] || LB.geoWhy_unknown);
+  const steps = geoStepsFor(kind);
+  const list = steps.length ? `<ul class="amg-geo-steps">${steps.map(s => `<li>${esc(s)}</li>`).join('')}</ul>` : '';
+  const diag = ['secure=' + (window.isSecureContext ? 'yes' : 'no'),
+                'api=' + (navigator.geolocation ? 'yes' : 'no'),
+                'perm=' + (geoPermState || 'n/a'),
+                'code=' + (geoLastCode == null ? '—' : geoLastCode),
+                'ua=' + navigator.userAgent].join(' · ');
+  return `<div class="amg-geo-fail"><div class="amg-geo-why">${esc(why)}</div>${list}
+    <div class="btns amg-geo-btns"><button type="button" class="btn p" data-geo-retry="1">${esc(pick(LB.geoRetry))}</button></div>
+    <details class="amg-geo-diag"><summary>${esc(pick(LB.geoDiag))}</summary><div>${esc(diag)}</div></details></div>`;
+}
+function geoEnvProblem() {
+  if (!window.isSecureContext) return 'insecure';   // http:// или file:// — браузеры блокируют геолокацию
+  if (!navigator.geolocation) return 'unsupported';
+  return null;
+}
+function geoQueryPermission() {
+  try {
+    if (!navigator.permissions || !navigator.permissions.query) return Promise.resolve(null);
+    return navigator.permissions.query({ name:'geolocation' }).then(st => st && st.state).catch(() => null);
+  } catch (_) { return Promise.resolve(null); }
+}
+function locateOnce(opts) {
+  return new Promise(resolve => {
+    let done = false;
+    const fin = v => { if (!done) { done = true; resolve(v); } };
+    try {
+      navigator.geolocation.getCurrentPosition(
+        p => fin({ ok:true, lat:p.coords.latitude, lng:p.coords.longitude, acc:p.coords.accuracy }),
+        e => fin({ ok:false, code:(e && e.code) || 0, msg:(e && e.message) || '' }),
+        opts
+      );
+    } catch (e) { fin({ ok:false, code:0, msg:String((e && e.message) || e) }); }
+  });
+}
+async function runNearbyLocate() {
+  nearby.err = null; geoLastCode = null;
+  renderNearby();                                    // «Определяю местоположение…»
+  const env = geoEnvProblem();
+  if (env) { nearby.err = env; renderNearby(); return; }
+  geoPermState = await geoQueryPermission();
+  if (geoPermState === 'denied') { nearby.err = 'denied'; renderNearby(); return; }
+  // 1) точная попытка (GPS). 20 с — человек должен успеть прочитать системный диалог разрешения.
+  let r = await locateOnce({ enableHighAccuracy:true, timeout:20000, maximumAge:60000 });
+  // 2) таймаут/недоступность → вторая попытка по сети: хуже точность, но факт наличия важнее.
+  if (!r.ok && (r.code === 2 || r.code === 3)) {
+    geoLastCode = r.code; renderNearby();
+    r = await locateOnce({ enableHighAccuracy:false, timeout:20000, maximumAge:600000 });
+  }
+  if (r.ok) {
+    nearby.lat = r.lat; nearby.lng = r.lng; nearby.acc = r.acc; nearby.err = null; geoLastCode = null;
+    renderNearby(); watchGeoPermission(); return;
+  }
+  geoLastCode = r.code || 0;
+  nearby.err = r.code === 1 ? 'denied' : (r.code === 3 ? 'timeout' : 'unavailable');
+  renderNearby();
+  watchGeoPermission();
+}
+// Если человек ушёл в настройки и разрешил — панель сама подхватит это без перезагрузки.
+function watchGeoPermission() {
+  try {
+    if (!navigator.permissions || !navigator.permissions.query) return;
+    navigator.permissions.query({ name:'geolocation' }).then(st => {
+      geoPermState = st.state;
+      st.onchange = () => {
+        geoPermState = st.state;
+        if (st.state === 'granted' && nearby.lat == null && nearby.err) runNearbyLocate();
+      };
+    }).catch(() => {});
+  } catch (_) {}
 }
 function openNearby() {
+  Overlays.hide('menu');                             // «Рядом» живёт в бургере на мобиле — панель не должна открываться поверх меню
   Overlays.show('nearby');
+  nearby.err = null;
   renderNearby();
   if (nearby.lat != null) return;
-  if (!navigator.geolocation) { toast(pick(LB.locateFail), 7000); return; }
-  navigator.geolocation.getCurrentPosition(
-    pos => { nearby.lat = pos.coords.latitude; nearby.lng = pos.coords.longitude; renderNearby(); },
-    () => { toast(pick(LB.locateFail), 7000); Overlays.hide('nearby'); },
-    { enableHighAccuracy:true, timeout:10000, maximumAge:60000 });
+  runNearbyLocate();
 }
 function focusSite(id) {
   const f = catalog.siteById.get(id); if (!f) return;
@@ -2010,7 +2172,7 @@ function iAmHere(btn) {
     finish(pos.coords.latitude, pos.coords.longitude);
   }, err => {
     if (window.__AMG_PREVIEW__) { offerManual(); return; }
-    const m = err && err.code === 1 ? pick(LB.hereNoGeo) : pick(LB.locateFail);
+    const m = err && err.code === 1 ? pick(LB.hereNoGeoHint) : pick(LB.locateFail);
     hereBtnSet(btn, 'miss', m);
     toast(m, 7000);
   }, { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 });
