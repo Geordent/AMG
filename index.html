@@ -27,6 +27,10 @@
   #amgHits[hidden] { display:none; }
   #amgHits b { font-weight:600; color:#3f382f; font-variant-numeric:tabular-nums; }
   #amgFeedbackBtn { border:0; background:transparent; color:#a2543a; font-family:inherit; font-size:12px; padding:6px 2px; cursor:pointer; text-decoration:underline; text-underline-offset:2px; }
+  /* Mobile: служебная строка переезжает в #topui и видна всегда (компактная «пилюля»),
+     иначе счётчик/обратная связь прятались в бургер-меню и их не находили. */
+  #topui > #amgMeta { pointer-events:auto; align-self:flex-end; background:rgba(255,255,255,.94); border:1px solid #e0d8cc; border-radius:999px; padding:2px 10px; box-shadow:0 4px 12px rgba(43,38,34,.08); }
+  #topui > #amgMeta #amgFeedbackBtn { font-size:13px; padding:8px 4px; }
   #feedback { position:absolute; left:0; right:0; bottom:0; z-index:20; background:#fff; border-radius:16px 16px 0 0; box-shadow:0 -6px 24px rgba(0,0,0,.2); padding:14px 16px calc(14px + env(safe-area-inset-bottom,0px)); max-height:75%; overflow-y:auto; }
   #feedback[hidden] { display:none; }
   #feedback h2 { margin:0 0 8px; font-size:18px; }
@@ -1455,11 +1459,16 @@ function applyMobileClass() { document.documentElement.classList.toggle('is-mobi
 
 // Mobile menu: existing #bar перемещается в #menu (без дублей/новых id), обратно при wide.
 function relocateBar() {
-  const bar = document.getElementById('bar'), topui = document.getElementById('topui'), menu = document.getElementById('menu'), chips = document.getElementById('chips');
+  const bar = document.getElementById('bar'), topui = document.getElementById('topui'), menu = document.getElementById('menu'), chips = document.getElementById('chips'), meta = document.getElementById('amgMeta');
   if (!bar || !topui || !menu) return;
-  if (isMobileUI()) { if (bar.parentElement !== menu) menu.appendChild(bar); }
+  // Счётчик + «Обратная связь» НЕ прячем в бургер: на мобиле держим их в #topui (видимая «пилюля»).
+  if (isMobileUI()) {
+    if (bar.parentElement !== menu) menu.appendChild(bar);
+    if (meta && meta.parentElement !== topui) topui.insertBefore(meta, chips);
+  }
   else {
     if (bar.parentElement !== topui) topui.insertBefore(bar, chips);
+    if (meta && meta.parentElement !== bar) bar.appendChild(meta);
     if (Overlays.isOpen('menu')) Overlays.hide('menu');
   }
 }
