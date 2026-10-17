@@ -398,6 +398,7 @@ const LB = {
   srcPhoto:   { ru:'Фото', en:'Photos', ka:'ფოტოები' },
   srcCatalog: { ru:'Каталог / проект', en:'Catalog / project', ka:'კატალოგი / პროექტი' },
   srcProv:    { ru:'Провенанс', en:'Provenance', ka:'წარმომავლობა' },
+  placeReviews:{ ru:'Фото и отзывы', en:'Photos & reviews', ka:'ფოტოები და შეფასებები' },
   nearby:     { ru:'Рядом', en:'Nearby', ka:'ახლოს' },
   nearTitle:  { ru:'Что рядом', en:'What’s nearby', ka:'რა არის ახლოს' },
   locating:   { ru:'Определяю местоположение…', en:'Locating…', ka:'მდებარეობის განსაზღვრა…' },
@@ -1243,6 +1244,15 @@ function isGenericUrl(u) {
 }
 // Map / lookup link (OpenStreetMap coordinate, Google My Maps, Mapcarta, Google Maps /maps).
 // Policy: НЕ показываем ссылки на карты — наш проект сам карта; в чужой карте объект надо искать.
+// Ссылка «только координаты» (навигация) — не карточка места, в блок UGC не идёт.
+function isNavOnlyUrl(u) {
+  if (typeof u !== 'string') return true;
+  if (/whatshere/i.test(u)) return true;
+  if (/[?&]api=1&(?:[^#]*&)?query=-?\d/.test(u)) return true;   // google ?api=1&query=lat,lng
+  if (/\?ll=-?\d[^&]*&z=\d+\s*$/i.test(u.split('&whatshere')[0]) && !/\/org\//.test(u)) return true;
+  return false;
+}
+const PLACE_LABELS = { google: 'Google', yandex: 'Яндекс', osm: 'OpenStreetMap' };
 function isMapUrl(u) {
   if (typeof u !== 'string') return true;
   const s = u.trim(); if (!s) return true;
@@ -1373,8 +1383,19 @@ function detailSourcesHtml(site, arts) {
     if (!url || isMapUrl(url)) continue;
     obj.push(`<a href="${esc(url)}" target="_blank" rel="noopener">${esc(s.title)}</a>`);
   }
+  // Внешние карточки места (Google / Яндекс) — чужие фото и отзывы. Это НЕ навигация:
+  // чисто координатные ссылки (whatshere / ?query=lat,lon) отсекаем, оставляем страницы объектов.
+  const place = [], seenPlace = new Set();
+  for (const e of (site.external || [])) {
+    if (!e || typeof e.url !== 'string') continue;
+    const u = e.url.trim();
+    if (!u || seenPlace.has(u) || isNavOnlyUrl(u)) continue;
+    seenPlace.add(u);
+    const label = PLACE_LABELS[e.provider] || e.provider || 'link';
+    place.push(`<a href="${esc(u)}" target="_blank" rel="noopener" title="${esc(e.title || label)}">${esc(label)}</a>`);
+  }
   const grp = (key, items) => items.length ? `<div class="amg-srcgrp"><span class="amg-srcgrp-h">${esc(pick(LB[key]))}</span> ${items.join(' · ')}</div>` : '';
-  const out = grp('srcPhoto', photo) + grp('srcObject', obj);
+  const out = grp('srcPhoto', photo) + grp('srcObject', obj) + grp('placeReviews', place);
   return out ? `<div class="amg-src amg-src-all">${out}</div>` : '';
 }
 // Compact preview: ONE object, title shown once; full artwork list lives in Detail (#detail).
