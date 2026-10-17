@@ -185,5 +185,6 @@
   { "id": "artist-0186", "name": "Irakli Toidze", "aliases": [], "type": "person", "origin": "manual", "updated": "2026-10-08" },
   { "id": "artist-0187", "name": "Arkane", "aliases": [], "type": "person", "origin": "manual", "updated": "2026-10-08" },
   { "id": "artist-0188", "name": "Mr.Black", "aliases": [], "type": "person", "origin": "manual", "updated": "2026-10-08" },
-  { "id": "artist-0189", "name": "Salome Merabishvili", "aliases": [], "type": "person", "origin": "manual", "updated": "2026-10-08" }
+  { "id": "artist-0189", "name": "Salome Merabishvili", "aliases": [], "type": "person", "origin": "manual", "updated": "2026-10-08" },
+  { "id": "artist-0190", "name": "The Kuhl Kid", "aliases": [], "type": "person", "origin": "manual", "updated": "2026-10-17" }
 ]

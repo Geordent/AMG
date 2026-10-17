@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>ArtMap Georgia</title>
+<link rel="icon" href="data:,">
 <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@5/dist/maplibre-gl.css">
 <style>
   html, body { margin:0; height:100%; font-family:system-ui,-apple-system,"Segoe UI",sans-serif; color:#2a2622; }
@@ -531,10 +532,17 @@ const CATEGORIES = [
   { key:'sculpture',    label:{ru:'Скульптуры и монументы',en:'Sculptures & Monuments',ka:'სკულპტურები და მონუმენტები'}, types:['sculpture','monument'] },
   { key:'architecture', label:{ru:'Архитектура',en:'Architecture',ka:'არქიტექტურა'}, types:['architectural_art','monumental_art'] },
   { key:'installation', label:{ru:'Арт-объекты и инсталляции',en:'Art Objects & Installations',ka:'არტ-ობიექტები და ინსტალაციები'}, types:['installation'] },
+  { key:'unusual',      label:{ru:'Необычные места',en:'Unusual Places',ka:'უჩვეულო ადგილები'}, types:[] },
   { key:'other',        label:{ru:'Наследие и другое',en:'Heritage & Other',ka:'მემკვიდრეობა და სხვა'}, types:['other','artifact'] },
 ];
 const CATEGORY_OF_TYPE = {};
 for (const c of CATEGORIES) for (const t of c.types) CATEGORY_OF_TYPE[t] = c.key;
+// Place-centric fallback: точка-место без собственного ARTWORK задаёт категорию/семейство сама (поле topic).
+// topic 'unusual' -> чип «Необычные места»; topic 'heritage' -> существующий чип «Наследие и другое».
+const PLACE_CAT = { unusual:'unusual', heritage:'other' };
+const PLACE_FAMILY = { unusual:'unusual', heritage:'artifact' };
+function siteCat(p, arts) { return (arts && arts[0]) ? (CATEGORY_OF_TYPE[arts[0].type] || '') : (PLACE_CAT[p.topic] || ''); }
+function siteFamily(p, arts) { return (arts && arts[0]) ? (FAMILY_OF_TYPE[arts[0].type] || 'installation') : (PLACE_FAMILY[p.topic] || 'installation'); }
 const ALL_LABEL = { ru:'Все', en:'All', ka:'ყველა' };
 const RESET_LABEL = { ru:'Сбросить', en:'Reset', ka:'გადატვირთვა' };
 // Категорийный фильтр — Strategy B: фильтруем ДАННЫЕ source «sites» (setData), нативная
@@ -555,17 +563,17 @@ function applyCategoryFilter() {
   if (src) src.setData(selectedSiteFeatures());
 }
 // Приоритет отрисовки: редкие категории (скульптура/наследие) — выше массовых (мозаики).
-const FAMILY_PRIO = { mosaic:1, mural:2, street_art:3, installation:3, architectural:5, sculpture:7, artifact:7 };
+const FAMILY_PRIO = { mosaic:1, mural:2, street_art:3, installation:3, unusual:4, architectural:5, sculpture:7, artifact:7 };
 function siteFeatures() {
   return { type:'FeatureCollection', features: catalog.sites.map(f => {
     const p = f.properties;
     const arts = catalog.artworksBySite.get(p.id) || [];
     const label = pick(p.name) || (arts[0] ? pick(arts[0].title) : '');
-    const family = arts[0] ? (FAMILY_OF_TYPE[arts[0].type] || 'installation') : 'installation';
-    const cat = arts[0] ? (CATEGORY_OF_TYPE[arts[0].type] || '') : '';
+    const family = siteFamily(p, arts);
+    const cat = siteCat(p, arts);
     return { type:'Feature', geometry:f.geometry,
       properties:{ ...p, label, icon:'icon-' + family, cat, count:arts.length,
-        status:siteStatus(arts), prio: FAMILY_PRIO[family] || 3 } };
+        status: arts.length ? siteStatus(arts) : '', prio: FAMILY_PRIO[family] || 3 } };
   }) };
 }
 // Кластеры SITE (native MapLibre). Добавляются ПЕРВЫМИ → лежат ниже singleton-маркеров.
@@ -585,7 +593,7 @@ const siteLayers = [
     layout:{ 'icon-image':['get','icon'], 'icon-size':1.1, 'icon-allow-overlap':true, 'icon-ignore-placement':true,
       'symbol-sort-key':['get','prio'] },
     paint:{} },
-  { id:'sites-status', type:'symbol', source:'sites', filter:SINGLETON,
+  { id:'sites-status', type:'symbol', source:'sites', filter:['all', SINGLETON, ['!=', ['get','status'], '']],
     layout:{ 'icon-image':['concat','badge-',['get','status']], 'icon-size':0.9, 'icon-offset':[15,-15],
       'icon-allow-overlap':true, 'icon-ignore-placement':true, 'symbol-sort-key':['get','prio'] },
     paint:{} },
@@ -945,6 +953,9 @@ const ICON_SVGS = {
 <path d="M19 7 h10 v5 h-10 z" fill="#5b6b7a" stroke="#3b332b" stroke-width="1.5"/>
 <path d="M17 12 Q11 22 17 31 Q21 39 24 39 Q27 39 31 31 Q37 22 31 12 Z" fill="#5b6b7a" stroke="#3b332b" stroke-width="2"/>
 <rect x="17" y="38" width="14" height="4" rx="1" fill="#b8c4cf" stroke="#3b332b" stroke-width="1.5"/></svg>`,
+  'icon-unusual': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
+<path d="M24 5 C26 15 33 22 43 24 C33 26 26 33 24 43 C22 33 15 26 5 24 C15 22 22 15 24 5 Z" fill="#F0B429" stroke="#3b332b" stroke-width="2" stroke-linejoin="round"/>
+<circle cx="24" cy="24" r="3.4" fill="#fff8e6" stroke="#3b332b" stroke-width="1.4"/></svg>`,
 };
 // Статус-бейджи в стиле референса: круг с символом (✓ / ? / ! / ⇄ / ×).
 const BADGE_SVGS = {
@@ -1227,7 +1238,7 @@ function sitePopupHtml(siteId) {
   const multi = arts.length > 1;
   const first = arts[0] || null;
   const title = (!multi && first) ? (pick(first.title) || name || pick(LB.untitled)) : (name || (first && pick(first.title)) || pick(LB.untitled));
-  const catKey = first ? (CATEGORY_OF_TYPE[first.type] || '') : '';
+  const catKey = siteCat(p, arts);
   const status = arts.length ? siteStatus(arts) : (first ? first.status : '');
   const year = (!multi && first) ? first.year : null;
   const ids = multi ? [...new Set(arts.flatMap(a => a.artist_ids || []))] : (first ? (first.artist_ids || []) : []);
@@ -1271,11 +1282,11 @@ function detailHtml(siteId) {
   const vis = p.visible_from_outside ? pick(LB.visibleYes) : pick(LB.visibleNo);
   const name = pick(p.name);
   const first = arts[0] || null;
-  const catKey = first ? (CATEGORY_OF_TYPE[first.type] || '') : '';
+  const catKey = siteCat(p, arts);
   const tags = [
     catKey ? `<span class="amg-tag cat">${esc(categoryLabel(catKey))}</span>` : '',
     arts.length ? `<span class="amg-tag st st-${esc(siteStatus(arts))}">${esc(labelOf(STATUS_LABELS, siteStatus(arts)))}</span>` : '',
-    `<span class="amg-tag cnt">${esc(worksLabel(arts.length))}</span>`,
+    arts.length ? `<span class="amg-tag cnt">${esc(worksLabel(arts.length))}</span>` : '',
     verifiedBadge(siteId),
   ].filter(Boolean).join('');
   const addr = pick(p.address);
@@ -1310,7 +1321,7 @@ function detailHtml(siteId) {
     ${hereBlockHtml(siteId)}
     ${siteDesc ? `<div class="amg-desc">${esc(siteDesc)}</div>` : ''}
     ${gallery.length ? `<div class="amg-detail-gallery">${gallery.join('')}</div>` : ''}
-    <div class="amg-detail-arts">${artsHtml}</div>
+    ${arts.length ? `<div class="amg-detail-arts">${artsHtml}</div>` : ''}
     ${detailSourcesHtml(p, arts)}
   </div>`;
 }
@@ -1894,7 +1905,7 @@ function categoryCounts() {
   const counts = Object.fromEntries(CATEGORIES.map(c => [c.key, 0]));
   for (const f of catalog.sites) {
     const arts = catalog.artworksBySite.get(f.properties.id) || [];
-    const k = arts[0] && CATEGORY_OF_TYPE[arts[0].type];
+    const k = siteCat(f.properties, arts);
     if (k) counts[k]++;
   }
   counts._all = catalog.sites.length;

@@ -18770,5 +18770,295 @@
     ],
     "origin": "manual",
     "updated": "2026-10-08"
+  },
+  {
+    "id": "amg-0545",
+    "site_id": "site-0573",
+    "type": "mural",
+    "title": {
+      "en": "Lamb on Lamb",
+      "ru": "Lamb on Lamb",
+      "ka": "Lamb on Lamb"
+    },
+    "artist_ids": [
+      "artist-0140"
+    ],
+    "year": 2017,
+    "status": "active",
+    "replaced_by": null,
+    "description": {
+      "en": "Mural by the artist Lamb at 21 Niko Pirosmani Street in Rustavi, recorded by Street Art Cities.",
+      "ru": "Мурал художника Lamb на улице Нико Пиросмани 21 в Рустави; учтён Street Art Cities.",
+      "ka": "მხატვარ Lamb-ის მურალი რუსთავში, ნიკო ფიროსმანის 21-ში; აღრიცხულია Street Art Cities-ის მიერ."
+    },
+    "sources": [
+      {
+        "id": "src-0013",
+        "role": "object_page",
+        "url": "https://streetartcities.com/markers/17248"
+      },
+      {
+        "id": "src-0013",
+        "role": "identity"
+      },
+      {
+        "id": "src-0013",
+        "role": "artist"
+      }
+    ],
+    "origin": "manual",
+    "updated": "2026-10-17"
+  },
+  {
+    "id": "amg-0546",
+    "site_id": "site-0574",
+    "type": "mural",
+    "title": {
+      "en": "Rooster",
+      "ru": "Петух",
+      "ka": "მამალი"
+    },
+    "artist_ids": [
+      "artist-0091"
+    ],
+    "year": 2019,
+    "status": "active",
+    "replaced_by": null,
+    "description": {
+      "en": "Mural painted by Matthias Mross for the second edition of the annual NIKO festival in Rustavi (2019).",
+      "ru": "Мурал Маттиаса Мросса для второго сезона ежегодного фестиваля NIKO в Рустави (2019).",
+      "ka": "მათიას მროსის მურალი რუსთავში, ყოველწლიური NIKO ფესტივალის მეორე გამოცემისთვის (2019)."
+    },
+    "sources": [
+      {
+        "id": "src-0013",
+        "role": "object_page",
+        "url": "https://streetartcities.com/markers/32779"
+      },
+      {
+        "id": "src-0013",
+        "role": "identity"
+      },
+      {
+        "id": "src-0013",
+        "role": "artist"
+      }
+    ],
+    "origin": "manual",
+    "updated": "2026-10-17"
+  },
+  {
+    "id": "amg-0547",
+    "site_id": "site-0575",
+    "type": "mural",
+    "title": {
+      "en": "Girl in Nature",
+      "ru": "Девушка и природа",
+      "ka": "გოგონა ბუნებაში"
+    },
+    "artist_ids": [
+      "artist-0007"
+    ],
+    "year": 2019,
+    "status": "active",
+    "replaced_by": null,
+    "description": {
+      "en": "Mural by Davit Samkharadze for the second edition of the annual NIKO festival in Rustavi (2019).",
+      "ru": "Мурал Давита Самхарадзе для второго сезона ежегодного фестиваля NIKO в Рустави (2019).",
+      "ka": "დავით სამხარაძის მურალი რუსთავში, ყოველწლიური NIKO ფესტივალის მეორე გამოცემისთვის (2019)."
+    },
+    "sources": [
+      {
+        "id": "src-0013",
+        "role": "object_page",
+        "url": "https://streetartcities.com/markers/32778"
+      },
+      {
+        "id": "src-0013",
+        "role": "identity"
+      },
+      {
+        "id": "src-0013",
+        "role": "artist"
+      }
+    ],
+    "origin": "manual",
+    "updated": "2026-10-17"
+  },
+  {
+    "id": "amg-0548",
+    "site_id": "site-0576",
+    "type": "mural",
+    "title": {
+      "en": "The Kuhl Kid mural",
+      "ru": "Фреска The Kuhl Kid",
+      "ka": "The Kuhl Kid-ის ფრესკა"
+    },
+    "artist_ids": [
+      "artist-0190"
+    ],
+    "year": null,
+    "status": "active",
+    "replaced_by": null,
+    "description": {
+      "en": "Mural by the artist The Kuhl Kid on Ivane Javakhishvili Street in Tbilisi, recorded by Street Art Cities.",
+      "ru": "Мурал художника The Kuhl Kid на улице Иване Джавахишвили в Тбилиси; учтён Street Art Cities.",
+      "ka": "მხატვარ The Kuhl Kid-ის მურალი თბილისში, ივანე ჯავახიშვილის ქუჩაზე; აღრიცხულია Street Art Cities-ის მიერ."
+    },
+    "sources": [
+      {
+        "id": "src-0013",
+        "role": "object_page",
+        "url": "https://streetartcities.com/markers/2492abfe-8f47-46ec-8e8c-ae691258043a"
+      },
+      {
+        "id": "src-0013",
+        "role": "identity"
+      },
+      {
+        "id": "src-0013",
+        "role": "artist"
+      }
+    ],
+    "origin": "manual",
+    "updated": "2026-10-17"
+  },
+  {
+    "id": "amg-0549",
+    "site_id": "site-0577",
+    "type": "mural",
+    "title": {
+      "en": "Mural at 31v Pekini Avenue",
+      "ru": "Мурал на проспекте Пекини, 31в",
+      "ka": "მურალი პეკინის გამზირზე, 31ვ"
+    },
+    "artist_ids": [],
+    "year": null,
+    "status": "active",
+    "replaced_by": null,
+    "description": {
+      "en": "Street-art mural on a building at 31v Pekini Avenue in the Saburtalo district of Tbilisi. Recorded by Street Art Cities (hunter: Gabo); the author is not documented.",
+      "ru": "Стрит-арт мурал на доме по проспекту Пекини, 31в, в тбилисском районе Сабуртало. Учтён Street Art Cities (автор съёмки — Gabo); автор работы не задокументирован.",
+      "ka": "სტრიტ-არტ მურალი სახლზე პეკინის გამზირ 31ვ-ში, თბილისის საბურთალოს რაიონში. აღრიცხულია Street Art Cities-ის მიერ (გადამღები — Gabo); ავტორი დოკუმენტირებული არ არის."
+    },
+    "sources": [
+      {
+        "id": "src-0013",
+        "role": "object_page",
+        "url": "https://streetartcities.com/markers/9ae8a74a-1020-4237-afa0-aa82e8ce8a70"
+      },
+      {
+        "id": "src-0013",
+        "role": "identity"
+      }
+    ],
+    "origin": "manual",
+    "updated": "2026-10-17"
+  },
+  {
+    "id": "amg-0550",
+    "site_id": "site-0578",
+    "type": "mural",
+    "title": {
+      "en": "Mural at 9 Temur Kevkhishvili Street",
+      "ru": "Мурал на улице Темура Кевхишвили, 9",
+      "ka": "მურალი თემურ კევხიშვილის ქუჩაზე, 9"
+    },
+    "artist_ids": [],
+    "year": null,
+    "status": "active",
+    "replaced_by": null,
+    "description": {
+      "en": "Street-art mural in the Vazisubani area (Isani district) of Tbilisi, recorded at house 9 on Temur Kevkhishvili Street. Documented by Street Art Cities (hunter: Gabo); the author is unknown.",
+      "ru": "Стрит-арт мурал в тбилисском районе Вазисубани (Исани), отмечен у дома 9 по улице Темура Кевхишвили. Учтён Street Art Cities (автор съёмки — Gabo); автор работы неизвестен.",
+      "ka": "სტრიტ-არტ მურალი თბილისის ვაზისუბნის რაიონში (ისანი), აღნიშნულია თემურ კევხიშვილის ქუჩის მე-9 სახლთან. აღრიცხულია Street Art Cities-ის მიერ (გადამღები — Gabo); ავტორი უცნობია."
+    },
+    "sources": [
+      {
+        "id": "src-0013",
+        "role": "object_page",
+        "url": "https://streetartcities.com/markers/c27b0b7f-dbc4-4fb2-8f95-51f346278236"
+      },
+      {
+        "id": "src-0013",
+        "role": "identity"
+      }
+    ],
+    "origin": "manual",
+    "updated": "2026-10-17"
+  },
+  {
+    "id": "amg-0551",
+    "site_id": "site-0579",
+    "type": "mural",
+    "title": {
+      "en": "Mural by Afzan Pirzade",
+      "ru": "Мурал Афзана Пирзаде",
+      "ka": "აფზან პირზადეს მურალი"
+    },
+    "artist_ids": [
+      "artist-0101"
+    ],
+    "year": null,
+    "status": "active",
+    "replaced_by": null,
+    "description": {
+      "en": "Mural by Afzan Pirzade on Tavisupleba Street in Gurjaani (Kakheti). Recorded by Street Art Cities; the marker is filed there under Rustavi, but its coordinates lie in Gurjaani.",
+      "ru": "Мурал Афзана Пирзаде на улице Тависуплеба в Гурджаани (Кахетия). Учтён Street Art Cities; на сайте маркер отнесён к Рустави, но его координаты находятся в Гурджаани.",
+      "ka": "აფზან პირზადეს მურალი თავისუფლების ქუჩაზე გურჯაანში (კახეთი). აღრიცხულია Street Art Cities-ის მიერ; საიტზე მარკერი რუსთავს მიეკუთვნება, თუმცა მისი კოორდინატები გურჯაანშია."
+    },
+    "sources": [
+      {
+        "id": "src-0013",
+        "role": "object_page",
+        "url": "https://streetartcities.com/markers/9c5ad010-0a33-443c-98e1-adecbf557a55"
+      },
+      {
+        "id": "src-0013",
+        "role": "identity"
+      },
+      {
+        "id": "src-0013",
+        "role": "artist"
+      }
+    ],
+    "origin": "manual",
+    "updated": "2026-10-17"
+  },
+  {
+    "id": "amg-0552",
+    "site_id": "site-0580",
+    "type": "sculpture",
+    "title": {
+      "en": "Sculpture of Saint Andrew the First-Called",
+      "ru": "Скульптура Андрея Первозванного",
+      "ka": "წმინდა ანდრია პირველწოდებულის სკულპტურა"
+    },
+    "artist_ids": [],
+    "year": 2008,
+    "status": "active",
+    "replaced_by": null,
+    "description": {
+      "en": "Modern sculpture of Saint Andrew the First-Called beside the waterfall on the Batumi–Sarpi road, about 1 km from the Turkish border. The complex with the sculpture and the waterfall opened in 2008; a nearby plaque reads: “The road through Georgia is the road of enlightenment.” The site is presented as a symbol of the arrival of Christianity in Georgia — a church tradition, not a documented historical fact.",
+      "ru": "Современная скульптура Андрея Первозванного у водопада на трассе Батуми–Сарпи, примерно в 1 км от грузино-турецкой границы. Комплекс со скульптурой и водопадом открыт в 2008 году; на расположенной рядом плите надпись: «Дорога через Грузию — дорога просвещения». Место представлено как символ прихода христианства в Грузию — церковное предание, а не документированный исторический факт.",
+      "ka": "წმინდა ანდრია პირველწოდებულის თანამედროვე სკულპტურა ჩანჩქერთან, ბათუმი–სარფის გზაზე, თურქეთის საზღვრიდან დაახლოებით 1 კმ-ში. სკულპტურისა და ჩანჩქერის კომპლექსი 2008 წელს გაიხსნა; ახლომდებარე ფილაზე წერია: „გზა საქართველოში განათლების გზაა“. ადგილი წარმოდგენილია როგორც ქრისტიანობის საქართველოში შემოსვლის სიმბოლო — საეკლესიო გადმოცემა და არა დოკუმენტირებული ისტორიული ფაქტი."
+    },
+    "sources": [
+      {
+        "id": "src-0013",
+        "role": "object_page",
+        "url": "https://streetartcities.com/markers/964dfbe0-3d04-4574-83a2-359e1a692651"
+      },
+      {
+        "id": "src-0013",
+        "role": "identity"
+      },
+      {
+        "id": "src-0013",
+        "role": "description"
+      }
+    ],
+    "origin": "manual",
+    "updated": "2026-10-17"
   }
 ]

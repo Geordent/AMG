@@ -38,5 +38,12 @@
   "sighnaghi": {"ru": "Сигнахи", "en": "Sighnaghi", "ka": "სიღნაღი"},
   "tskemi": {"ru": "Цкеми", "en": "Tskemi", "ka": "წკემი"},
   "nosiri": {"ru": "Носири", "en": "Nosiri", "ka": "ნოსირი"},
-  "tetritskaro": {"ru": "Тетрицкаро", "en": "Tetritskaro", "ka": "თეთრიწყარო"}
+  "tetritskaro": {"ru": "Тетрицкаро", "en": "Tetritskaro", "ka": "თეთრიწყარო"},
+  "aspindza": {"ru": "Аспиндза", "en": "Aspindza", "ka": "ასპინძა"},
+  "dmanisi": {"ru": "Дманиси", "en": "Dmanisi", "ka": "დმანისი"},
+  "mestia": {"ru": "Местиа", "en": "Mestia", "ka": "მესტია"},
+  "vani": {"ru": "Вани", "en": "Vani", "ka": "ვანი"},
+  "dedoplistskaro": {"ru": "Дедо-Плисцкаро", "en": "Dedoplistskaro", "ka": "დედოფლისწყარო"},
+  "akhmeta": {"ru": "Ахмета", "en": "Akhmeta", "ka": "ახმეტა"},
+  "lentekhi": {"ru": "Лентехи", "en": "Lentekhi", "ka": "ლენტეხი"}
 }
