@@ -20,6 +20,13 @@
   #sheet { position:absolute; left:0; right:0; bottom:0; z-index:20; background:#fff; border-radius:16px 16px 0 0; box-shadow:0 -6px 24px rgba(0,0,0,.2); padding:14px 16px calc(14px + env(safe-area-inset-bottom,0px)); max-height:75%; overflow-y:auto; }
   #sheet[hidden], #toast[hidden] { display:none; }
   #sheet h2 { margin:0 0 8px; font-size:18px; }
+  /* --- Транспорт: подключаемые слои (метро/ЖД/автовокзалы/аэропорты) --- */
+  #transit { position:absolute; left:0; right:0; bottom:0; z-index:20; background:#fff; border-radius:16px 16px 0 0; box-shadow:0 -6px 24px rgba(0,0,0,.2); padding:14px 16px calc(14px + env(safe-area-inset-bottom,0px)); max-height:75%; overflow-y:auto; }
+  #transit[hidden] { display:none; }
+  #transit h2 { margin:0 0 8px; font-size:18px; }
+  #transit input[type=checkbox] { width:20px; height:20px; accent-color:#d9552b; flex:0 0 auto; }
+  #transit .row { justify-content:flex-start; padding:6px 0; }
+  #bar button#btnTransit.on { background:#fbe9e2; border-color:#d9552b; color:#b8431c; font-weight:600; }
   /* --- Служебная строка: счётчик посещений + обратная связь (живёт в #bar; на мобиле уезжает в меню) --- */
   #amgMeta { display:flex; align-items:center; gap:2px 10px; flex-wrap:wrap; font-size:12px; color:#6b6259; padding:0 2px; }
   #amgMeta[hidden] { display:none; }
@@ -262,6 +269,7 @@
       <option value="en">English</option>
     </select>
     <button id="btnNearby">Рядом</button>
+    <button id="btnTransit" aria-haspopup="dialog">Транспорт</button>
     <button id="btnPacks">Офлайн</button>
     <div id="amgMeta" hidden>
       <button type="button" id="amgFeedbackBtn">Обратная связь</button>
@@ -280,6 +288,15 @@
   <div class="btns"><button class="btn" id="btnClose">Закрыть</button></div>
 </div>
 <div id="menu" hidden></div>
+<div id="transit" hidden>
+  <h2 id="transitTitle">Транспорт на карте</h2>
+  <div class="small" id="transitHint">Слои выключены по умолчанию — включайте только то, что нужно: на обзорном зуме транспорт сильно забивает карту.</div>
+  <label class="row"><input type="checkbox" id="trMetro"> <span id="trMetroLabel">Метро и линия метро</span></label>
+  <label class="row"><input type="checkbox" id="trTrain"> <span id="trTrainLabel">Ж/Д станции</span></label>
+  <label class="row"><input type="checkbox" id="trBus"> <span id="trBusLabel">Автовокзалы</span></label>
+  <label class="row"><input type="checkbox" id="trAir"> <span id="trAirLabel">Аэропорты</span></label>
+  <div class="btns"><button class="btn" id="transitClose" type="button">Закрыть</button></div>
+</div>
 <div id="toast" hidden></div>
 <div id="rotateHint" hidden><span class="rh-text"></span><button type="button" id="rhClose" aria-label="×">×</button></div>
 <div id="card" hidden></div>
@@ -344,7 +361,16 @@ const PACKS = [
   { id:'tbilisi', title:{ ru:'Тбилиси, детально', en:'Tbilisi, detailed', ka:'თბილისი, დეტალურად' }, url:'tiles/tbilisi.pmtiles', minz:10, maxz:15, local:null },
 ];
 PACKS.forEach(p => p.remote = new PMTiles(p.url));
-const state = { flavor:'light', lang:'ru', offlineOnly:false, lastError:'', categories:null };
+// state.transit — какие виды транспорта включены (пусто = все транспортные слои скрыты).
+// Читаем сохранённый выбор прямо здесь, чтобы значение было готово к первому addLayer.
+const TRANSIT_KEYS = ['metro', 'train', 'bus', 'air'];
+const readTransitPref = () => {
+  try {
+    const a = JSON.parse(localStorage.getItem('amg-transit') || '[]');
+    return new Set(Array.isArray(a) ? a.filter(k => TRANSIT_KEYS.includes(k)) : []);
+  } catch (_) { return new Set(); }
+};
+const state = { flavor:'light', lang:'ru', offlineOnly:false, lastError:'', categories:null, transit: readTransitPref() };
 
 // ---------- каталог (Stage 0 data) ----------
 // SITE = физическое место (GeoJSON), ARTWORK связан с местом через site_id.
@@ -508,6 +534,16 @@ const LB = {
   brandTag:   { ru:'Карта искусства и необычных городских объектов Грузии', en:'A map of art and unusual urban objects of Georgia', ka:'საქართველოს ხელოვნებისა და უჩვეულო ურბანული ობიექტების რუკა' },
   menu:       { ru:'Меню', en:'Menu', ka:'მენიუ' },
   offline:    { ru:'Офлайн', en:'Offline', ka:'ოფლაინ' },
+  // --- транспорт: подключаемые слои ---
+  transit:      { ru:'Транспорт', en:'Transit', ka:'ტრანსპორტი' },
+  transitTitle: { ru:'Транспорт на карте', en:'Transit on the map', ka:'ტრანსპორტი რუკაზე' },
+  transitHint:  { ru:'По умолчанию выключено: на обзорном зуме транспорт забивает карту. Включайте нужное — выбор запоминается.',
+    en:'Off by default — at low zoom transit clutters the map. Turn on what you need; the choice is remembered.',
+    ka:'ნაგულისხმევად გამორთულია — შორი ხედისას ტრანსპორტი რუკას ტვირთავს. ჩართეთ საჭირო; არჩევანი ინახება.' },
+  transitMetro: { ru:'Метро и линия метро', en:'Metro & metro line', ka:'მეტრო და მეტროს ხაზი' },
+  transitTrain: { ru:'Ж/Д станции', en:'Railway stations', ka:'რკინიგზის სადგურები' },
+  transitBus:   { ru:'Автовокзалы', en:'Bus stations', ka:'ავტოსადგურები' },
+  transitAir:   { ru:'Аэропорты', en:'Airports', ka:'აეროპორტები' },
   offlineMap: { ru:'Офлайн карта', en:'Offline map', ka:'ოფლაინ რუკა' },
   offlineOnlyTxt:{ ru:'Только скачанное (проверка без сети)', en:'Downloaded only (offline check)', ka:'მხოლოდ ჩამოტვირთული (შემოწმება ქსელის გარეშე)' },
   showDownloaded:{ ru:'Показываю только скачанное', en:'Showing downloaded only', ka:'ვაჩვენებ მხოლოდ ჩამოტვირთულს' },
@@ -863,6 +899,44 @@ const TRANSIT_ICON = ['match', ['get', 'kind'],
   'subway', 'amg-transit-metro', 'metro', 'amg-transit-metro',
   'station', ['case', METRO_TEST, 'amg-transit-metro', 'amg-transit-train'],
   'amg-transit-train'];
+// Локальный транспорт (data/transit.geojson): метро, ЖД-станции, автовокзалы, аэропорты.
+// Не зависит от pmtiles — поэтому виден на любом зуме, а не только там, где есть подробные тайлы.
+let transitGeoPromise = null;
+function loadTransitGeo() {
+  if (!transitGeoPromise) {
+    transitGeoPromise = fetch('data/transit.geojson', { cache: 'no-cache' })
+      .then(r => (r.ok ? r.json() : null)).catch(() => null);
+  }
+  return transitGeoPromise;
+}
+const TRANSIT_LOCAL_ICON = ['match', ['get', 'kind'],
+  'metro', 'amg-transit-metro', 'train', 'amg-transit-train',
+  'bus', 'amg-transit-bus', 'air', 'amg-transit-air', 'amg-transit-train'];
+// Имя строим в момент добавления слоя (а не при разборе файла), иначе язык «застынет».
+const transitName = () => ['coalesce', ['get', 'name_' + state.lang], ['get', 'name_en'], ['get', 'name_ka'], ['get', 'name_ru'], ''];
+// Какой переключатель включает какой слой. Метро = линия + станции.
+const TRANSIT_LAYER_TOGGLE = {
+  metro: ['amg-transit-line', 'amg-transit-metro-local'],
+  train: ['amg-transit-train-local'],
+  bus:   ['amg-transit-bus-local'],
+  air:   ['amg-transit-air-local'],
+};
+// Единственная точка, которая решает «что видно»: и при включении галочки, и после
+// пересборки стиля (style.load пересоздаёт слои — visibility нужно вернуть заново).
+function applyTransitVisibility() {
+  if (!map || typeof map.getLayer !== 'function') return;
+  for (const [kind, ids] of Object.entries(TRANSIT_LAYER_TOGGLE)) {
+    const v = state.transit.has(kind) ? 'visible' : 'none';
+    for (const id of ids) {
+      if (!map.getLayer(id)) continue;
+      try { map.setLayoutProperty(id, 'visibility', v); } catch (_) {}
+    }
+  }
+  // Переправы берутся из базовых тайлов; показываем их только вместе с транспортом.
+  if (map.getLayer('amg-transit')) {
+    try { map.setLayoutProperty('amg-transit', 'visibility', state.transit.size ? 'visible' : 'none'); } catch (_) {}
+  }
+}
 function amgTheme(ls, flavor) {
   const P = paletteOf(flavor);
   const themed = ls.map(l => {
@@ -906,7 +980,11 @@ function amgTheme(ls, flavor) {
         paint: { ...paint, 'text-color': P.houseLabel, 'text-halo-color': P.labelHalo, 'text-halo-width': 1.4 } };
       paint['text-color'] = P.label; paint['text-halo-color'] = P.labelHalo; paint['text-halo-width'] = 1.7;
       if (/water|marine|ocean/.test(key)) paint['text-color'] = P.waterLabel;
-      if (id === 'pois') return { ...l, paint, layout: { ...(l.layout || {}), 'icon-image': AMG_POI_ICONS } };
+      if (id === 'pois') return { ...l, paint,
+        // транспорт рисует собственный слой amg-transit-* — иначе иконки задваиваются
+        filter: ['all', ...(l.filter ? [l.filter] : []),
+                 ['!', ['in', ['get', 'kind'], ['literal', TRANSIT_KINDS]]]],
+        layout: { ...(l.layout || {}), 'icon-image': AMG_POI_ICONS } };
       return { ...l, paint };
     }
     return l;
@@ -1209,14 +1287,58 @@ async function setupCatalogLayers() {
   for (const layer of siteLayers) if (!map.getLayer(layer.id)) map.addLayer(layer);
   // Подписи объектов каталога — в цветах текущей темы (иначе на тёмной теме не видны).
   try { map.setPaintProperty('sites-label','text-color', PAL.siteLabel); map.setPaintProperty('sites-label','text-halo-color', PAL.labelHalo); } catch (_) {}
-  // Транспорт (метро/вокзалы/автовокзалы/аэропорты/переправы) — поверх базовой карты и маркеров.
+  // Транспорт: переправы берём из базовых тайлов (в локальном наборе их нет),
+  // метро/ЖД/автовокзалы/аэропорты — из собственного data/transit.geojson (см. ниже).
   if (!map.getLayer('amg-transit')) map.addLayer({
     id:'amg-transit', type:'symbol', source:'protomaps_base', 'source-layer':'pois',
-    filter:['in', ['get','kind'], ['literal', TRANSIT_KINDS]],
+    filter:['in', ['get','kind'], ['literal', ['ferry_terminal','ferry','harbor']]],
     layout:{ 'icon-image': TRANSIT_ICON, 'icon-size':1.15, 'icon-allow-overlap':true, 'icon-ignore-placement':true,
       'text-field':['coalesce',['get','name:'+state.lang],['get','name:en'],['get','name']],
       'text-font':['Noto Sans Medium'], 'text-size':11, 'text-offset':[0,1.7], 'text-anchor':'top', 'text-optional':true },
     paint:{ 'text-color':PAL.transitLabel, 'text-halo-color':PAL.labelHalo, 'text-halo-width':1.8 } });
+  // Локальный транспорт — поверх базовой карты, на любом зуме.
+  // Один вид = один слой: только так их можно включать по отдельности из панели «Транспорт».
+  const tgeo = await loadTransitGeo();
+  if (tgeo) {
+    if (!map.getSource('amg-transit-local')) map.addSource('amg-transit-local', { type:'geojson', data:tgeo });
+    const addTransitSymbol = def => {
+      if (map.getLayer(def.id)) return;
+      map.addLayer({ id:def.id, type:'symbol', source:'amg-transit-local', minzoom:def.minzoom || 0,
+        filter:['==', ['get','kind'], def.kind],
+        layout:{ 'icon-image':TRANSIT_LOCAL_ICON, 'icon-size':def.iconSize,
+          'icon-allow-overlap':true, 'icon-ignore-placement':true,
+          'text-field':transitName(), 'text-font':['Noto Sans Medium'],
+          'text-size':def.textSize, 'text-offset':[0,1.5], 'text-anchor':'top', 'text-optional':true },
+        paint:{ 'text-color':PAL.transitLabel, 'text-halo-color':PAL.labelHalo, 'text-halo-width':1.8,
+          'text-opacity':def.textOpacity } });
+    };
+    if (!map.getLayer('amg-transit-line')) map.addLayer({
+      id:'amg-transit-line', type:'line', source:'amg-transit-local',
+      filter:['==', ['get','kind'], 'metro_line'],
+      layout:{ 'line-cap':'round', 'line-join':'round' },
+      paint:{ 'line-color':['coalesce',['get','color'],'#e72400'],
+        'line-width':['interpolate',['linear'],['zoom'], 0,0.8, 8,2, 12,3.2, 16,4.5],
+        'line-opacity':['interpolate',['linear'],['zoom'], 0,0.6, 10,0.9] } });
+    // Метро и аэропорты — с нулевого зума (иконка растёт с зумом).
+    addTransitSymbol({ id:'amg-transit-metro-local', kind:'metro', minzoom:0,
+      iconSize:['interpolate',['linear'],['zoom'], 0,0.22, 6,0.45, 10,0.75, 14,1.0, 18,1.15],
+      textSize:['interpolate',['linear'],['zoom'], 9,10, 14,12],
+      textOpacity:['interpolate',['linear'],['zoom'], 8,0, 10,1] });
+    addTransitSymbol({ id:'amg-transit-air-local', kind:'air', minzoom:0,
+      iconSize:['interpolate',['linear'],['zoom'], 0,0.22, 6,0.45, 10,0.75, 14,1.0, 18,1.15],
+      textSize:['interpolate',['linear'],['zoom'], 9,10, 14,12],
+      textOpacity:['interpolate',['linear'],['zoom'], 8,0, 10,1] });
+    // ЖД-станции и автовокзалы — с z5/z6, подписи с z12.
+    addTransitSymbol({ id:'amg-transit-train-local', kind:'train', minzoom:5,
+      iconSize:['interpolate',['linear'],['zoom'], 5,0.38, 10,0.6, 14,0.9, 18,1.05],
+      textSize:['interpolate',['linear'],['zoom'], 10,10, 15,12],
+      textOpacity:['interpolate',['linear'],['zoom'], 10,0, 12,1] });
+    addTransitSymbol({ id:'amg-transit-bus-local', kind:'bus', minzoom:6,
+      iconSize:['interpolate',['linear'],['zoom'], 6,0.38, 10,0.6, 14,0.9, 18,1.05],
+      textSize:['interpolate',['linear'],['zoom'], 10,10, 15,12],
+      textOpacity:['interpolate',['linear'],['zoom'], 10,0, 12,1] });
+  }
+  applyTransitVisibility();
   applyCategoryFilter();
   try { handleHash(); } catch (_) {}
 }
@@ -1224,6 +1346,11 @@ let layersChain = Promise.resolve();
 const schedule = () => { layersChain = layersChain.then(setupCatalogLayers).catch(() => {}); };
 map.on('style.load', schedule);
 map.on('load', schedule);
+// Выше в файле есть top-level await (каталог, локальные паки): при быстрой загрузке стиля
+// style.load/load успевают сработать ДО подписки, и тогда каталог/транспорт не добавляются
+// вовсе (пустая карта без слоёв и иконок). Страхуемся идемпотентным вызовом: setupCatalogLayers
+// проверяет наличие каждого слоя через getLayer/hasImage, поэтому повтор безопасен.
+if (map.isStyleLoaded()) schedule();
 
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
 // Generic/home/root/Special:/search/My-Maps-viewer URL — НЕ объектная evidence-ссылка.
@@ -1536,6 +1663,7 @@ Overlays.register('sheet', document.getElementById('sheet'));
 Overlays.register('card', document.getElementById('card'));
 Overlays.register('detail', document.getElementById('detail'));
 Overlays.register('nearby', document.getElementById('nearby'));
+Overlays.register('transit', document.getElementById('transit'));
 // scrim закрывает только по «тапу» (не по drag/свайпу, чтобы обычный жест не закрывал card)
 (function scrimTap() {
   const s = document.getElementById('scrim');
@@ -1681,6 +1809,7 @@ Overlays.setCloser('card', closeCard);
 Overlays.setCloser('detail', closeDetail);
 Overlays.setCloser('sheet', () => Overlays.hide('sheet'));
 Overlays.setCloser('menu', () => Overlays.hide('menu'));
+Overlays.setCloser('transit', () => { Overlays.hide('transit'); if (typeof renderTransitBtn === 'function') renderTransitBtn(); });
 // Держим ссылку на активный Popup, чтобы корректно перерисовывать его при смене языка.
 let popupRef = null, popupSiteId = null;
 function renderPopup() {
@@ -1825,6 +1954,31 @@ $('offlineOnly').onchange = e => { state.offlineOnly = e.target.checked; map.set
 $('btnPacks').onclick = () => { Overlays.hide('menu'); Overlays.show('sheet'); renderPacks(); };
 $('btnClose').onclick = () => Overlays.hide('sheet');
 
+// ---------- транспорт: подключаемые слои (по умолчанию выключены) ----------
+const TRANSIT_UI = [
+  { key:'metro', box:'trMetro', label:'trMetroLabel' },
+  { key:'train', box:'trTrain', label:'trTrainLabel' },
+  { key:'bus',   box:'trBus',   label:'trBusLabel' },
+  { key:'air',   box:'trAir',   label:'trAirLabel' },
+];
+function saveTransitPref() { try { localStorage.setItem('amg-transit', JSON.stringify([...state.transit])); } catch (_) {} }
+function renderTransitBtn() {
+  const b = $('btnTransit'); if (!b) return;
+  const n = state.transit.size;
+  b.textContent = n ? `${pick(LB.transit)} · ${n}` : pick(LB.transit);
+  b.classList.toggle('on', n > 0);
+  b.setAttribute('aria-expanded', Overlays.isOpen('transit') ? 'true' : 'false');
+}
+function syncTransitPanel() { for (const t of TRANSIT_UI) { const el = $(t.box); if (el) el.checked = state.transit.has(t.key); } }
+function setTransitKind(k, on) {
+  if (on) state.transit.add(k); else state.transit.delete(k);
+  saveTransitPref(); applyTransitVisibility(); renderTransitBtn();
+}
+$('btnTransit').onclick = () => { Overlays.hide('menu'); syncTransitPanel(); Overlays.show('transit'); renderTransitBtn(); };
+for (const t of TRANSIT_UI) { const el = $(t.box); if (el) el.onchange = e => setTransitKind(t.key, e.target.checked); }
+$('transitClose').onclick = () => { Overlays.hide('transit'); renderTransitBtn(); };
+renderTransitBtn();
+
 // ---------- UGC Этап 1: «Что рядом» + share + deep-link (только клиент, без сервера) ----------
 // Единая точка локализации статичной оболочки: вызывается при загрузке и при смене языка.
 function applyStaticLabels() {
@@ -1836,6 +1990,15 @@ function applyStaticLabels() {
   T('brandTag', pick(LB.brandTag));
   T('sheetTitle', pick(LB.offlineMap));
   T('offlineOnlyLabel', pick(LB.offlineOnlyTxt));
+  // транспорт: подписи панели + кнопки (кнопка дополнительно показывает число включённых)
+  T('transitTitle', pick(LB.transitTitle));
+  T('transitHint', pick(LB.transitHint));
+  T('transitClose', pick(LB.close));
+  T('trMetroLabel', pick(LB.transitMetro));
+  T('trTrainLabel', pick(LB.transitTrain));
+  T('trBusLabel', pick(LB.transitBus));
+  T('trAirLabel', pick(LB.transitAir));
+  if (typeof renderTransitBtn === 'function') renderTransitBtn();
   const mb = $('menuBtn'); if (mb) mb.setAttribute('aria-label', pick(LB.menu));
   renderFlavors();
   if (Overlays.isOpen('sheet')) renderPacks();
