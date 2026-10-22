@@ -101,6 +101,10 @@
   .amg-pop .amg-src { font-size:11px; color:#7a7268; margin-top:3px; }
   .amg-pop .amg-src a { color:#a2543a; }
   .amg-pop .amg-src-text { color:#7a7268; }   /* generic source = plain provenance, не ссылка */
+  /* Карточка «Впечатления»: адрес/контакты/источник описания */
+  .amg-pop .amg-note { color:#8a8177; font-size:11px; font-style:italic; margin:2px 0; }
+  .amg-pop .amg-h { color:#5b5147; font-size:11px; text-transform:uppercase; letter-spacing:.4px; margin:9px 0 2px; font-weight:700; }
+  .amg-pop .amg-contacts a, .amg-pop .amg-meta a { color:#a2543a; }
   /* «Подробно» — только информация об объекте; навигация/действия живут на компактной карточке */
   .amg-pop .amg-role { color:#a89f93; }
   .amg-src-all { margin-top:10px; border-top:1px solid #eee; padding-top:8px; }
@@ -208,6 +212,7 @@
     box-shadow:0 2px 8px rgba(0,0,0,.08); max-width:min(72vw,380px); }
   #brand .wm { font-size:16px; font-weight:700; color:#d9552b; line-height:1.1; letter-spacing:.2px; }
   #brand .tag { font-size:11px; color:#6b6258; line-height:1.15; margin-top:2px; }
+  #chipsCat { display:contents; }
   #chips { display:flex; gap:6px; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none; padding-bottom:2px; }
   #chips::-webkit-scrollbar { display:none; }
   #chips .chip { flex:0 0 auto; font-size:13px; padding:7px 11px; border-radius:16px; border:1px solid #d8d1c6;
@@ -270,13 +275,12 @@
     </select>
     <button id="btnNearby">Рядом</button>
     <button id="btnTransit" aria-haspopup="dialog">Транспорт</button>
-    <button id="btnExp" aria-haspopup="dialog">Впечатления</button>
     <button id="btnPacks">Офлайн</button>
     <div id="amgMeta" hidden>
       <button type="button" id="amgFeedbackBtn">Обратная связь</button>
     </div>
   </div>
-  <div id="chips"></div>
+  <div id="chips"><button class="chip" id="btnExp" type="button" aria-haspopup="dialog">Впечатления</button><span id="chipsCat"></span></div>
   <!-- Глаз-счётчик: всегда в #topui, сразу под линией переключателей объектов -->
   <span id="amgHits" title="" hidden><span aria-hidden="true">👁</span>&nbsp;<b id="amgHitsN">—</b></span>
 </div>
@@ -1423,6 +1427,9 @@ async function setupCatalogLayers() {
           'text-offset':[0,1.5], 'text-anchor':'top', 'text-max-width':9, 'text-optional':true },
         paint:{ 'text-color':PAL.siteLabel, 'text-halo-color':PAL.labelHalo, 'text-halo-width':1.8,
           'text-opacity':textOpacity } });
+      // Курсор-подсказка: объект кликабелен (карточка с адресом/контактами).
+      map.on('mouseenter', id, () => { map.getCanvas().style.cursor = 'pointer'; });
+      map.on('mouseleave', id, () => { map.getCanvas().style.cursor = ''; });
     };
     const bigIcon = ['interpolate',['linear'],['zoom'], 0,0.28, 6,0.5, 10,0.8, 14,1.0, 18,1.15];
     const midIcon = ['interpolate',['linear'],['zoom'], 5,0.4, 10,0.65, 14,0.95, 18,1.08];
@@ -1825,6 +1832,7 @@ for (const mq of [mqCoarse, mqNarrow, mqLand, mqShort]) {
 
 const isNarrow = () => isMobileUI();   // mobile → bottom-sheet card; wide/desktop → popup
 let cardSiteId = null;
+let cardExp = null;   // {props, coords} — открытая карточка «впечатления» (не место с работами)
 function renderCard(siteId) {
   const c = document.getElementById('card');
   c.innerHTML = `<button type="button" class="amg-card-close" data-card-close aria-label="×">×</button>${sitePopupHtml(siteId)}`;
@@ -1833,7 +1841,7 @@ function renderCard(siteId) {
   wireMedia(c);
   Overlays.show('card');
 }
-function closeCard() { const c = document.getElementById('card'); if (c) { c.hidden = true; c.innerHTML = ''; c.style.transform = ''; } cardSiteId = null; Overlays.hide('card'); }
+function closeCard() { const c = document.getElementById('card'); if (c) { c.hidden = true; c.innerHTML = ''; c.style.transform = ''; } cardSiteId = null; cardExp = null; Overlays.hide('card'); }
 let detailSiteId = null;
 function renderDetail(siteId) {
   const d = document.getElementById('detail');
@@ -1849,6 +1857,93 @@ function closeDetail() { const d = document.getElementById('detail'); if (d) { d
 function openDetail(siteId) {
   if (typeof window.amgOpenDetail === 'function') return window.amgOpenDetail(siteId);
   renderDetail(siteId); // Popup/Card остаются под Detail (z-index) и снова доступны после Close
+}
+
+// ---------- «Впечатления»: карточка объекта по клику ----------
+// Показываем только то, что реально лежит в data/experiences.geojson:
+// адрес (Nominatim), описание + ссылка на источник (Wikipedia/OSM), подтверждённые контакты.
+const EXP_KIND_LABELS = {
+  paraglide: { ru:'Парапланы', en:'Paragliding', ka:'პარაპლანი' },
+  canyon:    { ru:'Каньон / водопад', en:'Canyon / waterfall', ka:'კანიონი / ჩანჩქერი' },
+  zipline:   { ru:'Зиплайн', en:'Zipline', ka:'ზიპლაინი' },
+  rafting:   { ru:'Рафтинг', en:'Rafting', ka:'რაფტინგი' },
+  bike:      { ru:'Байк-парк', en:'Bike park', ka:'ველო-პარკი' },
+  cablecar:  { ru:'Канатка / подъёмник', en:'Cable car / lift', ka:'საბაგირო' },
+};
+const EXP_LB = {
+  addr:       { ru:'Адрес', en:'Address', ka:'მისამართი' },
+  contacts:   { ru:'Контакты', en:'Contacts', ka:'კონტაქტები' },
+  phone:      { ru:'Телефон', en:'Phone', ka:'ტელეფონი' },
+  site:       { ru:'Сайт', en:'Website', ka:'ვებგვერდი' },
+  email:      { ru:'E-mail', en:'E-mail', ka:'ელფოსტა' },
+  hours:      { ru:'Часы работы', en:'Hours', ka:'სამუშაო საათები' },
+  descSrc:    { ru:'Источник описания', en:'Description source', ka:'აღწერის წყარო' },
+  fromOsm:    { ru:'OSM', en:'OSM', ka:'OSM' },
+  agency:     { ru:'Контакт ведомства (не самого объекта)', en:'Agency contact (not the venue itself)', ka:'უწყების კონტაქტი (არა ობიექტის)' },
+  noContacts: { ru:'Официальных контактов не найдено', en:'No official contact found', ka:'ოფიციალური კონტაქტი ვერ მოიძებნა' },
+  approx:     { ru:'точка приблизительная', en:'approximate location', ka:'მიახლოებითი წერტილი' },
+};
+function expHostOf(u) { try { return new URL(u).hostname.replace(/^www\./, ''); } catch (_) { return String(u); } }
+function expTitleOf(p) {
+  if (state.lang === 'en' && p.name_en) return p.name_en;
+  if (state.lang === 'ka' && p.name_ka) return p.name_ka;
+  return p.name_ru || p.name_en || p.name_ka || '';
+}
+function expCardHtml(p, coords) {
+  const lng = coords ? coords[0] : null, lat = coords ? coords[1] : null;
+  const kindLbl = EXP_KIND_LABELS[p.kind] ? pick(EXP_KIND_LABELS[p.kind]) : '';
+  const tags = [
+    kindLbl ? `<span class="amg-tag cat">${esc(kindLbl)}</span>` : '',
+    p.approx ? `<span class="amg-tag type">${esc(pick(EXP_LB.approx))}</span>` : '',
+  ].filter(Boolean).join('');
+  const desc = p.desc_ru || p.note_ru || '';
+  const ds = String(p.desc_src || '').trim();
+  const srcHtml = !ds ? '' : (ds === 'OSM'
+    ? `<span class="amg-role">${esc(pick(EXP_LB.fromOsm))}</span>`
+    : `<a href="${esc(ds)}" target="_blank" rel="noopener">${esc(expHostOf(ds))}</a>`);
+  const rows = [];
+  if (p.phone) rows.push(`<div class="amg-meta">${esc(pick(EXP_LB.phone))}: <a href="tel:${esc(String(p.phone).replace(/[^\d+]/g, ''))}">${esc(p.phone)}</a></div>`);
+  if (p.website) rows.push(`<div class="amg-meta">${esc(pick(EXP_LB.site))}: <a href="${esc(p.website)}" target="_blank" rel="noopener">${esc(expHostOf(p.website))}</a></div>`);
+  if (p.email) rows.push(`<div class="amg-meta">${esc(pick(EXP_LB.email))}: <a href="mailto:${esc(p.email)}">${esc(p.email)}</a></div>`);
+  if (p.hours) rows.push(`<div class="amg-meta">${esc(pick(EXP_LB.hours))}: ${esc(p.hours)}</div>`);
+  const agency = p.contact_kind === 'agency' ? `<div class="amg-note">${esc(pick(EXP_LB.agency))}</div>` : '';
+  const contacts = rows.length
+    ? `<div class="amg-h">${esc(pick(EXP_LB.contacts))}</div>${rows.join('')}${agency}`
+    : `<div class="amg-note">${esc(pick(EXP_LB.noContacts))}</div>`;
+  return `<div class="amg-pop amg-preview amg-exp-card">
+    <div class="amg-title">${esc(expTitleOf(p))}</div>
+    ${tags ? `<div class="amg-tags">${tags}</div>` : ''}
+    ${p.addr_ru ? `<div class="amg-meta amg-addr">${esc(pick(EXP_LB.addr))}: ${esc(p.addr_ru)}</div>` : ''}
+    ${desc ? `<div class="amg-desc">${esc(desc)}</div>` : ''}
+    ${srcHtml ? `<div class="amg-src">${esc(pick(EXP_LB.descSrc))}: ${srcHtml}</div>` : ''}
+    ${contacts}
+    ${lat != null ? `<div class="amg-actions">${routeButtons(lat, lng)}</div>` : ''}
+  </div>`;
+}
+// Слои, клик по которым открывает карточку «впечатления».
+const EXP_CLICK_LAYERS = ['amg-exp-paraglide', 'amg-exp-canyon', 'amg-exp-zipline', 'amg-exp-rafting', 'amg-exp-bike', 'amg-exp-cablecar'];
+function renderExpCard(props, coords) {
+  const c = document.getElementById('card');
+  if (!c) return;
+  c.innerHTML = `<button type="button" class="amg-card-close" data-card-close aria-label="×">×</button>${expCardHtml(props, coords)}`;
+  c.hidden = false; cardSiteId = null; cardExp = { props, coords };
+  c.scrollTop = 0;
+  Overlays.show('card');
+}
+function openExpCard(props, coords) {
+  if (isNarrow()) return renderExpCard(props, coords);
+  if (popupRef) { try { popupRef.remove(); } catch (_) {} popupRef = null; popupSiteId = null; popupExp = null; }
+  if (cardExp) closeCard();
+  const pop = new maplibregl.Popup({ offset:14, maxWidth:'min(360px, calc(100vw - 24px))' })
+    .setLngLat(coords).setHTML(expCardHtml(props, coords));
+  pop.on('open', () => requestAnimationFrame(() => clampPopup(pop)));
+  pop.on('close', () => { if (popupRef === pop) { popupRef = null; popupExp = null; } });
+  pop.addTo(map);
+  popupRef = pop; popupSiteId = null; popupExp = { props, coords };
+  pop.getElement().addEventListener('click', ev => {
+    const a = ev.target.closest('a[href]');
+    if (a) ev.stopPropagation();   // ссылки в карточке не должны «проваливаться» в карту
+  });
 }
 function clampPopup(popup) {
   const el = popup.getElement();
@@ -1914,8 +2009,13 @@ Overlays.setCloser('menu', () => Overlays.hide('menu'));
 Overlays.setCloser('transit', () => { Overlays.hide('transit'); if (typeof renderTransitBtn === 'function') renderTransitBtn(); });
 Overlays.setCloser('experiences', () => { Overlays.hide('experiences'); if (typeof renderExpBtn === 'function') renderExpBtn(); });
 // Держим ссылку на активный Popup, чтобы корректно перерисовывать его при смене языка.
-let popupRef = null, popupSiteId = null;
+let popupRef = null, popupSiteId = null, popupExp = null;   // popupExp — открытый попап «впечатления»
 function renderPopup() {
+  if (popupRef && popupExp) {              // карточка «впечатления» в попапе — перерисовать на новом языке
+    popupRef.setHTML(expCardHtml(popupExp.props, popupExp.coords));
+    requestAnimationFrame(() => clampPopup(popupRef));
+    return;
+  }
   if (!popupRef || !popupSiteId) return;
   popupRef.setHTML(sitePopupHtml(popupSiteId));
   wireMedia(popupRef.getElement());
@@ -1925,12 +2025,12 @@ map.on('click', 'sites', e => {
   if (demoPick) return;
   const id = e.features[0].properties.id;
   if (isNarrow()) return renderCard(id);
-  if (popupRef) { try { popupRef.remove(); } catch (_) {} popupRef = null; popupSiteId = null; }
+  if (popupRef) { try { popupRef.remove(); } catch (_) {} popupRef = null; popupSiteId = null; popupExp = null; }
   const pop = new maplibregl.Popup({ offset:14, maxWidth:'min(360px, calc(100vw - 24px))' })
     .setLngLat(e.features[0].geometry.coordinates)
     .setHTML(sitePopupHtml(id));
   pop.on('open', () => requestAnimationFrame(() => clampPopup(pop)));
-  pop.on('close', () => { if (popupRef === pop) { popupRef = null; popupSiteId = null; } });
+  pop.on('close', () => { if (popupRef === pop) { popupRef = null; popupSiteId = null; popupExp = null; } });
   pop.addTo(map);
   popupRef = pop; popupSiteId = id;
   wireMedia(pop.getElement());
@@ -1943,10 +2043,24 @@ map.on('click', 'sites', e => {
     if (b) openDetail(b.dataset.detail);
   });
 });
+// Клик по объекту «Впечатлений» → карточка с адресом, описанием, источником и контактами.
 map.on('click', e => {
   if (demoPick) return;
-  if (!isNarrow() || !cardSiteId || !map.getLayer('sites')) return;
-  if (!map.queryRenderedFeatures(e.point, { layers: ['sites'] }).length) closeCard();
+  const present = EXP_CLICK_LAYERS.filter(id => map.getLayer(id));
+  if (!present.length) return;
+  const feats = map.queryRenderedFeatures(e.point, { layers: present });
+  if (!feats.length) return;
+  const f = feats[0];
+  const p = f.properties || {};
+  // queryRenderedFeatures по symbol-слою отдаёт точку в географических координатах.
+  const c = f.geometry && f.geometry.coordinates && f.geometry.type === 'Point' ? f.geometry.coordinates : null;
+  openExpCard(p, c);
+});
+map.on('click', e => {
+  if (demoPick) return;
+  if (!isNarrow() || (!cardSiteId && !cardExp)) return;
+  const has = list => list.some(id => map.getLayer(id) && map.queryRenderedFeatures(e.point, { layers: [id] }).length);
+  if (!has(['sites']) && !has(EXP_CLICK_LAYERS)) closeCard();
 });
 map.on('mouseenter', 'sites', () => map.getCanvas().style.cursor = 'pointer');
 map.on('mouseleave', 'sites', () => map.getCanvas().style.cursor = '');
@@ -2052,7 +2166,7 @@ function renderFlavors() {
 }
 renderFlavors();
 $('flavor').onchange = e => { state.flavor = e.target.value; map.setStyle(buildStyle()); };
-$('lang').onchange = e => { state.lang = e.target.value; map.setStyle(buildStyle()); renderChips(); updateRotateHint(); applyStaticLabels(); if (Overlays.isOpen('nearby')) renderNearby(); if (cardSiteId) renderCard(cardSiteId); if (detailSiteId) renderDetail(detailSiteId); renderPopup(); try { applyMetaLabels(); } catch (_) {} };
+$('lang').onchange = e => { state.lang = e.target.value; map.setStyle(buildStyle()); renderChips(); updateRotateHint(); applyStaticLabels(); if (Overlays.isOpen('nearby')) renderNearby(); if (cardSiteId) renderCard(cardSiteId); else if (cardExp) renderExpCard(cardExp.props, cardExp.coords); if (detailSiteId) renderDetail(detailSiteId); renderPopup(); try { applyMetaLabels(); } catch (_) {} };
 $('offlineOnly').onchange = e => { state.offlineOnly = e.target.checked; map.setStyle(buildStyle()); toast(state.offlineOnly ? pick(LB.showDownloaded) : pick(LB.showNetwork)); };
 $('btnPacks').onclick = () => { Overlays.hide('menu'); Overlays.show('sheet'); renderPacks(); };
 $('btnClose').onclick = () => Overlays.hide('sheet');
@@ -2560,7 +2674,7 @@ function renderChips() {
   for (const c of CATEGORIES) {
     html += `<button class="chip${active.has(c.key) ? ' on' : ''}" data-cat="${c.key}">${esc(pick(c.label))} <span class="cnt">${counts[c.key] || 0}</span></button>`;
   }
-  $('chips').innerHTML = html;
+  $('chipsCat').innerHTML = html;
 }
 $('chips').onclick = e => {
   if (e.target.closest('[data-reset]')) state.categories = null;                          // сброс → All
