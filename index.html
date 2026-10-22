@@ -21,12 +21,12 @@
   #sheet[hidden], #toast[hidden] { display:none; }
   #sheet h2 { margin:0 0 8px; font-size:18px; }
   /* --- Транспорт: подключаемые слои (метро/ЖД/автовокзалы/аэропорты) --- */
-  #transit { position:absolute; left:0; right:0; bottom:0; z-index:20; background:#fff; border-radius:16px 16px 0 0; box-shadow:0 -6px 24px rgba(0,0,0,.2); padding:14px 16px calc(14px + env(safe-area-inset-bottom,0px)); max-height:75%; overflow-y:auto; }
-  #transit[hidden] { display:none; }
-  #transit h2 { margin:0 0 8px; font-size:18px; }
-  #transit input[type=checkbox] { width:20px; height:20px; accent-color:#d9552b; flex:0 0 auto; }
-  #transit .row { justify-content:flex-start; padding:6px 0; }
-  #bar button#btnTransit.on { background:#fbe9e2; border-color:#d9552b; color:#b8431c; font-weight:600; }
+  #transit, #experiences { position:absolute; left:0; right:0; bottom:0; z-index:20; background:#fff; border-radius:16px 16px 0 0; box-shadow:0 -6px 24px rgba(0,0,0,.2); padding:14px 16px calc(14px + env(safe-area-inset-bottom,0px)); max-height:75%; overflow-y:auto; }
+  #transit[hidden], #experiences[hidden] { display:none; }
+  #transit h2, #experiences h2 { margin:0 0 8px; font-size:18px; }
+  #transit input[type=checkbox], #experiences input[type=checkbox] { width:20px; height:20px; accent-color:#d9552b; flex:0 0 auto; }
+  #transit .row, #experiences .row { justify-content:flex-start; padding:6px 0; }
+  #bar button#btnTransit.on, #bar button#btnExp.on { background:#fbe9e2; border-color:#d9552b; color:#b8431c; font-weight:600; }
   /* --- Служебная строка: счётчик посещений + обратная связь (живёт в #bar; на мобиле уезжает в меню) --- */
   #amgMeta { display:flex; align-items:center; gap:2px 10px; flex-wrap:wrap; font-size:12px; color:#6b6259; padding:0 2px; }
   #amgMeta[hidden] { display:none; }
@@ -270,6 +270,7 @@
     </select>
     <button id="btnNearby">Рядом</button>
     <button id="btnTransit" aria-haspopup="dialog">Транспорт</button>
+    <button id="btnExp" aria-haspopup="dialog">Впечатления</button>
     <button id="btnPacks">Офлайн</button>
     <div id="amgMeta" hidden>
       <button type="button" id="amgFeedbackBtn">Обратная связь</button>
@@ -296,6 +297,17 @@
   <label class="row"><input type="checkbox" id="trBus"> <span id="trBusLabel">Автовокзалы</span></label>
   <label class="row"><input type="checkbox" id="trAir"> <span id="trAirLabel">Аэропорты</span></label>
   <div class="btns"><button class="btn" id="transitClose" type="button">Закрыть</button></div>
+</div>
+<div id="experiences" hidden>
+  <h2 id="expTitle">Впечатления на карте</h2>
+  <div class="small" id="expHint">Экстрим и природа: парапланы, каньоны, зиплайны, рафтинг, байк, канатки. По умолчанию выключено.</div>
+  <label class="row"><input type="checkbox" id="exParaglide"> <span id="exParaglideLabel">Парапланы</span></label>
+  <label class="row"><input type="checkbox" id="exCanyon"> <span id="exCanyonLabel">Каньоны, водопады, смотровые</span></label>
+  <label class="row"><input type="checkbox" id="exZipline"> <span id="exZiplineLabel">Зиплайны и подвесные мосты</span></label>
+  <label class="row"><input type="checkbox" id="exRafting"> <span id="exRaftingLabel">Рафтинг</span></label>
+  <label class="row"><input type="checkbox" id="exBike"> <span id="exBikeLabel">Байк и даунхилл</span></label>
+  <label class="row"><input type="checkbox" id="exCablecar"> <span id="exCablecarLabel">Канатные дороги</span></label>
+  <div class="btns"><button class="btn" id="expClose" type="button">Закрыть</button></div>
 </div>
 <div id="toast" hidden></div>
 <div id="rotateHint" hidden><span class="rh-text"></span><button type="button" id="rhClose" aria-label="×">×</button></div>
@@ -364,13 +376,21 @@ PACKS.forEach(p => p.remote = new PMTiles(p.url));
 // state.transit — какие виды транспорта включены (пусто = все транспортные слои скрыты).
 // Читаем сохранённый выбор прямо здесь, чтобы значение было готово к первому addLayer.
 const TRANSIT_KEYS = ['metro', 'train', 'bus', 'air'];
+const EXP_KEYS = ['paraglide', 'canyon', 'zipline', 'rafting', 'bike', 'cablecar'];
 const readTransitPref = () => {
   try {
     const a = JSON.parse(localStorage.getItem('amg-transit') || '[]');
     return new Set(Array.isArray(a) ? a.filter(k => TRANSIT_KEYS.includes(k)) : []);
   } catch (_) { return new Set(); }
 };
-const state = { flavor:'light', lang:'ru', offlineOnly:false, lastError:'', categories:null, transit: readTransitPref() };
+const readExpPref = () => {
+  try {
+    const a = JSON.parse(localStorage.getItem('amg-exp') || '[]');
+    return new Set(Array.isArray(a) ? a.filter(k => EXP_KEYS.includes(k)) : []);
+  } catch (_) { return new Set(); }
+};
+const state = { flavor:'light', lang:'ru', offlineOnly:false, lastError:'', categories:null,
+  transit: readTransitPref(), exp: readExpPref() };
 
 // ---------- каталог (Stage 0 data) ----------
 // SITE = физическое место (GeoJSON), ARTWORK связан с местом через site_id.
@@ -536,6 +556,17 @@ const LB = {
   offline:    { ru:'Офлайн', en:'Offline', ka:'ოფლაინ' },
   // --- транспорт: подключаемые слои ---
   transit:      { ru:'Транспорт', en:'Transit', ka:'ტრანსპორტი' },
+  exp:          { ru:'Впечатления', en:'Experiences', ka:'შთაბეჭდილებები' },
+  expTitle:     { ru:'Впечатления на карте', en:'Experiences on the map', ka:'შთაბეჭდილებები რუკაზე' },
+  expHint:      { ru:'Экстрим и природа: парапланы, каньоны, зиплайны, рафтинг, байк, канатки. По умолчанию выключено.',
+    en:'Adventure and nature: paragliding, canyons, ziplines, rafting, biking, cable cars. Off by default.',
+    ka:'ექსტრიმი და ბუნება: პარაპლანი, კანიონები, ზიპლაინი, რაფტინგი, ველო, საბაგირო. ნაგულისხმევად გამორთულია.' },
+  expParaglide: { ru:'Парапланы', en:'Paragliding', ka:'პარაპლანი' },
+  expCanyon:    { ru:'Каньоны, водопады, смотровые', en:'Canyons, waterfalls, viewpoints', ka:'კანიონები, ჩანჩქერები' },
+  expZipline:   { ru:'Зиплайны и подвесные мосты', en:'Ziplines & suspension bridges', ka:'ზიპლაინი, ხიდები' },
+  expRafting:   { ru:'Рафтинг', en:'Rafting', ka:'რაფტინგი' },
+  expBike:      { ru:'Байк и даунхилл', en:'Biking & downhill', ka:'ველო და დაუნჰილი' },
+  expCablecar:  { ru:'Канатные дороги', en:'Cable cars', ka:'საბაგიროები' },
   transitTitle: { ru:'Транспорт на карте', en:'Transit on the map', ka:'ტრანსპორტი რუკაზე' },
   transitHint:  { ru:'По умолчанию выключено: на обзорном зуме транспорт забивает карту. Включайте нужное — выбор запоминается.',
     en:'Off by default — at low zoom transit clutters the map. Turn on what you need; the choice is remembered.',
@@ -909,6 +940,35 @@ function loadTransitGeo() {
   }
   return transitGeoPromise;
 }
+// Слой «Впечатления» (data/experiences.geojson): парапланы, каньоны, зиплайны, рафтинг, байк, канатки.
+let expGeoPromise = null;
+function loadExpGeo() {
+  if (!expGeoPromise) {
+    expGeoPromise = fetch('data/experiences.geojson', { cache: 'no-cache' })
+      .then(r => (r.ok ? r.json() : null)).catch(() => null);
+  }
+  return expGeoPromise;
+}
+const EXP_ICON = ['match', ['get', 'kind'],
+  'paraglide', 'amg-exp-paraglide', 'canyon', 'amg-exp-canyon',
+  'zipline', 'amg-exp-zipline', 'rafting', 'amg-exp-rafting',
+  'bike', 'amg-exp-bike', 'cablecar', 'amg-exp-cablecar', 'amg-exp-canyon'];
+const EXP_LAYER_TOGGLE = {
+  paraglide: ['amg-exp-paraglide'], canyon: ['amg-exp-canyon'],
+  zipline: ['amg-exp-zipline'], rafting: ['amg-exp-rafting'],
+  bike: ['amg-exp-bike'], cablecar: ['amg-exp-cablecar'],
+};
+const expName = () => ['coalesce', ['get', 'name_' + state.lang], ['get', 'name_en'], ['get', 'name_ru'], ['get', 'name_ka'], ''];
+function applyExpVisibility() {
+  if (!map || typeof map.getLayer !== 'function') return;
+  for (const [kind, ids] of Object.entries(EXP_LAYER_TOGGLE)) {
+    const v = state.exp.has(kind) ? 'visible' : 'none';
+    for (const id of ids) {
+      if (!map.getLayer(id)) continue;
+      try { map.setLayoutProperty(id, 'visibility', v); } catch (_) {}
+    }
+  }
+}
 const TRANSIT_LOCAL_ICON = ['match', ['get', 'kind'],
   'metro', 'amg-transit-metro', 'train', 'amg-transit-train',
   'bus', 'amg-transit-bus', 'air', 'amg-transit-air', 'amg-transit-train'];
@@ -1216,6 +1276,15 @@ const POI_SVGS = {
   'amg-poi-boat': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48"><path d="M8 34 H40 L34 42 H14 Z" fill="#C99A6B" stroke="#3b332b" stroke-width="2" stroke-linejoin="round"/><path d="M24 6 V34" stroke="#3b332b" stroke-width="2" stroke-linecap="round"/><path d="M25 8 L38 30 H25 Z" fill="#F2F6F8" stroke="#3b332b" stroke-width="2" stroke-linejoin="round"/><path d="M23 12 L11 30 H23 Z" fill="#E8EDF0" stroke="#3b332b" stroke-width="2" stroke-linejoin="round"/></svg>`,
   'amg-poi-transport': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48"><rect x="8" y="12" width="32" height="22" rx="4" fill="#F2A23C" stroke="#3b332b" stroke-width="2"/><rect x="12" y="16" width="9" height="7" rx="1.5" fill="#BFE3F2" stroke="#3b332b" stroke-width="1"/><rect x="27" y="16" width="9" height="7" rx="1.5" fill="#BFE3F2" stroke="#3b332b" stroke-width="1"/><circle cx="16" cy="37" r="3" fill="#3b332b"/><circle cx="32" cy="37" r="3" fill="#3b332b"/></svg>`,
 };
+// Иконки слоя «Впечатления»: экстрим и природа (параплан/каньон/зиплайн/рафт/байк/канатка).
+const EXP_SVGS = {
+  'amg-exp-paraglide': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48"><circle cx="24" cy="24" r="17" fill="#EFE7DA" stroke="#3b332b" stroke-width="2.4"/><path d="M8 17 C16 10 32 10 40 17 C32 21 16 21 8 17 Z" fill="#E4614A" stroke="#3b332b" stroke-width="2" stroke-linejoin="round"/><path d="M8 17 L18 26 M40 17 L30 26 M18 26 H30" fill="none" stroke="#3b332b" stroke-width="1.5"/><circle cx="24" cy="29.5" r="2.6" fill="#2f6fb0" stroke="#3b332b" stroke-width="1.5"/><path d="M21.6 32 L19 39 M26.4 32 L29 39" stroke="#3b332b" stroke-width="2" stroke-linecap="round"/></svg>`,
+  'amg-exp-canyon': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48"><circle cx="24" cy="24" r="17" fill="#EFE7DA" stroke="#3b332b" stroke-width="2.4"/><path d="M8 15 L14 27 L19 32 L24 39 L29 32 L34 27 L40 15" fill="none" stroke="#a9764a" stroke-width="2.4" stroke-linejoin="round"/><path d="M18 33 Q24 36 30 33" fill="none" stroke="#2f8fb0" stroke-width="2.6" stroke-linecap="round"/><path d="M12 14 L16 21 L9 21 Z" fill="#7FA86B" stroke="#3b332b" stroke-width="1.2" stroke-linejoin="round"/></svg>`,
+  'amg-exp-zipline': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48"><circle cx="24" cy="24" r="17" fill="#EFE7DA" stroke="#3b332b" stroke-width="2.4"/><path d="M8 14 L40 26" stroke="#3b332b" stroke-width="2.2" stroke-linecap="round"/><circle cx="24" cy="20" r="3.4" fill="#F2C14E" stroke="#3b332b" stroke-width="1.8"/><path d="M24 23.4 V29" stroke="#3b332b" stroke-width="2" stroke-linecap="round"/><path d="M19 30 H29 L27 35 H21 Z" fill="#2f6fb0" stroke="#3b332b" stroke-width="1.6" stroke-linejoin="round"/></svg>`,
+  'amg-exp-rafting': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48"><circle cx="24" cy="24" r="17" fill="#EFE7DA" stroke="#3b332b" stroke-width="2.4"/><path d="M10 26 H38 L34 34 H14 Z" fill="#E4614A" stroke="#3b332b" stroke-width="2" stroke-linejoin="round"/><g stroke="#3b332b" stroke-width="2" stroke-linecap="round"><path d="M17 19 L12 30"/><path d="M31 19 L36 30"/></g><g fill="none" stroke="#2f8fb0" stroke-width="2.4" stroke-linecap="round"><path d="M9 37 Q13 34 17 37 T25 37 T33 37 T40 37"/></g></svg>`,
+  'amg-exp-bike': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48"><circle cx="24" cy="24" r="17" fill="#EFE7DA" stroke="#3b332b" stroke-width="2.4"/><circle cx="16" cy="31" r="5" fill="none" stroke="#3b332b" stroke-width="2"/><circle cx="33" cy="31" r="5" fill="none" stroke="#3b332b" stroke-width="2"/><path d="M16 31 L22 21 H30 L33 31 M22 21 L26 31 H16" fill="none" stroke="#2f7d32" stroke-width="2" stroke-linejoin="round"/><path d="M30 21 L28 16 H24" fill="none" stroke="#3b332b" stroke-width="2" stroke-linecap="round"/></svg>`,
+  'amg-exp-cablecar': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48"><circle cx="24" cy="24" r="17" fill="#EFE7DA" stroke="#3b332b" stroke-width="2.4"/><path d="M8 13 L40 20" stroke="#3b332b" stroke-width="2.2" stroke-linecap="round"/><path d="M24 17.5 V21" stroke="#3b332b" stroke-width="2"/><rect x="16" y="21" width="16" height="13" rx="3" fill="#F2A23C" stroke="#3b332b" stroke-width="2"/><rect x="19.5" y="24" width="9" height="6" rx="1.5" fill="#BFE3F2" stroke="#3b332b" stroke-width="1.2"/></svg>`,
+};
 // Бесшовный «бумажный» паттерн (128×128, степень двойки) для светлых тем.
 const PATTERN_SVGS = {
   'amg-paper': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128"><g fill="#8a6a3a" opacity="0.06"><circle cx="16" cy="20" r="1.5"/><circle cx="48" cy="12" r="1"/><circle cx="90" cy="30" r="1.6"/><circle cx="120" cy="18" r="1"/><circle cx="30" cy="60" r="1.2"/><circle cx="70" cy="52" r="1.5"/><circle cx="110" cy="70" r="1"/><circle cx="12" cy="90" r="1.4"/><circle cx="55" cy="100" r="1.2"/><circle cx="95" cy="110" r="1.6"/><circle cx="40" cy="120" r="1"/><circle cx="118" cy="118" r="1.2"/></g></svg>`,
@@ -1247,6 +1316,7 @@ const ICON_DEFS = [
   ...Object.entries(BADGE_SVGS).map(([k, v]) => [k, v, 24, 2]),
   ...Object.entries(POI_SVGS).map(([k, v]) => [k, v, 48, 2]),
   ...Object.entries(TRANSIT_SVGS).map(([k, v]) => [k, v, 48, 2]),
+  ...Object.entries(EXP_SVGS).map(([k, v]) => [k, v, 48, 2]),
   ...Object.entries(PATTERN_SVGS).map(([k, v]) => [k, v, 128, 1]),
 ];
 let iconsChain = Promise.resolve();
@@ -1339,6 +1409,37 @@ async function setupCatalogLayers() {
       textOpacity:['interpolate',['linear'],['zoom'], 10,0, 12,1] });
   }
   applyTransitVisibility();
+  // Впечатления — поверх всего, но по умолчанию невидимы (включаются из панели).
+  const egeo = await loadExpGeo();
+  if (egeo) {
+    if (!map.getSource('amg-exp-local')) map.addSource('amg-exp-local', { type:'geojson', data:egeo });
+    const addExpSymbol = (id, kind, mz, iconSize, textSize, textOpacity) => {
+      if (map.getLayer(id)) return;
+      map.addLayer({ id, type:'symbol', source:'amg-exp-local', minzoom:mz,
+        filter:['==', ['get','kind'], kind],
+        layout:{ 'icon-image':EXP_ICON, 'icon-size':iconSize,
+          'icon-allow-overlap':true, 'icon-ignore-placement':true,
+          'text-field':expName(), 'text-font':['Noto Sans Medium'], 'text-size':textSize,
+          'text-offset':[0,1.5], 'text-anchor':'top', 'text-max-width':9, 'text-optional':true },
+        paint:{ 'text-color':PAL.siteLabel, 'text-halo-color':PAL.labelHalo, 'text-halo-width':1.8,
+          'text-opacity':textOpacity } });
+    };
+    const bigIcon = ['interpolate',['linear'],['zoom'], 0,0.28, 6,0.5, 10,0.8, 14,1.0, 18,1.15];
+    const midIcon = ['interpolate',['linear'],['zoom'], 5,0.4, 10,0.65, 14,0.95, 18,1.08];
+    addExpSymbol('amg-exp-paraglide','paraglide',7, midIcon,
+      ['interpolate',['linear'],['zoom'], 9,10, 14,12], ['interpolate',['linear'],['zoom'], 8,0, 11,1]);
+    addExpSymbol('amg-exp-canyon','canyon',6, midIcon,
+      ['interpolate',['linear'],['zoom'], 9,10, 14,12], ['interpolate',['linear'],['zoom'], 7,0, 10,1]);
+    addExpSymbol('amg-exp-zipline','zipline',7, bigIcon,
+      ['interpolate',['linear'],['zoom'], 9,10, 14,12], ['interpolate',['linear'],['zoom'], 8,0, 11,1]);
+    addExpSymbol('amg-exp-rafting','rafting',7, midIcon,
+      ['interpolate',['linear'],['zoom'], 9,10, 14,12], ['interpolate',['linear'],['zoom'], 8,0, 11,1]);
+    addExpSymbol('amg-exp-bike','bike',7, midIcon,
+      ['interpolate',['linear'],['zoom'], 9,10, 14,12], ['interpolate',['linear'],['zoom'], 8,0, 11,1]);
+    addExpSymbol('amg-exp-cablecar','cablecar',8, midIcon,
+      ['interpolate',['linear'],['zoom'], 10,10, 14,12], ['interpolate',['linear'],['zoom'], 9,0, 12,1]);
+  }
+  applyExpVisibility();
   applyCategoryFilter();
   try { handleHash(); } catch (_) {}
 }
@@ -1664,6 +1765,7 @@ Overlays.register('card', document.getElementById('card'));
 Overlays.register('detail', document.getElementById('detail'));
 Overlays.register('nearby', document.getElementById('nearby'));
 Overlays.register('transit', document.getElementById('transit'));
+Overlays.register('experiences', document.getElementById('experiences'));
 // scrim закрывает только по «тапу» (не по drag/свайпу, чтобы обычный жест не закрывал card)
 (function scrimTap() {
   const s = document.getElementById('scrim');
@@ -1810,6 +1912,7 @@ Overlays.setCloser('detail', closeDetail);
 Overlays.setCloser('sheet', () => Overlays.hide('sheet'));
 Overlays.setCloser('menu', () => Overlays.hide('menu'));
 Overlays.setCloser('transit', () => { Overlays.hide('transit'); if (typeof renderTransitBtn === 'function') renderTransitBtn(); });
+Overlays.setCloser('experiences', () => { Overlays.hide('experiences'); if (typeof renderExpBtn === 'function') renderExpBtn(); });
 // Держим ссылку на активный Popup, чтобы корректно перерисовывать его при смене языка.
 let popupRef = null, popupSiteId = null;
 function renderPopup() {
@@ -1979,6 +2082,33 @@ for (const t of TRANSIT_UI) { const el = $(t.box); if (el) el.onchange = e => se
 $('transitClose').onclick = () => { Overlays.hide('transit'); renderTransitBtn(); };
 renderTransitBtn();
 
+// ---------- впечатления: подключаемые слои (по умолчанию выключены) ----------
+const EXP_UI = [
+  { key:'paraglide', box:'exParaglide', label:'exParaglideLabel' },
+  { key:'canyon',    box:'exCanyon',    label:'exCanyonLabel' },
+  { key:'zipline',   box:'exZipline',   label:'exZiplineLabel' },
+  { key:'rafting',   box:'exRafting',   label:'exRaftingLabel' },
+  { key:'bike',      box:'exBike',      label:'exBikeLabel' },
+  { key:'cablecar',  box:'exCablecar',  label:'exCablecarLabel' },
+];
+function saveExpPref() { try { localStorage.setItem('amg-exp', JSON.stringify([...state.exp])); } catch (_) {} }
+function renderExpBtn() {
+  const b = $('btnExp'); if (!b) return;
+  const n = state.exp.size;
+  b.textContent = n ? `${pick(LB.exp)} · ${n}` : pick(LB.exp);
+  b.classList.toggle('on', n > 0);
+  b.setAttribute('aria-expanded', Overlays.isOpen('experiences') ? 'true' : 'false');
+}
+function syncExpPanel() { for (const t of EXP_UI) { const el = $(t.box); if (el) el.checked = state.exp.has(t.key); } }
+function setExpKind(k, on) {
+  if (on) state.exp.add(k); else state.exp.delete(k);
+  saveExpPref(); applyExpVisibility(); renderExpBtn();
+}
+$('btnExp').onclick = () => { Overlays.hide('menu'); syncExpPanel(); Overlays.show('experiences'); renderExpBtn(); };
+for (const t of EXP_UI) { const el = $(t.box); if (el) el.onchange = e => setExpKind(t.key, e.target.checked); }
+$('expClose').onclick = () => { Overlays.hide('experiences'); renderExpBtn(); };
+renderExpBtn();
+
 // ---------- UGC Этап 1: «Что рядом» + share + deep-link (только клиент, без сервера) ----------
 // Единая точка локализации статичной оболочки: вызывается при загрузке и при смене языка.
 function applyStaticLabels() {
@@ -1998,6 +2128,18 @@ function applyStaticLabels() {
   T('trTrainLabel', pick(LB.transitTrain));
   T('trBusLabel', pick(LB.transitBus));
   T('trAirLabel', pick(LB.transitAir));
+  // впечатления: подписи панели + кнопки
+  T('btnExp', pick(LB.exp));
+  T('expTitle', pick(LB.expTitle));
+  T('expHint', pick(LB.expHint));
+  T('expClose', pick(LB.close));
+  T('exParaglideLabel', pick(LB.expParaglide));
+  T('exCanyonLabel', pick(LB.expCanyon));
+  T('exZiplineLabel', pick(LB.expZipline));
+  T('exRaftingLabel', pick(LB.expRafting));
+  T('exBikeLabel', pick(LB.expBike));
+  T('exCablecarLabel', pick(LB.expCablecar));
+  if (typeof renderExpBtn === 'function') renderExpBtn();
   if (typeof renderTransitBtn === 'function') renderTransitBtn();
   const mb = $('menuBtn'); if (mb) mb.setAttribute('aria-label', pick(LB.menu));
   renderFlavors();
