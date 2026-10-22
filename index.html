@@ -221,6 +221,7 @@
   #chips .chip .cnt { opacity:.65; font-size:11px; margin-left:2px; }
   #chips .chip.on .cnt { opacity:.9; }
   #chips .chip-x { display:inline-block; margin-left:4px; font-weight:700; }
+  #chips .chip-sep { flex:0 0 auto; width:1px; height:22px; align-self:center; background:#d8d1c6; margin:0 3px; }
   /* Touch devices: увеличенные цели (desktop appearance не меняется) */
   @media (pointer: coarse) {
     #bar select, #bar button { min-height:44px; }
@@ -280,7 +281,7 @@
       <button type="button" id="amgFeedbackBtn">Обратная связь</button>
     </div>
   </div>
-  <div id="chips"><button class="chip" id="btnExp" type="button" aria-haspopup="dialog">Впечатления</button><span id="chipsCat"></span></div>
+  <div id="chips"><span id="chipsCat"></span><span class="chip-sep" aria-hidden="true"></span><button class="chip" id="btnExp" type="button" aria-haspopup="dialog">Впечатления</button></div>
   <!-- Глаз-счётчик: всегда в #topui, сразу под линией переключателей объектов -->
   <span id="amgHits" title="" hidden><span aria-hidden="true">👁</span>&nbsp;<b id="amgHitsN">—</b></span>
 </div>
