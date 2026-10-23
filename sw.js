@@ -1,5 +1,5 @@
 // Кэш оболочки приложения. Файлы карты (.pmtiles) этим кодом не кэшируются, их хранит само приложение в IndexedDB.
-const CACHE = 'amg-shell-v10';
+const CACHE = 'amg-shell-v11';
 self.addEventListener('install', () => self.skipWaiting());
 self.addEventListener('activate', e => e.waitUntil((async () => {
   for (const k of await caches.keys()) if (k !== CACHE) await caches.delete(k);
@@ -10,7 +10,7 @@ self.addEventListener('fetch', e => {
   if (req.method !== 'GET' || req.headers.has('range')) return;
   const u = new URL(req.url);
   if (u.pathname.endsWith('.pmtiles')) return;
-  const isPage = req.mode === 'navigate' || u.pathname.endsWith('/') || u.pathname.endsWith('index.html');
+  const isPage = req.mode === 'navigate' || u.pathname.endsWith('/') || u.pathname.endsWith('.html');
   e.respondWith((async () => {
     const c = await caches.open(CACHE);
     if (isPage) {

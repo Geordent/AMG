@@ -34,6 +34,10 @@
   #amgHits[hidden] { display:none; }
   #amgHits b { font-weight:600; color:#3f382f; font-variant-numeric:tabular-nums; }
   #amgFeedbackBtn { border:0; background:transparent; color:#a2543a; font-family:inherit; font-size:12px; padding:6px 2px; cursor:pointer; text-decoration:underline; text-underline-offset:2px; }
+  #legalLinks { display:flex; align-items:center; gap:6px; flex-wrap:wrap; font-size:11px; margin-top:3px; pointer-events:auto; }
+  #legalLinks a { color:#8a5a44; text-decoration:none; border-bottom:1px dotted #c9b7a7; }
+  #legalLinks a:hover { color:#a2543a; border-bottom-color:#a2543a; }
+  #legalLinks .sep { color:#c2b8ad; }
   /* Mobile: служебная строка переезжает в #topui и видна всегда (компактная «пилюля»),
      иначе счётчик/обратная связь прятались в бургер-меню и их не находили. */
   #topui > #amgMeta { pointer-events:auto; align-self:flex-end; background:rgba(255,255,255,.94); border:1px solid #e0d8cc; border-radius:999px; padding:2px 10px; box-shadow:0 4px 12px rgba(43,38,34,.08); }
@@ -263,6 +267,11 @@
   <div id="brand">
     <div class="wm" id="brandWm">ArtMap Georgia</div>
     <div class="tag" id="brandTag">Карта искусства и необычных городских объектов Грузии</div>
+    <span id="legalLinks">
+      <a id="lnkPrivacy" href="privacy.html">Конфиденциальность</a>
+      <span class="sep" aria-hidden="true">·</span>
+      <a id="lnkLicense" href="license.html">Лицензии</a>
+    </span>
   </div>
   <button id="menuBtn" type="button" aria-label="Меню">
     <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke="#2a2622" stroke-width="2" stroke-linecap="round"/></svg>
@@ -394,8 +403,13 @@ const readExpPref = () => {
     return new Set(Array.isArray(a) ? a.filter(k => EXP_KEYS.includes(k)) : []);
   } catch (_) { return new Set(); }
 };
-const state = { flavor:'light', lang:'ru', offlineOnly:false, lastError:'', categories:null,
+const readOfflinePref = () => {
+  try { return localStorage.getItem('amg-offline-only') === '1'; } catch (_) { return false; }
+};
+const state = { flavor:'light', lang:'ru', offlineOnly: readOfflinePref(), lastError:'', categories:null,
   transit: readTransitPref(), exp: readExpPref() };
+// UGC («Я здесь») включаем только после реального запуска Telegram-бота и публикации feed.
+const AMG_UGC_ENABLED = false;
 
 // ---------- каталог (Stage 0 data) ----------
 // SITE = физическое место (GeoJSON), ARTWORK связан с местом через site_id.
@@ -448,6 +462,7 @@ const LB = {
   srcObject:  { ru:'Объект', en:'Object', ka:'ობიექტი' },
   srcPhoto:   { ru:'Фото', en:'Photos', ka:'ფოტოები' },
   srcCatalog: { ru:'Каталог / проект', en:'Catalog / project', ka:'კატალოგი / პროექტი' },
+  srcNoLink:  { ru:'Источники без прямой ссылки', en:'Sources without a direct link', ka:'წყაროები პირდაპირი ბმულის გარეშე' },
   srcProv:    { ru:'Провенанс', en:'Provenance', ka:'წარმომავლობა' },
   placeReviews:{ ru:'Фото и отзывы', en:'Photos & reviews', ka:'ფოტოები და შეფასებები' },
   nearby:     { ru:'Рядом', en:'Nearby', ka:'ახლოს' },
@@ -517,6 +532,8 @@ const LB = {
   close:      { ru:'Закрыть', en:'Close', ka:'დახურვა' },
   hitsTitle:  { ru:'Число посещений сайта', en:'Number of site visits', ka:'საიტის ვიზიტების რაოდენობა' },
   feedback:   { ru:'Обратная связь', en:'Feedback', ka:'უკუკავშირი' },
+  privacy:    { ru:'Конфиденциальность', en:'Privacy', ka:'კონფიდენციალურობა' },
+  license:    { ru:'Лицензии', en:'Licenses', ka:'ლიცენზიები' },
   fbText:     { ru:'Что-то не работает или есть предложение? Напишите нам — это помогает проекту.',
                 en:'Something is broken or you have an idea? Tell us — it helps the project.',
                 ka:'რაღაც არ მუშაობს ან გაქვთ წინადადება? მოგვწერეთ — ეს პროექტს ეხმარება.' },
@@ -1102,7 +1119,7 @@ function buildStyle() {
   // Georgia base → online detail → Tbilisi detail (opaque-тайлы Тбилиси перекрывают online
   // внутри своего bbox; снаружи online виден). В offlineOnly online source/слои не добавляются.
   let online = [];
-  if (!state.offlineOnly) {
+  if (!state.offlineOnly && navigator.onLine) {
     sources.openmaptiles = { type:'vector', url:'https://tiles.openfreemap.org/planet' };
     online = onlineDetailLayers();
   }
@@ -1526,6 +1543,13 @@ function routeButtons(lat, lng) {
     return `<a class="${cls}" href="${esc(p.url(lat, lng))}" target="_blank" rel="noopener">${esc(txt)}</a>`;
   }).join('');
 }
+// Wikimedia Commons: превью вместо оригинала. Если шаблон не подошёл — останется original.
+function thumbFor(u, width = 960) {
+  if (typeof u !== 'string') return '';
+  const m = /^(https:\/\/upload\.wikimedia\.org\/wikipedia\/commons\/)([0-9a-f])\/([0-9a-f]{2})\/([^/?#]+)(?:\?.*)?$/i.exec(u.trim());
+  if (!m) return '';
+  return `${m[1]}thumb/${m[2]}/${m[3]}/${m[4]}/${width}px-${m[4]}`;
+}
 // Preview media: first item with role "photo"/"detail"; never duplicated within one card
 // (shared `shown` Set of canonical urls). Never shows source_id/depicts/internal ids.
 function mediaHtml(list, shown) {
@@ -1535,6 +1559,7 @@ function mediaHtml(list, shown) {
   shown.add(m.url);
   const url = esc(m.url);
   const direct = typeof m.direct_url === 'string' ? m.direct_url.trim() : '';
+  const preview = thumbFor(direct) || direct;
   const parts = [];
   if (m.author) parts.push(`<span class="amg-attr-author">${esc(m.author)}</span>`);
   if (m.license) parts.push(m.license_url ? `<a href="${esc(m.license_url)}" target="_blank" rel="noopener">${esc(m.license)}</a>` : `<span>${esc(m.license)}</span>`);
@@ -1542,7 +1567,7 @@ function mediaHtml(list, shown) {
   parts.push(`<a href="${url}" target="_blank" rel="noopener">${esc(pick(LB.source))}</a>`);
   const attr = `<figcaption class="amg-attr">${parts.join(' · ')}</figcaption>`;
   const fallback = `<a class="amg-media-fallback" href="${url}" target="_blank" rel="noopener">${esc(pick(LB.photoFail))}</a>`;
-  const img = direct ? `<img data-media-img src="${esc(direct)}" loading="lazy" alt="${esc(pick(LB.photoAlt))}">` : '';
+  const img = direct ? `<img data-media-img data-media-full="${esc(direct)}" src="${esc(preview)}" loading="lazy" decoding="async" alt="${esc(pick(LB.photoAlt))}">` : '';
   return `<figure class="amg-media${direct ? '' : ' amg-media-error'}">
     <div class="amg-media-frame">${img}${fallback}</div>
     ${attr}
@@ -1552,7 +1577,16 @@ function wireMedia(root) {
   if (!root) return;
   root.querySelectorAll('img[data-media-img]').forEach(img => {
     const fig = img.closest('.amg-media');
-    const fail = () => { if (fig) fig.classList.add('amg-media-error'); img.remove(); };
+    const fail = () => {
+      const full = img.getAttribute('data-media-full');
+      if (full && img.getAttribute('src') !== full) {
+        img.removeAttribute('data-media-full');
+        img.setAttribute('src', full);
+        return;
+      }
+      if (fig) fig.classList.add('amg-media-error');
+      img.remove();
+    };
     img.addEventListener('error', fail, { once: true });
     if (img.complete && img.naturalWidth === 0) fail();
   });
@@ -1610,13 +1644,22 @@ function detailSourcesHtml(site, arts) {
   // Прицельные ссылки на объект: только конкретный, не map/generic URL, который несёт сама привязка
   // (напр. Street Art Cities /markers/<id>), либо конкретный URL реестра. Всё прочее и любые ссылки
   // на карты НЕ показываем вовсе (наш проект сам карта).
-  const obj = [];
+  const obj = [], plain = [], seenPlain = new Set();
   for (const [id, refs] of byId) {
     const s = catalog.sources.get(id) || { title: id, url: '' };
     const refUrl = refs.map(r => (r && typeof r.url === 'string') ? r.url.trim() : '').find(u => u && !isGenericUrl(u)) || '';
     const regUrl = (s.url && !isGenericUrl(s.url)) ? s.url : '';
     const url = refUrl || regUrl;
-    if (!url || isMapUrl(url)) continue;
+    if (!url || isMapUrl(url)) {
+      // Не выдаём карту/каталог за object page, но и не скрываем сам факт источника.
+      if (!seenPlain.has(id)) {
+        seenPlain.add(id);
+        const roles = [...new Set(refs.map(r => r && r.role).filter(Boolean))]
+          .map(r => labelOf(ROLE_LABELS, r)).filter(Boolean).join(', ');
+        plain.push(`<span class="amg-src-plain">${esc(s.title)}${roles ? ` (${esc(roles)})` : ''}</span>`);
+      }
+      continue;
+    }
     obj.push(`<a href="${esc(url)}" target="_blank" rel="noopener">${esc(s.title)}</a>`);
   }
   // Внешние карточки места (Google / Яндекс) — чужие фото и отзывы. Это НЕ навигация:
@@ -1631,7 +1674,7 @@ function detailSourcesHtml(site, arts) {
     place.push(`<a href="${esc(u)}" target="_blank" rel="noopener" title="${esc(e.title || label)}">${esc(label)}</a>`);
   }
   const grp = (key, items) => items.length ? `<div class="amg-srcgrp"><span class="amg-srcgrp-h">${esc(pick(LB[key]))}</span> ${items.join(' · ')}</div>` : '';
-  const out = grp('srcPhoto', photo) + grp('srcObject', obj) + grp('placeReviews', place);
+  const out = grp('srcPhoto', photo) + grp('srcObject', obj) + grp('srcNoLink', plain) + grp('placeReviews', place);
   return out ? `<div class="amg-src amg-src-all">${out}</div>` : '';
 }
 // Compact preview: ONE object, title shown once; full artwork list lives in Detail (#detail).
@@ -1727,7 +1770,7 @@ function detailHtml(siteId) {
     <div class="amg-tags">${tags}</div>
     ${landmark ? `<div class="amg-meta amg-addr">${esc(landmark)}</div>` : ''}
     <div class="amg-meta">${esc(pick(LB.access))}: ${esc(labelOf(ACCESS_LABELS, p.access))} · ${esc(vis)}</div>
-    ${hereBlockHtml(siteId)}
+    ${AMG_UGC_ENABLED ? hereBlockHtml(siteId) : ''}
     ${siteDesc ? `<div class="amg-desc">${esc(siteDesc)}</div>` : ''}
     ${gallery.length ? `<div class="amg-detail-gallery">${gallery.join('')}</div>` : ''}
     ${arts.length ? `<div class="amg-detail-arts">${artsHtml}</div>` : ''}
@@ -2086,7 +2129,7 @@ map.on('mouseleave', 'sites-clusters', () => map.getCanvas().style.cursor = '');
 // ---------- управление ----------
 const $ = id => document.getElementById(id);
 const toast = (t, ms = 5000) => { $('toast').textContent = t; $('toast').hidden = false; clearTimeout(toast.t); toast.t = setTimeout(() => $('toast').hidden = true, ms); };
-if (catalogError) toast(pick(LB.catalogFail) + catalogError, 9000);
+if (catalogError) toast([pick(LB.catalogFail), catalogError].filter(Boolean).join(' '), 9000);
 
 // ---------- Служебное: счётчик посещений (простой, без аналитики) + обратная связь ----------
 // Счётчик — один внешний счётчик визитов (abacus.jasoncameron.dev). Никаких cookie,
@@ -2097,6 +2140,8 @@ const AMG_FEEDBACK = { gh:'https://github.com/Geordent/AMG/issues/new' };
 function applyMetaLabels() {
   const hits = $('amgHits'); if (hits) hits.title = pick(LB.hitsTitle);
   const fb = $('amgFeedbackBtn'); if (fb) fb.textContent = pick(LB.feedback);
+  const privacy = $('lnkPrivacy'); if (privacy) privacy.textContent = pick(LB.privacy);
+  const license = $('lnkLicense'); if (license) license.textContent = pick(LB.license);
   const t = $('fbTitle'); if (t) t.textContent = pick(LB.feedback);
   const txt = $('fbText'); if (txt) txt.textContent = pick(LB.fbText);
   const hint = $('fbHint'); if (hint) hint.textContent = pick(LB.fbHint);
@@ -2157,8 +2202,14 @@ function _reportAppError(reason) {
 }
 window.addEventListener('error', e => _reportAppError(e.error || e.message));
 window.addEventListener('unhandledrejection', e => _reportAppError(e.reason));
-window.addEventListener('offline', () => { try { toast(pick(LB.netOffline), 6000); } catch (_) {} });
-window.addEventListener('online', () => { try { toast(pick(LB.netOnline), 4000); } catch (_) {} });
+window.addEventListener('offline', () => {
+  try { toast(pick(LB.netOffline), 6000); } catch (_) {}
+  try { map.setStyle(buildStyle()); } catch (_) {}
+});
+window.addEventListener('online', () => {
+  try { toast(pick(LB.netOnline), 4000); } catch (_) {}
+  try { map.setStyle(buildStyle()); } catch (_) {}
+});
 function renderFlavors() {
   const sel = $('flavor'); if (!sel) return;
   sel.innerHTML = '';
@@ -2168,7 +2219,13 @@ function renderFlavors() {
 renderFlavors();
 $('flavor').onchange = e => { state.flavor = e.target.value; map.setStyle(buildStyle()); };
 $('lang').onchange = e => { state.lang = e.target.value; map.setStyle(buildStyle()); renderChips(); updateRotateHint(); applyStaticLabels(); if (Overlays.isOpen('nearby')) renderNearby(); if (cardSiteId) renderCard(cardSiteId); else if (cardExp) renderExpCard(cardExp.props, cardExp.coords); if (detailSiteId) renderDetail(detailSiteId); renderPopup(); try { applyMetaLabels(); } catch (_) {} };
-$('offlineOnly').onchange = e => { state.offlineOnly = e.target.checked; map.setStyle(buildStyle()); toast(state.offlineOnly ? pick(LB.showDownloaded) : pick(LB.showNetwork)); };
+$('offlineOnly').onchange = e => {
+  state.offlineOnly = e.target.checked;
+  try { localStorage.setItem('amg-offline-only', state.offlineOnly ? '1' : '0'); } catch (_) {}
+  map.setStyle(buildStyle());
+  toast(state.offlineOnly ? pick(LB.showDownloaded) : pick(LB.showNetwork));
+};
+$('offlineOnly').checked = state.offlineOnly;
 $('btnPacks').onclick = () => { Overlays.hide('menu'); Overlays.show('sheet'); renderPacks(); };
 $('btnClose').onclick = () => Overlays.hide('sheet');
 
@@ -2454,6 +2511,7 @@ async function loadContributions() {
 await loadContributions();
 
 function verifiedBadge(siteId) {
+  if (!AMG_UGC_ENABLED) return '';
   const c = contrib.get(siteId);
   if (!c || c.status !== 'verified') return '';
   const n = c.count ? ' ' + c.count : '';
@@ -2693,7 +2751,7 @@ $('chips').onclick = e => {
 };
 renderChips();
 
-map.on('idle', () => { if (state.lastError) { toast(pick(LB.mapError) + state.lastError, 8000); state.lastError = ''; } });
+map.on('idle', () => { if (state.lastError) { toast([pick(LB.mapError), state.lastError].filter(Boolean).join(' '), 8000); state.lastError = ''; } });
 
 const mb = b => (b / 1048576).toFixed(1) + ' ' + pick(LB.mbUnit);
 let busy = null;
@@ -2701,15 +2759,20 @@ let busy = null;
 async function probe(p) {
   try {
     const r = await fetch(p.url, { headers: { Range: 'bytes=0-15' }, cache: 'no-store' });
-    return r.ok ? pick(LB.packAvail) : pick(LB.packMissing) + r.status;
-  } catch (e) { return pick(LB.packNoConn); }
+    if (!r.ok) return { text: pick(LB.packMissing) + r.status, size: 0 };
+    const cr = r.headers.get('content-range') || '';
+    const size = +(cr.split('/')[1] || 0);
+    return { text: pick(LB.packAvail) + (size ? ' · ' + mb(size) : ''), size };
+  } catch (e) { return { text: pick(LB.packNoConn), size: 0 }; }
 }
 
 async function renderPacks() {
   const box = $('packs'); box.innerHTML = '';
   for (const p of PACKS) {
     const el = document.createElement('div'); el.className = 'pack';
-    const st = p.local ? pick(LB.packDownloaded) + mb(p.size) : pick(LB.packNotDownloaded) + (await probe(p));
+    const st = p.local
+      ? [pick(LB.packDownloaded), mb(p.size)].filter(Boolean).join(' ')
+      : [pick(LB.packNotDownloaded), (await probe(p)).text].filter(Boolean).join(' ');
     el.innerHTML = `<b>${pick(p.title)}</b><div class="st" id="st-${p.id}">${st}</div><div class="bar"><i id="pb-${p.id}"></i></div>
       <div class="btns"><button class="btn p" id="dl-${p.id}">${p.local ? pick(LB.btnUpdate) : pick(LB.btnDownload)}</button>
       <button class="btn" id="rm-${p.id}">${pick(LB.btnDelete)}</button></div>`;
@@ -2719,7 +2782,7 @@ async function renderPacks() {
   }
   if (navigator.storage && navigator.storage.estimate) {
     const e = await navigator.storage.estimate();
-    $('usage').textContent = pick(LB.usagePre) + mb(e.usage || 0) + pick(LB.usageOf) + mb(e.quota || 0) + pick(LB.usagePost);
+    $('usage').textContent = [pick(LB.usagePre), mb(e.usage || 0), pick(LB.usageOf), mb(e.quota || 0), pick(LB.usagePost)].filter(Boolean).join(' ');
   }
 }
 
@@ -2751,22 +2814,22 @@ async function download(p) {
       const { done, value } = await rd.read(); if (done) break;
       chunks.push(value); got += value.length;
       $('pb-' + p.id).style.width = (total ? got / total * 100 : 50) + '%';
-      $('st-' + p.id).textContent = pick(LB.downloadedPre) + mb(got) + (total ? pick(LB.downloadedOf) + mb(total) : '');
+      $('st-' + p.id).textContent = [pick(LB.downloadedPre), mb(got), total ? pick(LB.downloadedOf) : '', total ? mb(total) : ''].filter(Boolean).join(' ');
     }
     const blob = new Blob(chunks, { type:'application/octet-stream' });
     await idbPut('pack:' + p.id, blob);
     await loadLocal();
-    toast(pick(p.title) + pick(LB.downloadedSuffix) + mb(blob.size));
+    toast([pick(p.title), pick(LB.downloadedSuffix), mb(blob.size)].filter(Boolean).join(' '));
     map.setStyle(buildStyle());
   } catch (e) {
-    toast(pick(LB.downloadFail) + (e.message || e), 9000);
+    toast([pick(LB.downloadFail), e.message || e].filter(Boolean).join(' '), 9000);
   } finally { busy = null; renderPacks(); }
 }
 
 async function remove(p) {
   if (busy) return toast(pick(LB.busyWait));
   await idbDel('pack:' + p.id); await loadLocal();
-  toast(pick(p.title) + pick(LB.deletedSuffix)); renderPacks(); map.setStyle(buildStyle());
+  toast([pick(p.title), pick(LB.deletedSuffix)].filter(Boolean).join(' ')); renderPacks(); map.setStyle(buildStyle());
 }
 
 </script>

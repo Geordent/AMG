@@ -22,6 +22,12 @@ jobs:
         with:
           node-version: '22'
           cache: npm
+      - name: Validate data and required pages
+        run: |
+          node scripts/validate-data.mjs
+          test -s data/transit.geojson
+          test -s privacy.html
+          test -s license.html
       - name: Build vendored map libraries
         # maplibre-gl / pmtiles / @protomaps/basemaps — из точных версий в lock-файле,
         # в один vendor/map-bundle.js. Рантайм-зависимости от esm.sh/unpkg больше нет.
@@ -50,7 +56,7 @@ jobs:
         run: |
           test -n "$BUILD" || { echo "No planet build found"; exit 1; }
           mkdir -p site/tiles
-          cp index.html sw.js site/
+          cp index.html sw.js privacy.html license.html site/
           cp -r data site/
           # vendor обязателен: без него страница не поднимет карту (guard ниже).
           cp -r vendor site/

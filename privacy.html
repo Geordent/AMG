@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Конфиденциальность — ArtMap Georgia</title>
+<style>
+  :root { color-scheme: light; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:#f6f1e8; color:#2a2622; font:15px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif; }
+  main { max-width:760px; margin:0 auto; padding:28px 18px 56px; }
+  a { color:#a2543a; }
+  h1 { font-size:26px; line-height:1.2; margin:0 0 6px; }
+  h2 { font-size:19px; margin:28px 0 8px; }
+  h3 { font-size:16px; margin:18px 0 6px; }
+  p, li { margin:6px 0; }
+  ul { padding-left:22px; }
+  .back { display:inline-block; margin-bottom:18px; text-decoration:none; }
+  .meta { color:#6b6259; font-size:13px; }
+  .card { background:#fff; border:1px solid #e6ded2; border-radius:14px; padding:16px 18px; margin:14px 0; }
+  .lang { border-top:1px solid #e6ded2; margin-top:34px; padding-top:18px; }
+  .note { background:#fff7e8; border-color:#ecd9b8; }
+  code { font-size:13px; background:#f1ece3; border-radius:4px; padding:1px 4px; }
+</style>
+</head>
+<body>
+<main>
+  <a class="back" href="./">← ArtMap Georgia</a>
+  <h1>Конфиденциальность</h1>
+  <p class="meta">Обновлено: 22.10.2026</p>
+
+  <div class="card">
+    <p><strong>Коротко:</strong> сайт не требует аккаунта, не использует рекламу и не продаёт данные. Карта, каталог и офлайн-пакеты работают как статические файлы. Геолокация обрабатывается в браузере. Внешние запросы возникают только к картографическим/фото-сервисам, счётчику посещений и — по вашему нажатию — к GitHub/Telegram.</p>
+  </div>
+
+  <h2>Что хранится в браузере</h2>
+  <ul>
+    <li>выбранный язык, тема карты и набор транспортных слоёв — в <code>localStorage</code>;</li>
+    <li>скачанные офлайн-пакеты карты — в <code>IndexedDB</code>; их можно удалить в меню «Офлайн»;</li>
+    <li>служебные настройки интерфейса. Мы не используем cookie для рекламы или профилирования.</li>
+  </ul>
+  <p>Очистить всё можно средствами браузера: «Настройки сайта» → «Удалить данные».</p>
+
+  <h2>Геолокация</h2>
+  <p>Кнопки «Рядом» и «Я здесь» используют <code>navigator.geolocation</code> только после вашего разрешения. Координаты вычисляются в браузере и не отправляются на сервер ArtMap Georgia. Сейчас подтверждение «Я здесь» отключено; когда оно будет включено, координаты будут передаваться в Telegram-бот только по вашему нажатию.</p>
+
+  <h2>Карта и внешние сервисы</h2>
+  <ul>
+    <li>сайт размещён на GitHub Pages; GitHub может получать IP и User-Agent по обычным правилам веб-сервера;</li>
+    <li>карта использует Protomaps/OpenStreetMap, а онлайн-детализация — OpenFreeMap/OpenMapTiles; эти сервисы получают запросы тайлов;</li>
+    <li>фотографии из Wikimedia Commons загружаются с <code>upload.wikimedia.org</code>;</li>
+    <li>счётчик посещений использует <code>abacus.jasoncameron.dev</code>: один инкремент за сессию вкладки, без cookie и без идентификатора пользователя. Сервис может видеть IP; при сбое счётчик просто скрывается;</li>
+    <li>кнопка «Обратная связь» открывает форму GitHub Issues — применяется политика GitHub;</li>
+    <li>если Telegram-подтверждение включено, переход идёт в Telegram — применяется политика Telegram. Публичный фид не содержит uid.</li>
+  </ul>
+
+  <h2>Чего мы не делаем</h2>
+  <ul>
+    <li>не создаём аккаунты и профили;</li>
+    <li>не продаём и не передаём данные рекламным сетям;</li>
+    <li>не храним координаты пользователей на своём сервере;</li>
+    <li>не используем скрытые трекеры и fingerprinting.</li>
+  </ul>
+
+  <h2>Вопросы</h2>
+  <p>Напишите через <a href="https://github.com/Geordent/AMG/issues/new" target="_blank" rel="noopener">GitHub Issues</a>. Не публикуйте там персональные данные.</p>
+
+  <div class="lang" lang="en">
+    <h2>Privacy (English)</h2>
+    <p><strong>Short version:</strong> no account, no ads, no sale of data. The map, catalog and offline packs are static files. Geolocation is processed in the browser. External requests go only to map/photo providers, the visit counter, and — when you click — GitHub or Telegram.</p>
+    <p>Language, theme and transit choices are stored in <code>localStorage</code>; downloaded map packs are stored in <code>IndexedDB</code> and can be deleted in the Offline panel. The visit counter uses <code>abacus.jasoncameron.dev</code> (one increment per tab session, no cookies, no user ID; the service may see your IP). Feedback opens a GitHub issue. The “I’m here” confirmation is currently disabled; when enabled, coordinates are sent to the Telegram bot only after you press the button. To remove local data, clear this site’s data in your browser.</p>
+  </div>
+
+  <div class="lang" lang="ka">
+    <h2>კონფიდენციალურობა (ქართული)</h2>
+    <p><strong>მოკლედ:</strong> საიტი არ ითხოვს ანგარიშს, არ აჩვენებს რეკლამას და არ ყიდის მონაცემებს. რუკა, კატალოგი და ოფლაინ-პაკეტები სტატიკური ფაილებია. გეოლოკაცია მუშავდება ბრაუზერში. გარე მოთხოვნები მიდის მხოლოდ რუკის/ფოტოს სერვისებთან, ვიზიტების მრიცხველთან და — თქვენი დაჭერით — GitHub-თან ან Telegram-თან.</p>
+    <p>ენა, თემა და ტრანსპორტის არჩევანი ინახება <code>localStorage</code>-ში; ჩამოტვირთული რუკის პაკეტები — <code>IndexedDB</code>-ში და შეიძლება წაიშალოს „ოფლაინ“ პანელიდან. ვიზიტების მრიცხველი იყენებს <code>abacus.jasoncameron.dev</code>-ს (ერთი ინკრემენტი სესიაზე, cookie-ს და მომხმარებლის ID-ის გარეშე; სერვისმა შეიძლება დაინახოს IP). უკუკავშირი ხსნის GitHub-ის ფორმას. „აქ ვარ“ დადასტურება ამჟამად გამორთულია; ჩართვისას კოორდინატები გადაეცემა Telegram-ბოტს მხოლოდ ღილაკის დაჭერის შემდეგ. ლოკალური მონაცემების წასაშლელად გაასუფთავეთ საიტის მონაცემები ბრაუზერში.</p>
+  </div>
+</main>
+</body>
+</html>
