@@ -38,8 +38,19 @@ for (const [i, f] of data.features.entries()) {
   }
   const p = f.properties || {};
   if (!KINDS.has(p.kind)) err(`${w}: unknown kind ${JSON.stringify(p.kind)}`);
-  for (const k of ['name_ru','name_en','name_ka','addr_ru','desc_ru','desc_src']) {
+  for (const k of ['name_ru','name_en','name_ka','addr_ru','desc_ru','desc_src',
+                   'note_en','note_ka','desc_en','desc_ka','addr_en','addr_ka']) {
     if (!nonEmpty(p[k])) err(`${w}: missing ${k}`);
+  }
+  // i18n: en-поля не должны содержать кириллицу, ka-поля — должны быть на грузинской письменности.
+  const CYR = /[\u0400-\u04FF]/;
+  const GEO = /[\u10A0-\u10FF\u2D00-\u2D2F]/;
+  for (const k of ['note_en','desc_en','addr_en','fee_en','name_en']) {
+    if (nonEmpty(p[k]) && CYR.test(p[k])) err(`${w}: cyrillic in ${k}`);
+  }
+  for (const k of ['note_ka','desc_ka','addr_ka','fee_ka','name_ka']) {
+    if (nonEmpty(p[k]) && !GEO.test(p[k])) err(`${w}: ${k} has no Georgian script`);
+    if (nonEmpty(p[k]) && CYR.test(p[k])) err(`${w}: cyrillic in ${k}`);
   }
   if (p.minzoom != null && (typeof p.minzoom !== 'number' || p.minzoom < 0 || p.minzoom > 22)) {
     err(`${w}: minzoom must be 0..22`);

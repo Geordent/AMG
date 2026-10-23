@@ -2025,8 +2025,13 @@ function expCardHtml(p, coords) {
   ].filter(Boolean).join('');
   // Описание в карточке — до двух абзацев: что это за объект (note, из тегов OSM)
   // и контекст из Wikipedia (desc). У старых фич note_ru тоже был, но не показывался.
-  const note = String(p.note_ru || '').trim();
-  const descText = String(p.desc_ru || '').trim();
+  // Языко-зависимые текстовые поля: берём <поле>_<lang>, при отсутствии — ru (честный фолбэк).
+  const trField = base => {
+    const v = String(p[base + '_' + (state.lang || 'ru')] || '').trim();
+    return v || String(p[base + '_ru'] || '').trim();
+  };
+  const note = trField('note');
+  const descText = trField('desc');
   const desc = [note, descText].filter(Boolean).map(t => `<div class="amg-desc">${esc(t)}</div>`).join('');
   const ds = String(p.desc_src || '').trim();
   // «Источник описания» — когда текст об объекте; «О населённом пункте» — когда это
@@ -2040,7 +2045,7 @@ function expCardHtml(p, coords) {
   if (p.website) rows.push(`<div class="amg-meta">${esc(pick(EXP_LB.site))}: <a href="${esc(p.website)}" target="_blank" rel="noopener">${esc(expHostOf(p.website))}</a></div>`);
   if (p.email) rows.push(`<div class="amg-meta">${esc(pick(EXP_LB.email))}: <a href="mailto:${esc(p.email)}">${esc(p.email)}</a></div>`);
   if (p.hours) rows.push(`<div class="amg-meta">${esc(pick(EXP_LB.hours))}: ${esc(p.hours)}</div>`);
-  if (p.fee_ru) rows.push(`<div class="amg-meta">${esc(pick(EXP_LB.fee))}: ${esc(p.fee_ru)}</div>`);
+  if (trField('fee')) rows.push(`<div class="amg-meta">${esc(pick(EXP_LB.fee))}: ${esc(trField('fee'))}</div>`);
   const agency = p.contact_kind === 'agency' ? `<div class="amg-note">${esc(pick(EXP_LB.agency))}</div>` : '';
   const contacts = rows.length
     ? `<div class="amg-h">${esc(pick(EXP_LB.contacts))}</div>${rows.join('')}${agency}`
@@ -2048,7 +2053,7 @@ function expCardHtml(p, coords) {
   return `<div class="amg-pop amg-preview amg-exp-card">
     <div class="amg-title">${esc(expTitleOf(p))}</div>
     ${tags ? `<div class="amg-tags">${tags}</div>` : ''}
-    ${p.addr_ru ? `<div class="amg-meta amg-addr">${esc(pick(EXP_LB.addr))}: ${esc(p.addr_ru)}</div>` : ''}
+    ${trField('addr') ? `<div class="amg-meta amg-addr">${esc(pick(EXP_LB.addr))}: ${esc(trField('addr'))}</div>` : ''}
     ${desc}
     ${srcHtml ? `<div class="amg-src">${esc(descLbl)}: ${srcHtml}</div>` : ''}
     ${contacts}
