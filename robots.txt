@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /data/.
+
+Sitemap: https://geordent.github.io/AMG/sitemap.xml

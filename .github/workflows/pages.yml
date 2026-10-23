@@ -30,6 +30,17 @@ jobs:
           test -s data/experiences.geojson
           test -s privacy.html
           test -s license.html
+          # SEO/PWA: манифест, иконки, обложка для соцсетей, robots/sitemap
+          test -s manifest.webmanifest
+          node -e "JSON.parse(require('fs').readFileSync('manifest.webmanifest','utf8'))"
+          test -s icons/icon-192.png
+          test -s icons/icon-512.png
+          test -s icons/apple-touch-icon.png
+          test -s og-cover.jpg
+          test -s robots.txt
+          test -s sitemap.xml
+          grep -q 'property="og:image"' index.html
+          grep -q 'rel="manifest"' index.html
       - name: Build vendored map libraries
         # maplibre-gl / pmtiles / @protomaps/basemaps — из точных версий в lock-файле,
         # в один vendor/map-bundle.js. Рантайм-зависимости от esm.sh/unpkg больше нет.
@@ -58,13 +69,19 @@ jobs:
         run: |
           test -n "$BUILD" || { echo "No planet build found"; exit 1; }
           mkdir -p site/tiles
-          cp index.html sw.js privacy.html license.html site/
+          cp index.html sw.js privacy.html license.html manifest.webmanifest robots.txt sitemap.xml og-cover.jpg site/
+          cp -r icons site/
           cp -r data site/
           # vendor обязателен: без него страница не поднимет карту (guard ниже).
           cp -r vendor site/
           test -s site/vendor/map-bundle.js || { echo "FATAL: site/vendor/map-bundle.js missing"; exit 1; }
           test -s site/vendor/maplibre-gl.css || { echo "FATAL: site/vendor/maplibre-gl.css missing"; exit 1; }
           ! grep -q 'esm\.sh' site/index.html || { echo "FATAL: index.html still references esm.sh"; exit 1; }
+          test -s site/manifest.webmanifest || { echo "FATAL: manifest.webmanifest not copied"; exit 1; }
+          test -s site/icons/icon-192.png || { echo "FATAL: icons not copied"; exit 1; }
+          test -s site/og-cover.jpg || { echo "FATAL: og-cover.jpg not copied"; exit 1; }
+          test -s site/robots.txt || { echo "FATAL: robots.txt not copied"; exit 1; }
+          test -s site/sitemap.xml || { echo "FATAL: sitemap.xml not copied"; exit 1; }
           pmtiles extract "https://build.protomaps.com/$BUILD.pmtiles" site/tiles/tbilisi.pmtiles --bbox=44.68,41.62,44.95,41.82
           pmtiles extract "https://build.protomaps.com/$BUILD.pmtiles" site/tiles/georgia.pmtiles --bbox=39.9,41.0,46.8,43.7 --maxzoom=9
           ls -la site/tiles
