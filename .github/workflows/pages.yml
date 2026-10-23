@@ -25,7 +25,9 @@ jobs:
       - name: Validate data and required pages
         run: |
           node scripts/validate-data.mjs
+          node scripts/validate-experiences.mjs
           test -s data/transit.geojson
+          test -s data/experiences.geojson
           test -s privacy.html
           test -s license.html
       - name: Build vendored map libraries

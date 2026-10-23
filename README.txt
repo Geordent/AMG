@@ -7,8 +7,9 @@ AMG — ArtMap Georgia
   sw.js                           service worker, кэш оболочки (PMTiles не кэширует)
   privacy.html                    конфиденциальность
   license.html                    лицензии и атрибуция
-  data/                           sites, artworks, artists, sources, cities, transit
+  data/                           sites, artworks, artists, sources, cities, transit, experiences
   scripts/validate-data.mjs       проверка данных (Stage 0)
+  scripts/validate-experiences.mjs проверка слоя «Впечатления»
   scripts/build-vendor.mjs        сборка vendor/map-bundle.js из lock-файла
   .github/workflows/pages.yml     сборка тайлов, vendor и публикация на GitHub Pages
   docs/                           отчёты, аудит, планы
