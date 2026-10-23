@@ -2044,7 +2044,9 @@ function expCardHtml(p, coords) {
   if (p.phone) rows.push(`<div class="amg-meta">${esc(pick(EXP_LB.phone))}: <a href="tel:${esc(String(p.phone).replace(/[^\d+]/g, ''))}">${esc(p.phone)}</a></div>`);
   if (p.website) rows.push(`<div class="amg-meta">${esc(pick(EXP_LB.site))}: <a href="${esc(p.website)}" target="_blank" rel="noopener">${esc(expHostOf(p.website))}</a></div>`);
   if (p.email) rows.push(`<div class="amg-meta">${esc(pick(EXP_LB.email))}: <a href="mailto:${esc(p.email)}">${esc(p.email)}</a></div>`);
-  if (p.hours) rows.push(`<div class="amg-meta">${esc(pick(EXP_LB.hours))}: ${esc(p.hours)}</div>`);
+  // Часы работы тоже языко-зависимы (hours_ru нет — базовое поле hours): берём hours_<lang>, иначе hours.
+  const hoursText = String(p['hours_' + (state.lang || 'ru')] || '').trim() || String(p.hours || '').trim();
+  if (hoursText) rows.push(`<div class="amg-meta">${esc(pick(EXP_LB.hours))}: ${esc(hoursText)}</div>`);
   if (trField('fee')) rows.push(`<div class="amg-meta">${esc(pick(EXP_LB.fee))}: ${esc(trField('fee'))}</div>`);
   const agency = p.contact_kind === 'agency' ? `<div class="amg-note">${esc(pick(EXP_LB.agency))}</div>` : '';
   const contacts = rows.length
