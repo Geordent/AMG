@@ -865,26 +865,37 @@ const clusterLayers = [
       'text-size':12, 'text-allow-overlap':true, 'text-ignore-placement':true },
     paint:{ 'text-color':'#ffffff' } },
 ];
+// --- Размеры маркеров каталога ---
+// База: 48px SVG при pixelRatio 2 → 24 CSS px (бейдж 24@2 → 12 CSS px).
+// Было: постоянные 1.1 / 0.9 = 26.4 / 10.8 px — на телефоне и на десктопе мелко
+// (бейдж статуса почти не читался). Теперь размер зависит от зума: обзор страны —
+// компактно (не сорим карту), улица — крупно; на узких экранах +0.10 запаса.
+const NARROW_SCREEN = Math.min(window.innerWidth || 1024, window.innerHeight || 768) < 520;
+const ICON_BOOST = NARROW_SCREEN ? 0.10 : 0;
+const withBoost = arr => arr.map((v, i) => (i >= 4 && i % 2 === 0) ? +(v + ICON_BOOST).toFixed(3) : v);
+const SITE_ICON_SIZE  = withBoost(['interpolate',['linear'],['zoom'], 7,0.95, 10,1.15, 13,1.35, 16,1.45]);
+const SITE_BADGE_SIZE = withBoost(['interpolate',['linear'],['zoom'], 7,0.95, 10,1.20, 13,1.40, 16,1.55]);
+const SITE_LABEL_SIZE = ['interpolate',['linear'],['zoom'], 12,11.5, 14,12.5, 16,13];
 // Singleton-слои: только развёрнутые SITE (никогда на кластере).
 const siteLayers = [
   { id:'sites', type:'symbol', source:'sites', filter:SINGLETON,
-    layout:{ 'icon-image':['get','icon'], 'icon-size':1.1, 'icon-allow-overlap':true, 'icon-ignore-placement':true,
+    layout:{ 'icon-image':['get','icon'], 'icon-size':SITE_ICON_SIZE, 'icon-allow-overlap':true, 'icon-ignore-placement':true,
       'symbol-sort-key':['get','prio'] },
     paint:{} },
   { id:'sites-status', type:'symbol', source:'sites', filter:['all', SINGLETON, ['!=', ['get','status'], '']],
-    layout:{ 'icon-image':['concat','badge-',['get','status']], 'icon-size':0.9, 'icon-offset':[15,-15],
+    layout:{ 'icon-image':['concat','badge-',['get','status']], 'icon-size':SITE_BADGE_SIZE, 'icon-offset':[16,-16],
       'icon-allow-overlap':true, 'icon-ignore-placement':true, 'symbol-sort-key':['get','prio'] },
     paint:{} },
   // ×N: несколько ARTWORK на одном SITE (только singleton, никогда на кластере).
   { id:'sites-count-bg', type:'circle', source:'sites', filter:['all', SINGLETON, COUNT_EXTRA],
-    paint:{ 'circle-radius':9, 'circle-color':'#d9552b', 'circle-stroke-color':'#ffffff', 'circle-stroke-width':2,
-      'circle-translate':[16,16], 'circle-translate-anchor':'viewport' } },
+    paint:{ 'circle-radius':10.5, 'circle-color':'#d9552b', 'circle-stroke-color':'#ffffff', 'circle-stroke-width':2,
+      'circle-translate':[18,18], 'circle-translate-anchor':'viewport' } },
   { id:'sites-count', type:'symbol', source:'sites', filter:['all', SINGLETON, COUNT_EXTRA],
-    layout:{ 'text-field':['concat','×',['to-string',['get','count']]], 'text-font':['Noto Sans Medium'], 'text-size':10,
-      'text-offset':[1.6,1.6], 'text-anchor':'center', 'text-allow-overlap':true, 'text-ignore-placement':true, 'text-padding':0 },
+    layout:{ 'text-field':['concat','×',['to-string',['get','count']]], 'text-font':['Noto Sans Medium'], 'text-size':11,
+      'text-offset':[1.64,1.64], 'text-anchor':'center', 'text-allow-overlap':true, 'text-ignore-placement':true, 'text-padding':0 },
     paint:{ 'text-color':'#ffffff' } },
   { id:'sites-label', type:'symbol', source:'sites', minzoom:12, filter:SINGLETON,
-    layout:{ 'text-field':['coalesce',['get','label'],''], 'text-font':['Noto Sans Medium'], 'text-size':12, 'text-offset':[0,1.9], 'text-anchor':'top', 'text-optional':true },
+    layout:{ 'text-field':['coalesce',['get','label'],''], 'text-font':['Noto Sans Medium'], 'text-size':SITE_LABEL_SIZE, 'text-offset':[0,2.05], 'text-anchor':'top', 'text-optional':true },
     paint:{ 'text-color':'#7a2d12', 'text-halo-color':'#ffffff', 'text-halo-width':1.5 } },
 ];
 // --- Фирменные палитры AMG для ВСЕХ тем карты. ---
@@ -1403,10 +1414,13 @@ const ICON_DEFS = [
 let iconsChain = Promise.resolve();
 function addCatalogIcons() {
   iconsChain = iconsChain.then(async () => {
-    for (const [name, svg, size, pr] of ICON_DEFS) {
-      if (map.hasImage(name)) continue;
+    // Декодируем ПАРАЛЛЕЛЬНО: последовательный цикл на слабом/софтверном GPU растягивал
+    // добавление ~60 иконок на десятки секунд, и после смены языка/темы (setStyle)
+    // весь каталог пропадал, пока иконки не догрузятся (слои добавляются ПОСЛЕ них).
+    await Promise.all(ICON_DEFS.map(async ([name, svg, size, pr]) => {
+      if (map.hasImage(name)) return;
       try { map.addImage(name, await svgToImageData(svg, size), { pixelRatio: pr }); } catch (_) {}
-    }
+    }));
   }).catch(() => {});
   return iconsChain;
 }
@@ -1443,7 +1457,7 @@ async function setupCatalogLayers() {
   if (!map.getLayer('amg-transit')) map.addLayer({
     id:'amg-transit', type:'symbol', source:'protomaps_base', 'source-layer':'pois',
     filter:['in', ['get','kind'], ['literal', ['ferry_terminal','ferry','harbor']]],
-    layout:{ 'icon-image': TRANSIT_ICON, 'icon-size':1.15, 'icon-allow-overlap':true, 'icon-ignore-placement':true,
+    layout:{ 'icon-image': TRANSIT_ICON, 'icon-size':1.28, 'icon-allow-overlap':true, 'icon-ignore-placement':true,
       'text-field':['coalesce',['get','name:'+state.lang],['get','name:en'],['get','name']],
       'text-font':['Noto Sans Medium'], 'text-size':11, 'text-offset':[0,1.7], 'text-anchor':'top', 'text-optional':true },
     paint:{ 'text-color':PAL.transitLabel, 'text-halo-color':PAL.labelHalo, 'text-halo-width':1.8 } });
@@ -1472,20 +1486,20 @@ async function setupCatalogLayers() {
         'line-opacity':['interpolate',['linear'],['zoom'], 0,0.6, 10,0.9] } });
     // Метро и аэропорты — с нулевого зума (иконка растёт с зумом).
     addTransitSymbol({ id:'amg-transit-metro-local', kind:'metro', minzoom:0,
-      iconSize:['interpolate',['linear'],['zoom'], 0,0.22, 6,0.45, 10,0.75, 14,1.0, 18,1.15],
+      iconSize:['interpolate',['linear'],['zoom'], 0,0.24, 6,0.50, 10,0.82, 14,1.12, 18,1.30],
       textSize:['interpolate',['linear'],['zoom'], 9,10, 14,12],
       textOpacity:['interpolate',['linear'],['zoom'], 8,0, 10,1] });
     addTransitSymbol({ id:'amg-transit-air-local', kind:'air', minzoom:0,
-      iconSize:['interpolate',['linear'],['zoom'], 0,0.22, 6,0.45, 10,0.75, 14,1.0, 18,1.15],
+      iconSize:['interpolate',['linear'],['zoom'], 0,0.24, 6,0.50, 10,0.82, 14,1.12, 18,1.30],
       textSize:['interpolate',['linear'],['zoom'], 9,10, 14,12],
       textOpacity:['interpolate',['linear'],['zoom'], 8,0, 10,1] });
     // ЖД-станции и автовокзалы — с z5/z6, подписи с z12.
     addTransitSymbol({ id:'amg-transit-train-local', kind:'train', minzoom:5,
-      iconSize:['interpolate',['linear'],['zoom'], 5,0.38, 10,0.6, 14,0.9, 18,1.05],
+      iconSize:['interpolate',['linear'],['zoom'], 5,0.42, 10,0.66, 14,1.0, 18,1.18],
       textSize:['interpolate',['linear'],['zoom'], 10,10, 15,12],
       textOpacity:['interpolate',['linear'],['zoom'], 10,0, 12,1] });
     addTransitSymbol({ id:'amg-transit-bus-local', kind:'bus', minzoom:6,
-      iconSize:['interpolate',['linear'],['zoom'], 6,0.38, 10,0.6, 14,0.9, 18,1.05],
+      iconSize:['interpolate',['linear'],['zoom'], 6,0.42, 10,0.66, 14,1.0, 18,1.18],
       textSize:['interpolate',['linear'],['zoom'], 10,10, 15,12],
       textOpacity:['interpolate',['linear'],['zoom'], 10,0, 12,1] });
   }
@@ -1508,8 +1522,8 @@ async function setupCatalogLayers() {
       map.on('mouseenter', id, () => { map.getCanvas().style.cursor = 'pointer'; });
       map.on('mouseleave', id, () => { map.getCanvas().style.cursor = ''; });
     };
-    const bigIcon = ['interpolate',['linear'],['zoom'], 0,0.28, 6,0.5, 10,0.8, 14,1.0, 18,1.15];
-    const midIcon = ['interpolate',['linear'],['zoom'], 5,0.4, 10,0.65, 14,0.95, 18,1.08];
+    const bigIcon = ['interpolate',['linear'],['zoom'], 0,0.30, 6,0.54, 10,0.88, 14,1.12, 18,1.28];
+    const midIcon = ['interpolate',['linear'],['zoom'], 5,0.44, 10,0.70, 14,1.05, 18,1.20];
     addExpSymbol('amg-exp-paraglide','paraglide',7, midIcon,
       ['interpolate',['linear'],['zoom'], 9,10, 14,12], ['interpolate',['linear'],['zoom'], 8,0, 11,1]);
     addExpSymbol('amg-exp-canyon','canyon',6, midIcon,

@@ -1,5 +1,5 @@
 // Кэш оболочки приложения. Файлы карты (.pmtiles) этим кодом не кэшируются, их хранит само приложение в IndexedDB.
-const CACHE = 'amg-shell-v14';
+const CACHE = 'amg-shell-v15';
 self.addEventListener('install', () => self.skipWaiting());
 self.addEventListener('activate', e => e.waitUntil((async () => {
   for (const k of await caches.keys()) if (k !== CACHE) await caches.delete(k);
