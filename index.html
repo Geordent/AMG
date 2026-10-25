@@ -2166,8 +2166,13 @@ Overlays.setCloser('menu', () => Overlays.hide('menu'));
 Overlays.setCloser('transit', () => { Overlays.hide('transit'); if (typeof renderTransitBtn === 'function') renderTransitBtn(); });
 Overlays.setCloser('experiences', () => { Overlays.hide('experiences'); if (typeof renderExpBtn === 'function') renderExpBtn(); });
 // Держим ссылку на активный Popup, чтобы корректно перерисовывать его при смене языка.
-let popupRef = null, popupSiteId = null, popupExp = null;   // popupExp — открытый попап «впечатления»
+let popupRef = null, popupSiteId = null, popupExp = null, popupPoi = null;   // popupPoi — попап точки базовой карты (OSM)
 function renderPopup() {
+  if (popupRef && popupPoi) {              // попап базовой точки (OSM) — перерисовать на новом языке
+    popupRef.setHTML(poiPopupHtml(popupPoi.props, popupPoi.coords));
+    requestAnimationFrame(() => clampPopup(popupRef));
+    return;
+  }
   if (popupRef && popupExp) {              // карточка «впечатления» в попапе — перерисовать на новом языке
     popupRef.setHTML(expCardHtml(popupExp.props, popupExp.coords));
     requestAnimationFrame(() => clampPopup(popupRef));
@@ -2178,16 +2183,15 @@ function renderPopup() {
   wireMedia(popupRef.getElement());
   requestAnimationFrame(() => clampPopup(popupRef));
 }
-map.on('click', 'sites', e => {
-  if (demoPick) return;
-  const id = e.features[0].properties.id;
-  if (isNarrow()) return renderCard(id);
-  if (popupRef) { try { popupRef.remove(); } catch (_) {} popupRef = null; popupSiteId = null; popupExp = null; }
+// Попап объекта каталога (десктоп). Вынесено в функцию, чтобы тот же попап мог
+// открыть клик по базовой точке карты, если на этом месте стоит наш объект.
+function showSitePopup(id, coords) {
+  if (popupRef) { try { popupRef.remove(); } catch (_) {} popupRef = null; popupSiteId = null; popupExp = null; popupPoi = null; }
   const pop = new maplibregl.Popup({ offset:14, maxWidth:'min(360px, calc(100vw - 24px))' })
-    .setLngLat(e.features[0].geometry.coordinates)
+    .setLngLat(coords)
     .setHTML(sitePopupHtml(id));
   pop.on('open', () => requestAnimationFrame(() => clampPopup(pop)));
-  pop.on('close', () => { if (popupRef === pop) { popupRef = null; popupSiteId = null; popupExp = null; } });
+  pop.on('close', () => { if (popupRef === pop) { popupRef = null; popupSiteId = null; popupExp = null; popupPoi = null; } });
   pop.addTo(map);
   popupRef = pop; popupSiteId = id;
   wireMedia(pop.getElement());
@@ -2199,6 +2203,12 @@ map.on('click', 'sites', e => {
     const b = ev.target.closest('[data-detail]');
     if (b) openDetail(b.dataset.detail);
   });
+}
+map.on('click', 'sites', e => {
+  if (demoPick) return;
+  const id = e.features[0].properties.id;
+  if (isNarrow()) return renderCard(id);
+  showSitePopup(id, e.features[0].geometry.coordinates);
 });
 // Клик по объекту «Впечатлений» → карточка с адресом, описанием, источником и контактами.
 map.on('click', e => {
@@ -2238,6 +2248,108 @@ map.on('click', 'sites-clusters', e => {
 });
 map.on('mouseenter', 'sites-clusters', () => map.getCanvas().style.cursor = 'pointer');
 map.on('mouseleave', 'sites-clusters', () => map.getCanvas().style.cursor = '');
+
+// ---------- Базовые точки карты (OSM/Protomaps): делаем их интерактивными ----------
+// Иконки базовой карты (жёлтые звёзды «attraction», парковые объекты, кафе, храмы…)
+// раньше были «мёртвыми»: обработчика клика у слоёв `pois`/`pois-detail` не было вовсе.
+// Теперь тап по такой точке открывает мини-карточку (название, тип, ссылка на OSM).
+// Если рядом (≤ 25 м) стоит объект нашего каталога — открывается НАША карточка,
+// чтобы на одном месте не появлялись две разные карточки (дедупликация на клик).
+const POI_NEAR_SITE_M = 25;
+const POI_KIND_LABELS = {
+  ru: { attraction:'Достопримечательность', theme_park:'Парк развлечений', archaeological_site:'Археологический объект',
+        park:'Парк', garden:'Сад', national_park:'Национальный парк', viewpoint:'Смотровая площадка', peak:'Вершина',
+        monument:'Памятник', memorial:'Мемориал', artwork:'Арт-объект', museum:'Музей', art_gallery:'Галерея', gallery:'Галерея',
+        place_of_worship:'Храм', castle:'Крепость', ruins:'Руины', cave_entrance:'Вход в пещеру', fountain:'Фонтан',
+        cafe:'Кафе', restaurant:'Ресторан', fast_food:'Фастфуд', bar:'Бар', pub:'Паб', winery:'Винодельня',
+        hotel:'Отель', hostel:'Хостел', guest_house:'Гостевой дом',
+        station:'Станция', subway_entrance:'Вход в метро', bus_stop:'Остановка',
+        swimming_pool:'Бассейн', beach:'Пляж', playground:'Детская площадка', theatre:'Театр', cinema:'Кинотеатр' },
+  en: { attraction:'Attraction', theme_park:'Theme park', archaeological_site:'Archaeological site',
+        park:'Park', garden:'Garden', national_park:'National park', viewpoint:'Viewpoint', peak:'Peak',
+        monument:'Monument', memorial:'Memorial', artwork:'Artwork', museum:'Museum', art_gallery:'Gallery', gallery:'Gallery',
+        place_of_worship:'Place of worship', castle:'Castle', ruins:'Ruins', cave_entrance:'Cave entrance', fountain:'Fountain',
+        cafe:'Cafe', restaurant:'Restaurant', fast_food:'Fast food', bar:'Bar', pub:'Pub', winery:'Winery',
+        hotel:'Hotel', hostel:'Hostel', guest_house:'Guest house',
+        station:'Station', subway_entrance:'Metro entrance', bus_stop:'Bus stop',
+        swimming_pool:'Pool', beach:'Beach', playground:'Playground', theatre:'Theatre', cinema:'Cinema' },
+};
+function poiKindLabel(kind) {
+  const d = POI_KIND_LABELS[state.lang] || POI_KIND_LABELS.ru;
+  return d[kind] || (state.lang === 'en' ? 'Point of interest' : state.lang === 'ka' ? 'საინტერესო ადგილი' : 'Интересное место');
+}
+function poiPopupHtml(props, coords) {
+  const p = props || {};
+  const name = pick({ ru: p['name:ru'] || p.name, en: p['name:en'] || p.name, ka: p['name:ka'] || p.name }) || p.name || '';
+  const kind = poiKindLabel(p.kind || '');
+  const [lon, lat] = coords;
+  const osm = `https://www.openstreetmap.org/?mlat=${lat.toFixed(6)}&mlon=${lon.toFixed(6)}#map=18/${lat.toFixed(6)}/${lon.toFixed(6)}`;
+  const note = state.lang === 'en' ? 'Base map point (OSM)'
+             : state.lang === 'ka' ? 'საბაზისო რუკის ობიექტი (OSM)'
+             : 'Точка базовой карты (OSM)';
+  return `<div class="amg-pop"><div class="amg-title">${esc(name || kind)}</div>`
+    + (name ? `<div class="amg-meta">${esc(kind)}</div>` : '')
+    + `<div class="amg-note">${esc(note)}</div>`
+    + `<div class="amg-src"><a href="${osm}" target="_blank" rel="noopener">OpenStreetMap</a></div></div>`;
+}
+let POI_CLICK_IDS = null;
+function poiClickLayers() {
+  if (!POI_CLICK_IDS) {
+    POI_CLICK_IDS = (map.getStyle().layers || [])
+      .filter(l => l.type === 'symbol' && (l.id === 'pois' || l.id === 'pois-detail'))
+      .map(l => l.id);
+  }
+  return POI_CLICK_IDS.filter(id => !!map.getLayer(id));
+}
+function nearestCatalogSite(coords) {
+  const [lon, lat] = coords;
+  let bestId = null, bestD = POI_NEAR_SITE_M;
+  for (const f of catalog.sites) {
+    const c = f.geometry && f.geometry.coordinates;
+    if (!c) continue;
+    const d = haversine(lat, lon, c[1], c[0]);
+    if (d < bestD) { bestD = d; bestId = f.properties.id; }
+  }
+  return bestId ? { id: bestId, d: bestD } : null;
+}
+map.on('click', e => {
+  if (demoPick) return;
+  // приоритет: наши объекты каталога и «Впечатления» — их обрабатывают свои хендлеры
+  if (map.getLayer('sites') && map.queryRenderedFeatures(e.point, { layers: ['sites'] }).length) return;
+  const expIds = EXP_CLICK_LAYERS.filter(id => map.getLayer(id));
+  if (expIds.length && map.queryRenderedFeatures(e.point, { layers: expIds }).length) return;
+  const ids = poiClickLayers();
+  if (!ids.length) return;
+  const feats = map.queryRenderedFeatures(e.point, { layers: ids });
+  if (!feats.length) return;
+  const f = feats[0];
+  const c = f.geometry && f.geometry.type === 'Point' ? f.geometry.coordinates : null;
+  if (!c) return;
+  const props = f.properties || {};
+  // на мелком масштабе пустые (без имени) точки — шум: не открываем по ним карточку
+  if (map.getZoom() < 12 && !props.name) return;
+  const near = nearestCatalogSite(c);
+  if (near) {                                  // на этом месте стоит наш объект
+    if (isNarrow()) return renderCard(near.id);
+    return showSitePopup(near.id, c);
+  }
+  if (popupRef) { try { popupRef.remove(); } catch (_) {} popupRef = null; popupSiteId = null; popupExp = null; popupPoi = null; }
+  const pop = new maplibregl.Popup({ offset:14, maxWidth:'min(320px, calc(100vw - 24px))' })
+    .setLngLat(c)
+    .setHTML(poiPopupHtml(props, c));
+  pop.on('open', () => requestAnimationFrame(() => clampPopup(pop)));
+  pop.on('close', () => { if (popupRef === pop) { popupRef = null; popupPoi = null; } });
+  pop.addTo(map);
+  popupRef = pop; popupSiteId = null; popupExp = null; popupPoi = { props, coords: c };
+  pop.getElement().addEventListener('click', ev => {
+    const a = ev.target.closest('a[href]');
+    if (a) ev.stopPropagation();               // ссылка OSM не «проваливается» в карту
+  });
+});
+['pois', 'pois-detail'].forEach(id => {
+  map.on('mouseenter', id, () => { if (map.getLayer(id)) map.getCanvas().style.cursor = 'pointer'; });
+  map.on('mouseleave', id, () => { if (map.getLayer(id)) map.getCanvas().style.cursor = ''; });
+});
 
 // ---------- управление ----------
 const $ = id => document.getElementById(id);
