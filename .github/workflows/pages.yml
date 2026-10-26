@@ -98,7 +98,7 @@ jobs:
         run: |
           mkdir -p site/tiles
           cp index.html sw.js privacy.html license.html manifest.webmanifest robots.txt sitemap.xml og-cover.jpg site/
-          cp -r icons site/
+          cp -r icons fonts site/
           cp -r data site/
           # Описания работ — отдельным файлом, грузятся после показа карты (источник — data/artworks.json).
           node scripts/split-artworks.mjs site/data
@@ -115,13 +115,14 @@ jobs:
           ! grep -q 'esm\.sh\|protomaps\.github\.io' site/index.html || { echo "FATAL: index.html references external CDN"; exit 1; }
           test -s site/manifest.webmanifest || { echo "FATAL: manifest.webmanifest not copied"; exit 1; }
           test -s site/icons/icon-192.png || { echo "FATAL: icons not copied"; exit 1; }
+          test -s site/fonts/manrope-latin.woff2 || { echo "FATAL: fonts not copied"; exit 1; }
           test -s site/og-cover.jpg || { echo "FATAL: og-cover.jpg not copied"; exit 1; }
           test -s site/robots.txt || { echo "FATAL: robots.txt not copied"; exit 1; }
           test -s site/sitemap.xml || { echo "FATAL: sitemap.xml not copied"; exit 1; }
           test -s site/tiles/tbilisi.pmtiles && test -s site/tiles/georgia.pmtiles || { echo "FATAL: tiles missing"; exit 1; }
           # Версия кэша оболочки SW = хеш файлов, которые SW отдаёт cache-first: ручной bump больше не нужен,
           # а правка только данных/текстов не вызывает у пользователей «обновление сайта».
-          H=$(find site/sw.js site/vendor site/icons site/assets site/manifest.webmanifest site/og-cover.jpg -type f -print0 | sort -z | xargs -0 sha256sum | sha256sum | cut -c1-10)
+          H=$(find site/sw.js site/vendor site/icons site/fonts site/assets site/manifest.webmanifest site/og-cover.jpg -type f -print0 | sort -z | xargs -0 sha256sum | sha256sum | cut -c1-10)
           sed -i "s/'amg-shell-v[0-9]*'/'amg-shell-$H'/" site/sw.js
           grep -q "amg-shell-$H" site/sw.js || { echo "FATAL: sw cache version not stamped"; exit 1; }
           ls -la site/tiles site/data

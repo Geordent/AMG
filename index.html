@@ -28,38 +28,83 @@
 <link rel="stylesheet" href="vendor/maplibre-gl.css">
 <link rel="modulepreload" href="vendor/map-bundle.js">
 <style>
-  html, body { margin:0; height:100%; font-family:system-ui,-apple-system,"Segoe UI",sans-serif; color:#2a2622; }
+  /* ==== Стиль «Балкон + Скетчбук» (гибрид A + C, 2026-10-27) ====
+     Основа — «Тбилисский балкон»: черепица #B8482A, балкон #1F6F78, штукатурка #FFFBF5/#F6EFE4, чернила #2B2420.
+     Голос — «Скетчбук»: карандаш #6E2639 и рукописный Caveat только для коротких пометок (ru/en).
+     Шрифты лежат в fonts/ (OFL, см. license.html) — без внешнего CDN, работают офлайн. */
+  @font-face { font-family:'Caveat'; font-style:normal; font-weight:700; font-display:swap; src:url(fonts/caveat-cyrillic.woff2) format('woff2'); unicode-range:U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
+  @font-face { font-family:'Caveat'; font-style:normal; font-weight:700; font-display:swap; src:url(fonts/caveat-latin-ext.woff2) format('woff2'); unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+  @font-face { font-family:'Caveat'; font-style:normal; font-weight:700; font-display:swap; src:url(fonts/caveat-latin.woff2) format('woff2'); unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+  @font-face { font-family:'Manrope'; font-style:normal; font-weight:400 700; font-display:swap; src:url(fonts/manrope-cyrillic.woff2) format('woff2'); unicode-range:U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
+  @font-face { font-family:'Manrope'; font-style:normal; font-weight:400 700; font-display:swap; src:url(fonts/manrope-latin-ext.woff2) format('woff2'); unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+  @font-face { font-family:'Manrope'; font-style:normal; font-weight:400 700; font-display:swap; src:url(fonts/manrope-latin.woff2) format('woff2'); unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+  @font-face { font-family:'Noto Serif Georgian'; font-style:normal; font-weight:700; font-display:swap; src:url(fonts/noto-serif-georgian-georgian.woff2) format('woff2'); unicode-range:U+0589, U+10A0-10FF, U+1C90-1CBA, U+1CBD-1CBF, U+205A, U+2D00-2D2F, U+2E31; }
+  @font-face { font-family:'Playfair Display'; font-style:normal; font-weight:700; font-display:swap; src:url(fonts/playfair-display-cyrillic.woff2) format('woff2'); unicode-range:U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
+  @font-face { font-family:'Playfair Display'; font-style:normal; font-weight:700; font-display:swap; src:url(fonts/playfair-display-latin-ext.woff2) format('woff2'); unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+  @font-face { font-family:'Playfair Display'; font-style:normal; font-weight:700; font-display:swap; src:url(fonts/playfair-display-latin.woff2) format('woff2'); unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+  .amg-display, .amg-pop .amg-title, #detail .amg-title, .amg-art-title, #sheet h2, #transit h2, #experiences h2, #feedback h2, #nearby h2, #brand .wm {
+    font-family:'Playfair Display','Noto Serif Georgian',Georgia,serif; letter-spacing:0; }
+  .amg-pop .amg-title { font-size:18px; line-height:1.2; }
+  .amg-hand { font-family:Caveat,'Noto Sans Georgian',cursive; font-weight:700; color:#6E2639; }
+  .amg-hand.plain { font-family:inherit; font-weight:600; }
+  /* «Совет местного» в карточке: рукописная пометка на «стикере» */
+  .amg-tip { margin:8px 0 4px; padding:8px 12px; border-radius:10px; background:#FBF3DC; color:#4A3F38; font-size:21px; line-height:1.15; }
+  .amg-tip b { color:#6E2639; }
+  .amg-tip.plain { font-size:13px; line-height:1.45; }
+  /* Заставка «Рисуем Тбилиси…»: карандаш рисует силуэт, пока грузятся библиотека и каталог */
+  #amgLoader { position:fixed; inset:0; z-index:50; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px;
+    background:#F6EFE4; transition:opacity .35s ease; }
+  #amgLoader.done { opacity:0; pointer-events:none; }
+  #amgLoader svg { width:min(260px,70vw); height:auto; }
+  #amgLoader path { fill:none; stroke:#2B2420; stroke-width:2.2; stroke-linecap:round; stroke-linejoin:round;
+    stroke-dasharray:900; stroke-dashoffset:900; animation:amg-draw 3.6s ease-in-out infinite; }
+  #amgLoader path.t { stroke:#1F6F78; }
+  #amgLoader path.w { stroke:#6E2639; }
+  #amgLoader .amg-hand { font-size:30px; }
+  @keyframes amg-draw { 0% { stroke-dashoffset:900 } 65%, 100% { stroke-dashoffset:0 } }
+  /* «Рядом пусто»: рукописная пометка + ближайшие объекты за пределами радиуса */
+  #nearby .amg-near-empty { display:flex; flex-direction:column; gap:4px; margin:6px 0 4px; }
+  #nearby .amg-near-empty .amg-hand { font-size:26px; line-height:1.1; }
+  #nearby .amg-near-empty .amg-hand.plain { font-size:15px; }
+  #nearby .amg-shrug { display:inline-block; animation:amg-wob 2.6s ease-in-out infinite; transform-origin:50% 90%; }
+  #nearby .amg-near-dist.amg-hand { font-size:20px; color:#6E2639; }
+  @keyframes amg-wob { 0%, 100% { transform:rotate(-5deg) } 50% { transform:rotate(5deg) translateY(-2px) } }
+  @media (prefers-reduced-motion: reduce) {
+    #amgLoader path { animation:none; stroke-dashoffset:0; }
+    #nearby .amg-shrug { animation:none; }
+  }
+  html, body { margin:0; height:100%; font-family:Manrope,system-ui,-apple-system,"Segoe UI",sans-serif; color:#2B2420; }
   #map { position:absolute; inset:0; }
   /* Верхний overlay — нормальный flex-стек (без хардкод top:64/112) */
   #topui { position:absolute; left:0; right:0; top:calc(8px + env(safe-area-inset-top,0px)); z-index:6;
     display:flex; flex-direction:column; gap:6px; padding:0 8px; pointer-events:none; }
   #topui > #bar, #topui > #chips { pointer-events:auto; }
   #bar { display:flex; gap:6px; }
-  #bar select, #bar button { font-size:14px; padding:9px 10px; border-radius:10px; border:1px solid #d8d1c6; background:#fff; color:#2a2622; cursor:pointer; }
+  #bar select, #bar button { font-size:14px; padding:9px 10px; border-radius:10px; border:1px solid #E0D0B8; background:#FFFBF5; color:#2B2420; cursor:pointer; }
   #bar button#btnNearby { margin-left:auto; }
   #bar button#btnPacks { margin-left:0; }
-  #sheet { position:absolute; left:0; right:0; bottom:0; z-index:20; background:#fff; border-radius:16px 16px 0 0; box-shadow:0 -6px 24px rgba(0,0,0,.2); padding:14px 16px calc(14px + env(safe-area-inset-bottom,0px)); max-height:75%; overflow-y:auto; }
+  #sheet { position:absolute; left:0; right:0; bottom:0; z-index:20; background:#FFFBF5; border-radius:16px 16px 0 0; box-shadow:0 -6px 24px rgba(0,0,0,.2); padding:14px 16px calc(14px + env(safe-area-inset-bottom,0px)); max-height:75%; overflow-y:auto; }
   #sheet[hidden], #toast[hidden] { display:none; }
   #sheet h2 { margin:0 0 8px; font-size:18px; }
   /* --- Транспорт: подключаемые слои (метро/ЖД/автовокзалы/аэропорты) --- */
-  #transit, #experiences { position:absolute; left:0; right:0; bottom:0; z-index:20; background:#fff; border-radius:16px 16px 0 0; box-shadow:0 -6px 24px rgba(0,0,0,.2); padding:14px 16px calc(14px + env(safe-area-inset-bottom,0px)); max-height:75%; overflow-y:auto; }
+  #transit, #experiences { position:absolute; left:0; right:0; bottom:0; z-index:20; background:#FFFBF5; border-radius:16px 16px 0 0; box-shadow:0 -6px 24px rgba(0,0,0,.2); padding:14px 16px calc(14px + env(safe-area-inset-bottom,0px)); max-height:75%; overflow-y:auto; }
   #transit[hidden], #experiences[hidden] { display:none; }
   #transit h2, #experiences h2 { margin:0 0 8px; font-size:18px; }
-  #transit input[type=checkbox], #experiences input[type=checkbox] { width:20px; height:20px; accent-color:#d9552b; flex:0 0 auto; }
+  #transit input[type=checkbox], #experiences input[type=checkbox] { width:20px; height:20px; accent-color:#B8482A; flex:0 0 auto; }
   #transit .row, #experiences .row { justify-content:flex-start; padding:6px 0; }
-  #experiences .exp-sep { border-top:1px solid #e6e0d6; margin:10px 0 2px; }
+  #experiences .exp-sep { border-top:1px solid #E6D9C6; margin:10px 0 2px; }
   #experiences .exp-sub { font-size:12px; font-weight:700; color:#8a5a3b; padding:10px 0 2px; text-transform:uppercase; letter-spacing:.6px; }
-  #bar button#btnTransit.on, #bar button#btnExp.on { background:#fbe9e2; border-color:#d9552b; color:#b8431c; font-weight:600; }
+  #bar button#btnTransit.on, #bar button#btnExp.on { background:#F3D9CF; border-color:#B8482A; color:#9A3B22; font-weight:600; }
   /* --- Служебная строка: счётчик посещений + обратная связь (живёт в #bar; на мобиле уезжает в меню) --- */
   #amgMeta { display:flex; align-items:center; gap:2px 10px; flex-wrap:wrap; font-size:12px; color:#6b6259; padding:0 2px; }
   #amgMeta[hidden] { display:none; }
   #amgHits { display:inline-flex; align-items:center; gap:4px; white-space:nowrap; }
   #amgHits[hidden] { display:none; }
   #amgHits b { font-weight:600; color:#3f382f; font-variant-numeric:tabular-nums; }
-  #amgFeedbackBtn { border:0; background:transparent; color:#a2543a; font-family:inherit; font-size:12px; padding:6px 2px; cursor:pointer; text-decoration:underline; text-underline-offset:2px; }
+  #amgFeedbackBtn { border:0; background:transparent; color:#1F6F78; font-family:inherit; font-size:12px; padding:6px 2px; cursor:pointer; text-decoration:underline; text-underline-offset:2px; }
   #legalLinks { display:flex; align-items:center; gap:6px; flex-wrap:wrap; font-size:11px; margin-top:3px; pointer-events:auto; }
   #legalLinks a { color:#8a5a44; text-decoration:none; border-bottom:1px dotted #c9b7a7; }
-  #legalLinks a:hover { color:#a2543a; border-bottom-color:#a2543a; }
+  #legalLinks a:hover { color:#1F6F78; border-bottom-color:#1F6F78; }
   #legalLinks .sep { color:#c2b8ad; }
   /* Mobile: служебная строка переезжает в #topui и видна всегда (компактная «пилюля»),
      иначе счётчик/обратная связь прятались в бургер-меню и их не находили. */
@@ -69,27 +114,27 @@
   #topui > #amgHits { pointer-events:auto; align-self:flex-end; background:rgba(255,255,255,.94); border:1px solid #e0d8cc;
     border-radius:999px; padding:3px 11px; box-shadow:0 4px 12px rgba(43,38,34,.08); font-size:12px; color:#6b6259; }
   #topui > #amgHits[hidden] { display:none; }
-  #feedback { position:absolute; left:0; right:0; bottom:0; z-index:20; background:#fff; border-radius:16px 16px 0 0; box-shadow:0 -6px 24px rgba(0,0,0,.2); padding:14px 16px calc(14px + env(safe-area-inset-bottom,0px)); max-height:75%; overflow-y:auto; }
+  #feedback { position:absolute; left:0; right:0; bottom:0; z-index:20; background:#FFFBF5; border-radius:16px 16px 0 0; box-shadow:0 -6px 24px rgba(0,0,0,.2); padding:14px 16px calc(14px + env(safe-area-inset-bottom,0px)); max-height:75%; overflow-y:auto; }
   #feedback[hidden] { display:none; }
   #feedback h2 { margin:0 0 8px; font-size:18px; }
   #feedback .small { font-size:12px; color:#6b6259; line-height:1.5; margin:0 0 4px; }
   #feedback .btns { display:flex; gap:8px; flex-wrap:wrap; margin-top:12px; }
   #feedback .btns .btn { flex:1 1 auto; text-align:center; text-decoration:none; display:inline-flex; align-items:center; justify-content:center; }
   /* --- «Что рядом» (UGC Этап 1) --- */
-  #nearby { position:absolute; left:0; right:0; bottom:0; z-index:20; background:#fff; border-radius:16px 16px 0 0; box-shadow:0 -6px 24px rgba(0,0,0,.2); padding:14px 16px calc(14px + env(safe-area-inset-bottom,0px)); max-height:78%; overflow-y:auto; -webkit-overflow-scrolling:touch; }
+  #nearby { position:absolute; left:0; right:0; bottom:0; z-index:20; background:#FFFBF5; border-radius:16px 16px 0 0; box-shadow:0 -6px 24px rgba(0,0,0,.2); padding:14px 16px calc(14px + env(safe-area-inset-bottom,0px)); max-height:78%; overflow-y:auto; -webkit-overflow-scrolling:touch; }
   #nearby[hidden] { display:none; }
   #nearby h2 { margin:0 0 8px; font-size:18px; }
   #nearby .amg-near-radii { display:flex; gap:6px; margin:8px 0; }
-  #nearby .amg-near-radii button { flex:1; padding:9px 6px; border-radius:10px; border:1px solid #d8d1c6; background:#fff; color:#2a2622; font-size:13px; cursor:pointer; }
-  #nearby .amg-near-radii button.on { background:#d9552b; border-color:#d9552b; color:#fff; font-weight:600; }
+  #nearby .amg-near-radii button { flex:1; padding:9px 6px; border-radius:10px; border:1px solid #E0D0B8; background:#FFFBF5; color:#2B2420; font-size:13px; cursor:pointer; }
+  #nearby .amg-near-radii button.on { background:#B8482A; border-color:#B8482A; color:#fff; font-weight:600; }
   #nearby .amg-near-note { font-size:12px; color:#6b6259; margin:4px 0 6px; }
   #nearby .amg-near-row { display:flex; align-items:baseline; gap:8px; width:100%; text-align:left; padding:11px 4px; border:0; border-top:1px solid #eee; background:none; cursor:pointer; }
   #nearby .amg-near-row:first-of-type { border-top:0; }
-  #nearby .amg-near-name { flex:1; font-size:14px; color:#2a2622; }
-  #nearby .amg-near-dist { font-size:12px; color:#a2543a; white-space:nowrap; }
+  #nearby .amg-near-name { flex:1; font-size:14px; color:#2B2420; }
+  #nearby .amg-near-dist { font-size:12px; color:#1F6F78; white-space:nowrap; }
   /* --- диагностика геолокации: понятная причина вместо «не удалось» --- */
   #nearby .amg-geo-fail { border:1px solid #e8d9cf; background:#fdf7f2; border-radius:12px; padding:10px 12px; margin:8px 0; }
-  #nearby .amg-geo-why { font-size:14px; line-height:1.4; color:#2a2622; }
+  #nearby .amg-geo-why { font-size:14px; line-height:1.4; color:#2B2420; }
   #nearby .amg-geo-steps { margin:8px 0 4px; padding-left:20px; font-size:13px; line-height:1.45; color:#4a4238; }
   #nearby .amg-geo-steps li { margin:4px 0; }
   #nearby .amg-geo-btns { flex-wrap:wrap; margin-top:8px; }
@@ -98,22 +143,22 @@
   #nearby .amg-geo-diag summary { cursor:pointer; }
   #nearby .amg-geo-diag div { margin-top:4px; word-break:break-word; font-family:ui-monospace,Menlo,Consolas,monospace; font-size:11px; line-height:1.4; }
   .row { display:flex; align-items:center; gap:8px; font-size:14px; margin:6px 0 10px; }
-  .pack { border:1px solid #e6e0d6; border-radius:12px; padding:10px 12px; margin-bottom:10px; }
+  .pack { border:1px solid #E6D9C6; border-radius:12px; padding:10px 12px; margin-bottom:10px; }
   .pack b { font-size:15px; }
   .pack .st { font-size:13px; color:#7a7268; margin:2px 0 8px; }
   .bar { height:6px; background:#eee; border-radius:3px; overflow:hidden; margin-bottom:8px; }
-  .bar i { display:block; height:100%; width:0; background:#d9552b; }
+  .bar i { display:block; height:100%; width:0; background:#B8482A; }
   .btns { display:flex; gap:8px; }
-  .btn { flex:1; padding:10px; border-radius:10px; border:1px solid #d8d1c6; background:#fff; font-size:14px; }
-  .btn.p { background:#d9552b; border-color:#d9552b; color:#fff; }
+  .btn { flex:1; padding:10px; border-radius:10px; border:1px solid #E0D0B8; background:#FFFBF5; font-size:14px; }
+  .btn.p { background:#B8482A; border-color:#B8482A; color:#fff; }
   .small { font-size:12px; color:#7a7268; margin:6px 0 10px; }
-  #toast { position:absolute; left:12px; right:12px; bottom:calc(16px + env(safe-area-inset-bottom,0px)); z-index:40; background:#2a2622; color:#fff; padding:10px 14px; border-radius:10px; font-size:13px; }
+  #toast { position:absolute; left:12px; right:12px; bottom:calc(16px + env(safe-area-inset-bottom,0px)); z-index:40; background:#2B2420; color:#fff; padding:10px 14px; border-radius:10px; font-size:13px; }
   .fatal { position:absolute; inset:0; z-index:60; background:#faf7f2; padding:24px; font-size:15px; }
-  .amg-pop { font-size:13px; line-height:1.4; color:#2a2622; }
+  .amg-pop { font-size:13px; line-height:1.4; color:#2B2420; }
   .amg-pop .amg-title { font-weight:700; font-size:16px; margin:0 0 4px; padding-right:14px; }
   .amg-pop .amg-tags { display:flex; flex-wrap:wrap; gap:4px; margin:2px 0 6px; }
-  .amg-tag { display:inline-block; font-size:11px; padding:2px 8px; border-radius:10px; background:#f2ede4; color:#5b5147; white-space:nowrap; }
-  .amg-tag.cat { background:#fbe9e2; color:#b8431c; }
+  .amg-tag { display:inline-block; font-size:11px; padding:2px 8px; border-radius:10px; background:#EFE4D2; color:#5b5147; white-space:nowrap; }
+  .amg-tag.cat { background:#F3D9CF; color:#9A3B22; }
   .amg-tag.type { background:#eef0f4; color:#4a5568; }
   .amg-tag.st.st-active { background:#e3f0e4; color:#2f7d32; }
   .amg-tag.st.st-uncertain { background:#efefef; color:#7a7a7a; }
@@ -127,22 +172,22 @@
   .amg-pop .amg-desc { margin:4px 0; }
   .amg-exp-card .amg-desc + .amg-desc { margin-top:2px; }
   .amg-pop .amg-src { font-size:11px; color:#7a7268; margin-top:3px; }
-  .amg-pop .amg-src a { color:#a2543a; }
+  .amg-pop .amg-src a { color:#1F6F78; }
   .amg-pop .amg-src-text { color:#7a7268; }   /* generic source = plain provenance, не ссылка */
   /* Карточка «Впечатления»: адрес/контакты/источник описания */
   .amg-pop .amg-note { color:#8a8177; font-size:11px; font-style:italic; margin:2px 0; }
   .amg-pop .amg-h { color:#5b5147; font-size:11px; text-transform:uppercase; letter-spacing:.4px; margin:9px 0 2px; font-weight:700; }
-  .amg-pop .amg-contacts a, .amg-pop .amg-meta a { color:#a2543a; }
+  .amg-pop .amg-contacts a, .amg-pop .amg-meta a { color:#1F6F78; }
   /* «Подробно» — только информация об объекте; навигация/действия живут на компактной карточке */
   .amg-pop .amg-role { color:#a89f93; }
   .amg-src-all { margin-top:10px; border-top:1px solid #eee; padding-top:8px; }
   .amg-srcgrp { font-size:11px; color:#7a7268; margin:3px 0; line-height:1.4; }
   .amg-srcgrp-h { font-weight:600; color:#5b5147; }
   .amg-pop .amg-actions { display:flex; flex-wrap:wrap; gap:6px; margin:8px 0; }
-  .amg-btn { flex:1 1 auto; text-align:center; font-size:12px; padding:8px 10px; border-radius:10px; border:1px solid #d8d1c6; background:#fff; color:#2a2622; text-decoration:none; white-space:nowrap; cursor:pointer; }
-  .amg-btn.primary { background:#d9552b; border-color:#d9552b; color:#fff; font-weight:600; }
-  .amg-btn.accent { background:#fbe9e2; border-color:#d9552b; color:#b8431c; font-weight:600; }   /* вторичный акцент: терракота-контур */
-  .amg-btn.ghost { background:#fff; color:#a2543a; }
+  .amg-btn { flex:1 1 auto; text-align:center; font-size:12px; padding:8px 10px; border-radius:10px; border:1px solid #E0D0B8; background:#FFFBF5; color:#2B2420; text-decoration:none; white-space:nowrap; cursor:pointer; }
+  .amg-btn.primary { background:#B8482A; border-color:#B8482A; color:#fff; font-weight:600; }
+  .amg-btn.accent { background:#F3D9CF; border-color:#B8482A; color:#9A3B22; font-weight:600; }   /* вторичный акцент: терракота-контур */
+  .amg-btn.ghost { background:#FFFBF5; color:#1F6F78; }
   /* «Я здесь»: нейтральна в покое, зелёная галочка — ТОЛЬКО после подтверждения (не терракота, чтобы не путать с hover) */
   .amg-here-block { margin:12px 0 2px; }
   .amg-here-btn { width:100%; display:inline-flex; align-items:center; justify-content:center; gap:7px; }
@@ -153,7 +198,7 @@
   .amg-here-btn[data-state="confirmed"] .amg-here-ico.check { display:inline; }
   .amg-here-btn[data-state="confirmed"]:hover { background:#276b46; border-color:#276b46; color:#fff; }
   .amg-here-btn[data-state="checking"] { opacity:.65; cursor:progress; }
-  .amg-here-btn[data-state="miss"] { border-color:#e3b7a5; color:#b8431c; background:#fff; }
+  .amg-here-btn[data-state="miss"] { border-color:#e3b7a5; color:#9A3B22; background:#FFFBF5; }
   .amg-here-note { font-size:11px; color:#7a7268; margin:6px 2px 0; line-height:1.4; }
   .amg-here-block[data-state="confirmed"] .amg-here-note { color:#2f7d52; }
 
@@ -168,8 +213,8 @@
   }
   /* 2) наведение (мышь): мягкий подъём + терракотовый оттенок */
   .amg-btn:hover, .btn:hover, #nearby .amg-near-radii button:hover {
-    border-color:#d9552b; color:#b8431c; background:#fbe9e2;
-    transform: translateY(-1px); box-shadow: 0 4px 12px rgba(217,85,43,.18);
+    border-color:#B8482A; color:#9A3B22; background:#F3D9CF;
+    transform: translateY(-1px); box-shadow: 0 4px 12px rgba(184,72,42,.18);
   }
   /* 3) нажатие/тап: вдавливание (работает и на тачскрине, где hover нет) */
   .amg-btn:active, .btn:active, #bar button:active, #bar select:active,
@@ -181,19 +226,19 @@
   .amg-btn:focus-visible, .btn:focus-visible, #bar button:focus-visible, #bar select:focus-visible,
   #chips .chip:focus-visible, #nearby .amg-near-radii button:focus-visible, #menuBtn:focus-visible,
   #card .amg-card-close:focus-visible, #detail .amg-detail-close:focus-visible, #nearby .amg-near-row:focus-visible {
-    outline: 2px solid #d9552b; outline-offset: 2px;
+    outline: 2px solid #B8482A; outline-offset: 2px;
   }
   /* 5) заполненные/активные состояния сохраняют свою заливку при наведении (не перебиваем оттенком) */
-  .amg-btn.primary:hover { background:#c8491f; border-color:#c8491f; color:#fff; }
-  .amg-btn.accent:hover  { background:#f7dccf; border-color:#c8491f; color:#a83c17; }
-  .chip.on:hover, #nearby .amg-near-radii button.on:hover { background:#c8491f; border-color:#c8491f; color:#fff; }
+  .amg-btn.primary:hover { background:#9A3B22; border-color:#9A3B22; color:#fff; }
+  .amg-btn.accent:hover  { background:#EBC8BA; border-color:#9A3B22; color:#8A3219; }
+  .chip.on:hover, #nearby .amg-near-radii button.on:hover { background:#9A3B22; border-color:#9A3B22; color:#fff; }
   /* 6) у главной кнопки — лёгкая «приподнятость» и в покое */
-  .amg-btn.primary, .btn.p { box-shadow: 0 2px 8px rgba(217,85,43,.25); }
-  .amg-btn.primary:hover, .btn.p:hover { box-shadow: 0 6px 16px rgba(217,85,43,.30); }
+  .amg-btn.primary, .btn.p { box-shadow: 0 2px 8px rgba(184,72,42,.25); }
+  .amg-btn.primary:hover, .btn.p:hover { box-shadow: 0 6px 16px rgba(184,72,42,.30); }
   /* 7) чипы и строки «рядом» */
-  #chips .chip:hover { border-color:#d9552b; color:#b8431c; }
+  #chips .chip:hover { border-color:#B8482A; color:#9A3B22; }
   #nearby .amg-near-row:hover { background:#faf4ee; }
-  #nearby .amg-near-row:hover .amg-near-name { color:#b8431c; }
+  #nearby .amg-near-row:hover .amg-near-name { color:#9A3B22; }
   /* 8) уважаем «уменьшить движение» */
   @media (prefers-reduced-motion: reduce) {
     .amg-btn, .btn, #bar button, #bar select, #chips .chip,
@@ -207,27 +252,27 @@
   .amg-pop .amg-art-title { font-weight:600; font-size:14px; }
   .amg-pop .amg-empty { color:#7a7268; font-size:12px; }
   .amg-media { margin:8px 0; }
-  .amg-media-frame { position:relative; width:100%; aspect-ratio:4/3; max-height:220px; border-radius:10px; overflow:hidden; background:#f2ede4; display:flex; align-items:center; justify-content:center; }
+  .amg-media-frame { position:relative; width:100%; aspect-ratio:4/3; max-height:220px; border-radius:10px; overflow:hidden; background:#EFE4D2; display:flex; align-items:center; justify-content:center; }
   .amg-media-frame img { width:100%; height:100%; object-fit:cover; display:block; }
-  .amg-media-fallback { display:none; font-size:12px; color:#a2543a; text-align:center; padding:12px; text-decoration:none; }
+  .amg-media-fallback { display:none; font-size:12px; color:#1F6F78; text-align:center; padding:12px; text-decoration:none; }
   .amg-media-error .amg-media-frame img { display:none; }
   .amg-media-error .amg-media-fallback { display:block; }
   .amg-attr { font-size:11px; color:#7a7268; margin-top:3px; line-height:1.35; }
-  .amg-attr a { color:#a2543a; }
+  .amg-attr a { color:#1F6F78; }
   @media (max-width:520px) { .amg-media-frame { max-height:200px; } }
   .maplibregl-popup { z-index:8; }
   .maplibregl-popup-content { border-radius:14px; padding:12px 14px; box-shadow:0 6px 24px rgba(0,0,0,.2); max-height:70vh; overflow-y:auto; }
   @media (max-width:520px) { .maplibregl-popup-content { max-width:92vw; } }
-  #card { position:fixed; left:0; right:0; bottom:0; z-index:20; background:#fff; border-radius:16px 16px 0 0; box-shadow:0 -6px 24px rgba(0,0,0,.25); padding:14px 14px 18px; max-height:72vh; overflow-y:auto; -webkit-overflow-scrolling:touch; touch-action:pan-y; }
-  #card::before { content:''; position:absolute; top:6px; left:50%; transform:translateX(-50%); width:40px; height:4px; border-radius:2px; background:#e3ddd3; }
+  #card { position:fixed; left:0; right:0; bottom:0; z-index:20; background:#FFFBF5; border-radius:16px 16px 0 0; box-shadow:0 -6px 24px rgba(0,0,0,.25); padding:14px 14px 18px; max-height:72vh; overflow-y:auto; -webkit-overflow-scrolling:touch; touch-action:pan-y; }
+  #card::before { content:''; position:absolute; top:6px; left:50%; transform:translateX(-50%); width:40px; height:4px; border-radius:2px; background:#E0D0B8; }
   #card[hidden] { display:none; }
   #card .amg-head { margin-top:6px; }
-  #card .amg-card-close { position:absolute; top:8px; right:10px; width:30px; height:30px; border:0; border-radius:50%; background:#f2ede4; color:#5b5147; font-size:18px; line-height:1; cursor:pointer; }
+  #card .amg-card-close { position:absolute; top:8px; right:10px; width:30px; height:30px; border:0; border-radius:50%; background:#EFE4D2; color:#5b5147; font-size:18px; line-height:1; cursor:pointer; }
   @media (min-width:769px) { #card { display:none !important; } }
   #detail { position:fixed; inset:0; z-index:30; background:transparent; pointer-events:none; }
   #detail[hidden] { display:none; }
-  #detail .amg-detail { position:absolute; top:0; right:0; height:100%; width:min(440px,92vw); background:#fff; overflow-y:auto; -webkit-overflow-scrolling:touch; padding:16px 16px calc(16px + env(safe-area-inset-bottom,0px)); box-shadow:-8px 0 30px rgba(0,0,0,.25); pointer-events:auto; }
-  #detail .amg-detail-close { position:absolute; top:12px; right:12px; width:32px; height:32px; border:0; border-radius:50%; background:#f2ede4; color:#5b5147; font-size:18px; line-height:1; cursor:pointer; }
+  #detail .amg-detail { position:absolute; top:0; right:0; height:100%; width:min(440px,92vw); background:#FFFBF5; overflow-y:auto; -webkit-overflow-scrolling:touch; padding:16px 16px calc(16px + env(safe-area-inset-bottom,0px)); box-shadow:-8px 0 30px rgba(0,0,0,.25); pointer-events:auto; }
+  #detail .amg-detail-close { position:absolute; top:12px; right:12px; width:32px; height:32px; border:0; border-radius:50%; background:#EFE4D2; color:#5b5147; font-size:18px; line-height:1; cursor:pointer; }
   #detail .amg-detail .amg-title { padding-right:38px; }
   #detail .amg-detail-gallery { display:grid; grid-template-columns:repeat(2,1fr); gap:6px; margin:10px 0; }
   #detail .amg-detail-gallery .amg-media { margin:0; }
@@ -236,20 +281,20 @@
   #detail .amg-detail-art:first-child { border-top:0; padding-top:0; margin-top:0; }
   @media (max-width:600px) { #detail .amg-detail { left:0; right:0; width:auto; } }
   #brand { align-self:flex-start; pointer-events:none;
-    background:rgba(255,255,255,.92); border:1px solid #e6e0d6; border-radius:12px; padding:6px 12px;
+    background:rgba(255,255,255,.92); border:1px solid #E6D9C6; border-radius:12px; padding:6px 12px;
     box-shadow:0 2px 8px rgba(0,0,0,.08); max-width:min(72vw,380px); }
-  #brand .wm { font-size:16px; font-weight:700; color:#d9552b; line-height:1.1; letter-spacing:.2px; }
+  #brand .wm { font-size:16px; font-weight:700; color:#B8482A; line-height:1.1; letter-spacing:.2px; }
   #brand .tag { font-size:11px; color:#6b6258; line-height:1.15; margin-top:2px; }
   #chipsCat { display:contents; }
   #chips { display:flex; gap:6px; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none; padding-bottom:2px; }
   #chips::-webkit-scrollbar { display:none; }
-  #chips .chip { flex:0 0 auto; font-size:13px; padding:7px 11px; border-radius:16px; border:1px solid #d8d1c6;
-    background:#fff; color:#2a2622; white-space:nowrap; cursor:pointer; font-family:inherit; }
-  #chips .chip.on { background:#d9552b; border-color:#d9552b; color:#fff; font-weight:600; }
+  #chips .chip { flex:0 0 auto; font-size:13px; padding:7px 11px; border-radius:16px; border:1px solid #E0D0B8;
+    background:#FFFBF5; color:#2B2420; white-space:nowrap; cursor:pointer; font-family:inherit; }
+  #chips .chip.on { background:#B8482A; border-color:#B8482A; color:#fff; font-weight:600; }
   #chips .chip .cnt { opacity:.65; font-size:11px; margin-left:2px; }
   #chips .chip.on .cnt { opacity:.9; }
   #chips .chip-x { display:inline-block; margin-left:4px; font-weight:700; }
-  #chips .chip-sep { flex:0 0 auto; width:1px; height:22px; align-self:center; background:#d8d1c6; margin:0 3px; }
+  #chips .chip-sep { flex:0 0 auto; width:1px; height:22px; align-self:center; background:#E0D0B8; margin:0 3px; }
   /* Touch devices: увеличенные цели (desktop appearance не меняется) */
   @media (pointer: coarse) {
     #bar select, #bar button { min-height:44px; }
@@ -264,11 +309,11 @@
   #scrim[hidden] { display:none; }
   #menuBtn { position:absolute; top:0; right:8px; display:none; align-items:center; justify-content:center;
     width:44px; height:44px; border:1px solid #e0d8cc; border-radius:12px; background:rgba(255,255,255,.95);
-    color:#2a2622; box-shadow:0 4px 12px rgba(43,38,34,.08); pointer-events:auto; cursor:pointer; }
-  #menu { position:fixed; left:0; right:0; bottom:0; z-index:20; background:#fff; border-radius:16px 16px 0 0;
+    color:#2B2420; box-shadow:0 4px 12px rgba(43,38,34,.08); pointer-events:auto; cursor:pointer; }
+  #menu { position:fixed; left:0; right:0; bottom:0; z-index:20; background:#FFFBF5; border-radius:16px 16px 0 0;
     box-shadow:0 -6px 24px rgba(0,0,0,.2); padding:16px 16px calc(16px + env(safe-area-inset-bottom,0px)); max-height:80%; overflow-y:auto; }
   #menu[hidden] { display:none; }
-  #menu::before { content:''; position:absolute; top:6px; left:50%; transform:translateX(-50%); width:40px; height:4px; border-radius:2px; background:#e3ddd3; }
+  #menu::before { content:''; position:absolute; top:6px; left:50%; transform:translateX(-50%); width:40px; height:4px; border-radius:2px; background:#E0D0B8; }
   #menu #bar { flex-wrap:wrap; margin-top:6px; }
   /* Mobile shell: capability-based. pointer:coarse — сразу (без вспышки); html.is-mobile — фолбэк по ширине */
   @media (pointer: coarse) {
@@ -286,6 +331,31 @@
 </style>
 </head>
 <body>
+<!-- Заставка «Рисуем Тбилиси…» (стиль «Скетчбук»): снимается после первой отрисовки карты (amgLoaderDone), страховка — 12 с -->
+<div id="amgLoader" role="status" aria-live="polite">
+  <svg viewBox="0 0 260 120" aria-hidden="true">
+    <path d="M8 108 H252"/>
+    <path d="M24 108 V62 H58 V108 M58 74 H96 V108"/>
+    <path class="t" d="M30 62 V52 H52 V62 M34 52 V62 M41 52 V62 M48 52 V62"/>
+    <path d="M110 108 V48 L130 30 L150 48 V108 M120 108 V80 A10 10 0 0 1 140 80 V108"/>
+    <path class="t" d="M106 70 H154 M110 70 V78 M118 70 V78 M126 70 V78 M134 70 V78 M142 70 V78 M150 70 V78"/>
+    <path d="M164 108 V66 H200 V108 M200 82 H236 V108"/>
+    <path class="w" d="M210 38 C 214 30, 222 30, 224 38 S 236 46, 240 38"/>
+  </svg>
+  <span class="amg-hand" id="amgLoaderText">Рисуем Тбилиси…</span>
+</div>
+<script>
+(function () {
+  var l = (navigator.language || 'ru').slice(0, 2), t = document.getElementById('amgLoaderText');
+  if (l === 'en') t.textContent = 'Drawing Tbilisi…';
+  if (l === 'ka') { t.textContent = 'ვხატავთ თბილისს…'; t.className = 'amg-hand plain'; }
+  window.amgLoaderDone = function () {
+    var el = document.getElementById('amgLoader'); if (!el || el.classList.contains('done')) return;
+    el.classList.add('done'); setTimeout(function () { el.remove(); }, 400);
+  };
+  setTimeout(window.amgLoaderDone, 12000);
+})();
+</script>
 <div id="map"></div>
 <div id="topui">
   <div id="brand">
@@ -567,6 +637,8 @@ const LB = {
   accuracy:   { ru:'точность', en:'accuracy', ka:'სიზუსტე' },
   found:      { ru:'Найдено', en:'Found', ka:'ნაპოვნია' },
   noNearby:   { ru:'В этом радиусе объектов нет', en:'No objects within this radius', ka:'ამ რადიუსში ობიექტები არ არის' },
+  nearAlso:   { ru:'Зато недалеко:', en:'But not far away:', ka:'სამაგიეროდ ახლოს:' },
+  localTip:   { ru:'Совет местного', en:'Local tip', ka:'ადგილობრივის რჩევა' },
   walk:       { ru:'пешком', en:'on foot', ka:'ფეხით' },
   min:        { ru:'мин', en:'min', ka:'წთ' },
   hr:         { ru:'ч', en:'h', ka:'სთ' },
@@ -866,13 +938,13 @@ function siteFeatures() {
 // Кластеры SITE (native MapLibre). Добавляются ПЕРВЫМИ → лежат ниже singleton-маркеров.
 const clusterLayers = [
   { id:'sites-clusters', type:'circle', source:'sites', filter:['has','point_count'],
-    paint:{ 'circle-color':'#d9552b', 'circle-opacity':0.92,
-      'circle-stroke-color':'#ffffff', 'circle-stroke-width':2,
+    paint:{ 'circle-color':'#FFFBF5', 'circle-opacity':0.96,
+      'circle-stroke-color':'#B8482A', 'circle-stroke-width':4, 'circle-stroke-opacity':0.85,
       'circle-radius':['step',['get','point_count'], 14, 10, 18, 50, 24, 200, 30] } },
   { id:'sites-cluster-count', type:'symbol', source:'sites', filter:['has','point_count'],
     layout:{ 'text-field':['get','point_count_abbreviated'], 'text-font':['Noto Sans Medium'],
-      'text-size':12, 'text-allow-overlap':true, 'text-ignore-placement':true },
-    paint:{ 'text-color':'#ffffff' } },
+      'text-size':13, 'text-allow-overlap':true, 'text-ignore-placement':true },
+    paint:{ 'text-color':'#9A3B22' } },
 ];
 // --- Размеры маркеров каталога ---
 // База: 48px SVG при pixelRatio 2 → 24 CSS px (бейдж 24@2 → 12 CSS px).
@@ -888,23 +960,23 @@ const SITE_LABEL_SIZE = ['interpolate',['linear'],['zoom'], 12,11.5, 14,12.5, 16
 // Singleton-слои: только развёрнутые SITE (никогда на кластере).
 const siteLayers = [
   { id:'sites', type:'symbol', source:'sites', filter:SINGLETON,
-    layout:{ 'icon-image':['get','icon'], 'icon-size':SITE_ICON_SIZE, 'icon-allow-overlap':true, 'icon-ignore-placement':true,
+    layout:{ 'icon-image':['get','icon'], 'icon-size':SITE_ICON_SIZE, 'icon-anchor':'bottom', 'icon-allow-overlap':true, 'icon-ignore-placement':true,
       'symbol-sort-key':['get','prio'] },
     paint:{} },
   { id:'sites-status', type:'symbol', source:'sites', filter:['all', SINGLETON, ['!=', ['get','status'], '']],
-    layout:{ 'icon-image':['concat','badge-',['get','status']], 'icon-size':SITE_BADGE_SIZE, 'icon-offset':[16,-16],
+    layout:{ 'icon-image':['concat','badge-',['get','status']], 'icon-size':SITE_BADGE_SIZE, 'icon-offset':[12,-26],
       'icon-allow-overlap':true, 'icon-ignore-placement':true, 'symbol-sort-key':['get','prio'] },
     paint:{} },
   // ×N: несколько ARTWORK на одном SITE (только singleton, никогда на кластере).
   { id:'sites-count-bg', type:'circle', source:'sites', filter:['all', SINGLETON, COUNT_EXTRA],
-    paint:{ 'circle-radius':10.5, 'circle-color':'#d9552b', 'circle-stroke-color':'#ffffff', 'circle-stroke-width':2,
-      'circle-translate':[18,18], 'circle-translate-anchor':'viewport' } },
+    paint:{ 'circle-radius':10.5, 'circle-color':'#6E2639', 'circle-stroke-color':'#FFFBF5', 'circle-stroke-width':2,
+      'circle-translate':[-14,-32], 'circle-translate-anchor':'viewport' } },
   { id:'sites-count', type:'symbol', source:'sites', filter:['all', SINGLETON, COUNT_EXTRA],
     layout:{ 'text-field':['concat','×',['to-string',['get','count']]], 'text-font':['Noto Sans Medium'], 'text-size':11,
-      'text-offset':[1.64,1.64], 'text-anchor':'center', 'text-allow-overlap':true, 'text-ignore-placement':true, 'text-padding':0 },
+      'text-offset':[-1.27,-2.91], 'text-anchor':'center', 'text-allow-overlap':true, 'text-ignore-placement':true, 'text-padding':0 },
     paint:{ 'text-color':'#ffffff' } },
   { id:'sites-label', type:'symbol', source:'sites', minzoom:12, filter:SINGLETON,
-    layout:{ 'text-field':['coalesce',['get','label'],''], 'text-font':['Noto Sans Medium'], 'text-size':SITE_LABEL_SIZE, 'text-offset':[0,2.05], 'text-anchor':'top', 'text-optional':true },
+    layout:{ 'text-field':['coalesce',['get','label'],''], 'text-font':['Noto Sans Medium'], 'text-size':SITE_LABEL_SIZE, 'text-offset':[0,0.5], 'text-anchor':'top', 'text-optional':true },
     paint:{ 'text-color':'#7a2d12', 'text-halo-color':'#ffffff', 'text-halo-width':1.5 } },
 ];
 // --- Фирменные палитры AMG для ВСЕХ тем карты. ---
@@ -1265,82 +1337,24 @@ map.touchZoomRotate.disableRotation();  // pinch-zoom остаётся, two-fing
 map.addControl(new maplibregl.NavigationControl({ showCompass:false }), 'bottom-right');
 map.addControl(new maplibregl.GeolocateControl({ positionOptions:{ enableHighAccuracy:true }, trackUserLocation:true }), 'bottom-right');
 map.addControl(new maplibregl.ScaleControl({ unit:'metric' }), 'bottom-left');
+map.once('idle', () => window.amgLoaderDone && window.amgLoaderDone());   // снять заставку после первой отрисовки
 window.amgMap = map; // read-only test/debug hook (no behavior change)
 
 // ---------- SVG-маркеры: тип цветом/формой, статус отдельным бейджем ----------
-// Наивный плоский стиль, 2-4 цвета, inline (без внешних ассетов).
+// Маркеры «Балкон» (гибрид A + C): булавка цвета семейства, остриё указывает точно на место
+// (слой sites: icon-anchor bottom), внутри — белый линейный глиф на сетке 24.
+const amgPin = (color, glyph) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48"><path d="M24 46 C19 38 8 31 8 19 A16 16 0 1 1 40 19 C40 31 29 38 24 46 Z" fill="${color}" stroke="#FFFBF5" stroke-width="2.5" stroke-linejoin="round"/><g transform="translate(15 10) scale(.75)" fill="none" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">${glyph}</g></svg>`;
+// «Впечатления» — диск того же стиля: отличаются от булавок каталога формой, а не только цветом.
+const amgDisc = (color, glyph) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48"><circle cx="24" cy="24" r="18" fill="${color}" stroke="#FFFBF5" stroke-width="2.5"/><g transform="translate(15 15) scale(.75)" fill="none" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">${glyph}</g></svg>`;
 const ICON_SVGS = {
-  'icon-mural': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
-<path d="M6 40 C15 36 24 37 34 33" fill="none" stroke="#f0a43a" stroke-width="7" stroke-linecap="round"/>
-<path d="M6 40 C15 36 24 37 34 33" fill="none" stroke="#d9552b" stroke-width="2.4" stroke-linecap="round"/>
-<g transform="rotate(38 24 24)">
-<rect x="21" y="3" width="6" height="15" rx="3" fill="#c98a00" stroke="#3b332b" stroke-width="2"/>
-<rect x="19.5" y="17" width="9" height="5" rx="1.5" fill="#a7adb3" stroke="#3b332b" stroke-width="1.8"/>
-<path d="M19.5 22 h9 c0 6 -1.4 10.5 -4.5 14.5 c-3.1 -4 -4.5 -8.5 -4.5 -14.5 Z" fill="#d9552b" stroke="#3b332b" stroke-width="2" stroke-linejoin="round"/>
-</g></svg>`,
-  'icon-street_art': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
-<defs><clipPath id="amgcan"><rect x="14" y="16" width="16" height="24" rx="4"/></clipPath></defs>
-<g clip-path="url(#amgcan)">
-<rect x="14" y="16" width="16" height="4.8" fill="#e4614a"/><rect x="14" y="20.8" width="16" height="4.8" fill="#f0a43a"/>
-<rect x="14" y="25.6" width="16" height="4.8" fill="#f0c33a"/><rect x="14" y="30.4" width="16" height="4.8" fill="#67b74b"/>
-<rect x="14" y="35.2" width="16" height="4.8" fill="#2f6fb0"/></g>
-<rect x="14" y="16" width="16" height="24" rx="4" fill="none" stroke="#3b332b" stroke-width="2"/>
-<rect x="16.5" y="11" width="11" height="5.5" rx="2" fill="#c7ced5" stroke="#3b332b" stroke-width="1.8"/>
-<rect x="19.5" y="7" width="5" height="4.5" rx="1.2" fill="#3b332b"/>
-<g fill="none" stroke-linecap="round">
-<path d="M30 9.5 C33 8 35 8.5 38 6.5" stroke="#e4614a" stroke-width="1.6"/>
-<path d="M30.5 13 C33.5 12.4 35.5 13 38.5 12" stroke="#f0c33a" stroke-width="1.6"/>
-<path d="M31 16.5 C34 16.6 35.5 17.5 38 17.5" stroke="#2f6fb0" stroke-width="1.6"/>
-</g>
-<circle cx="31" cy="7.5" r="1.4" fill="#67b74b"/><circle cx="35" cy="5" r="1.1" fill="#e4614a"/><circle cx="36.5" cy="10" r="1.2" fill="#f0c33a"/><circle cx="34" cy="15.5" r="1.1" fill="#7e57c2"/></svg>`,
-  'icon-mosaic': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
-<rect x="6" y="6" width="36" height="36" rx="3" fill="#efe6d6" stroke="#3b332b" stroke-width="1.6"/>
-<g stroke="#3b332b" stroke-width="1.2" stroke-linejoin="round">
-<path d="M8.5 8.5 L21 9.5 L9.5 22 Z" fill="#2f6fb0"/>
-<path d="M23 8.5 L35 10.5 L34 20 L22 18.5 Z" fill="#f0c33a"/>
-<path d="M37 8.5 L41 9 L41 17 L36.5 18 Z" fill="#d9552b"/>
-<path d="M8.5 24 L20 23 L20 33 L9.5 36 Z" fill="#2f8f6b"/>
-<path d="M22 20.5 L34 20 L35 31 L21 32 Z" fill="#d9552b"/>
-<path d="M37 20 L41 19 L41 32.5 Z" fill="#2f6fb0"/>
-<path d="M9.5 38 L21 35 L22 41 L8.5 41 Z" fill="#f0c33a"/>
-<path d="M24 34 L36 33 L37 41 L23 41 Z" fill="#2f6fb0"/>
-<path d="M38 34 L41 35 L41 41 Z" fill="#2f8f6b"/>
-</g></svg>`,
-  'icon-sculpture': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
-<path d="M18 17 C15 18 14 22 14.5 25 C14.7 26.6 16.3 26.8 16.9 25.4 C17.6 23.6 17.4 21 19.5 19.6" fill="none" stroke="#3b332b" stroke-width="5" stroke-linecap="round"/>
-<path d="M18 17 C15 18 14 22 14.5 25 C14.7 26.6 16.3 26.8 16.9 25.4 C17.6 23.6 17.4 21 19.5 19.6" fill="none" stroke="#a2543a" stroke-width="3" stroke-linecap="round"/>
-<path d="M30 17 C33.5 18.5 34.5 22 33.5 26" fill="none" stroke="#3b332b" stroke-width="5" stroke-linecap="round"/>
-<path d="M30 17 C33.5 18.5 34.5 22 33.5 26" fill="none" stroke="#a2543a" stroke-width="3" stroke-linecap="round"/>
-<path d="M17 29.5 L17 41 L21.6 41 L22.6 32 L25.4 32 L26.4 41 L31 41 L31 29.5 Z" fill="#a2543a" stroke="#3b332b" stroke-width="1.8" stroke-linejoin="round"/>
-<path d="M18.4 16.5 C16.8 19 16.2 23 17 29.5 L31 29.5 C31.8 23 31.2 19 29.6 16.5 C27 14.2 21 14.2 18.4 16.5 Z" fill="#a2543a" stroke="#3b332b" stroke-width="1.8" stroke-linejoin="round"/>
-<path d="M18 15.5 L31.5 21" stroke="#3b332b" stroke-width="1.4" stroke-linecap="round"/>
-<circle cx="24" cy="10.5" r="4.2" fill="#a2543a" stroke="#3b332b" stroke-width="1.8"/>
-<rect x="14" y="41" width="20" height="4" rx="1" fill="#d9b48f" stroke="#3b332b" stroke-width="1.6"/></svg>`,
-  'icon-installation': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
-<circle cx="17" cy="15" r="6" fill="#7e57c2" stroke="#3b332b" stroke-width="2"/>
-<path d="M29 9 L38 21 L20 21 Z" fill="#c9b6f0" stroke="#3b332b" stroke-width="2" stroke-linejoin="round"/>
-<path d="M11 40 Q17 31 24 39 Q31 47 38 38" fill="none" stroke="#7e57c2" stroke-width="3" stroke-linecap="round"/></svg>`,
-  'icon-architectural': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
-<path d="M7 19 L24 6 L41 19 Z" fill="#EAD9B8" stroke="#3b332b" stroke-width="2" stroke-linejoin="round"/>
-<rect x="7" y="19" width="34" height="3.5" fill="#E4D3B6" stroke="#3b332b" stroke-width="1.8"/>
-<g stroke="#3b332b" stroke-width="1.6">
-<rect x="9" y="22.5" width="12" height="3.5" rx="1" fill="#F0D79A"/>
-<circle cx="9.6" cy="24.2" r="2.1" fill="#F0D79A"/><circle cx="20.4" cy="24.2" r="2.1" fill="#F0D79A"/>
-<rect x="12" y="26" width="6" height="12" fill="#F3E7D0"/>
-<rect x="27" y="22.5" width="12" height="3.5" rx="1" fill="#F0D79A"/>
-<circle cx="27.6" cy="24.2" r="2.1" fill="#F0D79A"/><circle cx="38.4" cy="24.2" r="2.1" fill="#F0D79A"/>
-<rect x="30" y="26" width="6" height="12" fill="#F3E7D0"/>
-</g>
-<line x1="15" y1="27" x2="15" y2="37" stroke="#C99A6B" stroke-width="1"/>
-<line x1="33" y1="27" x2="33" y2="37" stroke="#C99A6B" stroke-width="1"/>
-<rect x="8" y="38" width="32" height="4" rx="1" fill="#D9B48F" stroke="#3b332b" stroke-width="2"/></svg>`,
-  'icon-artifact': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
-<path d="M19 7 h10 v5 h-10 z" fill="#5b6b7a" stroke="#3b332b" stroke-width="1.5"/>
-<path d="M17 12 Q11 22 17 31 Q21 39 24 39 Q27 39 31 31 Q37 22 31 12 Z" fill="#5b6b7a" stroke="#3b332b" stroke-width="2"/>
-<rect x="17" y="38" width="14" height="4" rx="1" fill="#b8c4cf" stroke="#3b332b" stroke-width="1.5"/></svg>`,
-  'icon-unusual': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
-<path d="M24 5 C26 15 33 22 43 24 C33 26 26 33 24 43 C22 33 15 26 5 24 C15 22 22 15 24 5 Z" fill="#F0B429" stroke="#3b332b" stroke-width="2" stroke-linejoin="round"/>
-<circle cx="24" cy="24" r="3.4" fill="#fff8e6" stroke="#3b332b" stroke-width="1.4"/></svg>`,
+  'icon-mural':         amgPin('#B8482A', '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M7 15c2-4 4-4 6-2s3 1 4-2"/>'),
+  'icon-street_art':    amgPin('#A0640F', '<rect x="8" y="9" width="8" height="12" rx="2"/><path d="M10 9V6h4v3M18 4.5h.01M20 7h.01M18 8h.01"/>'),
+  'icon-mosaic':        amgPin('#1F6F78', '<rect x="4" y="4" width="7" height="7" rx="1"/><rect x="13" y="4" width="7" height="7" rx="1"/><rect x="4" y="13" width="7" height="7" rx="1"/><rect x="13" y="13" width="7" height="7" rx="1"/>'),
+  'icon-sculpture':     amgPin('#4E5B66', '<circle cx="12" cy="7" r="3"/><path d="M7 16c0-3 2.2-5 5-5s5 2 5 5M6 16h12v4H6z"/>'),
+  'icon-installation':  amgPin('#6E2639', '<path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M4 7.5l8 4.5 8-4.5M12 12v9"/>'),
+  'icon-architectural': amgPin('#8A5A2B', '<path d="M4 21V10a8 8 0 0 1 16 0v11"/><path d="M3 21h18M4 15h16M9 15v6M15 15v6"/>'),
+  'icon-artifact':      amgPin('#5A4636', '<path d="M9 3h6"/><path d="M10 3v2.2C7 6.6 5 9.6 5 13c0 4.4 3.1 8 7 8s7-3.6 7-8c0-3.4-2-6.4-5-7.8V3"/>'),
+  'icon-unusual':       amgPin('#B07A1E', '<path d="M12 3l2.2 6.8L21 12l-6.8 2.2L12 21l-2.2-6.8L3 12l6.8-2.2z"/>'),
 };
 // Статус-бейджи в стиле референса: круг с символом (✓ / ? / ! / ⇄ / ×).
 const BADGE_SVGS = {
@@ -1370,21 +1384,21 @@ const POI_SVGS = {
   'amg-poi-boat': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48"><path d="M8 34 H40 L34 42 H14 Z" fill="#C99A6B" stroke="#3b332b" stroke-width="2" stroke-linejoin="round"/><path d="M24 6 V34" stroke="#3b332b" stroke-width="2" stroke-linecap="round"/><path d="M25 8 L38 30 H25 Z" fill="#F2F6F8" stroke="#3b332b" stroke-width="2" stroke-linejoin="round"/><path d="M23 12 L11 30 H23 Z" fill="#E8EDF0" stroke="#3b332b" stroke-width="2" stroke-linejoin="round"/></svg>`,
   'amg-poi-transport': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48"><rect x="8" y="12" width="32" height="22" rx="4" fill="#F2A23C" stroke="#3b332b" stroke-width="2"/><rect x="12" y="16" width="9" height="7" rx="1.5" fill="#BFE3F2" stroke="#3b332b" stroke-width="1"/><rect x="27" y="16" width="9" height="7" rx="1.5" fill="#BFE3F2" stroke="#3b332b" stroke-width="1"/><circle cx="16" cy="37" r="3" fill="#3b332b"/><circle cx="32" cy="37" r="3" fill="#3b332b"/></svg>`,
 };
-// Иконки слоя «Впечатления»: экстрим и природа (параплан/каньон/зиплайн/рафт/байк/канатка).
+// Иконки слоя «Впечатления»: диски amgDisc (стиль «Балкон»), цвет — вид активности.
 const EXP_SVGS = {
-  'amg-exp-paraglide': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48"><circle cx="24" cy="24" r="17" fill="#EFE7DA" stroke="#3b332b" stroke-width="2.4"/><path d="M8 17 C16 10 32 10 40 17 C32 21 16 21 8 17 Z" fill="#E4614A" stroke="#3b332b" stroke-width="2" stroke-linejoin="round"/><path d="M8 17 L18 26 M40 17 L30 26 M18 26 H30" fill="none" stroke="#3b332b" stroke-width="1.5"/><circle cx="24" cy="29.5" r="2.6" fill="#2f6fb0" stroke="#3b332b" stroke-width="1.5"/><path d="M21.6 32 L19 39 M26.4 32 L29 39" stroke="#3b332b" stroke-width="2" stroke-linecap="round"/></svg>`,
-  'amg-exp-canyon': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48"><circle cx="24" cy="24" r="17" fill="#EFE7DA" stroke="#3b332b" stroke-width="2.4"/><path d="M8 15 L14 27 L19 32 L24 39 L29 32 L34 27 L40 15" fill="none" stroke="#a9764a" stroke-width="2.4" stroke-linejoin="round"/><path d="M18 33 Q24 36 30 33" fill="none" stroke="#2f8fb0" stroke-width="2.6" stroke-linecap="round"/><path d="M12 14 L16 21 L9 21 Z" fill="#7FA86B" stroke="#3b332b" stroke-width="1.2" stroke-linejoin="round"/></svg>`,
-  'amg-exp-zipline': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48"><circle cx="24" cy="24" r="17" fill="#EFE7DA" stroke="#3b332b" stroke-width="2.4"/><path d="M8 14 L40 26" stroke="#3b332b" stroke-width="2.2" stroke-linecap="round"/><circle cx="24" cy="20" r="3.4" fill="#F2C14E" stroke="#3b332b" stroke-width="1.8"/><path d="M24 23.4 V29" stroke="#3b332b" stroke-width="2" stroke-linecap="round"/><path d="M19 30 H29 L27 35 H21 Z" fill="#2f6fb0" stroke="#3b332b" stroke-width="1.6" stroke-linejoin="round"/></svg>`,
-  'amg-exp-rafting': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48"><circle cx="24" cy="24" r="17" fill="#EFE7DA" stroke="#3b332b" stroke-width="2.4"/><path d="M10 26 H38 L34 34 H14 Z" fill="#E4614A" stroke="#3b332b" stroke-width="2" stroke-linejoin="round"/><g stroke="#3b332b" stroke-width="2" stroke-linecap="round"><path d="M17 19 L12 30"/><path d="M31 19 L36 30"/></g><g fill="none" stroke="#2f8fb0" stroke-width="2.4" stroke-linecap="round"><path d="M9 37 Q13 34 17 37 T25 37 T33 37 T40 37"/></g></svg>`,
-  'amg-exp-bike': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48"><circle cx="24" cy="24" r="17" fill="#EFE7DA" stroke="#3b332b" stroke-width="2.4"/><circle cx="16" cy="31" r="5" fill="none" stroke="#3b332b" stroke-width="2"/><circle cx="33" cy="31" r="5" fill="none" stroke="#3b332b" stroke-width="2"/><path d="M16 31 L22 21 H30 L33 31 M22 21 L26 31 H16" fill="none" stroke="#2f7d32" stroke-width="2" stroke-linejoin="round"/><path d="M30 21 L28 16 H24" fill="none" stroke="#3b332b" stroke-width="2" stroke-linecap="round"/></svg>`,
-  'amg-exp-bath': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48"><circle cx="24" cy="24" r="17" fill="#EFE7DA" stroke="#3b332b" stroke-width="2.4"/><path d="M11 27 h26 a2 2 0 0 1 2 2 v4 a5 5 0 0 1 -5 5 H14 a5 5 0 0 1 -5 -5 v-4 a2 2 0 0 1 2 -2 z" fill="#BFE3F2" stroke="#3b332b" stroke-width="2" stroke-linejoin="round"/><path d="M13 27 v-5 a3 3 0 0 1 3 -3 h3" fill="none" stroke="#3b332b" stroke-width="2" stroke-linecap="round"/><path d="M23 25 q2.5 -3 0 -6 q-2.5 -3 0 -6" fill="none" stroke="#2f8fb0" stroke-width="2.2" stroke-linecap="round"/><path d="M30 25 q2.5 -3 0 -6 q-2.5 -3 0 -6" fill="none" stroke="#2f8fb0" stroke-width="2.2" stroke-linecap="round"/></svg>`,
-  'amg-exp-waterpark': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48"><circle cx="24" cy="24" r="17" fill="#EFE7DA" stroke="#3b332b" stroke-width="2.4"/><path d="M15 12 q13 0 13 8 q0 6 -7 7" fill="none" stroke="#2f6fb0" stroke-width="3.4" stroke-linecap="round"/><path d="M15 12 q-3 0 -3 3" fill="none" stroke="#2f6fb0" stroke-width="3.4" stroke-linecap="round"/><circle cx="30" cy="27" r="3.4" fill="#E4614A" stroke="#3b332b" stroke-width="1.6"/><g fill="none" stroke="#2f8fb0" stroke-width="2.2" stroke-linecap="round"><path d="M10 33 q4 -3 8 0 t8 0 t8 0"/><path d="M10 38 q4 -3 8 0 t8 0 t8 0"/></g></svg>`,
-  'amg-exp-zoo': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48"><circle cx="24" cy="24" r="17" fill="#EFE7DA" stroke="#3b332b" stroke-width="2.4"/><ellipse cx="24" cy="31" rx="7" ry="5.6" fill="#a9764a" stroke="#3b332b" stroke-width="1.8"/><circle cx="15.5" cy="24" r="3.3" fill="#a9764a" stroke="#3b332b" stroke-width="1.6"/><circle cx="21.2" cy="19.5" r="3.3" fill="#a9764a" stroke="#3b332b" stroke-width="1.6"/><circle cx="27.6" cy="19.5" r="3.3" fill="#a9764a" stroke="#3b332b" stroke-width="1.6"/><circle cx="33" cy="24" r="3.3" fill="#a9764a" stroke="#3b332b" stroke-width="1.6"/></svg>`,
-  'amg-exp-aquarium': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48"><circle cx="24" cy="24" r="17" fill="#EFE7DA" stroke="#3b332b" stroke-width="2.4"/><path d="M12 29 C15 20 24 14 33 17 C36 18 37 21 36 23 C32 24 29 25 26 28 C23 31 17 32 12 29 Z" fill="#3F7FA6" stroke="#3b332b" stroke-width="1.8" stroke-linejoin="round"/><path d="M33 17 L39 13 L36.5 21 Z" fill="#3F7FA6" stroke="#3b332b" stroke-width="1.6" stroke-linejoin="round"/><circle cx="18" cy="24" r="1.3" fill="#fff"/><g fill="none" stroke="#2f8fb0" stroke-width="2.2" stroke-linecap="round"><path d="M10 35 q4 -3 8 0 t8 0 t8 0"/></g></svg>`,
-  'amg-exp-horse': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48"><circle cx="24" cy="24" r="17" fill="#EFE7DA" stroke="#3b332b" stroke-width="2.4"/><path d="M17 35 C12 27 13 17 24 16 C35 17 36 27 31 35" fill="none" stroke="#3b332b" stroke-width="4.4" stroke-linecap="round"/><g fill="#F2C14E" stroke="#3b332b" stroke-width="1"><circle cx="17.6" cy="27.5" r="1.5"/><circle cx="30.4" cy="27.5" r="1.5"/><circle cx="20.4" cy="21.5" r="1.5"/><circle cx="27.6" cy="21.5" r="1.5"/></g></svg>`,
-  'amg-exp-golf': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48"><circle cx="24" cy="24" r="17" fill="#EFE7DA" stroke="#3b332b" stroke-width="2.4"/><path d="M20 35 V13" stroke="#3b332b" stroke-width="2.4" stroke-linecap="round"/><path d="M20 13 L33 18 L20 23 Z" fill="#E4614A" stroke="#3b332b" stroke-width="1.6" stroke-linejoin="round"/><ellipse cx="29" cy="34" rx="7" ry="2.6" fill="#3b332b"/><circle cx="16.5" cy="33" r="2.6" fill="#fff" stroke="#3b332b" stroke-width="1.4"/></svg>`,
-  'amg-exp-marina': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48"><circle cx="24" cy="24" r="17" fill="#EFE7DA" stroke="#3b332b" stroke-width="2.4"/><path d="M23 12 V30" stroke="#3b332b" stroke-width="2.2" stroke-linecap="round"/><path d="M25 14 L34 29 H25 Z" fill="#EFE7DA" stroke="#3b332b" stroke-width="1.8" stroke-linejoin="round"/><path d="M21 18 L13 29 H21 Z" fill="#E4614A" stroke="#3b332b" stroke-width="1.8" stroke-linejoin="round"/><path d="M11 31 H37 L32 37 H16 Z" fill="#2f6fb0" stroke="#3b332b" stroke-width="1.8" stroke-linejoin="round"/></svg>`,
-  'amg-exp-cablecar': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48"><circle cx="24" cy="24" r="17" fill="#EFE7DA" stroke="#3b332b" stroke-width="2.4"/><path d="M8 13 L40 20" stroke="#3b332b" stroke-width="2.2" stroke-linecap="round"/><path d="M24 17.5 V21" stroke="#3b332b" stroke-width="2"/><rect x="16" y="21" width="16" height="13" rx="3" fill="#F2A23C" stroke="#3b332b" stroke-width="2"/><rect x="19.5" y="24" width="9" height="6" rx="1.5" fill="#BFE3F2" stroke="#3b332b" stroke-width="1.2"/></svg>`,
+  'amg-exp-paraglide': amgDisc('#2E6FA8', '<path d="M3 9c3-4.5 15-4.5 18 0"/><path d="M3 9l9 7 9-7"/><circle cx="12" cy="18.5" r="1.8"/>'),
+  'amg-exp-canyon':    amgDisc('#5C6E2E', '<path d="M3 20l5-11 4 6 3-4 6 9z"/><path d="M10 20c1-2 3-2 3.5-4"/>'),
+  'amg-exp-zipline':   amgDisc('#7A4E8C', '<path d="M3 5l18 6M12 8v4"/><path d="M8 13h8l-1.5 5h-5z"/>'),
+  'amg-exp-rafting':   amgDisc('#1D6B86', '<path d="M3 14h18l-3 5H6z"/><path d="M8 14L5 7M16 14l3-7"/>'),
+  'amg-exp-bike':      amgDisc('#4E7A3A', '<circle cx="6" cy="16" r="3.5"/><circle cx="18" cy="16" r="3.5"/><path d="M6 16l4-7h5l3 7M10 9l3 7"/>'),
+  'amg-exp-bath':      amgDisc('#2F7F6F', '<path d="M4 14h16v2a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5z"/><path d="M8 10c-1-1.5 1-2.5 0-4M12 10c-1-1.5 1-2.5 0-4M16 10c-1-1.5 1-2.5 0-4"/>'),
+  'amg-exp-waterpark': amgDisc('#17768A', '<path d="M3 13c2-2 4-2 6 0s4 2 6 0 4-2 6 0"/><path d="M3 18c2-2 4-2 6 0s4 2 6 0 4-2 6 0"/><path d="M8 9a4 4 0 0 1 8 0"/>'),
+  'amg-exp-zoo':       amgDisc('#9A5B2E', '<circle cx="6.5" cy="10" r="1.8"/><circle cx="10" cy="6.5" r="1.8"/><circle cx="14" cy="6.5" r="1.8"/><circle cx="17.5" cy="10" r="1.8"/><path d="M12 12c-3 0-5 3-5 5.5 0 1.7 1.5 2.5 3 2l2-.6 2 .6c1.5.5 3-.3 3-2 0-2.5-2-5.5-5-5.5z"/>'),
+  'amg-exp-aquarium':  amgDisc('#2C6E9B', '<path d="M3 12c3-5 10-6 14-2l4-3v10l-4-3c-4 4-11 3-14-2z"/><path d="M8 11.5h.01"/>'),
+  'amg-exp-horse':     amgDisc('#7A5230', '<path d="M7 20C3 14 4 5 12 4c8 1 9 10 5 16"/><path d="M7.5 15h.01M16.5 15h.01M9 9h.01M15 9h.01"/>'),
+  'amg-exp-golf':      amgDisc('#4F7A2E', '<path d="M9 21V3l9 4-9 4"/><path d="M5 21h10"/>'),
+  'amg-exp-marina':    amgDisc('#2E5E8A', '<path d="M12 3v13M13 4l6 11h-6zM11 7l-5 8h5z"/><path d="M4 18h16l-2 3H6z"/>'),
+  'amg-exp-cablecar':  amgDisc('#3C5A8C', '<path d="M3 6l18-3M12 4.5V8"/><rect x="6" y="8" width="12" height="12" rx="2"/><path d="M6 13h12"/>'),
 };
 // Бесшовный «бумажный» паттерн (128×128, степень двойки) для светлых тем.
 const PATTERN_SVGS = {
@@ -1789,6 +1803,13 @@ function detailSourcesHtml(site, arts) {
   return out ? `<div class="amg-src amg-src-all">${out}</div>` : '';
 }
 // Compact preview: ONE object, title shown once; full artwork list lives in Detail (#detail).
+// «Совет местного» (стиль «Скетчбук»): поле tip {ru,en,ka} у места или у первой работы.
+// Рукописный Caveat — только для ru/en; грузинский текст набирается обычным шрифтом.
+function tipHtml(p, arts) {
+  const t = pick(p.tip) || (arts && arts[0] ? pick(arts[0].tip) : '');
+  if (!t) return '';
+  return `<p class="amg-tip amg-hand${state.lang === 'ka' ? ' plain' : ''}"><b>${esc(pick(LB.localTip))}:</b> ${esc(t)}</p>`;
+}
 function sitePopupHtml(siteId) {
   const f = catalog.siteById.get(siteId);
   if (!f) return '<b>—</b>';
@@ -1827,6 +1848,7 @@ function sitePopupHtml(siteId) {
     ${tags ? `<div class="amg-tags">${tags}</div>` : ''}
     ${artists ? `<div class="amg-meta">${esc(pick(LB.artist))}: ${esc(artists)}</div>` : ''}
     ${desc ? `<div class="amg-desc">${esc(desc)}</div>` : ''}
+    ${tipHtml(p, arts)}
     ${landmark ? `<div class="amg-meta amg-addr">${esc(landmark)}</div>` : ''}
     <div class="amg-meta">${esc(pick(LB.access))}: ${esc(labelOf(ACCESS_LABELS, p.access))} · ${esc(vis)}</div>
     ${media}
@@ -1883,6 +1905,7 @@ function detailHtml(siteId) {
     <div class="amg-meta">${esc(pick(LB.access))}: ${esc(labelOf(ACCESS_LABELS, p.access))} · ${esc(vis)}</div>
     ${AMG_UGC_ENABLED ? hereBlockHtml(siteId) : ''}
     ${siteDesc ? `<div class="amg-desc">${esc(siteDesc)}</div>` : ''}
+    ${tipHtml(p, arts)}
     ${gallery.length ? `<div class="amg-detail-gallery">${gallery.join('')}</div>` : ''}
     ${arts.length ? `<div class="amg-detail-arts">${artsHtml}</div>` : ''}
     ${detailSourcesHtml(p, arts)}
@@ -2607,6 +2630,22 @@ function nearbyRows() {
   out.sort((a, b) => a.d - b.d);
   return out;
 }
+// Ближайшие объекты без ограничения радиусом — подсказка для пустого результата.
+function nearestSites(n) {
+  if (nearby.lat == null) return [];
+  return catalog.sites.map(f => {
+    const [lng, lat] = f.geometry.coordinates;
+    return { id:f.properties.id, title:siteTitle(f), d:haversine(nearby.lat, nearby.lng, lat, lng) };
+  }).sort((a, b) => a.d - b.d).slice(0, n);
+}
+const nearRowHtml = (r, hand) => `<button type="button" class="amg-near-row" data-near="${esc(r.id)}"><span class="amg-near-name">${esc(r.title)}</span><span class="amg-near-dist${hand ? ' amg-hand' : ''}">${esc(fmtDist(r.d))} · ${esc(fmtWalk(r.d))}</span></button>`;
+function nearEmptyHtml() {
+  const hand = state.lang === 'ka' ? 'amg-hand plain' : 'amg-hand';
+  const near = nearestSites(3);
+  return `<div class="amg-near-empty"><span class="${hand}"><span class="amg-shrug" aria-hidden="true">¯\\_(ツ)_/¯</span> ${esc(pick(LB.noNearby))}</span>` +
+    (near.length ? `<span class="amg-near-note">${esc(pick(LB.nearAlso))}</span>` : '') + `</div>` +
+    near.map(r => nearRowHtml(r, state.lang !== 'ka')).join('');
+}
 function renderNearby() {
   const box = $('nearby'); if (!box) return;
   const radii = nearby.lat == null ? '' : `<div class="amg-near-radii">` + NEARBY_RADII.map(r =>
@@ -2618,8 +2657,8 @@ function renderNearby() {
     const accTxt = (typeof nearby.acc === 'number' && isFinite(nearby.acc)) ? ` · ${esc(pick(LB.accuracy))} ±${Math.round(nearby.acc)} ${esc(pick(LB.m))}` : '';
     const note = `${esc(pick(LB.found))}: ${rows.length} · ${esc(pick(LB.radius))} ${nearby.radius/1000} ${esc(pick(LB.km))} · ${esc(pick(LB.walk))} ≈ 5 ${esc(pick(LB.km))}/${esc(pick(LB.hr))}${accTxt}`;
     body = `<div class="amg-near-note">${note}</div>` + (rows.length
-      ? rows.slice(0, 40).map(r => `<button type="button" class="amg-near-row" data-near="${esc(r.id)}"><span class="amg-near-name">${esc(r.title)}</span><span class="amg-near-dist">${esc(fmtDist(r.d))} · ${esc(fmtWalk(r.d))}</span></button>`).join('')
-      : `<div class="amg-empty">${esc(pick(LB.noNearby))}</div>`);
+      ? rows.slice(0, 40).map(r => nearRowHtml(r, false)).join('')
+      : nearEmptyHtml());
   }
   box.innerHTML = `<h2>${esc(pick(LB.nearTitle))}</h2>${radii}${body}<div class="btns"><button class="btn" id="btnNearClose">${esc(pick(LB.close))}</button></div>`;
   $('btnNearClose').onclick = () => Overlays.hide('nearby');
