@@ -19,5 +19,8 @@
 - `privacy.html`, `license.html` — конфиденциальность и лицензии/атрибуция.
 - `data/` — sites, artworks, artists, sources, cities, transit.
 - `scripts/validate-data.mjs` — проверка данных.
+- `scripts/split-artworks.mjs`, `scripts/fetch-map-assets.mjs` — шаги сборки (описания работ отдельно; шрифты/спрайты карты в `assets/`).
+- `fonts/` — шрифты интерфейса (OFL), без внешнего CDN.
+- `docs/DESIGN.md` — дизайн-система «Балкон + Скетчбук» (палитра, шрифты, маркеры, движение); сверяться перед правками стиля.
 - `.github/workflows/pages.yml` — сборка vendor/тайлов и публикация на GitHub Pages.
 - `docs/` — отчёты, аудит, планы, runbook.
