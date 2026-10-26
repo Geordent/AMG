@@ -374,9 +374,12 @@
 
 <script type="module">
 // Данные каталога запрашиваем сразу — параллельно с загрузкой бандла карты, а не после него.
-const catalogRaw = Promise.all(['data/sites.geojson', 'data/artworks.json', 'data/artists.json',
-  'data/sources.json', 'data/cities.json'].map(p =>
-  fetch(p).then(r => { if (!r.ok) throw new Error(p + ' → HTTP ' + r.status); return r.json(); })));
+const getJson = p => fetch(p).then(r => { if (!r.ok) throw new Error(p + ' → HTTP ' + r.status); return r.json(); });
+// На сайте описания работ вынесены в artworks.desc.json (≈60 % объёма, см. scripts/split-artworks.mjs)
+// и догружаются после показа карты; локально без сборки — полный artworks.json.
+const catalogRaw = Promise.all([getJson('data/sites.geojson'),
+  getJson('data/artworks.lite.json').catch(() => getJson('data/artworks.json')),
+  getJson('data/artists.json'), getJson('data/sources.json'), getJson('data/cities.json')]);
 catalogRaw.catch(() => {});   // ошибку обработает loadCatalog(); здесь — без unhandledrejection
 let maplibregl, PMTiles, layers, namedFlavor;
 try {
@@ -411,8 +414,11 @@ if ('serviceWorker' in navigator) {
   });
 }
 
-const GLYPHS = 'https://protomaps.github.io/basemaps-assets/fonts/{fontstack}/{range}.pbf';
-const SPRITE = 'https://protomaps.github.io/basemaps-assets/sprites/v4/';
+// Шрифты и спрайты лежат рядом со страницей (assets/, собирает scripts/fetch-map-assets.mjs).
+// MapLibre нужен абсолютный URL; плейсхолдеры добавляем после new URL, чтобы {} не экранировались.
+const ASSETS = new URL('assets/', location.href).href;
+const GLYPHS = ASSETS + 'fonts/{fontstack}/{range}.pbf';
+const SPRITE = ASSETS + 'sprites/';
 // Метки тем карты. «AMG» — имя фирменной темы (не переводится), остальные локализуются.
 const FLAVORS = {
   light:     { ru:'AMG', en:'AMG', ka:'AMG' },
@@ -455,7 +461,7 @@ const AMG_UGC_ENABLED = false;
 // SITE = физическое место (GeoJSON), ARTWORK связан с местом через site_id.
 const catalog = {
   sites: [], siteById: new Map(), artworksBySite: new Map(),
-  artists: new Map(), sources: new Map(), cities: new Map(),
+  artists: new Map(), sources: new Map(), cities: new Map(), descPending: false,
 };
 let catalogError = null;
 
@@ -732,6 +738,7 @@ async function loadCatalog() {
   catalog.artists = new Map(artists.map(a => [a.id, a]));
   catalog.sources = new Map(sources.map(s => [s.id, s]));
   catalog.cities = new Map(Object.entries(cities));
+  catalog.descPending = !artworks.some(a => a.description);
   for (const a of artworks) {
     if (!catalog.artworksBySite.has(a.site_id)) catalog.artworksBySite.set(a.site_id, []);
     catalog.artworksBySite.get(a.site_id).push(a);
@@ -3088,6 +3095,25 @@ async function remove(p) {
   await idbDel('pack:' + p.id); await loadLocal();
   toast([pick(p.title), pick(LB.deletedSuffix)].filter(Boolean).join(' ')); renderPacks(); map.setStyle(buildStyle());
 }
+
+// ---------- описания работ (догрузка после показа карты) ----------
+// Подключаем в самом конце модуля: к этому моменту объявлены cardSiteId/detailSiteId и рендеры.
+let descStarted = false;
+function loadDescriptions() {
+  if (!catalog.descPending || descStarted) return;
+  descStarted = true;
+  getJson('data/artworks.desc.json').then(desc => {
+    for (const arr of catalog.artworksBySite.values()) for (const a of arr) if (desc[a.id]) a.description = desc[a.id];
+    catalog.descPending = false;
+    if (cardSiteId) renderCard(cardSiteId);
+    if (detailSiteId) renderDetail(detailSiteId);
+    renderPopup();
+  }).catch(e => { descStarted = false; console.warn('descriptions load failed', e); });
+}
+// Стартуем после первого idle карты (первые тайлы уже получены) или через 1 с — что раньше.
+// map.loaded()/once('load') тут ненадёжны: 'load' мог уже пройти, а setStyle сбрасывает isStyleLoaded.
+map.once('idle', loadDescriptions);
+setTimeout(loadDescriptions, 1000);
 
 </script>
 </body>

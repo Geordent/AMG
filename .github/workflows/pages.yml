@@ -47,15 +47,37 @@ jobs:
         run: |
           npm ci --no-audit --no-fund
           npm run build:vendor
+      - name: Map fonts and sprites (cache)
+        id: assets
+        uses: actions/cache@v4
+        with:
+          path: assets
+          key: map-assets-${{ hashFiles('scripts/fetch-map-assets.mjs') }}
+      - name: Fetch map fonts and sprites
+        # glyph PBF + спрайты protomaps — на сайт, чтобы в рантайме не зависеть от protomaps.github.io.
+        if: steps.assets.outputs.cache-hit != 'true'
+        run: npm run build:assets
+      - name: Tiles week key
+        # Тайлы пересобираются раз в ISO-неделю; правки контента между ними деплоятся без planet-build.
+        run: echo "WEEK=$(date -u +%G-W%V)" >> "$GITHUB_ENV"
+      - name: Tiles (cache)
+        id: tiles
+        uses: actions/cache@v4
+        with:
+          path: tiles-cache
+          key: tiles-v1-${{ env.WEEK }}
       - name: Install pmtiles
+        if: steps.tiles.outputs.cache-hit != 'true'
         env:
           GH_TOKEN: ${{ github.token }}
+          PMTILES_VERSION: v1.31.2
         run: |
-          gh release download -R protomaps/go-pmtiles --pattern '*Linux_x86_64.tar.gz' -D /tmp
+          gh release download "$PMTILES_VERSION" -R protomaps/go-pmtiles --pattern '*Linux_x86_64.tar.gz' -D /tmp
           tar -xzf /tmp/*Linux_x86_64.tar.gz -C /tmp pmtiles
           sudo mv /tmp/pmtiles /usr/local/bin/pmtiles
           pmtiles version
       - name: Find latest planet build
+        if: steps.tiles.outputs.cache-hit != 'true'
         run: |
           for i in $(seq 0 20); do
             d=$(date -u -d "-$i day" +%Y%m%d)
@@ -66,25 +88,43 @@ jobs:
             fi
           done
       - name: Extract tiles
+        if: steps.tiles.outputs.cache-hit != 'true'
         run: |
           test -n "$BUILD" || { echo "No planet build found"; exit 1; }
+          mkdir -p tiles-cache
+          pmtiles extract "https://build.protomaps.com/$BUILD.pmtiles" tiles-cache/tbilisi.pmtiles --bbox=44.68,41.62,44.95,41.82
+          pmtiles extract "https://build.protomaps.com/$BUILD.pmtiles" tiles-cache/georgia.pmtiles --bbox=39.9,41.0,46.8,43.7 --maxzoom=9
+      - name: Assemble site
+        run: |
           mkdir -p site/tiles
           cp index.html sw.js privacy.html license.html manifest.webmanifest robots.txt sitemap.xml og-cover.jpg site/
           cp -r icons site/
           cp -r data site/
-          # vendor обязателен: без него страница не поднимет карту (guard ниже).
+          # Описания работ — отдельным файлом, грузятся после показа карты (источник — data/artworks.json).
+          node scripts/split-artworks.mjs site/data
+          # vendor и assets обязательны: без них страница не поднимет карту / подписи (guard ниже).
           cp -r vendor site/
+          cp -r assets site/
+          cp tiles-cache/*.pmtiles site/tiles/
           test -s site/vendor/map-bundle.js || { echo "FATAL: site/vendor/map-bundle.js missing"; exit 1; }
           test -s site/vendor/maplibre-gl.css || { echo "FATAL: site/vendor/maplibre-gl.css missing"; exit 1; }
-          ! grep -q 'esm\.sh' site/index.html || { echo "FATAL: index.html still references esm.sh"; exit 1; }
+          test -s "site/assets/fonts/Noto Sans Regular/0-255.pbf" || { echo "FATAL: glyphs missing"; exit 1; }
+          test -s site/assets/sprites/light.json || { echo "FATAL: sprites missing"; exit 1; }
+          test -s site/data/artworks.lite.json || { echo "FATAL: artworks.lite.json missing"; exit 1; }
+          test -s site/data/artworks.desc.json || { echo "FATAL: artworks.desc.json missing"; exit 1; }
+          ! grep -q 'esm\.sh\|protomaps\.github\.io' site/index.html || { echo "FATAL: index.html references external CDN"; exit 1; }
           test -s site/manifest.webmanifest || { echo "FATAL: manifest.webmanifest not copied"; exit 1; }
           test -s site/icons/icon-192.png || { echo "FATAL: icons not copied"; exit 1; }
           test -s site/og-cover.jpg || { echo "FATAL: og-cover.jpg not copied"; exit 1; }
           test -s site/robots.txt || { echo "FATAL: robots.txt not copied"; exit 1; }
           test -s site/sitemap.xml || { echo "FATAL: sitemap.xml not copied"; exit 1; }
-          pmtiles extract "https://build.protomaps.com/$BUILD.pmtiles" site/tiles/tbilisi.pmtiles --bbox=44.68,41.62,44.95,41.82
-          pmtiles extract "https://build.protomaps.com/$BUILD.pmtiles" site/tiles/georgia.pmtiles --bbox=39.9,41.0,46.8,43.7 --maxzoom=9
-          ls -la site/tiles
+          test -s site/tiles/tbilisi.pmtiles && test -s site/tiles/georgia.pmtiles || { echo "FATAL: tiles missing"; exit 1; }
+          # Версия кэша оболочки SW = хеш файлов, которые SW отдаёт cache-first: ручной bump больше не нужен,
+          # а правка только данных/текстов не вызывает у пользователей «обновление сайта».
+          H=$(find site/sw.js site/vendor site/icons site/assets site/manifest.webmanifest site/og-cover.jpg -type f -print0 | sort -z | xargs -0 sha256sum | sha256sum | cut -c1-10)
+          sed -i "s/'amg-shell-v[0-9]*'/'amg-shell-$H'/" site/sw.js
+          grep -q "amg-shell-$H" site/sw.js || { echo "FATAL: sw cache version not stamped"; exit 1; }
+          ls -la site/tiles site/data
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

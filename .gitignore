@@ -27,3 +27,7 @@ scripts/.wiki-*.json
 
 # Локальные тайлы (собираются в CI через pmtiles extract)
 /tiles/
+/tiles-cache/
+
+# Шрифты и спрайты карты (npm run build:assets; в CI — кэшируются)
+/assets/

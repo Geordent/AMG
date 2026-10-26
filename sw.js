@@ -1,4 +1,5 @@
 // Кэш оболочки приложения. Файлы карты (.pmtiles) этим кодом не кэшируются, их хранит само приложение в IndexedDB.
+// Версию CI заменяет хешем cache-first файлов (pages.yml, шаг Assemble site); v18 — для локального запуска.
 const CACHE = 'amg-shell-v18';
 self.addEventListener('install', () => self.skipWaiting());
 self.addEventListener('activate', e => e.waitUntil((async () => {
