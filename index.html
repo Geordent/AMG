@@ -2445,9 +2445,13 @@ function expCardHtml(p, coords) {
   const contacts = rows.length
     ? `<div class="amg-h">${esc(pick(EXP_LB.contacts))}</div>${rows.join('')}${agency}`
     : `<div class="amg-note">${esc(pick(EXP_LB.noContacts))}</div>`;
+  // Фото Commons (media[] как у мест). Из карты свойства приходят строкой — разбираем.
+  let media = '';
+  try { let ml = p.media; if (typeof ml === 'string') ml = JSON.parse(ml); media = mediaHtml(ml, new Set()); } catch (_) {}
   return `<div class="amg-pop amg-preview amg-exp-card">
     <div class="amg-title">${esc(expTitleOf(p))}</div>
     ${tags ? `<div class="amg-tags">${tags}</div>` : ''}
+    ${media}
     ${trField('addr') ? `<div class="amg-meta amg-addr">${esc(pick(EXP_LB.addr))}: ${esc(trField('addr'))}</div>` : ''}
     ${desc}
     ${srcHtml ? `<div class="amg-src">${esc(descLbl)}: ${srcHtml}</div>` : ''}
@@ -2464,6 +2468,7 @@ function renderExpCard(props, coords) {
   c.innerHTML = `<button type="button" class="amg-card-close" data-card-close aria-label="×">×</button>${expCardHtml(props, coords)}`;
   c.hidden = false; cardSiteId = null; cardExp = { props, coords };
   c.scrollTop = 0;
+  wireMedia(c);
   Overlays.show('card');
 }
 function openExpCard(props, coords) {
@@ -2476,6 +2481,7 @@ function openExpCard(props, coords) {
   pop.on('close', () => { if (popupRef === pop) { popupRef = null; popupExp = null; } });
   pop.addTo(map);
   popupRef = pop; popupSiteId = null; popupExp = { props, coords };
+  wireMedia(pop.getElement());
   pop.getElement().addEventListener('click', ev => {
     const a = ev.target.closest('a[href]');
     if (a) ev.stopPropagation();   // ссылки в карточке не должны «проваливаться» в карту
@@ -2556,6 +2562,7 @@ function renderPopup() {
   }
   if (popupRef && popupExp) {              // карточка «впечатления» в попапе — перерисовать на новом языке
     popupRef.setHTML(expCardHtml(popupExp.props, popupExp.coords));
+    wireMedia(popupRef.getElement());
     requestAnimationFrame(() => clampPopup(popupRef));
     return;
   }

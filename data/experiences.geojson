@@ -151,7 +151,29 @@
      "desc_ka": "gtranslate",
      "addr_en": "gtranslate",
      "addr_ka": "gtranslate"
-    }
+    },
+    "media": [
+     {
+      "source_id": "src-0002",
+      "role": "photo",
+      "url": "https://commons.wikimedia.org/wiki/File:Okatse_26.jpg",
+      "direct_url": "https://upload.wikimedia.org/wikipedia/commons/5/50/Okatse_26.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "author": "Paata vardanashvili",
+      "license": "CC BY-SA 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+      "attribution_required": true
+     },
+     {
+      "source_id": "src-0002",
+      "role": "photo",
+      "url": "https://commons.wikimedia.org/wiki/File:Pendant_road._Okatse_Canyon_Natural_Monument._foto-4.jpg",
+      "direct_url": "https://upload.wikimedia.org/wikipedia/commons/8/87/Pendant_road._Okatse_Canyon_Natural_Monument._foto-4.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "author": "Zysko serhii",
+      "license": "CC BY-SA 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+      "attribution_required": true
+     }
+    ]
    }
   },
   {
@@ -263,7 +285,19 @@
      "desc_ka": "gtranslate",
      "addr_en": "gtranslate",
      "addr_ka": "gtranslate"
-    }
+    },
+    "media": [
+     {
+      "source_id": "src-0002",
+      "role": "photo",
+      "url": "https://commons.wikimedia.org/wiki/File:2024-01-07_Birtvisi_Natural_Monument_3.jpg",
+      "direct_url": "https://upload.wikimedia.org/wikipedia/commons/0/03/2024-01-07_Birtvisi_Natural_Monument_3.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "author": "Alexkom000",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0",
+      "attribution_required": true
+     }
+    ]
    }
   },
   {
@@ -451,7 +485,29 @@
      "desc_ka": "gtranslate",
      "addr_en": "gtranslate",
      "addr_ka": "gtranslate"
-    }
+    },
+    "media": [
+     {
+      "source_id": "src-0002",
+      "role": "photo",
+      "url": "https://commons.wikimedia.org/wiki/File:Black_Grouse_Waterfall_2023-08-12-3.jpg",
+      "direct_url": "https://upload.wikimedia.org/wikipedia/commons/3/3a/Black_Grouse_Waterfall_2023-08-12-3.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "author": "Alexey Komarov",
+      "license": "CC BY-SA 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+      "attribution_required": true
+     },
+     {
+      "source_id": "src-0002",
+      "role": "photo",
+      "url": "https://commons.wikimedia.org/wiki/File:Black_Grouse_Waterfall_2023-08-12-4.jpg",
+      "direct_url": "https://upload.wikimedia.org/wikipedia/commons/1/1d/Black_Grouse_Waterfall_2023-08-12-4.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "author": "Alexey Komarov",
+      "license": "CC BY-SA 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+      "attribution_required": true
+     }
+    ]
    }
   },
   {
@@ -487,7 +543,19 @@
      "desc_ka": "gtranslate",
      "addr_en": "gtranslate",
      "addr_ka": "gtranslate"
-    }
+    },
+    "media": [
+     {
+      "source_id": "src-0002",
+      "role": "photo",
+      "url": "https://commons.wikimedia.org/wiki/File:Dash_bashi_view.jpg",
+      "direct_url": "https://upload.wikimedia.org/wikipedia/commons/9/94/Dash_bashi_view.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "author": "Hijas Rahim Binutha",
+      "license": "CC BY-SA 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+      "attribution_required": true
+     }
+    ]
    }
   },
   {
@@ -667,7 +735,29 @@
      "desc_ka": "gtranslate",
      "addr_en": "gtranslate",
      "addr_ka": "gtranslate"
-    }
+    },
+    "media": [
+     {
+      "source_id": "src-0002",
+      "role": "photo",
+      "url": "https://commons.wikimedia.org/wiki/File:Goderdzi_Pass_(2025m).jpg",
+      "direct_url": "https://upload.wikimedia.org/wikipedia/commons/a/ad/Goderdzi_Pass_%282025m%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "author": "Jelger Groeneveld",
+      "license": "CC BY 2.0",
+      "license_url": "https://creativecommons.org/licenses/by/2.0",
+      "attribution_required": true
+     },
+     {
+      "source_id": "src-0002",
+      "role": "photo",
+      "url": "https://commons.wikimedia.org/wiki/File:Mount_Tlili_(view_from_Goderdzi_Pass).jpg",
+      "direct_url": "https://upload.wikimedia.org/wikipedia/commons/7/70/Mount_Tlili_%28view_from_Goderdzi_Pass%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "author": "Yasuhiro Kojima",
+      "license": "CC BY-SA 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+      "attribution_required": true
+     }
+    ]
    }
   },
   {
@@ -703,7 +793,29 @@
      "desc_ka": "gtranslate",
      "addr_en": "gtranslate",
      "addr_ka": "gtranslate"
-    }
+    },
+    "media": [
+     {
+      "source_id": "src-0002",
+      "role": "photo",
+      "url": "https://commons.wikimedia.org/wiki/File:The_Tbilisi_Funicular._Lower_station.jpg",
+      "direct_url": "https://upload.wikimedia.org/wikipedia/commons/f/fb/The_Tbilisi_Funicular._Lower_station.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "author": "Andrewlevint",
+      "license": "CC BY-SA 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+      "attribution_required": true
+     },
+     {
+      "source_id": "src-0002",
+      "role": "photo",
+      "url": "https://commons.wikimedia.org/wiki/File:Dzveli_Tbilisi,_Tbilisi,_Georgia_-_panoramio_(344).jpg",
+      "direct_url": "https://upload.wikimedia.org/wikipedia/commons/8/88/Dzveli_Tbilisi%2C_Tbilisi%2C_Georgia_-_panoramio_%28344%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "author": "Aldis Dzenovskis",
+      "license": "CC BY-SA 3.0",
+      "license_url": "https://creativecommons.org/licenses/by-sa/3.0",
+      "attribution_required": true
+     }
+    ]
    }
   },
   {
@@ -817,7 +929,19 @@
      "desc_ka": "gtranslate",
      "addr_en": "gtranslate",
      "addr_ka": "gtranslate"
-    }
+    },
+    "media": [
+     {
+      "source_id": "src-0002",
+      "role": "photo",
+      "url": "https://commons.wikimedia.org/wiki/File:A_view_from_mount_Zuruldi,_Svaneti,_June,_2018-1.jpg",
+      "direct_url": "https://upload.wikimedia.org/wikipedia/commons/7/7e/A_view_from_mount_Zuruldi%2C_Svaneti%2C_June%2C_2018-1.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "author": "Alexey Komarov",
+      "license": "CC BY-SA 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+      "attribution_required": true
+     }
+    ]
    }
   },
   {
@@ -1590,7 +1714,19 @@
      "hours_ka": "editorial"
     },
     "hours_en": "Mon-Sun 11:00-19:00",
-    "hours_ka": "ორშ-კვ 11:00-19:00"
+    "hours_ka": "ორშ-კვ 11:00-19:00",
+    "media": [
+     {
+      "source_id": "src-0002",
+      "role": "photo",
+      "url": "https://commons.wikimedia.org/wiki/File:Unnamed_Road,_Georgia_-_panoramio_(19).jpg",
+      "direct_url": "https://upload.wikimedia.org/wikipedia/commons/a/a9/Unnamed_Road%2C_Georgia_-_panoramio_%2819%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "author": "Dalibor Z. Chvatal",
+      "license": "CC BY 3.0",
+      "license_url": "https://creativecommons.org/licenses/by/3.0",
+      "attribution_required": true
+     }
+    ]
    }
   },
   {
@@ -1739,7 +1875,19 @@
      "desc_ka": "gtranslate",
      "addr_en": "gtranslate",
      "addr_ka": "gtranslate"
-    }
+    },
+    "media": [
+     {
+      "source_id": "src-0002",
+      "role": "photo",
+      "url": "https://commons.wikimedia.org/wiki/File:Gori_3.jpg",
+      "direct_url": "https://upload.wikimedia.org/wikipedia/commons/d/d8/Gori_3.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "author": "Tiia Monto",
+      "license": "CC BY-SA 3.0",
+      "license_url": "https://creativecommons.org/licenses/by-sa/3.0",
+      "attribution_required": true
+     }
+    ]
    }
   },
   {
@@ -1870,7 +2018,29 @@
     "fee_en": "Adults 4 GEL, children 3-12 — 2 GEL, under 3 — free",
     "fee_ka": "მოზრდილები — 4 ლარი, ბავშვები 3–12 წელი — 2 ლარი, 3 წლამდე — უფასო",
     "hours_en": "Mon-Sun 10:00-19:00",
-    "hours_ka": "ორშ-კვ 10:00-19:00"
+    "hours_ka": "ორშ-კვ 10:00-19:00",
+    "media": [
+     {
+      "source_id": "src-0002",
+      "role": "photo",
+      "url": "https://commons.wikimedia.org/wiki/File:%D8%AD%DB%8C%D9%88%D8%A7%D9%86%D8%A7%D8%AA_%D8%A8%D8%A7%D8%BA_%D9%88%D8%AD%D8%B4_%D9%85%D8%B1%DA%A9%D8%B2%DB%8C_%D8%B4%D9%87%D8%B1_%D8%AA%D9%81%D9%84%DB%8C%D8%B3_%D9%BE%D8%A7%DB%8C%D8%AA%D8%AE%D8%AA_%DA%AF%D8%B1%D8%AC%D8%B3%D8%AA%D8%A7%D9%86_29.jpg",
+      "direct_url": "https://upload.wikimedia.org/wikipedia/commons/2/23/%D8%AD%DB%8C%D9%88%D8%A7%D9%86%D8%A7%D8%AA_%D8%A8%D8%A7%D8%BA_%D9%88%D8%AD%D8%B4_%D9%85%D8%B1%DA%A9%D8%B2%DB%8C_%D8%B4%D9%87%D8%B1_%D8%AA%D9%81%D9%84%DB%8C%D8%B3_%D9%BE%D8%A7%DB%8C%D8%AA%D8%AE%D8%AA_%DA%AF%D8%B1%D8%AC%D8%B3%D8%AA%D8%A7%D9%86_29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "author": "Mostafameraji",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0",
+      "attribution_required": true
+     },
+     {
+      "source_id": "src-0002",
+      "role": "photo",
+      "url": "https://commons.wikimedia.org/wiki/File:%D8%AD%DB%8C%D9%88%D8%A7%D9%86%D8%A7%D8%AA_%D8%A8%D8%A7%D8%BA_%D9%88%D8%AD%D8%B4_%D9%85%D8%B1%DA%A9%D8%B2%DB%8C_%D8%B4%D9%87%D8%B1_%D8%AA%D9%81%D9%84%DB%8C%D8%B3_%D9%BE%D8%A7%DB%8C%D8%AA%D8%AE%D8%AA_%DA%AF%D8%B1%D8%AC%D8%B3%D8%AA%D8%A7%D9%86_28.jpg",
+      "direct_url": "https://upload.wikimedia.org/wikipedia/commons/1/1d/%D8%AD%DB%8C%D9%88%D8%A7%D9%86%D8%A7%D8%AA_%D8%A8%D8%A7%D8%BA_%D9%88%D8%AD%D8%B4_%D9%85%D8%B1%DA%A9%D8%B2%DB%8C_%D8%B4%D9%87%D8%B1_%D8%AA%D9%81%D9%84%DB%8C%D8%B3_%D9%BE%D8%A7%DB%8C%D8%AA%D8%AE%D8%AA_%DA%AF%D8%B1%D8%AC%D8%B3%D8%AA%D8%A7%D9%86_28.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "author": "Mostafameraji",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0",
+      "attribution_required": true
+     }
+    ]
    }
   },
   {
@@ -2049,7 +2219,19 @@
      "addr_ka": "gtranslate",
      "fee_en": "gtranslate",
      "fee_ka": "gtranslate"
-    }
+    },
+    "media": [
+     {
+      "source_id": "src-0002",
+      "role": "photo",
+      "url": "https://commons.wikimedia.org/wiki/File:Batumi_Dolphinarium_3.jpg",
+      "direct_url": "https://upload.wikimedia.org/wikipedia/commons/8/88/Batumi_Dolphinarium_3.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "author": "Kharkil",
+      "license": "CC BY-SA 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+      "attribution_required": true
+     }
+    ]
    }
   },
   {
@@ -2158,7 +2340,29 @@
      "desc_ka": "gtranslate",
      "addr_en": "gtranslate",
      "addr_ka": "gtranslate"
-    }
+    },
+    "media": [
+     {
+      "source_id": "src-0002",
+      "role": "photo",
+      "url": "https://commons.wikimedia.org/wiki/File:Cows_on_the_field_-_Kiketi.jpg",
+      "direct_url": "https://upload.wikimedia.org/wikipedia/commons/5/5a/Cows_on_the_field_-_Kiketi.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "author": "Anuka1990",
+      "license": "CC BY-SA 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+      "attribution_required": true
+     },
+     {
+      "source_id": "src-0002",
+      "role": "photo",
+      "url": "https://commons.wikimedia.org/wiki/File:%D0%A1%D1%82%D0%B0%D1%80%D0%B8%D0%BD%D0%BD%D1%8B%D0%B9_%D1%83%D0%BC%D1%8B%D0%B2%D0%B0%D0%BB%D1%8C%D0%BD%D0%B8%D0%BA_E.W.K._Lw%C3%B3w_%D0%BD%D0%B0_%D0%A4%D0%B5%D1%80%D0%BC%D0%B5_%D0%9A%D0%B8%D0%BA%D0%B5%D1%82%D0%B8.jpg",
+      "direct_url": "https://upload.wikimedia.org/wikipedia/commons/b/b6/%D0%A1%D1%82%D0%B0%D1%80%D0%B8%D0%BD%D0%BD%D1%8B%D0%B9_%D1%83%D0%BC%D1%8B%D0%B2%D0%B0%D0%BB%D1%8C%D0%BD%D0%B8%D0%BA_E.W.K._Lw%C3%B3w_%D0%BD%D0%B0_%D0%A4%D0%B5%D1%80%D0%BC%D0%B5_%D0%9A%D0%B8%D0%BA%D0%B5%D1%82%D0%B8.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "author": "FingerWiki",
+      "license": "CC BY-SA 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+      "attribution_required": true
+     }
+    ]
    }
   },
   {

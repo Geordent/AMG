@@ -8,6 +8,8 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 const FILE = join(HERE, '..', 'data', 'experiences.geojson');
 const KINDS = new Set(['paraglide','canyon','zipline','rafting','bike','cablecar',
   'bath','waterpark','zoo','aquarium','horse','golf','marina']);
+// Фото: только Wikimedia Commons со свободной лицензией (тот же список, что в validate-data.mjs).
+const LICENSE_ALLOW = ['CC0', 'Public domain', 'CC BY 2.0', 'CC BY 3.0', 'CC BY 4.0', 'CC BY-SA 2.0', 'CC BY-SA 3.0', 'CC BY-SA 4.0'];
 const errors = [];
 const warnings = [];
 const err = m => errors.push(m);
@@ -56,6 +58,18 @@ for (const [i, f] of data.features.entries()) {
     err(`${w}: minzoom must be 0..22`);
   }
   if (p.approx != null && typeof p.approx !== 'boolean') err(`${w}: approx must be boolean`);
+  if (p.media != null) {
+    if (!Array.isArray(p.media) || !p.media.length) err(`${w}: media must be a non-empty array`);
+    else p.media.forEach((m, j) => {
+      const mw = `${w}.media[${j}]`;
+      if (m.role !== 'photo') err(`${mw}: role must be photo`);
+      if (!/^https:\/\/commons\.wikimedia\.org\/wiki\/File:./.test(m.url || '')) err(`${mw}: url must be a commons.wikimedia.org File: page`);
+      if (!/^https:\/\/upload\.wikimedia\.org\//.test(m.direct_url || '')) err(`${mw}: direct_url must be on upload.wikimedia.org`);
+      if (!nonEmpty(m.author)) err(`${mw}: missing author`);
+      if (!LICENSE_ALLOW.includes(m.license)) err(`${mw}: license ${JSON.stringify(m.license)} not in allowlist`);
+      if (m.attribution_required != null && typeof m.attribution_required !== 'boolean') err(`${mw}: attribution_required must be boolean`);
+    });
+  }
   if (p.desc_scope != null && !['place','venue'].includes(p.desc_scope)) {
     err(`${w}: desc_scope must be place|venue`);
   }
