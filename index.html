@@ -1341,12 +1341,12 @@ map.once('idle', () => window.amgLoaderDone && window.amgLoaderDone());   // с�
 window.amgMap = map; // read-only test/debug hook (no behavior change)
 
 // ---------- SVG-маркеры: тип цветом/формой, статус отдельным бейджем ----------
-// Маркеры «Балкон» (гибрид A + C): булавка цвета семейства, остриё указывает точно на место
-// (слой sites: icon-anchor bottom), внутри — белый линейный глиф на сетке 24.
-const amgPin = (color, glyph) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48"><path d="M24 46 C19 38 8 31 8 19 A16 16 0 1 1 40 19 C40 31 29 38 24 46 Z" fill="${color}" stroke="#FFFBF5" stroke-width="2.5" stroke-linejoin="round"/><g transform="translate(15 10) scale(.75)" fill="none" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">${glyph}</g></svg>`;
-// Булавка с иллюстрацией: кремовая «головка» и цветной рисунок 48×48 из прежнего набора (масштаб 0.58).
-// Так оставлены любимые кисть (мурал) и разноцветный баллончик (стрит-арт) — форма и цвет категории те же.
-const amgPinArt = (color, art) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48"><path d="M24 46 C19 38 8 31 8 19 A16 16 0 1 1 40 19 C40 31 29 38 24 46 Z" fill="${color}" stroke="#FFFBF5" stroke-width="2.5" stroke-linejoin="round"/><circle cx="24" cy="19" r="13.2" fill="#FFFBF5"/><g transform="translate(10.1 5.1) scale(.58)">${art}</g></svg>`;
+// Маркеры каталога (стиль «Балкон» + рисунки первой версии сайта): булавка цвета семейства,
+// остриё = точка (слой sites: icon-anchor bottom); в кремовой головке — цветная иллюстрация 48×48,
+// обрезанная по кругу (медальон). fit — масштаб/сдвиг рисунка внутри головки.
+const amgPinArt = (color, art, fit = 'translate(10.1 5.1) scale(.58)') => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48"><defs><clipPath id="amghead"><circle cx="24" cy="19" r="13.2"/></clipPath></defs><path d="M24 46 C19 38 8 31 8 19 A16 16 0 1 1 40 19 C40 31 29 38 24 46 Z" fill="${color}" stroke="#FFFBF5" stroke-width="2.5" stroke-linejoin="round"/><circle cx="24" cy="19" r="13.2" fill="#FFFBF5"/><g clip-path="url(#amghead)"><g transform="${fit}">${art}</g></g></svg>`;
+// «Впечатления» — цветное кольцо (вид активности) и кремовый центр с иллюстрацией: отличаются от булавок формой.
+const amgDiscArt = (color, art) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48"><circle cx="24" cy="24" r="19" fill="${color}" stroke="#FFFBF5" stroke-width="2"/><circle cx="24" cy="24" r="15" fill="#FFFBF5"/><g transform="translate(4.8 4.8) scale(.8)">${art}</g></svg>`;
 const ART_MURAL = `<path d="M6 40 C15 36 24 37 34 33" fill="none" stroke="#f0a43a" stroke-width="7" stroke-linecap="round"/>
 <path d="M6 40 C15 36 24 37 34 33" fill="none" stroke="#d9552b" stroke-width="2.4" stroke-linecap="round"/>
 <g transform="rotate(38 24 24)">
@@ -1368,17 +1368,57 @@ const ART_SPRAY = `<defs><clipPath id="amgcan"><rect x="14" y="16" width="16" he
 <path d="M31 16.5 C34 16.6 35.5 17.5 38 17.5" stroke="#2f6fb0" stroke-width="1.6"/>
 </g>
 <circle cx="31" cy="7.5" r="1.4" fill="#67b74b"/><circle cx="35" cy="5" r="1.1" fill="#e4614a"/><circle cx="36.5" cy="10" r="1.2" fill="#f0c33a"/><circle cx="34" cy="15.5" r="1.1" fill="#7e57c2"/>`;
-// «Впечатления» — диск того же стиля: отличаются от булавок каталога формой, а не только цветом.
-const amgDisc = (color, glyph) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48"><circle cx="24" cy="24" r="18" fill="${color}" stroke="#FFFBF5" stroke-width="2.5"/><g transform="translate(15 15) scale(.75)" fill="none" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">${glyph}</g></svg>`;
+const ART_MOSAIC = `<rect x="6" y="6" width="36" height="36" rx="3" fill="#efe6d6"/>
+<g stroke="#3b332b" stroke-width="1.2" stroke-linejoin="round">
+<path d="M8.5 8.5 L21 9.5 L9.5 22 Z" fill="#2f6fb0"/>
+<path d="M23 8.5 L35 10.5 L34 20 L22 18.5 Z" fill="#f0c33a"/>
+<path d="M37 8.5 L41 9 L41 17 L36.5 18 Z" fill="#d9552b"/>
+<path d="M8.5 24 L20 23 L20 33 L9.5 36 Z" fill="#2f8f6b"/>
+<path d="M22 20.5 L34 20 L35 31 L21 32 Z" fill="#d9552b"/>
+<path d="M37 20 L41 19 L41 32.5 Z" fill="#2f6fb0"/>
+<path d="M9.5 38 L21 35 L22 41 L8.5 41 Z" fill="#f0c33a"/>
+<path d="M24 34 L36 33 L37 41 L23 41 Z" fill="#2f6fb0"/>
+<path d="M38 34 L41 35 L41 41 Z" fill="#2f8f6b"/>
+</g>`;
+const ART_SCULPTURE = `<path d="M18 17 C15 18 14 22 14.5 25 C14.7 26.6 16.3 26.8 16.9 25.4 C17.6 23.6 17.4 21 19.5 19.6" fill="none" stroke="#3b332b" stroke-width="5" stroke-linecap="round"/>
+<path d="M18 17 C15 18 14 22 14.5 25 C14.7 26.6 16.3 26.8 16.9 25.4 C17.6 23.6 17.4 21 19.5 19.6" fill="none" stroke="#a2543a" stroke-width="3" stroke-linecap="round"/>
+<path d="M30 17 C33.5 18.5 34.5 22 33.5 26" fill="none" stroke="#3b332b" stroke-width="5" stroke-linecap="round"/>
+<path d="M30 17 C33.5 18.5 34.5 22 33.5 26" fill="none" stroke="#a2543a" stroke-width="3" stroke-linecap="round"/>
+<path d="M17 29.5 L17 41 L21.6 41 L22.6 32 L25.4 32 L26.4 41 L31 41 L31 29.5 Z" fill="#a2543a" stroke="#3b332b" stroke-width="1.8" stroke-linejoin="round"/>
+<path d="M18.4 16.5 C16.8 19 16.2 23 17 29.5 L31 29.5 C31.8 23 31.2 19 29.6 16.5 C27 14.2 21 14.2 18.4 16.5 Z" fill="#a2543a" stroke="#3b332b" stroke-width="1.8" stroke-linejoin="round"/>
+<path d="M18 15.5 L31.5 21" stroke="#3b332b" stroke-width="1.4" stroke-linecap="round"/>
+<circle cx="24" cy="10.5" r="4.2" fill="#a2543a" stroke="#3b332b" stroke-width="1.8"/>
+<rect x="14" y="41" width="20" height="4" rx="1" fill="#d9b48f" stroke="#3b332b" stroke-width="1.6"/>`;
+const ART_INSTALLATION = `<circle cx="17" cy="15" r="6" fill="#7e57c2" stroke="#3b332b" stroke-width="2"/>
+<path d="M29 9 L38 21 L20 21 Z" fill="#c9b6f0" stroke="#3b332b" stroke-width="2" stroke-linejoin="round"/>
+<path d="M11 40 Q17 31 24 39 Q31 47 38 38" fill="none" stroke="#7e57c2" stroke-width="3" stroke-linecap="round"/>`;
+const ART_ARCH = `<path d="M7 19 L24 6 L41 19 Z" fill="#EAD9B8" stroke="#3b332b" stroke-width="2" stroke-linejoin="round"/>
+<rect x="7" y="19" width="34" height="3.5" fill="#E4D3B6" stroke="#3b332b" stroke-width="1.8"/>
+<g stroke="#3b332b" stroke-width="1.6">
+<rect x="9" y="22.5" width="12" height="3.5" rx="1" fill="#F0D79A"/>
+<circle cx="9.6" cy="24.2" r="2.1" fill="#F0D79A"/><circle cx="20.4" cy="24.2" r="2.1" fill="#F0D79A"/>
+<rect x="12" y="26" width="6" height="12" fill="#F3E7D0"/>
+<rect x="27" y="22.5" width="12" height="3.5" rx="1" fill="#F0D79A"/>
+<circle cx="27.6" cy="24.2" r="2.1" fill="#F0D79A"/><circle cx="38.4" cy="24.2" r="2.1" fill="#F0D79A"/>
+<rect x="30" y="26" width="6" height="12" fill="#F3E7D0"/>
+</g>
+<line x1="15" y1="27" x2="15" y2="37" stroke="#C99A6B" stroke-width="1"/>
+<line x1="33" y1="27" x2="33" y2="37" stroke="#C99A6B" stroke-width="1"/>
+<rect x="8" y="38" width="32" height="4" rx="1" fill="#D9B48F" stroke="#3b332b" stroke-width="2"/>`;
+const ART_VESSEL = `<path d="M19 7 h10 v5 h-10 z" fill="#5b6b7a" stroke="#3b332b" stroke-width="1.5"/>
+<path d="M17 12 Q11 22 17 31 Q21 39 24 39 Q27 39 31 31 Q37 22 31 12 Z" fill="#5b6b7a" stroke="#3b332b" stroke-width="2"/>
+<rect x="17" y="38" width="14" height="4" rx="1" fill="#b8c4cf" stroke="#3b332b" stroke-width="1.5"/>`;
+const ART_STAR = `<path d="M24 5 C26 15 33 22 43 24 C33 26 26 33 24 43 C22 33 15 26 5 24 C15 22 22 15 24 5 Z" fill="#F0B429" stroke="#3b332b" stroke-width="2" stroke-linejoin="round"/>
+<circle cx="24" cy="24" r="3.4" fill="#fff8e6" stroke="#3b332b" stroke-width="1.4"/>`;
 const ICON_SVGS = {
-  'icon-mural':         amgPinArt('#B8482A', ART_MURAL),
-  'icon-street_art':    amgPinArt('#A0640F', ART_SPRAY),
-  'icon-mosaic':        amgPin('#1F6F78', '<rect x="4" y="4" width="7" height="7" rx="1"/><rect x="13" y="4" width="7" height="7" rx="1"/><rect x="4" y="13" width="7" height="7" rx="1"/><rect x="13" y="13" width="7" height="7" rx="1"/>'),
-  'icon-sculpture':     amgPin('#4E5B66', '<circle cx="12" cy="7" r="3"/><path d="M7 16c0-3 2.2-5 5-5s5 2 5 5M6 16h12v4H6z"/>'),
-  'icon-installation':  amgPin('#6E2639', '<path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M4 7.5l8 4.5 8-4.5M12 12v9"/>'),
-  'icon-architectural': amgPin('#8A5A2B', '<path d="M4 21V10a8 8 0 0 1 16 0v11"/><path d="M3 21h18M4 15h16M9 15v6M15 15v6"/>'),
-  'icon-artifact':      amgPin('#5A4636', '<path d="M9 3h6"/><path d="M10 3v2.2C7 6.6 5 9.6 5 13c0 4.4 3.1 8 7 8s7-3.6 7-8c0-3.4-2-6.4-5-7.8V3"/>'),
-  'icon-unusual':       amgPin('#B07A1E', '<path d="M12 3l2.2 6.8L21 12l-6.8 2.2L12 21l-2.2-6.8L3 12l6.8-2.2z"/>'),
+  'icon-mural': amgPinArt('#B8482A', ART_MURAL),
+  'icon-street_art': amgPinArt('#A0640F', ART_SPRAY),
+  'icon-mosaic': amgPinArt('#1F6F78', ART_MOSAIC, 'translate(5.3 0.3) scale(.78)'),
+  'icon-sculpture': amgPinArt('#4E5B66', ART_SCULPTURE),
+  'icon-installation': amgPinArt('#6E2639', ART_INSTALLATION),
+  'icon-architectural': amgPinArt('#8A5A2B', ART_ARCH),
+  'icon-artifact': amgPinArt('#5A4636', ART_VESSEL),
+  'icon-unusual': amgPinArt('#B07A1E', ART_STAR),
 };
 // Статус-бейджи в стиле референса: круг с символом (✓ / ? / ! / ⇄ / ×).
 const BADGE_SVGS = {
@@ -1408,21 +1448,21 @@ const POI_SVGS = {
   'amg-poi-boat': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48"><path d="M8 34 H40 L34 42 H14 Z" fill="#C99A6B" stroke="#3b332b" stroke-width="2" stroke-linejoin="round"/><path d="M24 6 V34" stroke="#3b332b" stroke-width="2" stroke-linecap="round"/><path d="M25 8 L38 30 H25 Z" fill="#F2F6F8" stroke="#3b332b" stroke-width="2" stroke-linejoin="round"/><path d="M23 12 L11 30 H23 Z" fill="#E8EDF0" stroke="#3b332b" stroke-width="2" stroke-linejoin="round"/></svg>`,
   'amg-poi-transport': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48"><rect x="8" y="12" width="32" height="22" rx="4" fill="#F2A23C" stroke="#3b332b" stroke-width="2"/><rect x="12" y="16" width="9" height="7" rx="1.5" fill="#BFE3F2" stroke="#3b332b" stroke-width="1"/><rect x="27" y="16" width="9" height="7" rx="1.5" fill="#BFE3F2" stroke="#3b332b" stroke-width="1"/><circle cx="16" cy="37" r="3" fill="#3b332b"/><circle cx="32" cy="37" r="3" fill="#3b332b"/></svg>`,
 };
-// Иконки слоя «Впечатления»: диски amgDisc (стиль «Балкон»), цвет — вид активности.
+// Иконки слоя «Впечатления»: amgDiscArt — цветное кольцо + рисунок первой версии сайта.
 const EXP_SVGS = {
-  'amg-exp-paraglide': amgDisc('#2E6FA8', '<path d="M3 9c3-4.5 15-4.5 18 0"/><path d="M3 9l9 7 9-7"/><circle cx="12" cy="18.5" r="1.8"/>'),
-  'amg-exp-canyon':    amgDisc('#5C6E2E', '<path d="M3 20l5-11 4 6 3-4 6 9z"/><path d="M10 20c1-2 3-2 3.5-4"/>'),
-  'amg-exp-zipline':   amgDisc('#7A4E8C', '<path d="M3 5l18 6M12 8v4"/><path d="M8 13h8l-1.5 5h-5z"/>'),
-  'amg-exp-rafting':   amgDisc('#1D6B86', '<path d="M3 14h18l-3 5H6z"/><path d="M8 14L5 7M16 14l3-7"/>'),
-  'amg-exp-bike':      amgDisc('#4E7A3A', '<circle cx="6" cy="16" r="3.5"/><circle cx="18" cy="16" r="3.5"/><path d="M6 16l4-7h5l3 7M10 9l3 7"/>'),
-  'amg-exp-bath':      amgDisc('#2F7F6F', '<path d="M4 14h16v2a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5z"/><path d="M8 10c-1-1.5 1-2.5 0-4M12 10c-1-1.5 1-2.5 0-4M16 10c-1-1.5 1-2.5 0-4"/>'),
-  'amg-exp-waterpark': amgDisc('#17768A', '<path d="M3 13c2-2 4-2 6 0s4 2 6 0 4-2 6 0"/><path d="M3 18c2-2 4-2 6 0s4 2 6 0 4-2 6 0"/><path d="M8 9a4 4 0 0 1 8 0"/>'),
-  'amg-exp-zoo':       amgDisc('#9A5B2E', '<circle cx="6.5" cy="10" r="1.8"/><circle cx="10" cy="6.5" r="1.8"/><circle cx="14" cy="6.5" r="1.8"/><circle cx="17.5" cy="10" r="1.8"/><path d="M12 12c-3 0-5 3-5 5.5 0 1.7 1.5 2.5 3 2l2-.6 2 .6c1.5.5 3-.3 3-2 0-2.5-2-5.5-5-5.5z"/>'),
-  'amg-exp-aquarium':  amgDisc('#2C6E9B', '<path d="M3 12c3-5 10-6 14-2l4-3v10l-4-3c-4 4-11 3-14-2z"/><path d="M8 11.5h.01"/>'),
-  'amg-exp-horse':     amgDisc('#7A5230', '<path d="M7 20C3 14 4 5 12 4c8 1 9 10 5 16"/><path d="M7.5 15h.01M16.5 15h.01M9 9h.01M15 9h.01"/>'),
-  'amg-exp-golf':      amgDisc('#4F7A2E', '<path d="M9 21V3l9 4-9 4"/><path d="M5 21h10"/>'),
-  'amg-exp-marina':    amgDisc('#2E5E8A', '<path d="M12 3v13M13 4l6 11h-6zM11 7l-5 8h5z"/><path d="M4 18h16l-2 3H6z"/>'),
-  'amg-exp-cablecar':  amgDisc('#3C5A8C', '<path d="M3 6l18-3M12 4.5V8"/><rect x="6" y="8" width="12" height="12" rx="2"/><path d="M6 13h12"/>'),
+  'amg-exp-paraglide': amgDiscArt('#2E6FA8', `<path d="M8 17 C16 10 32 10 40 17 C32 21 16 21 8 17 Z" fill="#E4614A" stroke="#3b332b" stroke-width="2" stroke-linejoin="round"/><path d="M8 17 L18 26 M40 17 L30 26 M18 26 H30" fill="none" stroke="#3b332b" stroke-width="1.5"/><circle cx="24" cy="29.5" r="2.6" fill="#2f6fb0" stroke="#3b332b" stroke-width="1.5"/><path d="M21.6 32 L19 39 M26.4 32 L29 39" stroke="#3b332b" stroke-width="2" stroke-linecap="round"/>`),
+  'amg-exp-canyon': amgDiscArt('#5C6E2E', `<path d="M8 15 L14 27 L19 32 L24 39 L29 32 L34 27 L40 15" fill="none" stroke="#a9764a" stroke-width="2.4" stroke-linejoin="round"/><path d="M18 33 Q24 36 30 33" fill="none" stroke="#2f8fb0" stroke-width="2.6" stroke-linecap="round"/><path d="M12 14 L16 21 L9 21 Z" fill="#7FA86B" stroke="#3b332b" stroke-width="1.2" stroke-linejoin="round"/>`),
+  'amg-exp-zipline': amgDiscArt('#7A4E8C', `<path d="M8 14 L40 26" stroke="#3b332b" stroke-width="2.2" stroke-linecap="round"/><circle cx="24" cy="20" r="3.4" fill="#F2C14E" stroke="#3b332b" stroke-width="1.8"/><path d="M24 23.4 V29" stroke="#3b332b" stroke-width="2" stroke-linecap="round"/><path d="M19 30 H29 L27 35 H21 Z" fill="#2f6fb0" stroke="#3b332b" stroke-width="1.6" stroke-linejoin="round"/>`),
+  'amg-exp-rafting': amgDiscArt('#1D6B86', `<path d="M10 26 H38 L34 34 H14 Z" fill="#E4614A" stroke="#3b332b" stroke-width="2" stroke-linejoin="round"/><g stroke="#3b332b" stroke-width="2" stroke-linecap="round"><path d="M17 19 L12 30"/><path d="M31 19 L36 30"/></g><g fill="none" stroke="#2f8fb0" stroke-width="2.4" stroke-linecap="round"><path d="M9 37 Q13 34 17 37 T25 37 T33 37 T40 37"/></g>`),
+  'amg-exp-bike': amgDiscArt('#4E7A3A', `<circle cx="16" cy="31" r="5" fill="none" stroke="#3b332b" stroke-width="2"/><circle cx="33" cy="31" r="5" fill="none" stroke="#3b332b" stroke-width="2"/><path d="M16 31 L22 21 H30 L33 31 M22 21 L26 31 H16" fill="none" stroke="#2f7d32" stroke-width="2" stroke-linejoin="round"/><path d="M30 21 L28 16 H24" fill="none" stroke="#3b332b" stroke-width="2" stroke-linecap="round"/>`),
+  'amg-exp-bath': amgDiscArt('#2F7F6F', `<path d="M11 27 h26 a2 2 0 0 1 2 2 v4 a5 5 0 0 1 -5 5 H14 a5 5 0 0 1 -5 -5 v-4 a2 2 0 0 1 2 -2 z" fill="#BFE3F2" stroke="#3b332b" stroke-width="2" stroke-linejoin="round"/><path d="M13 27 v-5 a3 3 0 0 1 3 -3 h3" fill="none" stroke="#3b332b" stroke-width="2" stroke-linecap="round"/><path d="M23 25 q2.5 -3 0 -6 q-2.5 -3 0 -6" fill="none" stroke="#2f8fb0" stroke-width="2.2" stroke-linecap="round"/><path d="M30 25 q2.5 -3 0 -6 q-2.5 -3 0 -6" fill="none" stroke="#2f8fb0" stroke-width="2.2" stroke-linecap="round"/>`),
+  'amg-exp-waterpark': amgDiscArt('#17768A', `<path d="M15 12 q13 0 13 8 q0 6 -7 7" fill="none" stroke="#2f6fb0" stroke-width="3.4" stroke-linecap="round"/><path d="M15 12 q-3 0 -3 3" fill="none" stroke="#2f6fb0" stroke-width="3.4" stroke-linecap="round"/><circle cx="30" cy="27" r="3.4" fill="#E4614A" stroke="#3b332b" stroke-width="1.6"/><g fill="none" stroke="#2f8fb0" stroke-width="2.2" stroke-linecap="round"><path d="M10 33 q4 -3 8 0 t8 0 t8 0"/><path d="M10 38 q4 -3 8 0 t8 0 t8 0"/></g>`),
+  'amg-exp-zoo': amgDiscArt('#9A5B2E', `<ellipse cx="24" cy="31" rx="7" ry="5.6" fill="#a9764a" stroke="#3b332b" stroke-width="1.8"/><circle cx="15.5" cy="24" r="3.3" fill="#a9764a" stroke="#3b332b" stroke-width="1.6"/><circle cx="21.2" cy="19.5" r="3.3" fill="#a9764a" stroke="#3b332b" stroke-width="1.6"/><circle cx="27.6" cy="19.5" r="3.3" fill="#a9764a" stroke="#3b332b" stroke-width="1.6"/><circle cx="33" cy="24" r="3.3" fill="#a9764a" stroke="#3b332b" stroke-width="1.6"/>`),
+  'amg-exp-aquarium': amgDiscArt('#2C6E9B', `<path d="M12 29 C15 20 24 14 33 17 C36 18 37 21 36 23 C32 24 29 25 26 28 C23 31 17 32 12 29 Z" fill="#3F7FA6" stroke="#3b332b" stroke-width="1.8" stroke-linejoin="round"/><path d="M33 17 L39 13 L36.5 21 Z" fill="#3F7FA6" stroke="#3b332b" stroke-width="1.6" stroke-linejoin="round"/><circle cx="18" cy="24" r="1.3" fill="#fff"/><g fill="none" stroke="#2f8fb0" stroke-width="2.2" stroke-linecap="round"><path d="M10 35 q4 -3 8 0 t8 0 t8 0"/></g>`),
+  'amg-exp-horse': amgDiscArt('#7A5230', `<path d="M17 35 C12 27 13 17 24 16 C35 17 36 27 31 35" fill="none" stroke="#3b332b" stroke-width="4.4" stroke-linecap="round"/><g fill="#F2C14E" stroke="#3b332b" stroke-width="1"><circle cx="17.6" cy="27.5" r="1.5"/><circle cx="30.4" cy="27.5" r="1.5"/><circle cx="20.4" cy="21.5" r="1.5"/><circle cx="27.6" cy="21.5" r="1.5"/></g>`),
+  'amg-exp-golf': amgDiscArt('#4F7A2E', `<path d="M20 35 V13" stroke="#3b332b" stroke-width="2.4" stroke-linecap="round"/><path d="M20 13 L33 18 L20 23 Z" fill="#E4614A" stroke="#3b332b" stroke-width="1.6" stroke-linejoin="round"/><ellipse cx="29" cy="34" rx="7" ry="2.6" fill="#3b332b"/><circle cx="16.5" cy="33" r="2.6" fill="#fff" stroke="#3b332b" stroke-width="1.4"/>`),
+  'amg-exp-marina': amgDiscArt('#2E5E8A', `<path d="M23 12 V30" stroke="#3b332b" stroke-width="2.2" stroke-linecap="round"/><path d="M25 14 L34 29 H25 Z" fill="#EFE7DA" stroke="#3b332b" stroke-width="1.8" stroke-linejoin="round"/><path d="M21 18 L13 29 H21 Z" fill="#E4614A" stroke="#3b332b" stroke-width="1.8" stroke-linejoin="round"/><path d="M11 31 H37 L32 37 H16 Z" fill="#2f6fb0" stroke="#3b332b" stroke-width="1.8" stroke-linejoin="round"/>`),
+  'amg-exp-cablecar': amgDiscArt('#3C5A8C', `<path d="M8 13 L40 20" stroke="#3b332b" stroke-width="2.2" stroke-linecap="round"/><path d="M24 17.5 V21" stroke="#3b332b" stroke-width="2"/><rect x="16" y="21" width="16" height="13" rx="3" fill="#F2A23C" stroke="#3b332b" stroke-width="2"/><rect x="19.5" y="24" width="9" height="6" rx="1.5" fill="#BFE3F2" stroke="#3b332b" stroke-width="1.2"/>`),
 };
 // Бесшовный «бумажный» паттерн (128×128, степень двойки) для светлых тем.
 const PATTERN_SVGS = {
