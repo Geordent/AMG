@@ -112,6 +112,7 @@
   #report .opt { display:flex; align-items:center; gap:10px; padding:7px 0; font-size:14px; cursor:pointer; }
   #report input[type=radio] { width:20px; height:20px; accent-color:#B8482A; flex:none; }
   #report .btn.p[aria-disabled="true"] { opacity:.45; pointer-events:none; }
+  .amg-here-note .amg-tg-link { display:inline-flex; margin-top:6px; text-decoration:none; }
   .amg-link { border:0; background:none; padding:6px 0; color:#1F6F78; font:inherit; font-size:12px; text-decoration:underline; text-underline-offset:2px; cursor:pointer; }
   @media (pointer: coarse) { .amg-day-list .ctl { width:42px; height:42px; } .amg-link { min-height:44px; } }
   @media (prefers-reduced-motion: reduce) { .amg-stamp.new .ring { animation:none; } }
@@ -572,7 +573,7 @@ const readOfflinePref = () => {
 const state = { flavor:'light', lang:'ru', offlineOnly: readOfflinePref(), lastError:'', categories:null,
   transit: readTransitPref(), exp: readExpPref() };
 // UGC («Я здесь») включаем только после реального запуска Telegram-бота и публикации feed.
-const AMG_UGC_ENABLED = false;
+const AMG_UGC_ENABLED = true;    // бот @artmap_georgia_bot включён 2026-10-27 (GitHub Actions, docs/2026-10-27-amg-crowd-concept.md)
 // Этап 0 краудсорсинга: «Я здесь» ставит штамп в паспорт (локально, без бота). Подробности — в конце модуля.
 const AMG_STAMPS_ENABLED = true;
 const stage0 = (() => {
@@ -770,12 +771,13 @@ const LB = {
   hereFix:    { ru:'Точка не здесь — исправить', en:'Point is off — fix it', ka:'წერტილი სხვაგანაა — გასწორება' },
   hereFixSent:{ ru:'Исправление отправлено ✓', en:'Correction sent ✓', ka:'გასწორება გაიგზავნა ✓' },
   hereFixWhy: { ru:'Ты рядом, но не у самой метки. Если объект реально там, где ты стоишь — нажми, и мы поправим точку (после 3 согласных меток).', en:'You’re close but not at the marker. If the object is really where you stand — tap, and we’ll fix the point (after 3 agreeing marks).', ka:'ახლოს ხარ, მაგრამ არა ნიშანთან. თუ ობიექტი ნამდვილად იქაა, სადაც დგახარ — დააჭირე და გავასწორებთ (3 თანხმობის შემდეგ).' },
-  hereFixNote:{ ru:'Отправлено на исправление ✓ — точку перенесут, если так же отметят ещё 2 человека.', en:'Sent for correction ✓ — the point moves if 2 more mark it the same.', ka:'გასწორებაზე გაიგზავნა ✓ — წერტილი გადაადგილდება, თუ კიდევ 2 ასე მონიშნავს.' },
+  hereFixNote:{ ru:'Отправлено ✓ Когда так же отметят ещё 2 человека в другие дни, мы проверим и перенесём точку.', en:'Sent ✓ When 2 more people mark the same on other days, we’ll check and move the point.', ka:'გაიგზავნა ✓ როცა კიდევ 2 ადამიანი სხვა დღეებში ასევე მონიშნავს, შევამოწმებთ და წერტილს გადავიტანთ.' },
   hereCheckingBtn:{ ru:'Проверяю…', en:'Checking…', ka:'ვამოწმებ…' },
-  hereNoteSent:{ ru:'Отправлено на подтверждение ✓ — координату финально подтвердит бот.', en:'Sent for confirmation ✓ — the bot finalizes the coordinate.', ka:'დადასტურებაზე გაიგზავნა ✓ — კოორდინატს ბოტი საბოლოოდ დაადასტურებს.' },
-  hereWhy:    { ru:'Нажми, только если ты стоишь у самого объекта — так ты подтверждаешь его координаты. Если метка неточна, приложение предложит исправить.', en:'Tap only if you are standing at the object — this confirms its coordinates. If the marker is off, the app offers to fix it.', ka:'დააჭირე მხოლოდ მაშინ, თუ ობიექტთან დგახარ — ასე ადასტურებ მის კოორდინატებს. თუ ნიშანი არაზუსტია, აპი გასწორებას შემოგთავაზებს.' },
+  hereNoteSent:{ ru:'Штамп в паспорте ✓ Подтверждение в Telegram засчитается, когда ответит бот (до 10 минут).', en:'Stamp added ✓ The Telegram confirmation counts once the bot replies (up to 10 minutes).', ka:'შტამპი პასპორტშია ✓ Telegram-ში დადასტურება ჩაითვლება ბოტის პასუხის შემდეგ (10 წუთამდე).' },
+  hereWhy:    { ru:'Стоишь у самого объекта? Нажми — получишь штамп в паспорт и сможешь подтвердить точку в Telegram. Если метка неточна, предложим исправить.', en:'Standing right at the object? Tap to get a passport stamp and confirm the point in Telegram. If the marker is off, we’ll offer a fix.', ka:'ობიექტთან დგახარ? დააჭირე — მიიღებ შტამპს პასპორტში და შეძლებ წერტილის დადასტურებას Telegram-ში. თუ ნიშანი არაზუსტია, გასწორებას შემოგთავაზებთ.' },
   hereChecking:{ ru:'Проверяю твоё положение…', en:'Checking your location…', ka:'ვამოწმებ შენს მდებარეობას…' },
-  hereHit:    { ru:'Ты у объекта ✓ — открываю подтверждение в Telegram', en:'You’re at the object ✓ — opening confirmation in Telegram', ka:'ობიექტთან ხარ ✓ — ვხსნი დადასტურებას Telegram-ში' },
+  hereHit:    { ru:'Ты у объекта ✓ Штамп в паспорте ({n}). Подтверди отметку в Telegram — это поможет другим путешественникам.', en:'You’re at the object ✓ Stamp added ({n}). Confirm in Telegram — it helps other travellers.', ka:'ობიექტთან ხარ ✓ შტამპი პასპორტშია ({n}). დაადასტურე Telegram-ში — ეს სხვა მოგზაურებს დაეხმარება.' },
+  hereTgBtn:  { ru:'Подтвердить в Telegram', en:'Confirm in Telegram', ka:'Telegram-ში დადასტურება' },
   hereFail:   { ru:'Не удалось определить местоположение', en:'Could not determine location', ka:'მდებარეობა ვერ დგინდება' },
   hereNoGeo:  { ru:'Нет доступа к GPS — разреши геолокацию', en:'No GPS access — allow location', ka:'GPS-ზე წვდომა არ არის — დაუშვი მდებარეობა' },
   hereNoGeoHint:{ ru:'Геолокация запрещена для этого сайта. Разрешите её: 🔒 слева от адреса → «Разрешения» → «Местоположение» → «Разрешить», затем обновите страницу.',
@@ -784,7 +786,8 @@ const LB = {
   hereManualWhy:{ ru:'Геолокация недоступна (превью). Отметь на карте, где ты стоишь — так проверишь поток без GPS.', en:'Location unavailable (preview). Mark on the map where you stand — test the flow without GPS.', ka:'მდებარეობა მიუწვდომელია (პრევიუ). რუკაზე მონიშნე სად დგახარ.' },
   hereManualBtn:{ ru:'📍 Отметить моё место', en:'📍 Mark my spot', ka:'📍 მონიშნე ჩემი ადგილი' },
   hereManualHint:{ ru:'Превью: нажми на карту в точке, где ты находишься', en:'Preview: tap the map where you are', ka:'პრევიუ: დააჭირე რუკას, სადაც ხარ' },
-  verified:   { ru:'Подтверждено', en:'Verified', ka:'დადასტურებულია' },
+  verified:   { ru:'Проверено на месте', en:'Checked on site', ka:'ადგილზე შემოწმებულია' },
+  verifiedBy: { ru:'Подтвердили людей: {n}', en:'Confirmed by {n} people', ka:'დაადასტურა {n} ადამიანმა' },
   // --- статичная оболочка, бренд, офлайн-паки (добавлено: полное покрытие ru/en/ka) ---
   brandTag:   { ru:'Карта искусства и необычных городских объектов Грузии', en:'A map of art and unusual urban objects of Georgia', ka:'საქართველოს ხელოვნებისა და უჩვეულო ურბანული ობიექტების რუკა' },
   menu:       { ru:'Меню', en:'Menu', ka:'მენიუ' },
@@ -2959,7 +2962,7 @@ applyStaticLabels();
 
 // ---------- UGC Этап 2: «Я здесь» (подтверждение координат) + фид подтверждений ----------
 // Конфиг — единственное, что нужно поменять при появлении хостинга бота.
-const AMG_BOT_USERNAME = 'amg_map_bot';   // ← username Telegram-бота (плейсхолдер до выбора хостинга)
+const AMG_BOT_USERNAME = 'artmap_georgia_bot';   // Telegram-бот приёма отметок (.github/workflows/contrib-bot.yml)
 // Адаптивный допуск «попал» по точности точки (синхронизировано с contrib-lib.mjs PRECISION_TOLERANCE_M).
 const PRECISION_TOL_M = { exact: 60, building: 100, street: 250, approximate: 400 };
 const DEFAULT_TOL_M = 100;
@@ -2984,8 +2987,11 @@ function verifiedBadge(siteId) {
   if (!AMG_UGC_ENABLED) return '';
   const c = contrib.get(siteId);
   if (!c || c.status !== 'verified') return '';
-  const n = c.count ? ' ' + c.count : '';
-  return `<span class="amg-tag vf">✓ ${esc(pick(LB.verified))}${esc(n)}</span>`;
+  const loc = { ru:'ru-RU', en:'en-GB', ka:'ka-GE' }[state.lang] || 'ru-RU';
+  let month = '';
+  try { if (c.checked) month = new Date(c.checked + '-01T00:00:00Z').toLocaleDateString(loc, { month:'short', year:'numeric', timeZone:'UTC' }); } catch (_) {}
+  const who = c.count ? pick(LB.verifiedBy).replace('{n}', c.count) : '';
+  return `<span class="amg-tag vf" title="${esc(who)}">✓ ${esc(pick(LB.verified))}${month ? ' · ' + esc(month) : ''}</span>`;
 }
 
 // Компактный payload для deep-link: c|site-XXXX|lat|lng (confirm) или k|... (correct) → base64url.
@@ -3038,7 +3044,9 @@ function hereBlockHtml(siteId) {
   const st = hereState.get(siteId) || 'idle'; // idle, confirmed, fix-sent
   const label = pick(LB[`here${st === 'confirmed' ? 'Sent' : st === 'fix-sent' ? 'FixSent' : ''}`] || LB.here);
   let note  = pick(LB[`here${st === 'confirmed' ? 'NoteSent' : st === 'fix-sent' ? 'FixNote' : ''}`] || LB.hereWhy);
-  if (!AMG_UGC_ENABLED && (st === 'idle' || st === 'confirmed')) note = stage0.passport[siteId] ? pick(LB.stampAgain).replace('{d}', fmtDay(stage0.passport[siteId])) : pick(LB.stampWhy);
+  if (st === 'idle' && stage0.passport[siteId]) note = pick(LB.stampAgain).replace('{d}', fmtDay(stage0.passport[siteId]));
+  else if (!AMG_UGC_ENABLED && st === 'idle') note = pick(LB.stampWhy);
+  else if (!AMG_UGC_ENABLED && st === 'confirmed' && stage0.passport[siteId]) note = pick(LB.stampAgain).replace('{d}', fmtDay(stage0.passport[siteId]));
   const btnClass = (st === 'confirmed' || st === 'fix-sent') ? 'amg-btn primary' : 'amg-btn ghost';
   return `<div class="amg-here-block" data-here-block="${esc(siteId)}" data-state="${st}">
     <button type="button" class="${btnClass} amg-here-btn" data-here="${esc(siteId)}" data-state="${st}">
@@ -3107,8 +3115,11 @@ function iAmHere(btn) {
       const url = `https://t.me/${AMG_BOT_USERNAME}?start=${makeHerePayload(siteId, gLat, gLng, 'c')}`;
       hereBtnSet(btn, 'confirmed');
       if (window.__AMG_PREVIEW__) { console.log('AMG-HERE-URL ' + url); if (window.__amgHereHook) window.__amgHereHook(url); toast('Превью: сформирована ссылка ' + url, 9000); return; }
-      toast(pick(LB.hereHit), 6000);
-      window.open(url, '_blank');
+      // Ссылка, а не window.open: окно после асинхронного ответа GPS браузеры (особенно iOS Safari) блокируют.
+      const hit = pick(LB.hereHit).replace('{n}', nStamps);
+      const blockEl = btn.closest('.amg-here-block'), noteEl = blockEl && blockEl.querySelector('.amg-here-note');
+      if (noteEl) noteEl.innerHTML = `${esc(hit)} <a class="amg-btn accent amg-tg-link" href="${esc(url)}" target="_blank" rel="noopener">${esc(pick(LB.hereTgBtn))}</a>`;
+      toast(hit, 6000);
       return;
     }
 
