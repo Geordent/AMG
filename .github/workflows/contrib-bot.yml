@@ -1,0 +1,74 @@
+# Telegram-бот «Я здесь» без сервера: раз в 10 минут забирает новые сообщения (getUpdates),
+# принимает голоса, отвечает; зашифрованное состояние — в ветке contrib-state, публичный фид —
+# data/contributions.json в main (затем запуск деплоя). Концепция: docs/2026-10-27-amg-crowd-concept.md.
+# Секреты: AMG_BOT_TOKEN (токен от @BotFather), AMG_STATE_KEY (openssl rand -base64 32).
+# Пока AMG_BOT_TOKEN не задан, workflow ничего не делает.
+name: contrib-bot
+on:
+  schedule:
+    - cron: '*/10 * * * *'
+  workflow_dispatch:
+permissions:
+  contents: write
+  issues: write
+  actions: write
+concurrency:
+  group: contrib-bot
+  cancel-in-progress: false
+jobs:
+  poll:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Bot configured?
+        id: cfg
+        env:
+          TOKEN: ${{ secrets.AMG_BOT_TOKEN }}
+          KEY: ${{ secrets.AMG_STATE_KEY }}
+        run: |
+          if [ -n "$TOKEN" ] && [ -n "$KEY" ]; then echo "on=true" >> "$GITHUB_OUTPUT"
+          else echo "AMG_BOT_TOKEN / AMG_STATE_KEY не заданы — бот выключен, пропуск."; fi
+      - uses: actions/checkout@v4
+        if: steps.cfg.outputs.on == 'true'
+      - uses: actions/setup-node@v4
+        if: steps.cfg.outputs.on == 'true'
+        with:
+          node-version: '22'
+      - name: State branch
+        if: steps.cfg.outputs.on == 'true'
+        run: |
+          git config user.name "amg-contrib-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if git fetch --depth=1 origin contrib-state; then
+            git worktree add state FETCH_HEAD
+            git -C state switch -c contrib-state
+          else
+            git worktree add --orphan -b contrib-state state
+          fi
+      - name: Poll Telegram
+        id: bot
+        if: steps.cfg.outputs.on == 'true'
+        env:
+          AMG_BOT_TOKEN: ${{ secrets.AMG_BOT_TOKEN }}
+          AMG_STATE_KEY: ${{ secrets.AMG_STATE_KEY }}
+          AMG_STATE_FILE: state/contrib-state.enc
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node scripts/contrib-bot-once.mjs
+      - name: Save encrypted state
+        if: steps.cfg.outputs.on == 'true'
+        run: |
+          cd state
+          git add contrib-state.enc 2>/dev/null || exit 0
+          git diff --cached --quiet && exit 0
+          git -c user.name=amg-contrib-bot -c user.email=41898282+github-actions[bot]@users.noreply.github.com commit -q -m "contrib: state"
+          git push -q origin contrib-state
+      - name: Publish feed and deploy
+        if: steps.cfg.outputs.on == 'true' && steps.bot.outputs.feed_changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git add data/contributions.json
+          git commit -q -m "contrib: feed"
+          for i in 1 2 3; do git push -q origin HEAD:main && break; git pull -q --rebase origin main; done
+          # push через GITHUB_TOKEN не запускает другие workflow — деплой запускаем явно
+          gh workflow run pages.yml --ref main

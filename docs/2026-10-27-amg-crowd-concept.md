@@ -146,3 +146,28 @@ GitHub Action по расписанию (раз в сутки): правила �
 **Рекомендация:** бот без отдельного хостинга — **GitHub Actions по расписанию**. Workflow раз в 5–10 минут забирает новые сообщения через Telegram `getUpdates`, проверяет их, отвечает и дописывает строки в `contrib/inbox/*.jsonl`; ночной workflow считает согласие. Нужен только токен бота в секретах репозитория. Плюсы: нет новых аккаунтов и серверов, всё в одном месте и в истории git, бесплатно для публичного репозитория. Минус: ответ бота приходит с задержкой в несколько минут (сайт благодарит сразу). Если позже понадобятся мгновенные ответы — тот же код переносится на webhook (Cloudflare Worker или другой хост) без изменения формата данных.
 
 Источники: Cloudflare blog — «Russian Internet users are unable to access the open Internet» (blog.cloudflare.com); heise.de — «The 16-Kbyte trick»; Meduza 2026-04-10 — «Telegram blocking rate in Russia reaches 95%»; OSW 2026-04-17 — «Russia blocks Telegram and cracks down on VPNs»; agentdeals.dev — Deno Deploy / Netlify free tier 2026.
+
+## Этап 1 — бот на GitHub Actions (код готов, ждёт бота и секретов)
+
+Решение автора (2026-10-27): GitHub Actions вместо Cloudflare Worker.
+
+| Файл | Что делает |
+|---|---|
+| `scripts/contrib-lib.mjs` | правила: у объекта / рядом / далеко (допуск по `precision`); «проверено» — 2 человека; коррекция — 3 человека в ≥2 разных дня, точки в пределах 100 м; лимит 20 в сутки; «телепорт» > 300 км/ч; публичный фид без хешей и координат |
+| `scripts/contrib-store.mjs` | шифрование состояния AES-256-GCM, Telegram ID → HMAC-хеш (ключ `AMG_STATE_KEY`) |
+| `scripts/contrib-bot-once.mjs` | один проход: `getUpdates` → голоса → ответы ru/en/ka → состояние → `data/contributions.json`; при согласованной коррекции открывает Issue с меткой `report` (точку не переносит) |
+| `scripts/contrib-test.mjs` | 15 тестов логики, шифрования и прохода бота; запускается в CI перед каждым деплоем |
+| `.github/workflows/contrib-bot.yml` | раз в 10 минут; состояние → ветка `contrib-state`; фид → `main` и запуск деплоя; без секретов — пропуск |
+
+Основа — черновики с zimablade (`amg-contrib-bot.mjs`, `contrib-lib.mjs`, `contrib-test.mjs`, снято только чтением, sha256 `4d2cac3b…`, `2e543959…`, `891a1b10…`). Изменено: пороги по концепции; коррекция → предложение + Issue вместо автопереноса; внутреннее состояние только шифрованным (черновик писал Telegram ID открыто в `data/contrib-internal.json`); long-polling → один проход за запуск.
+
+Проверено: 15/15 тестов; интеграционный прогон против поддельного Telegram API (2 запуска подряд: 3 сообщения → 3 ответа на трёх языках, состояние зашифровано, фид обновлён, повторной обработки нет).
+
+### Как включить (делает автор)
+
+1. Через VPN в Telegram: `@BotFather` → `/newbot` → имя «ArtMap Georgia», username, например `artmap_georgia_bot`. Сообщить username (не токен!).
+2. Сохранить токен в секрет репозитория (токен никому не показывать): `gh secret set AMG_BOT_TOKEN -R Geordent/AMG` — команда спросит значение.
+3. Ключ состояния: `openssl rand -base64 32 | gh secret set AMG_STATE_KEY -R Geordent/AMG`. **Ключ потерять нельзя** — без него состояние не расшифровать; сохраните копию в менеджере паролей.
+4. После этого — правка сайта (по GO): `AMG_BOT_USERNAME`, `AMG_UGC_ENABLED = true`, значок «✓ проверено», `privacy.html` (хеш Telegram ID, координаты голоса хранятся зашифрованно).
+
+Ограничения: расписание GitHub может задерживать запуски на 5–15 минут; scheduled-workflow отключается после 60 дней без коммитов в репозитории (коммиты фида и деплои это продлевают).

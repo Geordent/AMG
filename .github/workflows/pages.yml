@@ -26,6 +26,7 @@ jobs:
         run: |
           node scripts/validate-data.mjs
           node scripts/validate-experiences.mjs
+          node scripts/contrib-test.mjs
           test -s data/transit.geojson
           test -s data/experiences.geojson
           test -s privacy.html
