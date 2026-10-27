@@ -1,6 +1,6 @@
 AMG — ArtMap Georgia
 Карта искусства и необычных городских объектов Грузии.
-Прод: https://geordent.github.io/AMG/
+Прод: https://artmap-georgia.github.io/AMG/
 
 Структура
   index.html                      вся логика карты (MapLibre + PMTiles, offline через IndexedDB)

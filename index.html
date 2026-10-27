@@ -7,21 +7,21 @@
 <meta name="description" content="Интерактивная карта Грузии: бани и термы, каньоны и водопады, канатки, зоопарки, конные клубы, аквапарки. 59 впечатлений и 573 объекта каталога — с координатами, описанием и источником. Работает офлайн.">
 <meta name="theme-color" content="#d9552b">
 <meta name="color-scheme" content="light">
-<link rel="canonical" href="https://geordent.github.io/AMG/">
+<link rel="canonical" href="https://artmap-georgia.github.io/AMG/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="ArtMap Georgia">
 <meta property="og:locale" content="ru_RU">
 <meta property="og:title" content="ArtMap Georgia — карта необычных мест Грузии">
 <meta property="og:description" content="59 впечатлений и 573 объекта: бани, каньоны, канатки, зоопарки, конные клубы. Координаты, описания, источники. Работает офлайн.">
-<meta property="og:url" content="https://geordent.github.io/AMG/">
-<meta property="og:image" content="https://geordent.github.io/AMG/og-cover.jpg">
+<meta property="og:url" content="https://artmap-georgia.github.io/AMG/">
+<meta property="og:image" content="https://artmap-georgia.github.io/AMG/og-cover.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="ArtMap Georgia — карта необычных мест Грузии">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="ArtMap Georgia — карта необычных мест Грузии">
 <meta name="twitter:description" content="59 впечатлений и 573 объекта: бани, каньоны, канатки, зоопарки, конные клубы. Координаты, описания, источники. Работает офлайн.">
-<meta name="twitter:image" content="https://geordent.github.io/AMG/og-cover.jpg">
+<meta name="twitter:image" content="https://artmap-georgia.github.io/AMG/og-cover.jpg">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
@@ -532,7 +532,7 @@
   <p class="small" id="fbText"></p>
   <p class="small" id="fbHint"></p>
   <div class="btns">
-    <a class="btn p" id="fbGh" href="https://github.com/Geordent/AMG/issues/new" target="_blank" rel="noopener">GitHub</a>
+    <a class="btn p" id="fbGh" href="https://github.com/artmap-georgia/AMG/issues/new" target="_blank" rel="noopener">GitHub</a>
     <button class="btn" id="fbClose" type="button">Закрыть</button>
   </div>
 </div>
@@ -699,22 +699,22 @@ const LB = {
   geoWhy_unavailable: { ru:'Телефон не отдал координаты: GPS выключен или нет сигнала, и сеть не помогла. Проверьте, что в системе включено «Местоположение», и попробуйте на открытом месте.',
     en:'The device returned no coordinates: GPS is off or has no signal, and network location did not help. Make sure system Location is on and try again outdoors.',
     ka:'მოწყობილობამ კოორდინატები არ დააბრუნა: GPS გამორთულია ან სიგნალი არ არის, ქსელმაც არ უშველა. შეამოწმეთ, რომ სისტემაში „მდებარეობა“ ჩართულია და სცადეთ ღია ადგილზე.' },
-  geoWhy_insecure: { ru:'Страница открыта не по https (или как локальный файл) — браузеры в таком режиме геолокацию не выдают вообще. Откройте https://geordent.github.io/AMG/',
-    en:'The page is not served over https (or is a local file) — browsers refuse geolocation entirely in that mode. Open https://geordent.github.io/AMG/',
-    ka:'გვერდი გახსნილია არა https-ით (ან ლოკალური ფაილია) — ბრაუზერები ასეთ რეჟიმში მდებარეობას საერთოდ არ აძლევენ. გახსენით https://geordent.github.io/AMG/' },
+  geoWhy_insecure: { ru:'Страница открыта не по https (или как локальный файл) — браузеры в таком режиме геолокацию не выдают вообще. Откройте https://artmap-georgia.github.io/AMG/',
+    en:'The page is not served over https (or is a local file) — browsers refuse geolocation entirely in that mode. Open https://artmap-georgia.github.io/AMG/',
+    ka:'გვერდი გახსნილია არა https-ით (ან ლოკალური ფაილია) — ბრაუზერები ასეთ რეჟიმში მდებარეობას საერთოდ არ აძლევენ. გახსენით https://artmap-georgia.github.io/AMG/' },
   geoWhy_unsupported: { ru:'В этом браузере нет API геолокации. Откройте сайт в Chrome, Safari или Firefox.',
     en:'This browser has no geolocation API. Open the site in Chrome, Safari or Firefox.',
     ka:'ამ ბრაუზერს გეოლოკაციის API არ აქვს. გახსენით საიტი Chrome-ში, Safari-ში ან Firefox-ში.' },
   geoWhy_unknown: { ru:'Не удалось получить координаты.', en:'Could not get coordinates.', ka:'კოორდინატები ვერ მივიღეთ.' },
   geoStepsAndroid: {
     ru:['Chrome: нажмите 🔒 (замок) слева от адреса → «Разрешения» / «Настройки сайта» → «Местоположение» → «Разрешить».',
-        'Или ⋮ → «Настройки» → «Настройки сайтов» → «Местоположение» → geordent.github.io → «Разрешить».',
+        'Или ⋮ → «Настройки» → «Настройки сайтов» → «Местоположение» → artmap-georgia.github.io → «Разрешить».',
         'Проверьте, что в шторке включена «Локация» (Location), и обновите страницу.'],
     en:['Chrome: tap the 🔒 (padlock) left of the address → “Permissions” / “Site settings” → “Location” → “Allow”.',
-        'Or ⋮ → “Settings” → “Site settings” → “Location” → geordent.github.io → “Allow”.',
+        'Or ⋮ → “Settings” → “Site settings” → “Location” → artmap-georgia.github.io → “Allow”.',
         'Make sure “Location” is on in the quick settings panel, then reload the page.'],
     ka:['Chrome: დააჭირეთ 🔒-ს მისამართის მარცხნივ → „ნებართვები“ / „საიტის პარამეტრები“ → „მდებარეობა“ → „დაშვება“.',
-        'ან ⋮ → „პარამეტრები“ → „საიტების პარამეტრები“ → „მდებარეობა“ → geordent.github.io → „დაშვება“.',
+        'ან ⋮ → „პარამეტრები“ → „საიტების პარამეტრები“ → „მდებარეობა“ → artmap-georgia.github.io → „დაშვება“.',
         'შეამოწმეთ, რომ პანელში „მდებარეობა“ ჩართულია და გადატვირთეთ გვერდი.'] },
   geoStepsIOS: {
     ru:['Safari: «Настройки» (iPhone) → «Safari» → «Местоположение» → «Разрешить» или «Спросить», затем обновите страницу.',
@@ -2631,7 +2631,7 @@ if (catalogError) toast([pick(LB.catalogFail), catalogError].filter(Boolean).joi
 // идентификаторов и трекинга: только инкремент и чтение одного числа. Упал сервис —
 // счётчик просто не показывается, страница работает как обычно.
 const AMG_HITS = { ns:'geordent-amg', key:'visits', api:'https://abacus.jasoncameron.dev' };
-const AMG_FEEDBACK = { gh:'https://github.com/Geordent/AMG/issues/new' };
+const AMG_FEEDBACK = { gh:'https://github.com/artmap-georgia/AMG/issues/new' };
 function applyMetaLabels() {
   const hits = $('amgHits'); if (hits) hits.title = pick(LB.hitsTitle);
   const fb = $('amgFeedbackBtn'); if (fb) fb.textContent = pick(LB.feedback);
@@ -3399,7 +3399,7 @@ setTimeout(loadDescriptions, 1000);
 // нужен аккаунт GitHub — это и есть защита от спама. Концепция: docs/2026-10-27-amg-crowd-concept.md.
 // Всё ниже — объявления функций (видны раньше конца модуля); состояние — stage0 рядом с AMG_UGC_ENABLED.
 const DAY_MAX = 25;
-const REPORT_ISSUE_URL = 'https://github.com/Geordent/AMG/issues/new';
+const REPORT_ISSUE_URL = 'https://github.com/artmap-georgia/AMG/issues/new';
 const REPORT_KINDS = ['missing', 'painted', 'damaged', 'location', 'info', 'other'];
 
 function stage0Save(key, value) { try { localStorage.setItem(key, JSON.stringify(value)); } catch (_) {} }

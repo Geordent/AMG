@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /data/.
 
-Sitemap: https://geordent.github.io/AMG/sitemap.xml
+Sitemap: https://artmap-georgia.github.io/AMG/sitemap.xml

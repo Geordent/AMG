@@ -17,7 +17,7 @@ import { castVote, emptyState, publicFeed, userGuard, userCommit, decodeHerePayl
 import { stateKey, hashUid, encryptState, decryptState } from './contrib-store.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const SITE_URL = 'https://geordent.github.io/AMG/';
+const SITE_URL = 'https://artmap-georgia.github.io/AMG/';
 
 // --- тексты ответов: язык по language_code пользователя Telegram ---
 const T = {
