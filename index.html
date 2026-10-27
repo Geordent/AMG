@@ -116,6 +116,46 @@
   .amg-link { border:0; background:none; padding:6px 0; color:#1F6F78; font:inherit; font-size:12px; text-decoration:underline; text-underline-offset:2px; cursor:pointer; }
   @media (pointer: coarse) { .amg-day-list .ctl { width:42px; height:42px; } .amg-link { min-height:44px; } }
   @media (prefers-reduced-motion: reduce) { .amg-stamp.new .ring { animation:none; } }
+  /* ---- Поиск по каталогу + пульс выбранного объекта ---- */
+  #searchBtn { position:absolute; top:0; right:8px; width:44px; height:44px; display:flex; align-items:center; justify-content:center;
+    border:1px solid #E0D0B8; border-radius:12px; background:rgba(255,251,245,.95); color:#2B2420; cursor:pointer;
+    box-shadow:0 4px 12px rgba(43,38,34,.08); pointer-events:auto; }
+  #searchBtn:focus-visible { outline:2px solid #B8482A; outline-offset:2px; }
+  @media (pointer: coarse) { #searchBtn { right:64px; width:48px; height:48px; } }
+  html.is-mobile #searchBtn { right:64px; }
+  /* На телефоне справа две кнопки (поиск + меню) — бренд не должен под них заходить */
+  @media (pointer: coarse) { #topui #brand { max-width:calc(100vw - 140px); box-sizing:border-box; } }
+  html.is-mobile #topui #brand { max-width:calc(100vw - 140px); box-sizing:border-box; }
+  #search { position:fixed; left:8px; right:8px; top:calc(8px + env(safe-area-inset-top,0px)); z-index:33; background:#FFFBF5;
+    border-radius:16px; box-shadow:0 10px 32px rgba(0,0,0,.22); padding:10px; display:flex; flex-direction:column; gap:6px;
+    max-height:calc(100% - 24px - env(safe-area-inset-top,0px)); }
+  #search[hidden] { display:none; }
+  @media (min-width:769px) { #search { left:auto; right:16px; width:440px; } }
+  #search .srch-row { display:flex; gap:6px; align-items:center; }
+  #searchInput { flex:1; min-width:0; font:inherit; font-size:16px; padding:11px 12px; border:1px solid #E0D0B8; border-radius:12px; background:#FFFFFF; color:#2B2420; }
+  #searchInput:focus { outline:2px solid #B8482A; outline-offset:0; border-color:#B8482A; }
+  #searchClose { flex:none; width:44px; height:44px; border:0; border-radius:12px; background:#EFE4D2; color:#2B2420; font-size:20px; cursor:pointer; }
+  #searchResults { overflow-y:auto; -webkit-overflow-scrolling:touch; }
+  #searchResults .srch-hit { display:flex; align-items:center; gap:10px; width:100%; padding:8px 6px; border:0; border-top:1px solid #E6D9C6;
+    background:none; text-align:left; cursor:pointer; font:inherit; color:#2B2420; border-radius:8px; }
+  #searchResults .srch-hit:first-child { border-top:0; }
+  #searchResults .srch-hit:hover, #searchResults .srch-hit:focus-visible { background:#F6EFE4; outline:none; }
+  #searchResults .srch-hit img { flex:none; width:30px; height:30px; }
+  #searchResults .srch-txt { display:flex; flex-direction:column; min-width:0; }
+  #searchResults .srch-nm { font-weight:600; font-size:14px; }
+  #searchResults .srch-meta { font-size:12px; color:#6B5D52; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  #searchResults mark { background:#FBF3DC; color:inherit; border-radius:3px; padding:0 1px; }
+  #searchResults .srch-note { padding:8px 6px; font-size:13px; color:#6B5D52; }
+  #searchResults .srch-note.amg-hand { font-size:22px; color:#6E2639; }
+  .amg-pulse { position:relative; width:14px; height:14px; pointer-events:none; }
+  .amg-pulse i { position:absolute; inset:0; border-radius:50%; border:2px solid #B8482A; background:rgba(184,72,42,.16);
+    animation:amg-pulse 2s ease-out infinite; }
+  .amg-pulse i:last-child { animation-delay:1s; }
+  @keyframes amg-pulse { 0% { transform:scale(.6); opacity:.95 } 100% { transform:scale(4.4); opacity:0 } }
+  @media (prefers-reduced-motion: reduce) {
+    .amg-pulse i { animation:none; transform:scale(2.2); opacity:.7; }
+    .amg-pulse i:last-child { display:none; }
+  }
   html, body { margin:0; height:100%; font-family:Manrope,system-ui,-apple-system,"Segoe UI",sans-serif; color:#2B2420; }
   #map { position:absolute; inset:0; }
   /* Верхний overlay — нормальный flex-стек (без хардкод top:64/112) */
@@ -410,6 +450,9 @@
       <a id="lnkLicense" href="license.html">Лицензии</a>
     </span>
   </div>
+  <button id="searchBtn" type="button" aria-label="Поиск" title="Поиск" aria-haspopup="dialog">
+    <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="#2B2420" stroke-width="2"/><path d="M15.5 15.5 L20 20" stroke="#2B2420" stroke-width="2.2" stroke-linecap="round"/></svg>
+  </button>
   <button id="menuBtn" type="button" aria-label="Меню">
     <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke="#2a2622" stroke-width="2" stroke-linecap="round"/></svg>
   </button>
@@ -480,6 +523,10 @@
 <div id="passport" hidden role="dialog" aria-label="Паспорт путешественника"></div>
 <div id="day" hidden role="dialog" aria-label="Мой день"></div>
 <div id="report" hidden role="dialog" aria-label="Сообщить о проблеме"></div>
+<div id="search" hidden role="dialog" aria-label="Поиск">
+  <div class="srch-row"><input id="searchInput" type="search" autocomplete="off" spellcheck="false" enterkeyhint="search" aria-label="Поиск" placeholder="Мурал, художник, улица…"><button type="button" id="searchClose" aria-label="×">×</button></div>
+  <div id="searchResults" role="list"></div>
+</div>
 <div id="feedback" hidden>
   <h2 id="fbTitle">Обратная связь</h2>
   <p class="small" id="fbText"></p>
@@ -581,7 +628,7 @@ const stage0 = (() => {
   const day = read('amg-day', []), passport = read('amg-passport', {});
   return { day: Array.isArray(day) ? day.filter(x => typeof x === 'string') : [],
     passport: passport && typeof passport === 'object' ? passport : {},
-    passportNew: null, dayShared: null, report: null };
+    passportNew: null, dayShared: null, report: null, searchIdx: null, pulse: null, dayAnim: 0 };
 })();
 
 // ---------- каталог (Stage 0 data) ----------
@@ -735,6 +782,12 @@ const LB = {
   repPos:     { ru:'Приложим твою точку из «Я здесь»: ', en:'Your “I’m here” position will be attached: ', ka:'მიემაგრება შენი «აქ ვარ» მდებარეობა: ' },
   repHint:    { ru:'Откроется форма на GitHub (нужен аккаунт). Сообщение будет публичным — так мы защищаемся от спама.', en:'A GitHub form will open (account needed). Reports are public — this keeps spam out.', ka:'გაიხსნება GitHub-ის ფორმა (საჭიროა ანგარიში). შეტყობინება საჯარო იქნება — ასე ვიცავთ სპამისგან.' },
   repGo:      { ru:'Открыть форму на GitHub', en:'Open the GitHub form', ka:'GitHub-ის ფორმის გახსნა' },
+  searchBtn:  { ru:'Поиск', en:'Search', ka:'ძიება' },
+  searchPh:   { ru:'Мурал, художник, улица…', en:'Mural, artist, street…', ka:'მურალი, მხატვარი, ქუჩა…' },
+  searchHint: { ru:'Ищите по названию, художнику или адресу — на русском, английском или грузинском. Enter откроет первый результат.', en:'Search by name, artist or address — in English, Russian or Georgian. Enter opens the first result.', ka:'მოძებნე სახელით, მხატვრით ან მისამართით — ქართულად, ინგლისურად ან რუსულად. Enter გახსნის პირველ შედეგს.' },
+  searchNone: { ru:'Ничего не нашлось', en:'Nothing found', ka:'ვერაფერი მოიძებნა' },
+  searchNoneHint:{ ru:'Попробуйте короче или на другом языке: «Фабрика», «Fabrika», «ფაბრიკა».', en:'Try something shorter or another language: “Fabrika”, «Фабрика», «ფაბრიკა».', ka:'სცადე უფრო მოკლედ ან სხვა ენაზე: «ფაბრიკა», «Fabrika», «Фабрика».' },
+  searchMore: { ru:'Показаны первые 30 из {n} — уточните запрос', en:'Showing the first 30 of {n} — refine your search', ka:'ნაჩვენებია პირველი 30 / {n} — დააზუსტე ძიება' },
   walk:       { ru:'пешком', en:'on foot', ka:'ფეხით' },
   min:        { ru:'мин', en:'min', ka:'წთ' },
   hr:         { ru:'ч', en:'h', ka:'სთ' },
@@ -2180,11 +2233,12 @@ function renderCard(siteId) {
   const c = document.getElementById('card');
   c.innerHTML = `<button type="button" class="amg-card-close" data-card-close aria-label="×">×</button>${sitePopupHtml(siteId)}`;
   c.hidden = false; cardSiteId = siteId;
+  syncPulse();
   c.scrollTop = 0;
   wireMedia(c);
   Overlays.show('card');
 }
-function closeCard() { const c = document.getElementById('card'); if (c) { c.hidden = true; c.innerHTML = ''; c.style.transform = ''; } cardSiteId = null; cardExp = null; Overlays.hide('card'); }
+function closeCard() { const c = document.getElementById('card'); if (c) { c.hidden = true; c.innerHTML = ''; c.style.transform = ''; } cardSiteId = null; cardExp = null; Overlays.hide('card'); syncPulse(); }
 let detailSiteId = null;
 function renderDetail(siteId) {
   const d = document.getElementById('detail');
@@ -2192,11 +2246,12 @@ function renderDetail(siteId) {
   d.innerHTML = detailHtml(siteId);
   d.hidden = false;
   detailSiteId = siteId;
+  syncPulse();
   d.querySelector('.amg-detail')?.scrollTo?.(0, 0);
   wireMedia(d);
   Overlays.show('detail');
 }
-function closeDetail() { const d = document.getElementById('detail'); if (d) { d.hidden = true; d.innerHTML = ''; } detailSiteId = null; Overlays.hide('detail'); }
+function closeDetail() { const d = document.getElementById('detail'); if (d) { d.hidden = true; d.innerHTML = ''; } detailSiteId = null; Overlays.hide('detail'); syncPulse(); }
 function openDetail(siteId) {
   if (typeof window.amgOpenDetail === 'function') return window.amgOpenDetail(siteId);
   renderDetail(siteId); // Popup/Card остаются под Detail (z-index) и снова доступны после Close
@@ -2404,9 +2459,10 @@ function showSitePopup(id, coords) {
     .setLngLat(coords)
     .setHTML(sitePopupHtml(id));
   pop.on('open', () => requestAnimationFrame(() => clampPopup(pop)));
-  pop.on('close', () => { if (popupRef === pop) { popupRef = null; popupSiteId = null; popupExp = null; popupPoi = null; } });
+  pop.on('close', () => { if (popupRef === pop) { popupRef = null; popupSiteId = null; popupExp = null; popupPoi = null; syncPulse(); } });
   pop.addTo(map);
   popupRef = pop; popupSiteId = id;
+  syncPulse();
   wireMedia(pop.getElement());
   pop.getElement().addEventListener('click', ev => {
     if (stage0Click(ev)) return;
@@ -3046,6 +3102,7 @@ function hereBlockHtml(siteId) {
   let note  = pick(LB[`here${st === 'confirmed' ? 'NoteSent' : st === 'fix-sent' ? 'FixNote' : ''}`] || LB.hereWhy);
   if (st === 'idle' && stage0.passport[siteId]) note = pick(LB.stampAgain).replace('{d}', fmtDay(stage0.passport[siteId]));
   else if (!AMG_UGC_ENABLED && st === 'idle') note = pick(LB.stampWhy);
+  else if (st === 'idle') note = pick(LB.hereWhy);   // LB.here — это подпись кнопки, не пояснение
   else if (!AMG_UGC_ENABLED && st === 'confirmed' && stage0.passport[siteId]) note = pick(LB.stampAgain).replace('{d}', fmtDay(stage0.passport[siteId]));
   const btnClass = (st === 'confirmed' || st === 'fix-sent') ? 'amg-btn primary' : 'amg-btn ghost';
   return `<div class="amg-here-block" data-here-block="${esc(siteId)}" data-state="${st}">
@@ -3424,6 +3481,7 @@ function dayGeo() {
 }
 // Пунктир «карандашом» под маркерами каталога. setStyle пересобирает стиль — слой возвращается на style.load.
 function drawDay() {
+  stage0.dayAnim++;                                   // отменяет идущую прорисовку
   try {
     if (!map.isStyleLoaded()) return;
     const src = map.getSource('amg-day');
@@ -3472,6 +3530,28 @@ function fitDayMap() {
   if (pts.length === 1) { map.flyTo({ center: pts[0], zoom: Math.max(map.getZoom(), 16) }); return; }
   const b = pts.reduce((bb, p) => bb.extend(p), new maplibregl.LngLatBounds(pts[0], pts[0]));
   map.fitBounds(b, { padding: { top: 140, bottom: 60, left: 40, right: 40 }, maxZoom: 16, duration: 700 });
+  animateDayLine();
+}
+// Пунктир «рисуется карандашом»: линия растёт от первой точки к последней (один раз, ~0.6–1.6 с).
+function animateDayLine() {
+  const src = map.getSource('amg-day'), full = dayGeo();
+  if (!src || !full.features.length) return drawDay();
+  if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return drawDay();
+  const pts = full.features[0].geometry.coordinates, cum = [0];
+  for (let i = 1; i < pts.length; i++) cum.push(cum[i - 1] + haversine(pts[i - 1][1], pts[i - 1][0], pts[i][1], pts[i][0]));
+  const total = cum[cum.length - 1] || 1, dur = Math.min(1600, 500 + pts.length * 160), t0 = performance.now();
+  const token = ++stage0.dayAnim;
+  const step = now => {
+    if (token !== stage0.dayAnim || !map.getSource('amg-day')) return;
+    const k = Math.min(1, (now - t0) / dur), L = (1 - Math.pow(1 - k, 3)) * total;
+    let i = 1; while (i < pts.length && cum[i] <= L) i++;
+    const part = pts.slice(0, i);
+    if (i < pts.length) { const f = (L - cum[i - 1]) / ((cum[i] - cum[i - 1]) || 1);
+      part.push([pts[i - 1][0] + (pts[i][0] - pts[i - 1][0]) * f, pts[i - 1][1] + (pts[i][1] - pts[i - 1][1]) * f]); }
+    map.getSource('amg-day').setData({ type:'FeatureCollection', features: part.length > 1 ? [{ type:'Feature', properties:{}, geometry:{ type:'LineString', coordinates: part } }] : [] });
+    if (k < 1) requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
 }
 function fitDay() { closeDayPanelOnly(); fitDayMap(); }
 function closeDayPanelOnly() { Overlays.hide('day'); }          // свернуть панель, но оставить маршрут на карте
@@ -3589,6 +3669,118 @@ if (map.isStyleLoaded()) drawDay(); else map.once('idle', drawDay);
 stage0Labels();
 // Маршрут по ссылке, открытой до того, как модуль дочитался (handleHash мог сработать раньше).
 if (/#route=/.test(location.hash || '')) handleHash();
+
+// ---------- Поиск по каталогу (без сервера, работает офлайн) ----------
+// Ищет по названиям мест и работ, художникам (с псевдонимами), адресам и городам на ru/en/ka.
+// Порядок: совпадение в названии → художник → адрес; при равенстве — ближе к центру карты.
+const SEARCH_MAX = 30;
+function searchNorm(s) {
+  return String(s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/ё/g, 'е')
+    .replace(/[«»"'’`.,;:()!?\/\\–—-]+/g, ' ').replace(/\s+/g, ' ').trim();
+}
+function searchValues(o) { return o && typeof o === 'object' ? Object.values(o).filter(v => typeof v === 'string') : (o ? [String(o)] : []); }
+function buildSearchIndex() {
+  stage0.searchIdx = catalog.sites.map(f => {
+    const p = f.properties, arts = catalog.artworksBySite.get(p.id) || [];
+    const names = [...searchValues(p.name), ...arts.flatMap(a => searchValues(a.title))];
+    const artists = arts.flatMap(a => (a.artist_ids || []).map(id => catalog.artists.get(id)).filter(Boolean))
+      .flatMap(x => [x.name, ...(x.aliases || [])]);
+    const place = [...searchValues(p.address), ...searchValues(catalog.cities.get(p.city))];
+    return { id: p.id, n: ' ' + searchNorm(names.join(' | ')), a: ' ' + searchNorm(artists.join(' | ')), pl: ' ' + searchNorm(place.join(' | ')) };
+  });
+}
+function searchSites(q) {
+  const toks = searchNorm(q).split(' ').filter(Boolean);
+  if (!toks.length) return [];
+  if (!stage0.searchIdx) buildSearchIndex();
+  const c = map.getCenter(), out = [];
+  for (const e of stage0.searchIdx) {
+    let score = 0, okAll = true;
+    for (const t of toks) {
+      if (e.n.includes(' ' + t)) score += 4;          // начало слова в названии
+      else if (e.n.includes(t)) score += 3;
+      else if (e.a.includes(t)) score += 2;
+      else if (e.pl.includes(t)) score += 1;
+      else { okAll = false; break; }
+    }
+    if (!okAll) continue;
+    const g = catalog.siteById.get(e.id).geometry.coordinates;
+    out.push({ id: e.id, score, d: haversine(c.lat, c.lng, g[1], g[0]) });
+  }
+  return out.sort((a, b) => (b.score - a.score) || (a.d - b.d));
+}
+function searchMark(text, q) {
+  // Подсветка первого совпадения первого слова запроса (без учёта регистра).
+  const t = searchNorm(q).split(' ')[0], s = String(text || '');
+  if (!t) return esc(s);
+  const i = s.toLowerCase().replace(/ё/g, 'е').indexOf(t);
+  return i < 0 ? esc(s) : esc(s.slice(0, i)) + '<mark>' + esc(s.slice(i, i + t.length)) + '</mark>' + esc(s.slice(i + t.length));
+}
+function renderSearch() {
+  const box = $('searchResults'), q = $('searchInput').value;
+  if (!box) return;
+  if (!searchNorm(q)) { box.innerHTML = `<div class="srch-note">${esc(pick(LB.searchHint))}</div>`; return; }
+  const hits = searchSites(q);
+  if (!hits.length) {
+    box.innerHTML = `<div class="srch-note ${handCls()}">${esc(pick(LB.searchNone))}</div><div class="srch-note">${esc(pick(LB.searchNoneHint))}</div>`;
+    return;
+  }
+  box.innerHTML = hits.slice(0, SEARCH_MAX).map(h => {
+    const f = catalog.siteById.get(h.id), p = f.properties, arts = catalog.artworksBySite.get(h.id) || [];
+    const cat = CATEGORIES.find(c => c.key === siteCat(p, arts));
+    const artists = [...new Set(arts.flatMap(a => (a.artist_ids || []).map(id => catalog.artists.get(id)?.name).filter(Boolean)))].slice(0, 2).join(', ');
+    const meta = [cat ? pick(cat.label) : '', artists, pick(p.address), pick(catalog.cities.get(p.city) || {})].filter(Boolean).join(' · ');
+    return `<button type="button" class="srch-hit" data-hit="${esc(h.id)}"><img src="${siteIconUri(h.id)}" alt="">
+      <span class="srch-txt"><span class="srch-nm">${searchMark(siteTitle(f), q)}</span><span class="srch-meta">${esc(meta)}</span></span></button>`;
+  }).join('') + (hits.length > SEARCH_MAX ? `<div class="srch-note">${esc(pick(LB.searchMore).replace('{n}', hits.length))}</div>` : '');
+}
+function openSearch() {
+  Overlays.hide('menu');
+  Overlays.show('search');
+  const inp = $('searchInput');
+  inp.placeholder = pick(LB.searchPh);
+  renderSearch();
+  setTimeout(() => { inp.focus(); inp.select(); }, 30);
+}
+function pickSearchHit(id) {
+  Overlays.hide('search');
+  focusSite(id);
+}
+Overlays.register('search', $('search'));
+$('searchBtn').onclick = openSearch;
+$('searchClose').onclick = () => Overlays.hide('search');
+$('searchInput').addEventListener('input', renderSearch);
+$('searchInput').addEventListener('keydown', ev => {
+  if (ev.key === 'Enter') { const first = $('searchResults').querySelector('[data-hit]'); if (first) pickSearchHit(first.dataset.hit); }
+});
+$('searchResults').addEventListener('click', ev => { const h = ev.target.closest('[data-hit]'); if (h) pickSearchHit(h.dataset.hit); });
+// «/» открывает поиск (как на многих сайтах), если пользователь не печатает в поле.
+document.addEventListener('keydown', ev => {
+  if (ev.key !== '/' || ev.ctrlKey || ev.metaKey || ev.altKey) return;
+  const t = ev.target; if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable)) return;
+  ev.preventDefault(); openSearch();
+});
+$('lang').addEventListener('change', () => {
+  $('searchBtn').setAttribute('aria-label', pick(LB.searchBtn)); $('searchBtn').title = pick(LB.searchBtn);
+  if (Overlays.isOpen('search')) { $('searchInput').placeholder = pick(LB.searchPh); renderSearch(); }
+});
+$('searchBtn').setAttribute('aria-label', pick(LB.searchBtn)); $('searchBtn').title = pick(LB.searchBtn);
+
+// ---------- Пульс выбранного объекта ----------
+// Кольцо вокруг острия булавки, пока открыта карточка / «Подробно» / попап. Состояние — stage0.pulse.
+function syncPulse() {
+  let id = null;
+  try { id = cardSiteId || detailSiteId || popupSiteId || null; } catch (_) { return; }   // до объявления переменных
+  const f = id && catalog.siteById.get(id);
+  if (!f) { if (stage0.pulse) { stage0.pulse.remove(); stage0.pulse = null; } return; }
+  if (!stage0.pulse) {
+    const el = document.createElement('div');
+    el.className = 'amg-pulse'; el.setAttribute('aria-hidden', 'true'); el.innerHTML = '<i></i><i></i>';
+    stage0.pulse = new maplibregl.Marker({ element: el, anchor: 'center' });
+  }
+  stage0.pulse.setLngLat(f.geometry.coordinates).addTo(map);
+}
+syncPulse();
 
 </script>
 </body>
