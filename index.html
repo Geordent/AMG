@@ -51,7 +51,7 @@
   .amg-tip { margin:8px 0 4px; padding:8px 12px; border-radius:10px; background:#FBF3DC; color:#4A3F38; font-size:21px; line-height:1.15; }
   .amg-tip b { color:#6E2639; }
   .amg-tip.plain { font-size:13px; line-height:1.45; }
-  /* Заставка «Рисуем Тбилиси…»: карандаш рисует силуэт, пока грузятся библиотека и каталог */
+  /* Заставка «Рисуем Грузию…»: карандаш рисует силуэт, пока грузятся библиотека и каталог */
   #amgLoader { position:fixed; inset:0; z-index:50; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px;
     background:#F6EFE4; transition:opacity .35s ease; }
   #amgLoader.done { opacity:0; pointer-events:none; }
@@ -421,7 +421,7 @@
 </style>
 </head>
 <body>
-<!-- Заставка «Рисуем Тбилиси…» (стиль «Скетчбук»): снимается после первой отрисовки карты (amgLoaderDone), страховка — 12 с -->
+<!-- Заставка «Рисуем Грузию…» (стиль «Скетчбук»): снимается после первой отрисовки карты (amgLoaderDone), страховка — 12 с -->
 <div id="amgLoader" role="status" aria-live="polite">
   <svg viewBox="0 0 260 120" aria-hidden="true">
     <path d="M8 108 H252"/>
@@ -432,13 +432,18 @@
     <path d="M164 108 V66 H200 V108 M200 82 H236 V108"/>
     <path class="w" d="M210 38 C 214 30, 222 30, 224 38 S 236 46, 240 38"/>
   </svg>
-  <span class="amg-hand" id="amgLoaderText">Рисуем Тбилиси…</span>
+  <span class="amg-hand" id="amgLoaderText">Рисуем Грузию…</span>
 </div>
 <script>
 (function () {
-  var l = (navigator.language || 'ru').slice(0, 2), t = document.getElementById('amgLoaderText');
-  if (l === 'en') t.textContent = 'Drawing Tbilisi…';
-  if (l === 'ka') { t.textContent = 'ვხატავთ თბილისს…'; t.className = 'amg-hand plain'; }
+  // Язык сайта: сохранённый выбор → язык браузера (ka; ru/uk/be/kk → ru; остальные → en). Его же берёт модуль (window.__amgLang).
+  var saved = null; try { saved = localStorage.getItem('amg-lang'); } catch (e) {}
+  var b = (navigator.language || 'ru').slice(0, 2).toLowerCase();
+  var l = /^(ru|en|ka)$/.test(saved || '') ? saved : b === 'ka' ? 'ka' : /^(ru|uk|be|kk)$/.test(b) ? 'ru' : 'en';
+  window.__amgLang = l;
+  var t = document.getElementById('amgLoaderText');
+  if (l === 'en') t.textContent = 'Drawing Georgia…';
+  if (l === 'ka') { t.textContent = 'ვხატავთ საქართველოს…'; t.className = 'amg-hand plain'; }
   window.amgLoaderDone = function () {
     var el = document.getElementById('amgLoader'); if (!el || el.classList.contains('done')) return;
     el.classList.add('done'); setTimeout(function () { el.remove(); }, 400);
@@ -630,8 +635,11 @@ const readExpPref = () => {
 const readOfflinePref = () => {
   try { return localStorage.getItem('amg-offline-only') === '1'; } catch (_) { return false; }
 };
-const state = { flavor:'light', lang:'ru', offlineOnly: readOfflinePref(), lastError:'', categories:null,
+const state = { flavor:'light', lang: window.__amgLang || 'ru', offlineOnly: readOfflinePref(), lastError:'', categories:null,
   transit: readTransitPref(), exp: readExpPref() };
+// Выбор языка в меню — тот же, что у заставки; смена языка запоминается (localStorage 'amg-lang').
+try { document.getElementById('lang').value = state.lang; } catch (_) {}
+document.getElementById('lang').addEventListener('change', e => { try { localStorage.setItem('amg-lang', e.target.value); } catch (_) {} });
 // UGC («Я здесь») включаем только после реального запуска Telegram-бота и публикации feed.
 const AMG_UGC_ENABLED = true;    // бот @artmap_georgia_bot включён 2026-10-27 (GitHub Actions, docs/2026-10-27-amg-crowd-concept.md)
 // Этап 0 краудсорсинга: «Я здесь» ставит штамп в паспорт (локально, без бота). Подробности — в конце модуля.
@@ -767,6 +775,7 @@ const LB = {
   passHow:    { ru:'Подойди к объекту и нажми «Я здесь» в его карточке — он станет штампом. Паспорт хранится только в этом браузере.', en:'Walk up to an object and tap “I’m here” in its card to collect a stamp. The passport lives only in this browser.', ka:'მიდი ობიექტთან და ბარათში დააჭირე «აქ ვარ» — მიიღებ შტამპს. პასპორტი ინახება მხოლოდ ამ ბრაუზერში.' },
   dayBtn:     { ru:'Мой день', en:'My day', ka:'ჩემი დღე' },
   routesBtn:  { ru:'Маршруты', en:'Routes', ka:'მარშრუტები' },
+  streetView: { ru:'Посмотреть на улице', en:'Street view', ka:'ქუჩის ხედი' },
   readyTitle: { ru:'Готовые маршруты', en:'Ready-made routes', ka:'მზა მარშრუტები' },
   readyStops: { ru:'точек', en:'stops', ka:'წერტილი' },
   readyStraight:{ ru:'по прямой', en:'straight line', ka:'პირდაპირ' },
@@ -1908,6 +1917,17 @@ function sourceLinks(list) {
     return `<a href="${esc(url)}" target="_blank" rel="noopener">${esc(s.title)}</a> ${role}`;
   }).filter(Boolean).join(' · ');
 }
+// «Посмотреть на улице»: панорама Google Street View в точке объекта. Ссылка, а не чужое фото в карточке —
+// для муралов это вариант без вопросов об авторском праве (docs/2026-10-27-amg-photos-legal-sources.md).
+function streetViewBtn(lat, lng) {
+  if (lat == null || lng == null) return '';
+  const url = 'https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=' + (+lat).toFixed(6) + ',' + (+lng).toFixed(6);
+  return `<a class="amg-btn ghost" href="${esc(url)}" target="_blank" rel="noopener">${esc(pick(LB.streetView))}</a>`;
+}
+function streetViewBtnFor(siteId) {
+  const f = catalog.siteById.get(siteId);
+  return f ? streetViewBtn(f.geometry.coordinates[1], f.geometry.coordinates[0]) : '';
+}
 function routeButtons(lat, lng) {
   return ROUTE_PROVIDERS.map((p, i) => {
     const cls = i === 0 ? 'amg-btn primary' : 'amg-btn';
@@ -2100,7 +2120,7 @@ function sitePopupHtml(siteId) {
     <div class="amg-meta">${esc(pick(LB.access))}: ${esc(labelOf(ACCESS_LABELS, p.access))} · ${esc(vis)}</div>
     ${media}
     ${src}
-    <div class="amg-actions">${routeButtons(lat, lng)}<button type="button" class="amg-btn ghost" data-share="${esc(siteId)}">${esc(pick(LB.share))}</button><button type="button" class="amg-btn ghost" data-detail="${esc(siteId)}">${esc(pick(LB.detail))}</button>${dayBtnHtml(siteId)}</div>
+    <div class="amg-actions">${routeButtons(lat, lng)}${streetViewBtn(lat, lng)}<button type="button" class="amg-btn ghost" data-share="${esc(siteId)}">${esc(pick(LB.share))}</button><button type="button" class="amg-btn ghost" data-detail="${esc(siteId)}">${esc(pick(LB.detail))}</button>${dayBtnHtml(siteId)}</div>
     ${(AMG_UGC_ENABLED || AMG_STAMPS_ENABLED) ? hereBlockHtml(siteId) : ''}
     <button type="button" class="amg-link" data-report="${esc(siteId)}">${esc(pick(LB.repBtn))}</button>
   </div>`;
@@ -2153,7 +2173,7 @@ function detailHtml(siteId) {
     ${landmark ? `<div class="amg-meta amg-addr">${esc(landmark)}</div>` : ''}
     <div class="amg-meta">${esc(pick(LB.access))}: ${esc(labelOf(ACCESS_LABELS, p.access))} · ${esc(vis)}</div>
     ${(AMG_UGC_ENABLED || AMG_STAMPS_ENABLED) ? hereBlockHtml(siteId) : ''}
-    <div class="amg-actions">${dayBtnHtml(siteId)}<button type="button" class="amg-btn ghost" data-report="${esc(siteId)}">${esc(pick(LB.repBtn))}</button></div>
+    <div class="amg-actions">${streetViewBtnFor(siteId)}${dayBtnHtml(siteId)}<button type="button" class="amg-btn ghost" data-report="${esc(siteId)}">${esc(pick(LB.repBtn))}</button></div>
     ${siteDesc ? `<div class="amg-desc">${esc(siteDesc)}</div>` : ''}
     ${tipHtml(p, arts)}
     ${gallery.length ? `<div class="amg-detail-gallery">${gallery.join('')}</div>` : ''}
@@ -2371,7 +2391,7 @@ function expCardHtml(p, coords) {
     ${desc}
     ${srcHtml ? `<div class="amg-src">${esc(descLbl)}: ${srcHtml}</div>` : ''}
     ${contacts}
-    ${lat != null ? `<div class="amg-actions">${routeButtons(lat, lng)}</div>` : ''}
+    ${lat != null ? `<div class="amg-actions">${routeButtons(lat, lng)}${streetViewBtn(lat, lng)}</div>` : ''}
   </div>`;
 }
 // Слои, клик по которым открывает карточку «впечатления».
