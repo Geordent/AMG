@@ -655,8 +655,8 @@ try { document.getElementById('lang').value = state.lang; } catch (_) {}
 document.getElementById('lang').addEventListener('change', e => { try { localStorage.setItem('amg-lang', e.target.value); } catch (_) {} });
 // UGC («Я здесь») включаем только после реального запуска Telegram-бота и публикации feed.
 // Статистика посещений — GoatCounter (без cookie и личных данных). Код аккаунта: artmap-georgia → artmap-georgia.goatcounter.com.
-// Пока пусто — выключено. При включении обновить privacy.html (раздел «Карта и внешние сервисы»).
-const AMG_GOATCOUNTER = '';
+// Включён 2026-10-27; пустая строка — выключить. Описан в privacy.html (раздел «Карта и внешние сервисы»).
+const AMG_GOATCOUNTER = 'artmap-georgia';
 function track(name) {   // событие «что используют» (без данных о человеке): search, route-…, stamp, pack-…, report
   try { if (AMG_GOATCOUNTER && window.goatcounter && window.goatcounter.count) window.goatcounter.count({ path:'event/' + name, title:name, event:true }); } catch (_) {}
 }
