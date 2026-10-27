@@ -413,6 +413,18 @@
   }
   html.is-mobile #topui > #bar { display:none; }
   html.is-mobile #menuBtn { display:flex; }
+  /* ---- Подсказка «скачайте карту города» и справка по маршрутам ---- */
+  #packHint { position:fixed; left:50%; transform:translateX(-50%); bottom:calc(14px + env(safe-area-inset-bottom,0px)); z-index:16;
+    width:min(460px, calc(100vw - 24px)); box-sizing:border-box; display:flex; flex-direction:column; gap:10px;
+    background:#FFFBF5; color:#2B2420; border-radius:16px; padding:14px 16px; box-shadow:0 10px 32px rgba(0,0,0,.25), inset 0 0 0 1px #E6D9C6; font-size:14px; line-height:1.4; }
+  #packHint[hidden] { display:none; }
+  #packHint .ph-btns { display:flex; gap:8px; }
+  #packHint .ph-btns .amg-btn { flex:1; }
+  .amg-help { margin:10px 0 8px; font-size:13px; color:#4A3F38; }
+  .amg-help summary { cursor:pointer; color:#1F6F78; font-weight:600; padding:6px 0; }
+  .amg-help summary:focus-visible { outline:2px solid #B8482A; outline-offset:2px; border-radius:4px; }
+  .amg-help ol { margin:6px 0 4px; padding-left:20px; }
+  .amg-help li { margin:3px 0; line-height:1.4; }
   #rotateHint { position:fixed; left:50%; transform:translateX(-50%); bottom:calc(14px + env(safe-area-inset-bottom,0px)); z-index:15;
     display:flex; align-items:center; gap:10px; max-width:calc(100vw - 24px);
     background:rgba(42,38,34,.94); color:#fff; padding:10px 12px; border-radius:12px; font-size:13px; box-shadow:0 6px 20px rgba(0,0,0,.25); }
@@ -528,6 +540,7 @@
   <div class="btns"><button class="btn" id="expClose" type="button">Закрыть</button></div>
 </div>
 <div id="toast" hidden></div>
+<div id="packHint" hidden role="status"><span class="ph-text"></span><span class="ph-btns"><button type="button" id="phYes" class="amg-btn primary"></button><button type="button" id="phNo" class="amg-btn"></button></span></div>
 <div id="rotateHint" hidden><span class="rh-text"></span><button type="button" id="rhClose" aria-label="×">×</button></div>
 <div id="card" hidden></div>
 <div id="detail" hidden></div>
@@ -641,6 +654,18 @@ const state = { flavor:'light', lang: window.__amgLang || 'ru', offlineOnly: rea
 try { document.getElementById('lang').value = state.lang; } catch (_) {}
 document.getElementById('lang').addEventListener('change', e => { try { localStorage.setItem('amg-lang', e.target.value); } catch (_) {} });
 // UGC («Я здесь») включаем только после реального запуска Telegram-бота и публикации feed.
+// Статистика посещений — GoatCounter (без cookie и личных данных). Код аккаунта: artmap-georgia → artmap-georgia.goatcounter.com.
+// Пока пусто — выключено. При включении обновить privacy.html (раздел «Карта и внешние сервисы»).
+const AMG_GOATCOUNTER = '';
+function track(name) {   // событие «что используют» (без данных о человеке): search, route-…, stamp, pack-…, report
+  try { if (AMG_GOATCOUNTER && window.goatcounter && window.goatcounter.count) window.goatcounter.count({ path:'event/' + name, title:name, event:true }); } catch (_) {}
+}
+if (AMG_GOATCOUNTER) {
+  const gc = document.createElement('script');
+  gc.async = true; gc.src = 'https://gc.zgo.at/count.js';
+  gc.dataset.goatcounter = 'https://' + AMG_GOATCOUNTER + '.goatcounter.com/count';
+  document.head.appendChild(gc);
+}
 const AMG_UGC_ENABLED = true;    // бот @artmap_georgia_bot включён 2026-10-27 (GitHub Actions, docs/2026-10-27-amg-crowd-concept.md)
 // Этап 0 краудсорсинга: «Я здесь» ставит штамп в паспорт (локально, без бота). Подробности — в конце модуля.
 const AMG_STAMPS_ENABLED = true;
@@ -776,6 +801,15 @@ const LB = {
   dayBtn:     { ru:'Мой день', en:'My day', ka:'ჩემი დღე' },
   routesBtn:  { ru:'Маршруты', en:'Routes', ka:'მარშრუტები' },
   streetView: { ru:'Посмотреть на улице', en:'Street view', ka:'ქუჩის ხედი' },
+  packHintText:{ ru:'Скачайте карту «{city}» ({size}) — она будет работать без интернета. Лучше по Wi-Fi.', en:'Download the “{city}” map ({size}) to use it without internet. Best on Wi-Fi.', ka:'ჩამოტვირთე რუკა «{city}» ({size}) — ინტერნეტის გარეშე იმუშავებს. უმჯობესია Wi-Fi-ით.' },
+  packHintYes:{ ru:'Скачать', en:'Download', ka:'ჩამოტვირთვა' },
+  packHintNo: { ru:'Не сейчас', en:'Not now', ka:'ახლა არა' },
+  routeHelpTitle:{ ru:'Как собрать маршрут', en:'How to build a route', ka:'როგორ შევქმნათ მარშრუტი' },
+  routeHelpSteps:{
+    ru:['В карточке объекта нажмите «+ В мой день» — так для каждой нужной точки.', 'Откройте «Маршруты»: порядок меняют кнопки ↑ ↓, лишнюю точку убирает ×.', '«Показать на карте» вписывает маршрут в экран пунктиром.', '«Поделиться ссылкой» — друг откроет маршрут и сможет сохранить его себе.'],
+    en:['In an object’s card tap “+ My day” — repeat for every stop you want.', 'Open “Routes”: the ↑ ↓ buttons change the order, × removes a stop.', '“Show on map” fits the route on screen with a dotted line.', '“Share link” — a friend opens the route and can save it as theirs.'],
+    ka:['ობიექტის ბარათში დააჭირე «+ ჩემს დღეში» — ყველა საჭირო წერტილისთვის.', 'გახსენი «მარშრუტები»: ↑ ↓ ღილაკებით რიგი იცვლება, × წერტილს შლის.', '«რუკაზე ჩვენება» მარშრუტს პუნქტირით ეკრანზე ათავსებს.', '«ბმულის გაზიარება» — მეგობარი მარშრუტს გახსნის და თავისთვის შეინახავს.'] },
+  routeHelpNote:{ ru:'До 25 точек, только объекты каталога, расстояния по прямой. Маршрут хранится в этом браузере: если очистить данные сайта, он исчезнет — поделитесь ссылкой, чтобы сохранить.', en:'Up to 25 stops, catalog objects only, straight-line distances. The route lives in this browser: clearing site data deletes it — share the link to keep a copy.', ka:'მაქსიმუმ 25 წერტილი, მხოლოდ კატალოგის ობიექტები, მანძილი პირდაპირ ხაზზე. მარშრუტი ინახება ამ ბრაუზერში: საიტის მონაცემების გასუფთავებისას წაიშლება — შესანახად ბმული გააზიარე.' },
   readyTitle: { ru:'Готовые маршруты', en:'Ready-made routes', ka:'მზა მარშრუტები' },
   readyStops: { ru:'точек', en:'stops', ka:'წერტილი' },
   readyStraight:{ ru:'по прямой', en:'straight line', ka:'პირდაპირ' },
@@ -1061,6 +1095,31 @@ const tileProtocol = packOrPicker => async (params, abort) => {
 };
 maplibregl.addProtocol('amgbase', tileProtocol(PACKS[0]));
 maplibregl.addProtocol('amgdetail', tileProtocol(cityPackFor));
+// OpenFreeMap (онлайн-детализация вне городов с паками). Адрес тайлов содержит версию планеты, поэтому
+// описание (TileJSON) читаем один раз за визит, а не вшиваем в код.
+const OFM_TILEJSON = 'https://tiles.openfreemap.org/planet';
+const OFM_CITY_MIN_ZOOM = 14;   // = minzoom слоя ofm-housenumber
+const OFM_ATTR = '<a href="https://openfreemap.org" target="_blank">OpenFreeMap</a> <a href="https://www.openmaptiles.org/" target="_blank">&copy; OpenMapTiles</a> Data from <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>';
+let ofmTemplate = null;
+function ofmTemplateGet() {
+  if (!ofmTemplate) ofmTemplate = fetch(OFM_TILEJSON).then(r => r.json()).then(j => j.tiles[0]).catch(e => { ofmTemplate = null; throw e; });
+  return ofmTemplate;
+}
+maplibregl.addProtocol('amgofm', async (params, abort) => {
+  const m = /(\d+)\/(\d+)\/(\d+)/.exec(params.url);
+  const z = +m[1], x = +m[2], y = +m[3];
+  // Внутри города пак сам рисует дороги, здания и названия, а OpenFreeMap добавляет только номера домов (слой с зума 14).
+  // Поэтому на обзоре города (z<14, в том числе при старте) его тайлы не нужны, на уровне улиц — грузим как раньше.
+  if (z < OFM_CITY_MIN_ZOOM && cityPackFor(z, x, y)) return { data: new Uint8Array() };
+  try {
+    const url = (await ofmTemplateGet()).replace('{z}', z).replace('{x}', x).replace('{y}', y);
+    const r = await fetch(url, { signal: abort && abort.signal });
+    return { data: r.ok ? new Uint8Array(await r.arrayBuffer()) : new Uint8Array() };
+  } catch (e) {
+    if (abort && abort.signal && abort.signal.aborted) throw e;   // отменённый тайл не кэшируем как пустой
+    return { data: new Uint8Array() };
+  }
+});
 
 // ---------- стиль ----------
 // SITE как географический источник; label/icon/status/count вычисляются из связанных ARTWORK.
@@ -1453,7 +1512,9 @@ function buildStyle() {
   // внутри своего bbox; снаружи online виден). В offlineOnly online source/слои не добавляются.
   let online = [];
   if (!state.offlineOnly && navigator.onLine) {
-    sources.openmaptiles = { type:'vector', url:'https://tiles.openfreemap.org/planet' };
+    // Тайлы идут через протокол amgofm: он берёт описание OpenFreeMap только когда нужен первый тайл и
+    // пропускает тайлы на обзоре городов с паками (z<14) — при старте в Тбилиси ни одного запроса.
+    sources.openmaptiles = { type:'vector', tiles:['amgofm://{z}/{x}/{y}'], minzoom:0, maxzoom:14, attribution: OFM_ATTR };
     online = onlineDetailLayers();
   }
   return {
@@ -3399,6 +3460,7 @@ async function prefetchAssets() {
 
 async function download(p) {
   if (busy) return toast(pick(LB.busyDownload));
+  track('pack-' + p.id);
   busy = p.id;
   try {
     if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => {});
@@ -3477,6 +3539,7 @@ function stage0Labels() {
 function addStamp(id) {
   if (!catalog.siteById.get(id)) return Object.keys(stage0.passport).length;
   if (!stage0.passport[id]) {
+    track('stamp');
     stage0.passport[id] = new Date().toISOString().slice(0, 10);
     stage0.passportNew = id;
     stage0Save('amg-passport', stage0.passport);
@@ -3581,7 +3644,11 @@ function renderDay() {
     ${route ? `<p class="amg-route-desc">${esc(pick(route.theme))}. ${esc(pick(route.desc))}</p>` : ''}
     ${ids.length ? `<ol class="amg-day-list">${rows}</ol>${total}` : `<p class="amg-sub ${hand}">${esc(pick(LB.dayEmpty))}</p><p class="small">${esc(pick(LB.dayHow))}</p>`}
     ${ready}
+    ${shared ? '' : routeHelpHtml()}
     <div class="btns">${btns}<button type="button" class="btn" data-close-panel="day">${esc(pick(LB.close))}</button></div>`;
+}
+function routeHelpHtml() {
+  return `<details class="amg-help"><summary>? ${esc(pick(LB.routeHelpTitle))}</summary><ol>${pickList(LB.routeHelpSteps).map(t => `<li>${esc(t)}</li>`).join('')}</ol><p class="small">${esc(pick(LB.routeHelpNote))}</p></details>`;
 }
 function openDay() {
   Overlays.hide('menu'); renderDay(); Overlays.show('day');
@@ -3601,6 +3668,7 @@ function routeLen(stops) {
 }
 async function openReadyRoute(id) {
   const r = (await loadRoutes()).find(x => x.id === id); if (!r) return;
+  track('route-' + id);
   stage0.dayShared = r.stops.slice(); stage0.dayRoute = r;
   drawDay(); fitDayMap(); renderDay(); Overlays.hide('menu'); Overlays.show('day');
 }
@@ -3640,6 +3708,7 @@ function animateDayLine() {
 function fitDay() { closeDayPanelOnly(); fitDayMap(); }
 function closeDayPanelOnly() { Overlays.hide('day'); }          // свернуть панель, но оставить маршрут на карте
 function shareDay() {
+  track('route-share');
   const url = location.origin + location.pathname + (stage0.dayShared && stage0.dayRoute
     ? '#ready=' + encodeURIComponent(stage0.dayRoute.id)
     : '#route=' + stage0.day.map(encodeURIComponent).join(','));
@@ -3685,6 +3754,7 @@ function dayPanelClick(ev) {
 // --- «Сообщить о проблеме» → заполненная форма GitHub Issue ---
 function openReport(siteId, kind, pos) {
   if (!catalog.siteById.get(siteId)) return;
+  track('report');
   stage0.report = { siteId, kind: kind || '', pos: pos || null };
   renderReport(); Overlays.show('report');
 }
@@ -3822,6 +3892,7 @@ function renderSearch() {
   }).join('') + (hits.length > SEARCH_MAX ? `<div class="srch-note">${esc(pick(LB.searchMore).replace('{n}', hits.length))}</div>` : '');
 }
 function openSearch() {
+  track('search');
   Overlays.hide('menu');
   Overlays.show('search');
   const inp = $('searchInput');
@@ -3868,6 +3939,49 @@ function syncPulse() {
   stage0.pulse.setLngLat(f.geometry.coordinates).addTo(map);
 }
 syncPulse();
+
+// ---------- Подсказка «Скачайте карту города» ----------
+// Показываем не чаще двух раз на город и один раз за визит: когда центр карты внутри города с паком,
+// пак не скачан, мы онлайн, трафик не экономится и не мобильная сеть/2G (где API это сообщает), панели закрыты.
+const PACKHINT_KEY = 'amg-packhint';
+const packHintStore = () => { try { const j = JSON.parse(localStorage.getItem(PACKHINT_KEY)); return j && typeof j === 'object' ? j : {}; } catch (_) { return {}; } };
+const packHintSave = (id, n) => { const st = packHintStore(); st[id] = n; try { localStorage.setItem(PACKHINT_KEY, JSON.stringify(st)); } catch (_) {} };
+let packHintShown = false, packHintPack = null;
+function packHintNetOk() {
+  if (!navigator.onLine || state.offlineOnly) return false;
+  const c = navigator.connection;   // есть не везде (нет в Safari): тогда считаем сеть допустимой
+  // effectiveType — грубая оценка (на нормальном Wi-Fi нередко «3g»), поэтому режем только slow-2g/2g, мобильную сеть и экономию трафика.
+  return !(c && (c.saveData || c.type === 'cellular' || /^(slow-2g|2g)$/.test(c.effectiveType || '')));
+}
+function packAtCenter() {
+  const c = map.getCenter();
+  return PACKS.find(p => p.city && c.lng >= p.bbox[0] && c.lng <= p.bbox[2] && c.lat >= p.bbox[1] && c.lat <= p.bbox[3]) || null;
+}
+async function maybeShowPackHint() {
+  if (packHintShown || busy || Overlays.stack.length || !packHintNetOk()) return;
+  const p = packAtCenter();
+  if (!p || p.local || (packHintStore()[p.id] || 0) >= 2) return;
+  packHintShown = true;                         // ставим сразу: размер пакета запрашивается асинхронно
+  const info = await probe(p);
+  if (!info.size) { packHintShown = false; return; }   // файла нет на сервере (локальный запуск)
+  packHintPack = p;
+  packHintSave(p.id, (packHintStore()[p.id] || 0) + 1);
+  const el = $('packHint');
+  el.querySelector('.ph-text').textContent = pick(LB.packHintText).replace('{city}', pick(p.title)).replace('{size}', mb(info.size));
+  $('phYes').textContent = pick(LB.packHintYes); $('phNo').textContent = pick(LB.packHintNo);
+  el.hidden = false;
+}
+$('phNo').onclick = () => { if (packHintPack) packHintSave(packHintPack.id, 99); $('packHint').hidden = true; };
+$('phYes').onclick = async () => {
+  const p = packHintPack; $('packHint').hidden = true; if (!p) return;
+  packHintSave(p.id, 99);
+  Overlays.hide('menu'); Overlays.show('sheet'); await renderPacks();   // прогресс виден в панели «Офлайн»
+  download(p);
+};
+// Первая проверка — через 8 с после старта (заставка и первые тайлы уже позади), далее при остановке карты.
+let packHintTimer = 0;
+setTimeout(maybeShowPackHint, 8000);
+map.on('moveend', () => { clearTimeout(packHintTimer); packHintTimer = setTimeout(maybeShowPackHint, 2500); });
 
 </script>
 </body>
