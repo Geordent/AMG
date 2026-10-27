@@ -27,6 +27,8 @@ jobs:
           node scripts/validate-data.mjs
           node scripts/validate-experiences.mjs
           node scripts/contrib-test.mjs
+          node scripts/extract-tiles.mjs
+          node scripts/validate-routes.mjs
           test -s data/transit.geojson
           test -s data/experiences.geojson
           test -s privacy.html
@@ -66,7 +68,8 @@ jobs:
         uses: actions/cache@v4
         with:
           path: tiles-cache
-          key: tiles-v1-${{ env.WEEK }}
+          # пересобираем раз в неделю и при изменении списка пакетов
+          key: tiles-v2-${{ env.WEEK }}-${{ hashFiles('data/offline-packs.json') }}
       - name: Install pmtiles
         if: steps.tiles.outputs.cache-hit != 'true'
         env:
@@ -92,9 +95,8 @@ jobs:
         if: steps.tiles.outputs.cache-hit != 'true'
         run: |
           test -n "$BUILD" || { echo "No planet build found"; exit 1; }
-          mkdir -p tiles-cache
-          pmtiles extract "https://build.protomaps.com/$BUILD.pmtiles" tiles-cache/tbilisi.pmtiles --bbox=44.68,41.62,44.95,41.82
-          pmtiles extract "https://build.protomaps.com/$BUILD.pmtiles" tiles-cache/georgia.pmtiles --bbox=39.9,41.0,46.8,43.7 --maxzoom=9
+          # обзор Грузии + города из data/offline-packs.json
+          node scripts/extract-tiles.mjs "https://build.protomaps.com/$BUILD.pmtiles" tiles-cache
       - name: Assemble site
         run: |
           mkdir -p site/tiles
@@ -120,7 +122,7 @@ jobs:
           test -s site/og-cover.jpg || { echo "FATAL: og-cover.jpg not copied"; exit 1; }
           test -s site/robots.txt || { echo "FATAL: robots.txt not copied"; exit 1; }
           test -s site/sitemap.xml || { echo "FATAL: sitemap.xml not copied"; exit 1; }
-          test -s site/tiles/tbilisi.pmtiles && test -s site/tiles/georgia.pmtiles || { echo "FATAL: tiles missing"; exit 1; }
+          node scripts/extract-tiles.mjs --check site/tiles || { echo "FATAL: tiles missing"; exit 1; }
           # Версия кэша оболочки SW = хеш файлов, которые SW отдаёт cache-first: ручной bump больше не нужен,
           # а правка только данных/текстов не вызывает у пользователей «обновление сайта».
           H=$(find site/sw.js site/vendor site/icons site/fonts site/assets site/manifest.webmanifest site/og-cover.jpg -type f -print0 | sort -z | xargs -0 sha256sum | sha256sum | cut -c1-10)

@@ -1,0 +1,34 @@
+{
+  "version": 1,
+  "note": "Готовые маршруты по районам. stops — id мест в порядке обхода (ближайший следующий; только объекты со статусом active). Расстояние и время сайт считает сам. Проверка: node scripts/validate-routes.mjs",
+  "routes": [
+    {
+      "id": "sololaki-old-town",
+      "title": { "ru": "Старый город: от площади Свободы по Сололаки", "en": "Old Town: from Freedom Square through Sololaki", "ka": "ძველი ქალაქი: თავისუფლების მოედნიდან სოლოლაკში" },
+      "theme": { "ru": "Муралы и стрит-арт", "en": "Murals & street art", "ka": "მურალები და სტრიტ-არტი" },
+      "desc": { "ru": "Памятник Свободы, муралы Тбилиси Мурал Феста на улицах Асатиани и Атонели и стрит-арт старого города.", "en": "Freedom Monument, Tbilisi Mural Fest walls on Asatiani and Atoneli streets and Old Town street art.", "ka": "თავისუფლების ძეგლი, Tbilisi Mural Fest-ის მურალები ასათიანისა და ათონელის ქუჩებზე და ძველი ქალაქის სტრიტ-არტი." },
+      "stops": ["site-0022", "site-0533", "site-0428", "site-0355", "site-0482", "site-0415", "site-0534", "site-0009", "site-0461", "site-0010", "site-0035", "site-0003", "site-0450", "site-0425", "site-0508"]
+    },
+    {
+      "id": "vake-murals",
+      "title": { "ru": "Ваке: муралы на Чавчавадзе и Чиковани", "en": "Vake: murals on Chavchavadze and Chikovani", "ka": "ვაკე: მურალები ჭავჭავაძესა და ჩიქოვანზე" },
+      "theme": { "ru": "Муралы", "en": "Murals", "ka": "მურალები" },
+      "desc": { "ru": "Работы Тбилиси Мурал Феста и уличных художников в зелёном районе Ваке — от проспекта Чавчавадзе до улицы Чиковани.", "en": "Tbilisi Mural Fest and street artists in leafy Vake — from Chavchavadze Avenue to Chikovani Street.", "ka": "Tbilisi Mural Fest-ისა და ქუჩის მხატვრების ნამუშევრები მწვანე ვაკეში — ჭავჭავაძის გამზირიდან ჩიქოვანის ქუჩამდე." },
+      "stops": ["site-0420", "site-0453", "site-0449", "site-0356", "site-0405", "site-0006", "site-0380", "site-0426"]
+    },
+    {
+      "id": "saburtalo-mosaic-murals",
+      "title": { "ru": "Сабуртало: советская мозаика и муралы", "en": "Saburtalo: Soviet mosaic and murals", "ka": "საბურთალო: საბჭოთა მოზაიკა და მურალები" },
+      "theme": { "ru": "Мозаика и муралы", "en": "Mosaic & murals", "ka": "მოზაიკა და მურალები" },
+      "desc": { "ru": "Мозаика Дворца профсоюзов, муралы на проспекте Важа-Пшавела и скопление работ фестиваля на улице Бахтриони.", "en": "The Trade Unions Palace mosaic, murals on Vazha-Pshavela Avenue and a cluster of festival walls on Bakhtrioni Street.", "ka": "პროფკავშირების სასახლის მოზაიკა, მურალები ვაჟა-ფშაველას გამზირზე და ფესტივალის ნამუშევრები ბახტრიონის ქუჩაზე." },
+      "stops": ["site-0017", "site-0442", "site-0396", "site-0447", "site-0408", "site-0444", "site-0503", "site-0483", "site-0417", "site-0354", "site-0478"]
+    },
+    {
+      "id": "varketili-open-air",
+      "title": { "ru": "Варкетили: музей под открытым небом", "en": "Varketili: an open-air museum", "ka": "ვარკეთილი: მუზეუმი ღია ცის ქვეშ" },
+      "theme": { "ru": "Муралы Тбилиси Мурал Феста", "en": "Tbilisi Mural Fest walls", "ka": "Tbilisi Mural Fest-ის მურალები" },
+      "desc": { "ru": "Спальный район, где Тбилиси Мурал Фест расписал десятки фасадов: работы 2021–2024 годов.", "en": "A residential district where Tbilisi Mural Fest painted dozens of facades: works from 2021–2024.", "ka": "საცხოვრებელი უბანი, სადაც Tbilisi Mural Fest-მა ათობით ფასადი მოხატა: 2021–2024 წლების ნამუშევრები." },
+      "stops": ["site-0465", "site-0381", "site-0454", "site-0369", "site-0368", "site-0404", "site-0416", "site-0379", "site-0438", "site-0474", "site-0463", "site-0489", "site-0433", "site-0469", "site-0480", "site-0445", "site-0471"]
+    }
+  ]
+}

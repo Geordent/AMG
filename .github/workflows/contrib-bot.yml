@@ -3,6 +3,7 @@
 # data/contributions.json в main (затем запуск деплоя). Концепция: docs/2026-10-27-amg-crowd-concept.md.
 # Секреты: AMG_BOT_TOKEN (токен от @BotFather), AMG_STATE_KEY (openssl rand -base64 32).
 # Пока AMG_BOT_TOKEN не задан, workflow ничего не делает.
+# Расписание GitHub срабатывает с задержками; при изменении этого файла оно перерегистрируется.
 name: contrib-bot
 on:
   schedule:
