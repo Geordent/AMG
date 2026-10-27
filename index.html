@@ -73,6 +73,48 @@
     #amgLoader path { animation:none; stroke-dashoffset:0; }
     #nearby .amg-shrug { animation:none; }
   }
+  /* ---- Краудсорсинг, этап 0: паспорт путешественника, «Мой день», «Сообщить о проблеме» ---- */
+  #passport, #day, #report { position:absolute; left:0; right:0; bottom:0; z-index:20; background:#FFFBF5; border-radius:16px 16px 0 0;
+    box-shadow:0 -6px 24px rgba(0,0,0,.2); padding:14px 16px calc(14px + env(safe-area-inset-bottom,0px)); max-height:78%; overflow-y:auto; -webkit-overflow-scrolling:touch; }
+  #passport[hidden], #day[hidden], #report[hidden] { display:none; }
+  /* Десктоп: панель слева и поверх «Подробно» (z 30), чтобы не уходить под неё */
+  @media (min-width:769px) { #passport, #day, #report { z-index:32; left:16px; right:auto; bottom:16px; width:min(440px, calc(100vw - 32px));
+    border-radius:16px; max-height:calc(100% - 190px); box-shadow:0 10px 32px rgba(0,0,0,.22); } }
+  #report a.btn { text-decoration:none; }
+  #passport h2, #day h2, #report h2 { margin:0 0 2px; font-size:20px; font-family:'Playfair Display','Noto Serif Georgian',Georgia,serif; }
+  .amg-sub { margin:0 0 8px; font-size:24px; line-height:1.15; }
+  .amg-sub.plain { font-size:14px; }
+  .amg-coll { display:flex; flex-wrap:wrap; gap:6px; margin:4px 0 12px; }
+  .amg-coll span { font-size:12px; font-weight:600; padding:4px 10px; border-radius:999px; background:#F3D9CF; color:#8A3219; font-variant-numeric:tabular-nums; }
+  .amg-stamps { display:grid; grid-template-columns:repeat(auto-fill, minmax(96px, 1fr)); gap:14px 8px; margin:4px 0 14px; }
+  .amg-stamp { display:flex; flex-direction:column; align-items:center; gap:4px; padding:4px; border:0; background:none; cursor:pointer; font:inherit; color:#2B2420; text-align:center; }
+  .amg-stamp .ring { width:64px; height:64px; border-radius:50%; border:2px dashed #6E2639; background:#FBF3DC; display:flex; align-items:center; justify-content:center; transform:rotate(-6deg); }
+  .amg-stamp:nth-child(even) .ring { transform:rotate(5deg); }
+  .amg-stamp img { width:44px; height:44px; }
+  .amg-stamp .nm { font-size:12px; line-height:1.25; max-height:2.5em; overflow:hidden; }
+  .amg-stamp .dt { font-size:18px; line-height:1; }
+  .amg-stamp .dt.plain { font-size:12px; }
+  .amg-stamp.new .ring { animation:amg-stamp .55s cubic-bezier(.3,1.4,.5,1); }
+  @keyframes amg-stamp { 0% { transform:scale(1.7) rotate(-14deg); opacity:0 } 100% { transform:scale(1) rotate(-6deg); opacity:1 } }
+  .amg-day-list { list-style:none; margin:6px 0 8px; padding:0; }
+  .amg-day-list li { display:flex; align-items:center; gap:8px; padding:8px 0; border-top:1px solid #E6D9C6; }
+  .amg-day-list li:first-child { border-top:0; }
+  .amg-day-list .n { flex:none; width:24px; height:24px; border-radius:50%; background:#6E2639; color:#FFFFFF; font-size:12px; font-weight:700;
+    display:inline-flex; align-items:center; justify-content:center; font-variant-numeric:tabular-nums; }
+  .amg-day-list .nm { flex:1; min-width:0; display:flex; flex-direction:column; gap:1px; padding:0; border:0; background:none; text-align:left; cursor:pointer; font:inherit; font-size:14px; color:#2B2420; }
+  .amg-day-list .leg { font-size:18px; line-height:1.1; }
+  .amg-day-list .leg.plain { font-size:12px; color:#6B5D52; }
+  .amg-day-list .ctl { flex:none; width:32px; height:32px; border:1px solid #E0D0B8; border-radius:8px; background:#FFFBF5; color:#2B2420; cursor:pointer; font-size:15px; }
+  .amg-day-list .ctl:disabled { opacity:.35; cursor:default; }
+  .amg-day-total { margin:0 0 10px; font-size:22px; }
+  .amg-day-total.plain { font-size:14px; }
+  #day .btns, #report .btns, #passport .btns { flex-wrap:wrap; }
+  #report .opt { display:flex; align-items:center; gap:10px; padding:7px 0; font-size:14px; cursor:pointer; }
+  #report input[type=radio] { width:20px; height:20px; accent-color:#B8482A; flex:none; }
+  #report .btn.p[aria-disabled="true"] { opacity:.45; pointer-events:none; }
+  .amg-link { border:0; background:none; padding:6px 0; color:#1F6F78; font:inherit; font-size:12px; text-decoration:underline; text-underline-offset:2px; cursor:pointer; }
+  @media (pointer: coarse) { .amg-day-list .ctl { width:42px; height:42px; } .amg-link { min-height:44px; } }
+  @media (prefers-reduced-motion: reduce) { .amg-stamp.new .ring { animation:none; } }
   html, body { margin:0; height:100%; font-family:Manrope,system-ui,-apple-system,"Segoe UI",sans-serif; color:#2B2420; }
   #map { position:absolute; inset:0; }
   /* Верхний overlay — нормальный flex-стек (без хардкод top:64/112) */
@@ -378,6 +420,8 @@
       <option value="en">English</option>
     </select>
     <button id="btnNearby">Рядом</button>
+    <button id="btnDay" type="button" aria-haspopup="dialog">Мой день</button>
+    <button id="btnPassport" type="button" aria-haspopup="dialog">Паспорт</button>
     <button id="btnTransit" aria-haspopup="dialog">Транспорт</button>
     <button id="btnPacks">Офлайн</button>
     <div id="amgMeta" hidden>
@@ -432,6 +476,9 @@
 <div id="card" hidden></div>
 <div id="detail" hidden></div>
 <div id="nearby" hidden></div>
+<div id="passport" hidden role="dialog" aria-label="Паспорт путешественника"></div>
+<div id="day" hidden role="dialog" aria-label="Мой день"></div>
+<div id="report" hidden role="dialog" aria-label="Сообщить о проблеме"></div>
 <div id="feedback" hidden>
   <h2 id="fbTitle">Обратная связь</h2>
   <p class="small" id="fbText"></p>
@@ -526,6 +573,15 @@ const state = { flavor:'light', lang:'ru', offlineOnly: readOfflinePref(), lastE
   transit: readTransitPref(), exp: readExpPref() };
 // UGC («Я здесь») включаем только после реального запуска Telegram-бота и публикации feed.
 const AMG_UGC_ENABLED = false;
+// Этап 0 краудсорсинга: «Я здесь» ставит штамп в паспорт (локально, без бота). Подробности — в конце модуля.
+const AMG_STAMPS_ENABLED = true;
+const stage0 = (() => {
+  const read = (k, d) => { try { const v = JSON.parse(localStorage.getItem(k)); return v == null ? d : v; } catch (_) { return d; } };
+  const day = read('amg-day', []), passport = read('amg-passport', {});
+  return { day: Array.isArray(day) ? day.filter(x => typeof x === 'string') : [],
+    passport: passport && typeof passport === 'object' ? passport : {},
+    passportNew: null, dayShared: null, report: null };
+})();
 
 // ---------- каталог (Stage 0 data) ----------
 // SITE = физическое место (GeoJSON), ARTWORK связан с местом через site_id.
@@ -639,6 +695,45 @@ const LB = {
   noNearby:   { ru:'В этом радиусе объектов нет', en:'No objects within this radius', ka:'ამ რადიუსში ობიექტები არ არის' },
   nearAlso:   { ru:'Зато недалеко:', en:'But not far away:', ka:'სამაგიეროდ ახლოს:' },
   localTip:   { ru:'Совет местного', en:'Local tip', ka:'ადგილობრივის რჩევა' },
+  // Этап 0: паспорт путешественника, «Мой день», «Сообщить о проблеме»
+  stampWhy:   { ru:'Стоишь у объекта? Нажми — и он попадёт штампом в твой паспорт путешественника.', en:'Standing at the object? Tap to add it as a stamp to your travel passport.', ka:'ობიექტთან დგახარ? დააჭირე — და ის შტამპად ჩაიწერება შენს მოგზაურის პასპორტში.' },
+  stampDone:  { ru:'Штамп в паспорте ✓ Всего: {n}', en:'Stamp added ✓ Total: {n}', ka:'შტამპი პასპორტშია ✓ სულ: {n}' },
+  stampAgain: { ru:'В паспорте с {d}. Можно отметиться снова.', en:'In your passport since {d}. You can check in again.', ka:'პასპორტშია {d}-დან. შეგიძლია ხელახლა მონიშნო.' },
+  passBtn:    { ru:'Паспорт', en:'Passport', ka:'პასპორტი' },
+  passTitle:  { ru:'Паспорт путешественника', en:'Travel passport', ka:'მოგზაურის პასპორტი' },
+  passCount:  { ru:'Штампов: {n}', en:'Stamps: {n}', ka:'შტამპები: {n}' },
+  passEmpty:  { ru:'Пока ни одного штампа', en:'No stamps yet', ka:'ჯერ შტამპი არ არის' },
+  passHow:    { ru:'Подойди к объекту и нажми «Я здесь» в его карточке — он станет штампом. Паспорт хранится только в этом браузере.', en:'Walk up to an object and tap “I’m here” in its card to collect a stamp. The passport lives only in this browser.', ka:'მიდი ობიექტთან და ბარათში დააჭირე «აქ ვარ» — მიიღებ შტამპს. პასპორტი ინახება მხოლოდ ამ ბრაუზერში.' },
+  dayBtn:     { ru:'Мой день', en:'My day', ka:'ჩემი დღე' },
+  daySharedTitle:{ ru:'Маршрут по ссылке', en:'Shared route', ka:'გაზიარებული მარშრუტი' },
+  dayAdd:     { ru:'+ В мой день', en:'+ My day', ka:'+ ჩემს დღეში' },
+  dayIn:      { ru:'✓ В моём дне', en:'✓ In my day', ka:'✓ ჩემს დღეშია' },
+  dayAdded:   { ru:'Добавлено в «Мой день»', en:'Added to My day', ka:'დაემატა «ჩემს დღეს»' },
+  dayRemoved: { ru:'Убрано из «Моего дня»', en:'Removed from My day', ka:'ამოიშალა «ჩემი დღიდან»' },
+  dayFull:    { ru:'В дне уже 25 точек — уберите лишние', en:'Your day already has 25 stops — remove some first', ka:'დღეში უკვე 25 წერტილია — ჯერ ზედმეტი ამოიღე' },
+  dayEmpty:   { ru:'День пока пуст', en:'Your day is empty', ka:'დღე ჯერ ცარიელია' },
+  dayHow:     { ru:'Нажми «+ В мой день» в карточке объекта — точки соединятся пунктиром на карте. Маршрутом можно поделиться ссылкой.', en:'Tap “+ My day” in an object’s card — the stops join with a dotted line on the map. Share the route as a link.', ka:'ობიექტის ბარათში დააჭირე «+ ჩემს დღეში» — წერტილები რუკაზე პუნქტირით შეერთდება. მარშრუტი ბმულით გააზიარე.' },
+  dayTotal:   { ru:'Всего по прямой:', en:'Total, straight line:', ka:'სულ, პირდაპირ:' },
+  dayFit:     { ru:'Показать на карте', en:'Show on map', ka:'რუკაზე ჩვენება' },
+  dayShare:   { ru:'Поделиться ссылкой', en:'Share link', ka:'ბმულის გაზიარება' },
+  dayClear:   { ru:'Очистить', en:'Clear', ka:'გასუფთავება' },
+  daySave:    { ru:'Сохранить как мой день', en:'Save as my day', ka:'ჩემს დღედ შენახვა' },
+  daySaved:   { ru:'Маршрут сохранён в «Мой день»', en:'Saved to My day', ka:'შენახულია «ჩემს დღეში»' },
+  dayLinkCopied:{ ru:'Ссылка на маршрут скопирована', en:'Route link copied', ka:'მარშრუტის ბმული დაკოპირდა' },
+  dayUp:      { ru:'Выше', en:'Move up', ka:'ზემოთ' },
+  dayDown:    { ru:'Ниже', en:'Move down', ka:'ქვემოთ' },
+  dayRemove:  { ru:'Убрать', en:'Remove', ka:'ამოღება' },
+  repBtn:     { ru:'Сообщить о проблеме', en:'Report a problem', ka:'პრობლემის შეტყობინება' },
+  repPick:    { ru:'что не так?', en:'what’s wrong?', ka:'რა არის არასწორი?' },
+  rep_missing:{ ru:'Объекта больше нет', en:'The object is gone', ka:'ობიექტი აღარ არის' },
+  rep_painted:{ ru:'Закрашен или заменён', en:'Painted over or replaced', ka:'გადაღებილია ან შეცვლილია' },
+  rep_damaged:{ ru:'Повреждён', en:'Damaged', ka:'დაზიანებულია' },
+  rep_location:{ ru:'Точка стоит не там', en:'The pin is in the wrong place', ka:'წერტილი არასწორ ადგილასაა' },
+  rep_info:   { ru:'Ошибка в названии, авторе или описании', en:'Wrong name, artist or description', ka:'შეცდომა სახელში, ავტორში ან აღწერაში' },
+  rep_other:  { ru:'Другое', en:'Something else', ka:'სხვა' },
+  repPos:     { ru:'Приложим твою точку из «Я здесь»: ', en:'Your “I’m here” position will be attached: ', ka:'მიემაგრება შენი «აქ ვარ» მდებარეობა: ' },
+  repHint:    { ru:'Откроется форма на GitHub (нужен аккаунт). Сообщение будет публичным — так мы защищаемся от спама.', en:'A GitHub form will open (account needed). Reports are public — this keeps spam out.', ka:'გაიხსნება GitHub-ის ფორმა (საჭიროა ანგარიში). შეტყობინება საჯარო იქნება — ასე ვიცავთ სპამისგან.' },
+  repGo:      { ru:'Открыть форму на GitHub', en:'Open the GitHub form', ka:'GitHub-ის ფორმის გახსნა' },
   walk:       { ru:'пешком', en:'on foot', ka:'ფეხით' },
   min:        { ru:'мин', en:'min', ka:'წთ' },
   hr:         { ru:'ч', en:'h', ka:'სთ' },
@@ -1917,7 +2012,9 @@ function sitePopupHtml(siteId) {
     <div class="amg-meta">${esc(pick(LB.access))}: ${esc(labelOf(ACCESS_LABELS, p.access))} · ${esc(vis)}</div>
     ${media}
     ${src}
-    <div class="amg-actions">${routeButtons(lat, lng)}<button type="button" class="amg-btn ghost" data-share="${esc(siteId)}">${esc(pick(LB.share))}</button><button type="button" class="amg-btn ghost" data-detail="${esc(siteId)}">${esc(pick(LB.detail))}</button></div>
+    <div class="amg-actions">${routeButtons(lat, lng)}<button type="button" class="amg-btn ghost" data-share="${esc(siteId)}">${esc(pick(LB.share))}</button><button type="button" class="amg-btn ghost" data-detail="${esc(siteId)}">${esc(pick(LB.detail))}</button>${dayBtnHtml(siteId)}</div>
+    ${(AMG_UGC_ENABLED || AMG_STAMPS_ENABLED) ? hereBlockHtml(siteId) : ''}
+    <button type="button" class="amg-link" data-report="${esc(siteId)}">${esc(pick(LB.repBtn))}</button>
   </div>`;
 }
 // Full detail panel content: all media (deduped) + full SITE + all artworks.
@@ -1967,7 +2064,8 @@ function detailHtml(siteId) {
     <div class="amg-tags">${tags}</div>
     ${landmark ? `<div class="amg-meta amg-addr">${esc(landmark)}</div>` : ''}
     <div class="amg-meta">${esc(pick(LB.access))}: ${esc(labelOf(ACCESS_LABELS, p.access))} · ${esc(vis)}</div>
-    ${AMG_UGC_ENABLED ? hereBlockHtml(siteId) : ''}
+    ${(AMG_UGC_ENABLED || AMG_STAMPS_ENABLED) ? hereBlockHtml(siteId) : ''}
+    <div class="amg-actions">${dayBtnHtml(siteId)}<button type="button" class="amg-btn ghost" data-report="${esc(siteId)}">${esc(pick(LB.repBtn))}</button></div>
     ${siteDesc ? `<div class="amg-desc">${esc(siteDesc)}</div>` : ''}
     ${tipHtml(p, arts)}
     ${gallery.length ? `<div class="amg-detail-gallery">${gallery.join('')}</div>` : ''}
@@ -2225,6 +2323,7 @@ function clampPopup(popup) {
 }
 document.getElementById('card').addEventListener('click', ev => {
   if (ev.target.closest('[data-card-close]')) return closeCard();
+  if (stage0Click(ev)) return;
   const h = ev.target.closest('[data-here]');
   if (h) return iAmHere(h);
   const sh = ev.target.closest('[data-share]');
@@ -2257,6 +2356,7 @@ document.getElementById('card').addEventListener('click', ev => {
 document.getElementById('detail').addEventListener('click', ev => {
   if (ev.target.id === 'detail') return closeDetail(); // backdrop
   if (ev.target.closest('[data-detail-close]')) return closeDetail();
+  if (stage0Click(ev)) return;
   const mp = ev.target.closest('[data-manual-pick]');
   if (mp) return armManualPick();
   const h = ev.target.closest('[data-here]');
@@ -2306,6 +2406,7 @@ function showSitePopup(id, coords) {
   popupRef = pop; popupSiteId = id;
   wireMedia(pop.getElement());
   pop.getElement().addEventListener('click', ev => {
+    if (stage0Click(ev)) return;
     const h = ev.target.closest('[data-here]');
     if (h) return iAmHere(h);
     const sh = ev.target.closest('[data-share]');
@@ -2845,6 +2946,8 @@ function copyFallback(text, done) {
   ta.remove();
 }
 function handleHash() {
+  const r = /#route=([^&]+)/.exec(location.hash || '');
+  if (r) return openSharedRoute(r[1]);
   const m = /#s=([^&]+)/.exec(location.hash || '');
   if (!m) return;
   const id = decodeURIComponent(m[1]);
@@ -2934,7 +3037,8 @@ let hereLast = null;   // { siteId, lat, lng } — последняя позиц
 function hereBlockHtml(siteId) {
   const st = hereState.get(siteId) || 'idle'; // idle, confirmed, fix-sent
   const label = pick(LB[`here${st === 'confirmed' ? 'Sent' : st === 'fix-sent' ? 'FixSent' : ''}`] || LB.here);
-  const note  = pick(LB[`here${st === 'confirmed' ? 'NoteSent' : st === 'fix-sent' ? 'FixNote' : ''}`] || LB.hereWhy);
+  let note  = pick(LB[`here${st === 'confirmed' ? 'NoteSent' : st === 'fix-sent' ? 'FixNote' : ''}`] || LB.hereWhy);
+  if (!AMG_UGC_ENABLED && (st === 'idle' || st === 'confirmed')) note = stage0.passport[siteId] ? pick(LB.stampAgain).replace('{d}', fmtDay(stage0.passport[siteId])) : pick(LB.stampWhy);
   const btnClass = (st === 'confirmed' || st === 'fix-sent') ? 'amg-btn primary' : 'amg-btn ghost';
   return `<div class="amg-here-block" data-here-block="${esc(siteId)}" data-state="${st}">
     <button type="button" class="${btnClass} amg-here-btn" data-here="${esc(siteId)}" data-state="${st}">
@@ -2978,6 +3082,7 @@ function iAmHere(btn) {
 
   // Второй тап по кнопке в состоянии fix-offer = подтверждение коррекции (единый обработчик, без inline-onclick).
   if (btn.dataset.state === 'fix-offer' && hereLast && hereLast.siteId === siteId) {
+    if (!AMG_UGC_ENABLED) { openReport(siteId, 'location', hereLast); return; }   // этап 0: без бота — форма на GitHub
     hereBtnSet(btn, 'checking');
     const fixUrl = `https://t.me/${AMG_BOT_USERNAME}?start=${makeHerePayload(siteId, hereLast.lat, hereLast.lng, 'k')}`;
     if (sim.on) { hereBtnSet(btn, 'fix-sent'); simVote(siteId, 'fix'); return; }
@@ -2996,6 +3101,8 @@ function iAmHere(btn) {
 
     if (d <= tol) {                          // ПОДТВЕРЖДЕНИЕ: пользователь у объекта
       hereLast = null;
+      const nStamps = AMG_STAMPS_ENABLED ? addStamp(siteId) : 0;   // этап 0: штамп в паспорт (локально)
+      if (!AMG_UGC_ENABLED) { const msg = pick(LB.stampDone).replace('{n}', nStamps); hereBtnSet(btn, 'confirmed', msg); toast(msg, 6000); return; }
       if (sim.on) { hereBtnSet(btn, 'confirmed'); simVote(siteId); return; }   // лаб-симуляция
       const url = `https://t.me/${AMG_BOT_USERNAME}?start=${makeHerePayload(siteId, gLat, gLng, 'c')}`;
       hereBtnSet(btn, 'confirmed');
@@ -3217,6 +3324,260 @@ function loadDescriptions() {
 // map.loaded()/once('load') тут ненадёжны: 'load' мог уже пройти, а setStyle сбрасывает isStyleLoaded.
 map.once('idle', loadDescriptions);
 setTimeout(loadDescriptions, 1000);
+
+// ---------- Краудсорсинг, этап 0 (без бэкенда): паспорт путешественника, «Мой день», «Сообщить о проблеме» ----------
+// Паспорт и «Мой день» живут только в браузере (localStorage), на сервер ничего не уходит.
+// «Сообщить о проблеме» открывает публичный GitHub Issue по форме .github/ISSUE_TEMPLATE/object-report.yml:
+// нужен аккаунт GitHub — это и есть защита от спама. Концепция: docs/2026-10-27-amg-crowd-concept.md.
+// Всё ниже — объявления функций (видны раньше конца модуля); состояние — stage0 рядом с AMG_UGC_ENABLED.
+const DAY_MAX = 25;
+const REPORT_ISSUE_URL = 'https://github.com/Geordent/AMG/issues/new';
+const REPORT_KINDS = ['missing', 'painted', 'damaged', 'location', 'info', 'other'];
+
+function stage0Save(key, value) { try { localStorage.setItem(key, JSON.stringify(value)); } catch (_) {} }
+function handCls() { return state.lang === 'ka' ? 'amg-hand plain' : 'amg-hand'; }
+function fmtDay(iso) { const p = String(iso || '').split('-'); return p.length === 3 ? `${p[2]}.${p[1]}` : ''; }
+function siteIconUri(id) {
+  const f = catalog.siteById.get(id); if (!f) return '';
+  const fam = siteFamily(f.properties, catalog.artworksBySite.get(id));
+  return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(ICON_SVGS['icon-' + fam] || ICON_SVGS['icon-installation']);
+}
+function stage0Labels() {
+  const nDay = stage0.day.length, nPass = Object.keys(stage0.passport).length;
+  const d = $('btnDay'), p = $('btnPassport');
+  if (d) d.textContent = pick(LB.dayBtn) + (nDay ? ' · ' + nDay : '');
+  if (p) p.textContent = pick(LB.passBtn) + (nPass ? ' · ' + nPass : '');
+}
+
+// --- Паспорт путешественника: штамп = успешное «Я здесь» у объекта ---
+function addStamp(id) {
+  if (!catalog.siteById.get(id)) return Object.keys(stage0.passport).length;
+  if (!stage0.passport[id]) {
+    stage0.passport[id] = new Date().toISOString().slice(0, 10);
+    stage0.passportNew = id;
+    stage0Save('amg-passport', stage0.passport);
+  }
+  stage0Labels();
+  return Object.keys(stage0.passport).length;
+}
+function renderPassport() {
+  const box = $('passport'); if (!box) return;
+  const ids = Object.keys(stage0.passport).filter(id => catalog.siteById.get(id))
+    .sort((a, b) => String(stage0.passport[b]).localeCompare(String(stage0.passport[a])));
+  // Коллекции = категории каталога: «Мозаики 3/243».
+  const total = {}, got = {};
+  for (const f of catalog.sites) { const c = siteCat(f.properties, catalog.artworksBySite.get(f.properties.id)); if (c) total[c] = (total[c] || 0) + 1; }
+  for (const id of ids) { const c = siteCat(catalog.siteById.get(id).properties, catalog.artworksBySite.get(id)); if (c) got[c] = (got[c] || 0) + 1; }
+  const coll = CATEGORIES.filter(c => got[c.key]).map(c => `<span>${esc(pick(c.label))} ${got[c.key]}/${total[c.key]}</span>`).join('');
+  const hand = handCls();
+  const stamps = ids.map(id => `<button type="button" class="amg-stamp${id === stage0.passportNew ? ' new' : ''}" data-stamp="${esc(id)}">
+      <span class="ring"><img src="${siteIconUri(id)}" alt=""></span>
+      <span class="nm">${esc(siteTitle(catalog.siteById.get(id)))}</span>
+      <span class="dt ${hand}">${esc(fmtDay(stage0.passport[id]))}</span></button>`).join('');
+  box.innerHTML = `<h2>${esc(pick(LB.passTitle))}</h2>
+    <p class="amg-sub ${hand}">${esc(ids.length ? pick(LB.passCount).replace('{n}', ids.length) : pick(LB.passEmpty))}</p>
+    ${coll ? `<div class="amg-coll">${coll}</div>` : ''}
+    ${stamps ? `<div class="amg-stamps">${stamps}</div>` : ''}
+    <p class="small">${esc(pick(LB.passHow))}</p>
+    <div class="btns"><button type="button" class="btn" data-close-panel="passport">${esc(pick(LB.close))}</button></div>`;
+  stage0.passportNew = null;
+}
+function openPassport() { Overlays.hide('menu'); renderPassport(); Overlays.show('passport'); }
+
+// --- «Мой день»: личный маршрут, пунктир на карте, ссылка #route=… ---
+function dayList() { return stage0.dayShared || stage0.day; }
+function dayBtnHtml(id) {
+  const on = stage0.day.includes(id);
+  return `<button type="button" class="amg-btn ${on ? 'accent' : 'ghost'}" data-day="${esc(id)}">${esc(pick(on ? LB.dayIn : LB.dayAdd))}</button>`;
+}
+function syncDayButtons() {
+  document.querySelectorAll('[data-day]').forEach(b => {
+    const on = stage0.day.includes(b.dataset.day);
+    b.textContent = pick(on ? LB.dayIn : LB.dayAdd);
+    b.classList.toggle('accent', on); b.classList.toggle('ghost', !on);
+  });
+}
+function toggleDay(id) {
+  const i = stage0.day.indexOf(id);
+  if (i >= 0) { stage0.day.splice(i, 1); toast(pick(LB.dayRemoved)); }
+  else if (stage0.day.length >= DAY_MAX) { toast(pick(LB.dayFull)); return; }
+  else { stage0.day.push(id); toast(pick(LB.dayAdded)); }
+  stage0Save('amg-day', stage0.day);
+  syncDayButtons(); stage0Labels(); drawDay();
+  if (Overlays.isOpen('day')) renderDay();
+}
+function dayGeo() {
+  const pts = dayList().map(id => catalog.siteById.get(id)).filter(Boolean).map(f => f.geometry.coordinates);
+  return { type:'FeatureCollection', features: pts.length > 1
+    ? [{ type:'Feature', properties:{}, geometry:{ type:'LineString', coordinates: pts } }] : [] };
+}
+// Пунктир «карандашом» под маркерами каталога. setStyle пересобирает стиль — слой возвращается на style.load.
+function drawDay() {
+  try {
+    if (!map.isStyleLoaded()) return;
+    const src = map.getSource('amg-day');
+    if (src) { src.setData(dayGeo()); return; }
+    map.addSource('amg-day', { type:'geojson', data: dayGeo() });
+    map.addLayer({ id:'amg-day-line', type:'line', source:'amg-day',
+      layout:{ 'line-cap':'round', 'line-join':'round' },
+      paint:{ 'line-color':'#6E2639', 'line-width':3.5, 'line-opacity':0.9, 'line-dasharray':[0.1, 2.2] } },
+      map.getLayer('sites-clusters') ? 'sites-clusters' : undefined);
+  } catch (_) {}
+}
+function renderDay() {
+  const box = $('day'); if (!box) return;
+  const ids = dayList(), shared = !!stage0.dayShared, hand = handCls();
+  let sum = 0;
+  const rows = ids.map((id, i) => {
+    const f = catalog.siteById.get(id);
+    let leg = '';
+    if (i > 0) {
+      const a = catalog.siteById.get(ids[i - 1]).geometry.coordinates, b = f.geometry.coordinates;
+      const d = haversine(a[1], a[0], b[1], b[0]); sum += d;
+      leg = `↳ ${fmtDist(d)} · ${fmtWalk(d)}`;
+    }
+    const ctl = shared ? '' :
+      `<button type="button" class="ctl" data-day-up="${i}" aria-label="${esc(pick(LB.dayUp))}"${i === 0 ? ' disabled' : ''}>↑</button>` +
+      `<button type="button" class="ctl" data-day-down="${i}" aria-label="${esc(pick(LB.dayDown))}"${i === ids.length - 1 ? ' disabled' : ''}>↓</button>` +
+      `<button type="button" class="ctl" data-day-del="${i}" aria-label="${esc(pick(LB.dayRemove))}">×</button>`;
+    return `<li><span class="n">${i + 1}</span><button type="button" class="nm" data-day-go="${esc(id)}"><span>${esc(siteTitle(f))}</span>${leg ? `<span class="leg ${hand}">${esc(leg)}</span>` : ''}</button>${ctl}</li>`;
+  }).join('');
+  const total = ids.length > 1 ? `<p class="amg-day-total ${hand}">${esc(pick(LB.dayTotal))} ${esc(fmtDist(sum))} · ${esc(fmtWalk(sum))}</p>` : '';
+  const btns = shared
+    ? `<button type="button" class="btn p" data-day-save="1">${esc(pick(LB.daySave))}</button><button type="button" class="btn" data-day-fit="1">${esc(pick(LB.dayFit))}</button>`
+    : (ids.length ? `<button type="button" class="btn p" data-day-fit="1">${esc(pick(LB.dayFit))}</button><button type="button" class="btn" data-day-share="1">${esc(pick(LB.dayShare))}</button><button type="button" class="btn" data-day-clear="1">${esc(pick(LB.dayClear))}</button>` : '');
+  box.innerHTML = `<h2>${esc(pick(shared ? LB.daySharedTitle : LB.dayBtn))}</h2>
+    ${ids.length ? `<ol class="amg-day-list">${rows}</ol>${total}` : `<p class="amg-sub ${hand}">${esc(pick(LB.dayEmpty))}</p><p class="small">${esc(pick(LB.dayHow))}</p>`}
+    <div class="btns">${btns}<button type="button" class="btn" data-close-panel="day">${esc(pick(LB.close))}</button></div>`;
+}
+function openDay() { Overlays.hide('menu'); renderDay(); Overlays.show('day'); }
+function closeDay() {
+  Overlays.hide('day');
+  if (stage0.dayShared) { stage0.dayShared = null; drawDay(); }   // чужой маршрут не остаётся на карте без «Сохранить»
+}
+function fitDayMap() {
+  const pts = dayList().map(id => catalog.siteById.get(id)).filter(Boolean).map(f => f.geometry.coordinates);
+  if (!pts.length) return;
+  if (pts.length === 1) { map.flyTo({ center: pts[0], zoom: Math.max(map.getZoom(), 16) }); return; }
+  const b = pts.reduce((bb, p) => bb.extend(p), new maplibregl.LngLatBounds(pts[0], pts[0]));
+  map.fitBounds(b, { padding: { top: 140, bottom: 60, left: 40, right: 40 }, maxZoom: 16, duration: 700 });
+}
+function fitDay() { closeDayPanelOnly(); fitDayMap(); }
+function closeDayPanelOnly() { Overlays.hide('day'); }          // свернуть панель, но оставить маршрут на карте
+function shareDay() {
+  const url = location.origin + location.pathname + '#route=' + stage0.day.map(encodeURIComponent).join(',');
+  const done = () => toast(pick(LB.dayLinkCopied));
+  if (navigator.share) { navigator.share({ title: pick(LB.dayBtn), url }).catch(() => {}); return; }
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(url).then(done, () => copyFallback(url, done));
+  else copyFallback(url, done);
+}
+function openSharedRoute(raw) {
+  const seen = new Set();
+  const ids = String(raw || '').split(',').map(s => decodeURIComponent(s.trim()))
+    .filter(id => catalog.siteById.get(id) && !seen.has(id) && seen.add(id)).slice(0, DAY_MAX);
+  if (!ids.length) return;
+  stage0.dayShared = ids;
+  drawDay(); fitDayMap(); renderDay(); Overlays.show('day');
+}
+function saveSharedRoute() {
+  if (!stage0.dayShared) return;
+  stage0.day = stage0.dayShared.slice(); stage0.dayShared = null;
+  stage0Save('amg-day', stage0.day);
+  try { history.replaceState(null, '', location.pathname + location.search); } catch (_) {}
+  syncDayButtons(); stage0Labels(); drawDay(); renderDay();
+  toast(pick(LB.daySaved));
+}
+function dayPanelClick(ev) {
+  const t = ev.target.closest('button'); if (!t) return;
+  const d = t.dataset, list = stage0.day;
+  if (d.closePanel === 'day') return closeDay();
+  if (d.dayGo) { closeDayPanelOnly(); return focusSite(d.dayGo); }
+  if (d.dayFit) return fitDay();
+  if (d.dayShare) return shareDay();
+  if (d.daySave) return saveSharedRoute();
+  if (d.dayClear) { stage0.day = []; stage0Save('amg-day', []); syncDayButtons(); stage0Labels(); drawDay(); return renderDay(); }
+  const move = (from, to) => { if (to < 0 || to >= list.length) return; list.splice(to, 0, list.splice(from, 1)[0]); };
+  if (d.dayUp != null) move(+d.dayUp, +d.dayUp - 1);
+  else if (d.dayDown != null) move(+d.dayDown, +d.dayDown + 1);
+  else if (d.dayDel != null) list.splice(+d.dayDel, 1);
+  else return;
+  stage0Save('amg-day', list); syncDayButtons(); stage0Labels(); drawDay(); renderDay();
+}
+
+// --- «Сообщить о проблеме» → заполненная форма GitHub Issue ---
+function openReport(siteId, kind, pos) {
+  if (!catalog.siteById.get(siteId)) return;
+  stage0.report = { siteId, kind: kind || '', pos: pos || null };
+  renderReport(); Overlays.show('report');
+}
+function reportUrl() {
+  const r = stage0.report, f = catalog.siteById.get(r.siteId);
+  const [lng, lat] = f.geometry.coordinates, title = siteTitle(f);
+  const link = location.origin + location.pathname + '#s=' + encodeURIComponent(r.siteId);
+  const kindRu = (LB['rep_' + r.kind] || LB.rep_other).ru;   // issue пишем по-русски: язык хранителя данных
+  const q = new URLSearchParams({
+    template: 'object-report.yml',
+    title: `[${r.siteId}] ${kindRu} — ${title}`,
+    site: `${r.siteId} · ${title} · ${link} · ${lat.toFixed(5)},${lng.toFixed(5)}`,
+    problem: kindRu,
+  });
+  if (r.pos) q.set('position', `${r.pos.lat.toFixed(5)},${r.pos.lng.toFixed(5)}`);
+  return REPORT_ISSUE_URL + '?' + q.toString();
+}
+function renderReport() {
+  const box = $('report'), r = stage0.report; if (!box || !r) return;
+  const f = catalog.siteById.get(r.siteId);
+  const opts = REPORT_KINDS.map(k => `<label class="opt"><input type="radio" name="amgReportKind" value="${k}"${r.kind === k ? ' checked' : ''}> ${esc(pick(LB['rep_' + k]))}</label>`).join('');
+  const pos = r.pos ? `<p class="small">${esc(pick(LB.repPos))}${r.pos.lat.toFixed(5)}, ${r.pos.lng.toFixed(5)}</p>` : '';
+  box.innerHTML = `<h2>${esc(pick(LB.repBtn))}</h2>
+    <p class="small"><b>${esc(siteTitle(f))}</b> · ${esc(pick(LB.repPick))}</p>
+    <div role="radiogroup">${opts}</div>${pos}
+    <p class="small">${esc(pick(LB.repHint))}</p>
+    <div class="btns"><a class="btn p" id="repGo" target="_blank" rel="noopener" href="${r.kind ? esc(reportUrl()) : '#'}"${r.kind ? '' : ' aria-disabled="true"'}>${esc(pick(LB.repGo))}</a>
+    <button type="button" class="btn" data-close-panel="report">${esc(pick(LB.close))}</button></div>`;
+}
+
+// Общий обработчик кнопок этапа 0 в карточке, «Подробно» и попапе. true = клик обработан.
+function stage0Click(ev) {
+  const day = ev.target.closest('[data-day]');
+  if (day) { toggleDay(day.dataset.day); return true; }
+  const rep = ev.target.closest('[data-report]');
+  if (rep) { openReport(rep.dataset.report, '', null); return true; }
+  return false;
+}
+
+Overlays.register('passport', $('passport'));
+Overlays.register('day', $('day'));
+Overlays.register('report', $('report'));
+Overlays.setCloser('day', closeDay);
+$('btnPassport').onclick = openPassport;
+$('btnDay').onclick = openDay;
+$('passport').addEventListener('click', ev => {
+  const s = ev.target.closest('[data-stamp]');
+  if (s) { Overlays.hide('passport'); return focusSite(s.dataset.stamp); }
+  if (ev.target.closest('[data-close-panel]')) Overlays.hide('passport');
+});
+$('day').addEventListener('click', dayPanelClick);
+$('report').addEventListener('change', ev => {
+  if (ev.target.name !== 'amgReportKind') return;
+  stage0.report.kind = ev.target.value;
+  const a = $('repGo'); if (a) { a.href = reportUrl(); a.removeAttribute('aria-disabled'); }
+});
+$('report').addEventListener('click', ev => {
+  if (ev.target.closest('[data-close-panel]')) return Overlays.hide('report');
+  if (ev.target.closest('#repGo') && stage0.report && stage0.report.kind) setTimeout(() => Overlays.hide('report'), 300);
+});
+$('lang').addEventListener('change', () => {
+  stage0Labels();
+  if (Overlays.isOpen('passport')) renderPassport();
+  if (Overlays.isOpen('day')) renderDay();
+  if (Overlays.isOpen('report')) renderReport();
+});
+map.on('style.load', drawDay);
+if (map.isStyleLoaded()) drawDay(); else map.once('idle', drawDay);
+stage0Labels();
+// Маршрут по ссылке, открытой до того, как модуль дочитался (handleHash мог сработать раньше).
+if (/#route=/.test(location.hash || '')) handleHash();
 
 </script>
 </body>

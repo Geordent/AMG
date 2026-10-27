@@ -36,13 +36,14 @@
   <h2>Что хранится в браузере</h2>
   <ul>
     <li>выбранный язык, тема карты и набор транспортных слоёв — в <code>localStorage</code>;</li>
+    <li>«Паспорт путешественника» (какие объекты вы отметили и когда) и «Мой день» (список точек маршрута) — в <code>localStorage</code>, только в этом браузере, на сервер не отправляются;</li>
     <li>скачанные офлайн-пакеты карты — в <code>IndexedDB</code>; их можно удалить в меню «Офлайн»;</li>
     <li>служебные настройки интерфейса. Мы не используем cookie для рекламы или профилирования.</li>
   </ul>
   <p>Очистить всё можно средствами браузера: «Настройки сайта» → «Удалить данные».</p>
 
   <h2>Геолокация</h2>
-  <p>Кнопки «Рядом» и «Я здесь» используют <code>navigator.geolocation</code> только после вашего разрешения. Координаты вычисляются в браузере и не отправляются на сервер ArtMap Georgia. Сейчас подтверждение «Я здесь» отключено; когда оно будет включено, координаты будут передаваться в Telegram-бот только по вашему нажатию.</p>
+  <p>Кнопки «Рядом» и «Я здесь» используют <code>navigator.geolocation</code> только после вашего разрешения. Координаты вычисляются в браузере и не отправляются на сервер ArtMap Georgia. «Я здесь» сейчас только ставит штамп в ваш паспорт путешественника — локально. Если вы сообщаете, что точка стоит не там, ваши координаты подставляются в форму GitHub Issue; они станут публичными, только если вы сами отправите эту форму.</p>
 
   <h2>Карта и внешние сервисы</h2>
   <ul>
@@ -68,13 +69,13 @@
   <div class="lang" lang="en">
     <h2>Privacy (English)</h2>
     <p><strong>Short version:</strong> no account, no ads, no sale of data. The map, catalog and offline packs are static files. Geolocation is processed in the browser. External requests go only to map/photo providers, the visit counter, and — when you click — GitHub or Telegram.</p>
-    <p>Language, theme and transit choices are stored in <code>localStorage</code>; downloaded map packs are stored in <code>IndexedDB</code> and can be deleted in the Offline panel. The visit counter uses <code>abacus.jasoncameron.dev</code> (one increment per tab session, no cookies, no user ID; the service may see your IP). Feedback opens a GitHub issue. The “I’m here” confirmation is currently disabled; when enabled, coordinates are sent to the Telegram bot only after you press the button. To remove local data, clear this site’s data in your browser.</p>
+    <p>Language, theme and transit choices are stored in <code>localStorage</code>; downloaded map packs are stored in <code>IndexedDB</code> and can be deleted in the Offline panel. The visit counter uses <code>abacus.jasoncameron.dev</code> (one increment per tab session, no cookies, no user ID; the service may see your IP). Your “Travel passport” stamps and “My day” route are stored in <code>localStorage</code> in this browser only. Feedback and “Report a problem” open a public GitHub issue form; if you report a misplaced pin, your “I’m here” coordinates are prefilled and become public only if you submit the form. “I’m here” currently only adds a local passport stamp. To remove local data, clear this site’s data in your browser.</p>
   </div>
 
   <div class="lang" lang="ka">
     <h2>კონფიდენციალურობა (ქართული)</h2>
     <p><strong>მოკლედ:</strong> საიტი არ ითხოვს ანგარიშს, არ აჩვენებს რეკლამას და არ ყიდის მონაცემებს. რუკა, კატალოგი და ოფლაინ-პაკეტები სტატიკური ფაილებია. გეოლოკაცია მუშავდება ბრაუზერში. გარე მოთხოვნები მიდის მხოლოდ რუკის/ფოტოს სერვისებთან, ვიზიტების მრიცხველთან და — თქვენი დაჭერით — GitHub-თან ან Telegram-თან.</p>
-    <p>ენა, თემა და ტრანსპორტის არჩევანი ინახება <code>localStorage</code>-ში; ჩამოტვირთული რუკის პაკეტები — <code>IndexedDB</code>-ში და შეიძლება წაიშალოს „ოფლაინ“ პანელიდან. ვიზიტების მრიცხველი იყენებს <code>abacus.jasoncameron.dev</code>-ს (ერთი ინკრემენტი სესიაზე, cookie-ს და მომხმარებლის ID-ის გარეშე; სერვისმა შეიძლება დაინახოს IP). უკუკავშირი ხსნის GitHub-ის ფორმას. „აქ ვარ“ დადასტურება ამჟამად გამორთულია; ჩართვისას კოორდინატები გადაეცემა Telegram-ბოტს მხოლოდ ღილაკის დაჭერის შემდეგ. ლოკალური მონაცემების წასაშლელად გაასუფთავეთ საიტის მონაცემები ბრაუზერში.</p>
+    <p>ენა, თემა და ტრანსპორტის არჩევანი ინახება <code>localStorage</code>-ში; ჩამოტვირთული რუკის პაკეტები — <code>IndexedDB</code>-ში და შეიძლება წაიშალოს „ოფლაინ“ პანელიდან. ვიზიტების მრიცხველი იყენებს <code>abacus.jasoncameron.dev</code>-ს (ერთი ინკრემენტი სესიაზე, cookie-ს და მომხმარებლის ID-ის გარეშე; სერვისმა შეიძლება დაინახოს IP). „მოგზაურის პასპორტის“ შტამპები და „ჩემი დღის“ მარშრუტი ინახება <code>localStorage</code>-ში მხოლოდ ამ ბრაუზერში. უკუკავშირი და „პრობლემის შეტყობინება“ ხსნის საჯარო GitHub-ის ფორმას; არასწორი წერტილის შეტყობინებისას შენი „აქ ვარ“ კოორდინატები ავტომატურად ჩაიწერება და საჯარო გახდება მხოლოდ მაშინ, თუ თავად გააგზავნი ფორმას. „აქ ვარ“ ამჟამად მხოლოდ ლოკალურ შტამპს ამატებს. ლოკალური მონაცემების წასაშლელად გაასუფთავეთ საიტის მონაცემები ბრაუზერში.</p>
   </div>
 </main>
 </body>

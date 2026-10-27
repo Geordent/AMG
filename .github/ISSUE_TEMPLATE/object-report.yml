@@ -1,0 +1,34 @@
+name: Проблема с объектом на карте
+description: Объекта нет, он закрашен или повреждён, точка стоит не там, ошибка в описании. Обычно форма открывается с сайта уже заполненной.
+title: "[объект] "
+labels: ["report"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Спасибо, что помогаете держать карту точной. Сообщение будет **публичным** — не указывайте личные данные.
+        Thanks for keeping the map accurate. This report is **public** — please don't include personal data.
+  - type: input
+    id: site
+    attributes:
+      label: Объект / Object
+      description: ID, название, ссылка и координаты объекта (заполняет сайт)
+    validations:
+      required: true
+  - type: input
+    id: problem
+    attributes:
+      label: Что не так / What's wrong
+      description: "Например: объекта больше нет, закрашен или заменён, повреждён, точка стоит не там, ошибка в названии/авторе/описании"
+    validations:
+      required: true
+  - type: input
+    id: position
+    attributes:
+      label: Где вы стояли (широта, долгота) / Where you stood (lat, lng)
+      description: Только если точка стоит не там. Сайт подставляет точку из «Я здесь».
+  - type: textarea
+    id: details
+    attributes:
+      label: Подробности / Details
+      description: Что видно на месте? Можно приложить фото (перетащите файл сюда).
