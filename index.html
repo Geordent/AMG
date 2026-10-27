@@ -115,6 +115,9 @@
   .amg-ready-r b { font-size:14px; }
   .amg-ready-r span { font-size:12px; color:#6B5D52; }
   .amg-ready-r:hover, .amg-ready-r:focus-visible { border-color:#B8482A; outline:none; }
+  .amg-day-name { display:flex; flex-direction:column; gap:4px; margin:6px 0 8px; font-size:12px; color:#6B5D52; }
+  .amg-day-name input { font:inherit; font-size:15px; padding:9px 10px; border:1px solid #E0D0B8; border-radius:10px; background:#FFFFFF; color:#2B2420; }
+  .amg-day-name input:focus { outline:2px solid #B8482A; outline-offset:0; border-color:#B8482A; }
   .amg-route-desc { margin:0 0 6px; font-size:13px; color:#4A3F38; line-height:1.45; }
   #report .opt { display:flex; align-items:center; gap:10px; padding:7px 0; font-size:14px; cursor:pointer; }
   #report input[type=radio] { width:20px; height:20px; accent-color:#B8482A; flex:none; }
@@ -671,8 +674,9 @@ const AMG_UGC_ENABLED = true;    // бот @artmap_georgia_bot включён 20
 const AMG_STAMPS_ENABLED = true;
 const stage0 = (() => {
   const read = (k, d) => { try { const v = JSON.parse(localStorage.getItem(k)); return v == null ? d : v; } catch (_) { return d; } };
-  const day = read('amg-day', []), passport = read('amg-passport', {});
+  const day = read('amg-day', []), passport = read('amg-passport', {}), dayName = read('amg-day-name', '');
   return { day: Array.isArray(day) ? day.filter(x => typeof x === 'string') : [],
+    dayName: typeof dayName === 'string' ? dayName.slice(0, 60) : '', sharedName: '',
     passport: passport && typeof passport === 'object' ? passport : {},
     passportNew: null, dayShared: null, report: null, searchIdx: null, pulse: null, dayAnim: 0 };
 })();
@@ -825,6 +829,11 @@ const LB = {
   dayFit:     { ru:'Показать на карте', en:'Show on map', ka:'რუკაზე ჩვენება' },
   dayShare:   { ru:'Поделиться ссылкой', en:'Share link', ka:'ბმულის გაზიარება' },
   dayClear:   { ru:'Очистить', en:'Clear', ka:'გასუფთავება' },
+  dayNamePh:  { ru:'Название маршрута', en:'Route name', ka:'მარშრუტის სახელი' },
+  dayNameLbl: { ru:'Название (по желанию, попадёт в ссылку)', en:'Name (optional, goes into the link)', ka:'სახელი (სურვილისამებრ, ბმულში მოხვდება)' },
+  dayCopyList:{ ru:'Скопировать списком', en:'Copy as a list', ka:'სიად კოპირება' },
+  dayListCopied:{ ru:'Список скопирован — вставьте его в чат', en:'List copied — paste it into a chat', ka:'სია დაკოპირდა — ჩასვი ჩატში' },
+  dayMapWord: { ru:'Карта', en:'Map', ka:'რუკა' },
   daySave:    { ru:'Сохранить как мой день', en:'Save as my day', ka:'ჩემს დღედ შენახვა' },
   daySaved:   { ru:'Маршрут сохранён в «Мой день»', en:'Saved to My day', ka:'შენახულია «ჩემს დღეში»' },
   dayLinkCopied:{ ru:'Ссылка на маршрут скопирована', en:'Route link copied', ka:'მარშრუტის ბმული დაკოპირდა' },
@@ -3128,7 +3137,7 @@ function handleHash() {
   const rr = /#ready=([a-z0-9-]+)/.exec(location.hash || '');
   if (rr) return openReadyRoute(rr[1]);
   const r = /#route=([^&]+)/.exec(location.hash || '');
-  if (r) return openSharedRoute(r[1]);
+  if (r) { const n = /[&?]n=([^&]*)/.exec(location.hash || ''); return openSharedRoute(r[1], n ? n[1] : ''); }
   const m = /#s=([^&]+)/.exec(location.hash || '');
   if (!m) return;
   const id = decodeURIComponent(m[1]);
@@ -3645,9 +3654,13 @@ function renderDay() {
     : '';
   const btns = shared
     ? `<button type="button" class="btn p" data-day-save="1">${esc(pick(LB.daySave))}</button><button type="button" class="btn" data-day-fit="1">${esc(pick(LB.dayFit))}</button>` +
-      (route ? `<button type="button" class="btn" data-day-share="1">${esc(pick(LB.dayShare))}</button>` : '')
-    : (ids.length ? `<button type="button" class="btn p" data-day-fit="1">${esc(pick(LB.dayFit))}</button><button type="button" class="btn" data-day-share="1">${esc(pick(LB.dayShare))}</button><button type="button" class="btn" data-day-clear="1">${esc(pick(LB.dayClear))}</button>` : '');
-  box.innerHTML = `<h2>${esc(route ? pick(route.title) : pick(shared ? LB.daySharedTitle : LB.dayBtn))}</h2>
+      (route ? `<button type="button" class="btn" data-day-share="1">${esc(pick(LB.dayShare))}</button>` : '') +
+      `<button type="button" class="btn" data-day-copy="1">${esc(pick(LB.dayCopyList))}</button>`
+    : (ids.length ? `<button type="button" class="btn p" data-day-fit="1">${esc(pick(LB.dayFit))}</button><button type="button" class="btn" data-day-share="1">${esc(pick(LB.dayShare))}</button><button type="button" class="btn" data-day-copy="1">${esc(pick(LB.dayCopyList))}</button><button type="button" class="btn" data-day-clear="1">${esc(pick(LB.dayClear))}</button>` : '');
+  const title = route ? pick(route.title) : shared ? (stage0.sharedName || pick(LB.daySharedTitle)) : pick(LB.dayBtn);
+  const nameInput = !shared && ids.length
+    ? `<label class="amg-day-name"><span>${esc(pick(LB.dayNameLbl))}</span><input id="dayName" type="text" maxlength="60" autocomplete="off" value="${esc(stage0.dayName)}" placeholder="${esc(pick(LB.dayNamePh))}"></label>` : '';
+  box.innerHTML = `<h2>${esc(title)}</h2>${nameInput}
     ${route ? `<p class="amg-route-desc">${esc(pick(route.theme))}. ${esc(pick(route.desc))}</p>` : ''}
     ${ids.length ? `<ol class="amg-day-list">${rows}</ol>${total}` : `<p class="amg-sub ${hand}">${esc(pick(LB.dayEmpty))}</p><p class="small">${esc(pick(LB.dayHow))}</p>`}
     ${ready}
@@ -3681,7 +3694,7 @@ async function openReadyRoute(id) {
 }
 function closeDay() {
   Overlays.hide('day');
-  if (stage0.dayShared) { stage0.dayShared = null; stage0.dayRoute = null; drawDay(); }   // чужой маршрут не остаётся на карте без «Сохранить»
+  if (stage0.dayShared) { stage0.dayShared = null; stage0.dayRoute = null; stage0.sharedName = ''; drawDay(); }   // чужой маршрут не остаётся на карте без «Сохранить»
 }
 function fitDayMap() {
   const pts = dayList().map(id => catalog.siteById.get(id)).filter(Boolean).map(f => f.geometry.coordinates);
@@ -3714,28 +3727,49 @@ function animateDayLine() {
 }
 function fitDay() { closeDayPanelOnly(); fitDayMap(); }
 function closeDayPanelOnly() { Overlays.hide('day'); }          // свернуть панель, но оставить маршрут на карте
+// Название маршрута: без управляющих символов, до 60 знаков; выводится только текстом (esc).
+function cleanDayName(v) { return String(v || '').replace(/[\u0000-\u001f\u007f<>]/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 60); }
+function dayShareUrl() {
+  const base = location.origin + location.pathname;
+  if (stage0.dayShared && stage0.dayRoute) return base + '#ready=' + encodeURIComponent(stage0.dayRoute.id);
+  const list = stage0.dayShared || stage0.day, name = stage0.dayShared ? stage0.sharedName : stage0.dayName;
+  return base + '#route=' + list.map(encodeURIComponent).join(',') + (cleanDayName(name) ? '&n=' + encodeURIComponent(cleanDayName(name)) : '');
+}
+function copyDayList() {
+  track('route-copy');
+  const ids = dayList(); if (!ids.length) return;
+  const r = stage0.dayShared ? stage0.dayRoute : null;
+  const name = r ? pick(r.title) : cleanDayName(stage0.dayShared ? stage0.sharedName : stage0.dayName) || pick(LB.dayBtn);
+  const text = [name, ...ids.map((id, i) => `${i + 1}. ${siteTitle(catalog.siteById.get(id))}`), '', `${pick(LB.dayMapWord)}: ${dayShareUrl()}`].join('\n');
+  const done = () => toast(pick(LB.dayListCopied));
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done, () => copyFallback(text, done));
+  else copyFallback(text, done);
+}
 function shareDay() {
   track('route-share');
-  const url = location.origin + location.pathname + (stage0.dayShared && stage0.dayRoute
-    ? '#ready=' + encodeURIComponent(stage0.dayRoute.id)
-    : '#route=' + stage0.day.map(encodeURIComponent).join(','));
+  const url = dayShareUrl();
   const done = () => toast(pick(LB.dayLinkCopied));
-  if (navigator.share) { navigator.share({ title: pick(LB.dayBtn), url }).catch(() => {}); return; }
+  const shareTitle = stage0.dayRoute ? pick(stage0.dayRoute.title) : cleanDayName(stage0.dayShared ? stage0.sharedName : stage0.dayName) || pick(LB.dayBtn);
+  if (navigator.share) { navigator.share({ title: shareTitle, url }).catch(() => {}); return; }
   if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(url).then(done, () => copyFallback(url, done));
   else copyFallback(url, done);
 }
-function openSharedRoute(raw) {
+function openSharedRoute(raw, name) {
   const seen = new Set();
   const ids = String(raw || '').split(',').map(s => decodeURIComponent(s.trim()))
     .filter(id => catalog.siteById.get(id) && !seen.has(id) && seen.add(id)).slice(0, DAY_MAX);
   if (!ids.length) return;
   stage0.dayShared = ids; stage0.dayRoute = null;
+  let nm = ''; try { nm = cleanDayName(decodeURIComponent(String(name || ''))); } catch (_) { nm = cleanDayName(name); }
+  stage0.sharedName = nm;
   drawDay(); fitDayMap(); renderDay(); Overlays.show('day');
 }
 function saveSharedRoute() {
   if (!stage0.dayShared) return;
-  stage0.day = stage0.dayShared.slice(); stage0.dayShared = null; stage0.dayRoute = null;
-  stage0Save('amg-day', stage0.day);
+  stage0.day = stage0.dayShared.slice(); stage0.dayShared = null;
+  const wasReady = stage0.dayRoute; stage0.dayRoute = null;
+  stage0.dayName = wasReady ? cleanDayName(pick(wasReady.title)) : stage0.sharedName; stage0.sharedName = '';
+  stage0Save('amg-day', stage0.day); stage0Save('amg-day-name', stage0.dayName);
   try { history.replaceState(null, '', location.pathname + location.search); } catch (_) {}
   syncDayButtons(); stage0Labels(); drawDay(); renderDay();
   toast(pick(LB.daySaved));
@@ -3748,8 +3782,9 @@ function dayPanelClick(ev) {
   if (d.dayFit) return fitDay();
   if (d.ready) return openReadyRoute(d.ready);
   if (d.dayShare) return shareDay();
+  if (d.dayCopy) return copyDayList();
   if (d.daySave) return saveSharedRoute();
-  if (d.dayClear) { stage0.day = []; stage0Save('amg-day', []); syncDayButtons(); stage0Labels(); drawDay(); return renderDay(); }
+  if (d.dayClear) { stage0.day = []; stage0.dayName = ''; stage0Save('amg-day', []); stage0Save('amg-day-name', ''); syncDayButtons(); stage0Labels(); drawDay(); return renderDay(); }
   const move = (from, to) => { if (to < 0 || to >= list.length) return; list.splice(to, 0, list.splice(from, 1)[0]); };
   if (d.dayUp != null) move(+d.dayUp, +d.dayUp - 1);
   else if (d.dayDown != null) move(+d.dayDown, +d.dayDown + 1);
@@ -3813,6 +3848,11 @@ $('passport').addEventListener('click', ev => {
   if (ev.target.closest('[data-close-panel]')) Overlays.hide('passport');
 });
 $('day').addEventListener('click', dayPanelClick);
+$('day').addEventListener('input', ev => {
+  if (ev.target.id !== 'dayName') return;
+  stage0.dayName = String(ev.target.value || '').slice(0, 60);
+  stage0Save('amg-day-name', stage0.dayName);
+});
 $('report').addEventListener('change', ev => {
   if (ev.target.name !== 'amgReportKind') return;
   stage0.report.kind = ev.target.value;
