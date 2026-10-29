@@ -19,7 +19,7 @@ AMG — ArtMap Georgia
   scripts/contrib-*.mjs            логика, шифрование и проход Telegram-бота; тесты contrib-test.mjs
   scripts/e2e/                     браузерные сценарии (вручную, не в CI)
   .github/workflows/pages.yml      сборка и публикация на GitHub Pages
-  .github/workflows/contrib-bot.yml бот @artmap_georgia_bot, раз в 10 минут
+  .github/workflows/contrib-bot.yml бот @artmap_georgia_bot, дежурство 24/7 (long polling)
   .github/ISSUE_TEMPLATE/          форма «Сообщить о проблеме»
   docs/                            отчёты, аудит, планы; RUNBOOK.md — эксплуатация; DESIGN.md — стиль
 

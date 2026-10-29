@@ -1,23 +1,39 @@
-// AMG краудсорсинг, этап 1 — один проход Telegram-бота. Запускается GitHub Actions по расписанию
+// AMG краудсорсинг, этап 1 — проход Telegram-бота. Запускается GitHub Actions
 // (.github/workflows/contrib-bot.yml): забирает новые сообщения (getUpdates), принимает голоса «Я здесь»,
 // отвечает, сохраняет зашифрованное состояние и публичный фид data/contributions.json.
 // Предложенную коррекцию точки не применяет — открывает Issue для хранителя данных.
+//
+// Два режима:
+//   один проход (по умолчанию) — сколько сообщений накопилось, столько и обработал;
+//   дежурство (AMG_LOOP_SECONDS > 0) — держит длинный polling (AMG_TG_POLL_TIMEOUT) до дедлайна,
+//   отвечает за секунды, сам коммитит состояние и фид; workflow продлевает дежурство следующим запуском.
 //
 // Переменные окружения:
 //   AMG_BOT_TOKEN    токен бота (секрет). Без него — пробный прогон без сети.
 //   AMG_STATE_KEY    ключ состояния, 32 байта base64 (секрет).
 //   AMG_STATE_FILE   путь к зашифрованному состоянию (по умолчанию state/contrib-state.enc).
+//   AMG_FEED_FILE    путь к публичному фиду (по умолчанию data/contributions.json).
+//   AMG_LOOP_SECONDS секунды дежурства; 0 — один проход.
+//   AMG_TG_POLL_TIMEOUT  длинный polling, сек (0 — без ожидания).
+//   AMG_HEARTBEAT_DAYS   период heartbeat-коммита в ветку состояния (0 — выключить).
 //   GITHUB_TOKEN, GITHUB_REPOSITORY — для Issue о коррекции (в Actions заданы автоматически).
 //   GITHUB_OUTPUT    сюда пишется feed_changed=true|false.
 //   AMG_TG_API       адрес Bot API (по умолчанию https://api.telegram.org; для локального теста — заглушка).
 import fs from 'node:fs';
 import path from 'node:path';
+import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { castVote, emptyState, publicFeed, userGuard, userCommit, decodeHerePayload, encodeHerePayload, VERIFY_N, CORRECT_N } from './contrib-lib.mjs';
 import { stateKey, hashUid, encryptState, decryptState } from './contrib-store.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const SITE_URL = 'https://artmap-georgia.github.io/AMG/';
+
+const LOOP_SECONDS = parseInt(process.env.AMG_LOOP_SECONDS || '0', 10) || 0;
+const POLL_TIMEOUT = parseInt(process.env.AMG_TG_POLL_TIMEOUT || '0', 10) || 0;
+const HEARTBEAT_DAYS = parseInt(process.env.AMG_HEARTBEAT_DAYS || '14', 10) || 0;
+const POLL_ABORT_MS = (POLL_TIMEOUT + 20) * 1000;
+const IN_ACTIONS = process.env.GITHUB_ACTIONS === 'true';
 
 // --- тексты ответов: язык по language_code пользователя Telegram ---
 const T = {
@@ -94,6 +110,156 @@ function loadSites() {
 }
 function feedWithoutTime(f) { return JSON.stringify({ ...f, updated: null }); }
 
+function writeFeedIfChanged(state, feedPath) {
+  const feed = publicFeed(state, state.updated);
+  const prev = fs.existsSync(feedPath) ? JSON.parse(fs.readFileSync(feedPath, 'utf8')) : null;
+  const changed = !prev || feedWithoutTime(prev) !== feedWithoutTime(feed);
+  if (changed) fs.writeFileSync(feedPath, JSON.stringify(feed, null, 2) + '\n');
+  return changed;
+}
+
+// --- git/gh: только внутри GitHub Actions; локально и в тестах — no-op ---
+function gitTry(args, cwd = ROOT) {
+  if (!IN_ACTIONS) { console.log('[git:dry]', args.join(' ')); return null; }
+  try {
+    return execFileSync('git', args, { cwd, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
+  } catch (e) {
+    const msg = String(e.stderr || e.message || '').trim().split('\n')[0];
+    if (msg) console.error('[git]', msg);
+    return null;
+  }
+}
+const BOT_ID = ['-c', 'user.name=amg-contrib-bot', '-c', 'user.email=41898282+github-actions[bot]@users.noreply.github.com'];
+function commitState(dir, msg, pending) {
+  if (!IN_ACTIONS) return false;
+  gitTry(['add', '-A'], dir);
+  const dirty = (gitTry(['status', '--porcelain'], dir) || '').trim();
+  if (dirty) {
+    if (gitTry([...BOT_ID, 'commit', '-q', '-m', msg], dir) === null) return false;
+    pending.add(dir);
+  }
+  if (!pending.has(dir)) return false;
+  for (let i = 0; i < 3; i++) {
+    if (gitTry(['push', '-q', 'origin', 'contrib-state'], dir) !== null) { pending.delete(dir); return true; }
+    if (gitTry(['fetch', '-q', '--depth=1', 'origin', 'contrib-state'], dir) !== null) gitTry(['rebase', 'FETCH_HEAD'], dir);
+  }
+  return false;
+}
+function publishFeed() {
+  if (!IN_ACTIONS) return false;
+  gitTry(['add', 'data/contributions.json']);
+  const dirty = (gitTry(['status', '--porcelain', 'data/contributions.json']) || '').trim();
+  if (dirty && gitTry([...BOT_ID, 'commit', '-q', '-m', 'contrib: feed']) === null) return false;
+  for (let i = 0; i < 3; i++) {
+    if (gitTry(['push', '-q', 'origin', 'HEAD:main']) !== null) {
+      // Пуш мог пройти, а dispatch — нет: остаёмся в pending, следующий проход повторит
+      // (push будет no-op) и снова попробует запустить деплой.
+      return dispatchWorkflow('pages.yml');
+    }
+    if (gitTry(['pull', '-q', '--rebase', 'origin', 'main']) === null) gitTry(['rebase', '--abort']);
+  }
+  return false;
+}
+function dispatchWorkflow(file, inputs = {}) {
+  if (!IN_ACTIONS) { console.log('[dispatch:dry]', file); return false; }
+  const repo = process.env.GITHUB_REPOSITORY;
+  if (!repo) return false;
+  const args = ['workflow', 'run', file, '--ref', 'main', '-R', repo];
+  for (const [k, v] of Object.entries(inputs)) args.push('-f', `${k}=${v}`);
+  try {
+    execFileSync('gh', args, {
+      cwd: ROOT, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'],
+      env: { ...process.env, GH_TOKEN: process.env.GITHUB_TOKEN || process.env.GH_TOKEN || '' },
+    });
+    console.log('[dispatch]', file, JSON.stringify(inputs));
+    return true;
+  } catch (e) {
+    console.error('[dispatch]', String(e.stderr || e.message).trim().split('\n')[0]);
+    return false;
+  }
+}
+function heartbeatDue(dir) {
+  if (!HEARTBEAT_DAYS) return false;
+  try {
+    const t = Date.parse(fs.readFileSync(path.join(dir, 'heartbeat'), 'utf8').trim());
+    return !Number.isFinite(t) || Date.now() - t >= HEARTBEAT_DAYS * 86400000;
+  } catch { return true; }
+}
+function touchHeartbeat(dir) {
+  fs.mkdirSync(dir, { recursive: true });
+  fs.writeFileSync(path.join(dir, 'heartbeat'), new Date().toISOString() + '\n');
+}
+
+async function pollOnce(ctx) {
+  const q = `?timeout=${ctx.timeout}&limit=100&allowed_updates=${encodeURIComponent('["message"]')}&offset=${ctx.state.offset || 0}`;
+  const r = await fetch(ctx.api('getUpdates', q), { signal: AbortSignal.timeout(POLL_ABORT_MS) });
+  const j = await r.json();
+  if (!j.ok) {
+    const err = new Error('getUpdates: ' + (j.description || r.status));
+    if (r.status === 401 || r.status === 403) err.fatal = true;   // токен неверный/отозван — не крутить 5,5 ч
+    throw err;
+  }
+  const updates = j.result || [];
+  const res = processUpdates(ctx.state, updates, ctx.coords, ctx.hash);
+  for (const rep of res.replies) {
+    await fetch(ctx.api('sendMessage'), {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ chat_id: rep.chat_id, text: rep.text, disable_web_page_preview: true }),
+      signal: AbortSignal.timeout(20000),
+    }).catch(() => {});
+  }
+  for (const ev of res.events) await openCorrectionIssue(ev, ctx.names, ctx.coords).catch(e => console.error('[issue]', e.message));
+  if (updates.length) {
+    ctx.state.updated = new Date().toISOString();
+    fs.mkdirSync(path.dirname(ctx.statePath), { recursive: true });
+    fs.writeFileSync(ctx.statePath, encryptState(ctx.key, ctx.state));
+    // Подтверждаем offset только после записи состояния: сбой процесса не потеряет голос.
+    await fetch(ctx.api('getUpdates', `?timeout=0&limit=1&offset=${ctx.state.offset}`), { signal: AbortSignal.timeout(20000) }).catch(() => {});
+  }
+  return { updates: updates.length, replies: res.replies.length, events: res.events.length };
+}
+
+// Дежурство: длинный polling до дедлайна, состояние/фид пишутся и коммитятся по ходу.
+async function runLoop(ctx) {
+  const dir = path.dirname(ctx.statePath);
+  const statePending = new Set();
+  const deadline = Date.now() + LOOP_SECONDS * 1000;
+  let feedPending = false;
+  if (heartbeatDue(dir)) {
+    touchHeartbeat(dir);
+    commitState(dir, 'contrib: heartbeat', statePending);
+    console.log('[loop] heartbeat');
+  }
+  console.log(`[loop] start: ${Math.round(LOOP_SECONDS / 60)} мин, long poll ${POLL_TIMEOUT} с`);
+  let failures = 0;
+  while (Date.now() < deadline) {
+    let pass;
+    try { pass = await pollOnce(ctx); }
+    catch (e) {
+      failures++;
+      console.error(`[loop] poll (${failures}):`, e.message);
+      // Останавливаем дежурство, чтобы не жечь 5,5 ч job'а впустую; schedule перезапустит позже.
+      if (e.fatal || failures >= 20) { console.error('[loop] стоп: повторяющаяся ошибка'); process.exitCode = 1; return; }
+      await new Promise(res => setTimeout(res, 5000));
+      continue;
+    }
+    failures = 0;
+    if (pass.updates) {
+      commitState(dir, 'contrib: state', statePending);
+      if (writeFeedIfChanged(ctx.state, ctx.feedPath)) feedPending = true;
+    } else if (statePending.has(dir)) {
+      commitState(dir, 'contrib: state', statePending);
+    }
+    if (feedPending && publishFeed()) feedPending = false;
+    console.log(`[loop] updates=${pass.updates} replies=${pass.replies} corrections=${pass.events} left=${Math.max(0, Math.round((deadline - Date.now()) / 1000))}s`);
+    if (!pass.updates) await new Promise(res => setTimeout(res, 1000));
+  }
+  commitState(dir, 'contrib: state', statePending);
+  if (writeFeedIfChanged(ctx.state, ctx.feedPath)) feedPending = true;
+  if (feedPending) publishFeed();
+  console.log('[loop] done');
+}
+
 async function openCorrectionIssue(ev, names, coords) {
   const repo = process.env.GITHUB_REPOSITORY, token = process.env.GITHUB_TOKEN;
   const s = coords.get(ev.siteId), p = ev.proposal;
@@ -116,7 +282,7 @@ async function openCorrectionIssue(ev, names, coords) {
 async function main() {
   const TOKEN = process.env.AMG_BOT_TOKEN || '';
   const { coords, names } = loadSites();
-  const feedPath = path.join(ROOT, 'data/contributions.json');
+  const feedPath = path.resolve(ROOT, process.env.AMG_FEED_FILE || 'data/contributions.json');
   const out = (k, v) => { if (process.env.GITHUB_OUTPUT) fs.appendFileSync(process.env.GITHUB_OUTPUT, `${k}=${v}\n`); };
 
   if (!TOKEN) {   // пробный прогон: без сети, на выдуманных сообщениях
@@ -135,28 +301,18 @@ async function main() {
   const state = fs.existsSync(statePath) ? decryptState(key, fs.readFileSync(statePath, 'utf8')) : emptyState();
   const TG = (process.env.AMG_TG_API || 'https://api.telegram.org').replace(/\/$/, '');
   const api = (m, q = '') => `${TG}/bot${TOKEN}/${m}${q}`;
-  const r = await fetch(api('getUpdates', `?timeout=0&limit=100&allowed_updates=${encodeURIComponent('["message"]')}&offset=${state.offset || 0}`));
-  const j = await r.json();
-  if (!j.ok) throw new Error('getUpdates: ' + (j.description || r.status));
-  const updates = j.result || [];
-  const res = processUpdates(state, updates, coords, x => hashUid(key, x));
-  for (const rep of res.replies) {
-    await fetch(api('sendMessage'), { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ chat_id: rep.chat_id, text: rep.text, disable_web_page_preview: true }) }).catch(() => {});
+  const ctx = { key, state, statePath, coords, names, feedPath, api, hash: x => hashUid(key, x), timeout: POLL_TIMEOUT };
+
+  if (LOOP_SECONDS > 0) {
+    await runLoop(ctx);
+    out('feed_changed', 'false');
+    return;
   }
-  for (const ev of res.events) await openCorrectionIssue(ev, names, coords).catch(e => console.error('[issue]', e.message));
-  if (updates.length) {
-    // Подтверждаем обработанные сообщения, чтобы следующий запуск их не получил повторно.
-    await fetch(api('getUpdates', `?timeout=0&limit=1&offset=${state.offset}`)).catch(() => {});
-    state.updated = new Date().toISOString();
-    fs.mkdirSync(path.dirname(statePath), { recursive: true });
-    fs.writeFileSync(statePath, encryptState(key, state));
-  }
-  const feed = publicFeed(state, state.updated);
-  const prev = fs.existsSync(feedPath) ? JSON.parse(fs.readFileSync(feedPath, 'utf8')) : null;
-  const changed = !prev || feedWithoutTime(prev) !== feedWithoutTime(feed);
-  if (changed) fs.writeFileSync(feedPath, JSON.stringify(feed, null, 2) + '\n');
+
+  const res = await pollOnce(ctx);
+  const changed = writeFeedIfChanged(state, feedPath);
   out('feed_changed', String(changed));
-  console.log(`[bot] updates=${updates.length} replies=${res.replies.length} corrections=${res.events.length} feed_changed=${changed}`);
+  console.log(`[bot] updates=${res.updates} replies=${res.replies} corrections=${res.events} feed_changed=${changed}`);
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {

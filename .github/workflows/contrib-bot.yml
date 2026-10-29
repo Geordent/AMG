@@ -1,14 +1,28 @@
-# Telegram-бот «Я здесь» без сервера: раз в 10 минут забирает новые сообщения (getUpdates),
-# принимает голоса, отвечает; зашифрованное состояние — в ветке contrib-state, публичный фид —
-# data/contributions.json в main (затем запуск деплоя). Концепция: docs/2026-10-27-amg-crowd-concept.md.
+# Telegram-бот «Я здесь» без сервера. Режим 24/7: один запуск держит длинный polling
+# (getUpdates timeout=50) ~5,5 ч и отвечает за секунды; перед завершением запускает следующий
+# (workflow_dispatch). Раз в 10 минут schedule — сторожевой пёс: если цепочка оборвалась,
+# он поднимет её снова. Состояние — зашифрованное, ветка contrib-state (+ heartbeat-коммит
+# раз в 14 дней, чтобы GitHub не отключил расписание за 60 дней без активности).
+# Публичный фид — data/contributions.json в main (затем запуск деплоя).
+# Концепция: docs/2026-10-27-amg-crowd-concept.md, отчёт: docs/2026-10-29-amg-bot-247-loop.md.
 # Секреты: AMG_BOT_TOKEN (токен от @BotFather), AMG_STATE_KEY (openssl rand -base64 32).
 # Пока AMG_BOT_TOKEN не задан, workflow ничего не делает.
-# Расписание GitHub срабатывает с задержками и пропусками; при изменении этого файла оно перерегистрируется.
 name: contrib-bot
 on:
   schedule:
     - cron: '3,13,23,33,43,53 * * * *'   # неровные минуты: на :00/:10/:20 у GitHub пик нагрузки, запуски пропускаются
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/contrib-bot.yml'
+      - 'scripts/contrib-bot-once.mjs'
   workflow_dispatch:
+    inputs:
+      mode:
+        description: 'once — один проход (проверка); loop — дежурство 5,5 ч'
+        type: choice
+        options: ['once', 'loop']
+        default: 'once'
 permissions:
   contents: write
   issues: write
@@ -19,7 +33,7 @@ concurrency:
 jobs:
   poll:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 360
     steps:
       - name: Bot configured?
         id: cfg
@@ -46,9 +60,10 @@ jobs:
           else
             git worktree add --orphan -b contrib-state state
           fi
-      - name: Poll Telegram
+      # --- один проход: ручная проверка (mode=once) ---
+      - name: Poll Telegram (once)
         id: bot
-        if: steps.cfg.outputs.on == 'true'
+        if: steps.cfg.outputs.on == 'true' && github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'once'
         env:
           AMG_BOT_TOKEN: ${{ secrets.AMG_BOT_TOKEN }}
           AMG_STATE_KEY: ${{ secrets.AMG_STATE_KEY }}
@@ -56,7 +71,7 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
         run: node scripts/contrib-bot-once.mjs
       - name: Save encrypted state
-        if: steps.cfg.outputs.on == 'true'
+        if: steps.cfg.outputs.on == 'true' && github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'once'
         run: |
           cd state
           git add contrib-state.enc 2>/dev/null || exit 0
@@ -64,7 +79,7 @@ jobs:
           git -c user.name=amg-contrib-bot -c user.email=41898282+github-actions[bot]@users.noreply.github.com commit -q -m "contrib: state"
           git push -q origin contrib-state
       - name: Publish feed and deploy
-        if: steps.cfg.outputs.on == 'true' && steps.bot.outputs.feed_changed == 'true'
+        if: steps.cfg.outputs.on == 'true' && github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'once' && steps.bot.outputs.feed_changed == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
@@ -73,3 +88,20 @@ jobs:
           for i in 1 2 3; do git push -q origin HEAD:main && break; git pull -q --rebase origin main; done
           # push через GITHUB_TOKEN не запускает другие workflow — деплой запускаем явно
           gh workflow run pages.yml --ref main
+      # --- дежурство 24/7: schedule, push и mode=loop ---
+      - name: Poll Telegram (loop, 24/7)
+        if: steps.cfg.outputs.on == 'true' && (github.event_name != 'workflow_dispatch' || github.event.inputs.mode == 'loop')
+        env:
+          AMG_BOT_TOKEN: ${{ secrets.AMG_BOT_TOKEN }}
+          AMG_STATE_KEY: ${{ secrets.AMG_STATE_KEY }}
+          AMG_STATE_FILE: state/contrib-state.enc
+          AMG_LOOP_SECONDS: '19800'      # 5 ч 30 мин; лимит job — 6 ч
+          AMG_TG_POLL_TIMEOUT: '50'      # длинный polling: ответ за секунды
+          AMG_HEARTBEAT_DAYS: '14'       # heartbeat-коммит ~2 раза в месяц
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node scripts/contrib-bot-once.mjs
+      - name: Next shift
+        if: steps.cfg.outputs.on == 'true' && (github.event_name != 'workflow_dispatch' || github.event.inputs.mode == 'loop')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run contrib-bot.yml --ref main -f mode=loop

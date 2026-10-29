@@ -10,7 +10,7 @@
 | Сайт | `https://artmap-georgia.github.io/AMG/` (GitHub Pages, сборка через Actions) |
 | Репозиторий | `github.com/artmap-georgia/AMG` (организация; прежний `Geordent/AMG` GitHub перенаправляет) |
 | Старый адрес | `geordent.github.io` — репозиторий `Geordent/geordent.github.io` с перенаправлением на новый адрес |
-| Бот | `@artmap_georgia_bot`, GitHub Actions `contrib-bot` (раз в 10 минут) |
+| Бот | `@artmap_georgia_bot`, GitHub Actions `contrib-bot` (дежурство 24/7, п. 5b) |
 | Статистика | GoatCounter, `https://artmap-georgia.goatcounter.com` (вход — почта и пароль автора) |
 | Секреты репозитория | `AMG_BOT_TOKEN`, `AMG_STATE_KEY` (значения не читаются обратно; копия ключа — в менеджере паролей автора) |
 
@@ -58,7 +58,7 @@ node scripts/contrib-test.mjs         # логика бота (15 тестов)
 
 ## 5. Бот «Я здесь» (`@artmap_georgia_bot`)
 
-Схема: сайт → ссылка `t.me/artmap_georgia_bot?start=<payload>` → workflow `contrib-bot` раз в 10 минут забирает сообщения (`getUpdates`), проверяет, отвечает на языке пользователя и пишет:
+Схема: сайт → ссылка `t.me/artmap_georgia_bot?start=<payload>` → workflow `contrib-bot` в дежурном режиме 24/7 (длинный polling, см. п. 5b) забирает сообщения (`getUpdates`), проверяет, отвечает на языке пользователя и пишет:
 
 - зашифрованное состояние (AES-256-GCM, Telegram ID → HMAC-хеш) → ветка `contrib-state`;
 - публичный фид `data/contributions.json` (статус, число людей, месяц) → `main` и запуск деплоя.
@@ -69,12 +69,23 @@ node scripts/contrib-test.mjs         # логика бота (15 тестов)
 - Ручной запуск: Actions → `contrib-bot` → Run workflow (или `gh workflow run contrib-bot.yml -R artmap-georgia/AMG`).
 - Лог: строка `[bot] updates=… replies=… feed_changed=…`.
 - Секреты менять так: токен/ключ в временный файл → скрипт `gh secret set … --body` → удалить файл. Токены никому не показывать и не вставлять в чат; **ключ `AMG_STATE_KEY` потерять нельзя** (без него состояние не расшифровать).
-- Расписание GitHub срабатывает нестабильно (на практике — единичные запуски); запасной вариант — внешний планировщик, см. п. 5a.
+- Расписание GitHub срабатывает нестабильно (на практике — 2–3 запуска в сутки), поэтому основной режим — дежурство 24/7 (п. 5b), а `schedule` — только сторожевой пёс.
 - Telegram в РФ заблокирован; боту это не мешает (сообщения идут от пользователей из Грузии), автор админит через VPN. Сообщения Telegram хранит сутки.
 
-### 5a. Внешний планировщик (cron-job.org) для бота
+### 5b. Дежурный режим 24/7 (с 2026-10-29)
 
-Нужен, если собственное расписание GitHub не работает. Запускает `contrib-bot` по HTTP раз в 10 минут.
+Один job `contrib-bot` живёт ~5,5 ч и держит длинный polling (`getUpdates?timeout=50`): ответы за секунды. За 15 минут до лимита GitHub (6 ч на job) шаг `Next shift` запускает следующее дежурство (`workflow_dispatch mode=loop`), получается непрерывная цепочка. `schedule` каждые 10 минут и `push` правок бота поднимают цепочку, если она оборвалась; `concurrency: contrib-bot` не даёт плодить дубли.
+
+- Ручная проверка: Actions → `contrib-bot` → Run workflow → `mode=once` (один проход).
+- Дежурство вручную: Run workflow → `mode=loop`.
+- Лог: `[loop] start`, `[loop] updates=… replies=… left=…s`, `[loop] heartbeat`, `[loop] done`, `[dispatch] pages.yml`.
+- Состояние и фид цикл коммитит сам (в режиме `once` это делают отдельные шаги workflow).
+- Heartbeat: раз в 14 дней коммит `contrib: heartbeat` в `contrib-state` — страховка от отключения расписания после 60 дней без активности.
+- Если цепочка оборвалась — schedule перезапустит её в пределах часов. Внешний планировщик (п. 5c) больше не обязателен.
+
+### 5c. Внешний планировщик (cron-job.org) — резерв
+
+Нужен, только если собственное расписание GitHub перестанет работать совсем. Запускает `contrib-bot` по HTTP раз в 10 минут.
 
 1. GitHub → Settings → Developer settings → Personal access tokens → **Fine-grained tokens** → Generate: Resource owner `artmap-georgia`, Repository access — only `AMG`, Permissions → Repository → **Actions: Read and write** (ничего больше), срок 90 дней (поставить напоминание о продлении).
 2. cron-job.org → бесплатная регистрация → Create cronjob:
