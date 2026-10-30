@@ -1,5 +1,6 @@
 // Этап 3: OpenFreeMap вне городов, подсказка «скачайте карту», справка по маршрутам, GoatCounter (выключен/включён).
 import { chromium } from 'playwright-core';
+import { railify } from './rail.mjs';
 import http from 'http';
 import fs from 'fs';
 import path from 'path';
@@ -23,7 +24,7 @@ const b = await chromium.launch({ channel: 'msedge', headless: true, args: ['--u
 const newPage = async (opts = {}, init) => {
   const ctx = await b.newContext({ viewport: { width: 1360, height: 860 }, locale: 'ru-RU', serviceWorkers: 'block', ...opts });
   if (init) await ctx.addInitScript(init);
-  const p = await ctx.newPage(); p.on('pageerror', e => errs.push(e.message));
+  const p = await ctx.newPage(); railify(p); p.on('pageerror', e => errs.push(e.message));
   return [ctx, p];
 };
 

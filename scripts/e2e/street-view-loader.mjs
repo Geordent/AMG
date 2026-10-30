@@ -1,5 +1,6 @@
 // «Посмотреть на улице» в «Подробно» и мобильной карточке; текст заставки.
 import { chromium } from 'playwright-core';
+import { railify } from './rail.mjs';
 import http from 'http';
 import fs from 'fs';
 import path from 'path';
@@ -31,7 +32,7 @@ const a = await p.$$eval('#detail a.amg-btn', l => l.map(x => [x.textContent, x.
 const sv = a.find(x => x[0] === 'Посмотреть на улице');
 ok('«Подробно»: ссылка на Street View в точке объекта, в новой вкладке', sv && sv[1] === want && sv[2] === '_blank', sv ? sv[1] : JSON.stringify(a));
 const m = await b.newContext({ viewport: { width: 390, height: 800 }, isMobile: true, hasTouch: true, locale: 'en-GB', serviceWorkers: 'block' });
-const mp = await m.newPage(); mp.on('pageerror', e => errs.push('mobile: ' + e.message));
+const mp = await m.newPage(); railify(mp); mp.on('pageerror', e => errs.push('mobile: ' + e.message));
 await mp.goto(U + '#s=site-0003'); await mp.waitForTimeout(5000);
 const ma = await mp.$$eval('#card a.amg-btn', l => l.map(x => [x.textContent, x.href]));
 const msv = ma.find(x => x[0] === 'Street view');

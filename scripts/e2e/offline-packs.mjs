@@ -1,5 +1,6 @@
 // Офлайн-пакеты городов: детальный слой Батуми, панель «Офлайн», скачивание и режим «только скачанное».
 import { chromium } from 'playwright-core';
+import { railify } from './rail.mjs';
 import http from 'http';
 import fs from 'fs';
 import path from 'path';
@@ -23,7 +24,7 @@ const out = [], errs = [];
 const ok = (n, c, x = '') => out.push(`${c ? 'PASS' : 'FAIL'}  ${n}${x ? ' — ' + x : ''}`);
 const b = await chromium.launch({ channel: 'msedge', headless: true, args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader'] });
 const ctx = await b.newContext({ viewport: { width: 1360, height: 860 }, locale: 'ru-RU', serviceWorkers: 'block' });
-const p = await ctx.newPage(); p.on('pageerror', e => errs.push(e.message));
+const p = await ctx.newPage(); railify(p); p.on('pageerror', e => errs.push(e.message));
 await p.goto(U); await p.waitForTimeout(4500);
 
 // 1) Батуми на уровне улиц: тайлы идут из batumi.pmtiles.

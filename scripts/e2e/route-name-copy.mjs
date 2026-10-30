@@ -1,5 +1,6 @@
 // Название маршрута дня (в ссылке #route=…&n=…), показ у друга, сохранение, «Скопировать списком», защита от вредных названий.
 import { chromium } from 'playwright-core';
+import { railify } from './rail.mjs';
 import http from 'http';
 import fs from 'fs';
 import path from 'path';
@@ -28,7 +29,7 @@ const init = ids => { try { localStorage.setItem('amg-day', JSON.stringify(ids))
 // 1) Свой день: название, ссылка, список.
 const ctx = await b.newContext({ viewport: { width: 1360, height: 860 }, locale: 'ru-RU', serviceWorkers: 'block', permissions: ['clipboard-read', 'clipboard-write'] });
 await ctx.addInitScript(init, IDS);
-const p = await ctx.newPage(); p.on('pageerror', e => errs.push(e.message));
+const p = await ctx.newPage(); railify(p); p.on('pageerror', e => errs.push(e.message));
 await p.goto(U); await p.waitForTimeout(4500);
 await p.click('#btnDay'); await p.waitForTimeout(900);
 ok('поле «Название маршрута» есть у непустого дня', await p.$$eval('#day #dayName', a => a.length) === 1);
@@ -48,7 +49,7 @@ await p.screenshot({ path: path.join(OUT, 'rn-own.png') });
 // 2) Друг открывает ссылку.
 const ctx2 = await b.newContext({ viewport: { width: 390, height: 800 }, isMobile: true, hasTouch: true, locale: 'ru-RU', serviceWorkers: 'block', permissions: ['clipboard-read', 'clipboard-write'] });
 await ctx2.addInitScript(() => { try { localStorage.setItem('amg-packhint', JSON.stringify({ tbilisi: 99 })); } catch (_) {} });
-const p2 = await ctx2.newPage(); p2.on('pageerror', e => errs.push('friend: ' + e.message));
+const p2 = await ctx2.newPage(); railify(p2); p2.on('pageerror', e => errs.push('friend: ' + e.message));
 await p2.goto(want); await p2.waitForTimeout(6000);
 ok('у друга заголовок — название маршрута, 3 точки', (await p2.textContent('#day h2')) === 'Муралы Сабуртало & суббота' && await p2.$$eval('#day .amg-day-list li', a => a.length) === 3);
 ok('у друга нет поля названия (чужой маршрут не редактируется)', await p2.$$eval('#day #dayName', a => a.length) === 0);
@@ -64,7 +65,7 @@ ok('после сохранения в поле — то же название',
 // 3) Вредные и длинные названия.
 const ctx3 = await b.newContext({ viewport: { width: 1360, height: 860 }, locale: 'ru-RU', serviceWorkers: 'block' });
 await ctx3.addInitScript(() => { try { localStorage.setItem('amg-packhint', JSON.stringify({ tbilisi: 99 })); } catch (_) {} });
-const p3 = await ctx3.newPage(); p3.on('pageerror', e => errs.push('xss: ' + e.message));
+const p3 = await ctx3.newPage(); railify(p3); p3.on('pageerror', e => errs.push('xss: ' + e.message));
 const evil = '<img src=x onerror=window.__xss=1><script>window.__xss=2</script>' + 'ы'.repeat(100);
 await p3.goto(U + '#route=site-0450,site-0003&n=' + encodeURIComponent(evil)); await p3.waitForTimeout(6000);
 const info = await p3.evaluate(() => ({ title: document.querySelector('#day h2').textContent, imgs: document.querySelectorAll('#day h2 img, #day h2 script').length, xss: window.__xss || 0 }));

@@ -1,5 +1,6 @@
 // Сценарный тест этапа 0: штамп «Я здесь», паспорт, «Мой день», ссылка #route=, «Сообщить о проблеме».
 import { chromium } from 'playwright-core';
+import { railify } from './rail.mjs';
 import http from 'http';
 import fs from 'fs';
 import path from 'path';
@@ -26,7 +27,7 @@ const b = await chromium.launch({ channel: 'msedge', headless: true, args: ['--u
 // Пользователь стоит у «Солнечных логотипов» (site-0003).
 const ctx = await b.newContext({ viewport: { width: 1360, height: 860 }, locale: 'ru-RU', serviceWorkers: 'block',
   geolocation: { latitude: 41.69731, longitude: 44.80561, accuracy: 10 }, permissions: ['geolocation'] });
-const p = await ctx.newPage();
+const p = await ctx.newPage(); railify(p);
 p.on('pageerror', e => errors.push(e.message));
 
 // 1) «Подробно» → «Я здесь» → штамп.
@@ -81,7 +82,7 @@ await p.screenshot({ path: path.join(OUT, 's0-report.png') });
 
 // 6) Ссылка на маршрут в новой вкладке «друга» (чистый браузер).
 const ctx2 = await b.newContext({ viewport: { width: 390, height: 800 }, isMobile: true, hasTouch: true, locale: 'ru-RU', serviceWorkers: 'block' });
-const p2 = await ctx2.newPage(); p2.on('pageerror', e => errors.push('friend: ' + e.message));
+const p2 = await ctx2.newPage(); railify(p2); p2.on('pageerror', e => errors.push('friend: ' + e.message));
 await p2.goto(URL0 + '#route=site-0450,site-0003,site-0008,bogus-id'); await p2.waitForTimeout(5500);
 const sharedOpen = await p2.evaluate(() => !document.getElementById('day').hidden);
 const sharedRows = await p2.$$eval('#day .amg-day-list li', a => a.length);
@@ -99,7 +100,7 @@ await p2.screenshot({ path: path.join(OUT, 's0-mobile-card.png') });
 // 8) Далеко от объекта штамп не ставится.
 const ctx3 = await b.newContext({ viewport: { width: 1360, height: 860 }, locale: 'ru-RU', serviceWorkers: 'block',
   geolocation: { latitude: 41.7151, longitude: 44.8271, accuracy: 10 }, permissions: ['geolocation'] });
-const p3 = await ctx3.newPage(); p3.on('pageerror', e => errors.push('far: ' + e.message));
+const p3 = await ctx3.newPage(); railify(p3); p3.on('pageerror', e => errors.push('far: ' + e.message));
 await p3.goto(URL0 + '#s=site-0003'); await p3.waitForTimeout(5000);
 await p3.click('#detail [data-here]'); await p3.waitForTimeout(1500);
 const pass3 = await p3.evaluate(() => JSON.parse(localStorage.getItem('amg-passport') || '{}'));

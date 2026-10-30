@@ -1,5 +1,6 @@
 // Язык: заставка и сайт совпадают; выбор запоминается между визитами.
 import { chromium } from 'playwright-core';
+import { railify } from './rail.mjs';
 import http from 'http';
 import fs from 'fs';
 import path from 'path';
@@ -24,7 +25,7 @@ const state = async p => p.evaluate(() => ({ sel: document.getElementById('lang'
 
 for (const [locale, wantLoader, wantSel] of [['en-US', 'Drawing Georgia…', 'en'], ['ru-RU', 'Рисуем Грузию…', 'ru'], ['ka-GE', 'ვხატავთ საქართველოს…', 'ka'], ['de-DE', 'Drawing Georgia…', 'en']]) {
   const ctx = await b.newContext({ locale, serviceWorkers: 'block' });
-  const p = await ctx.newPage(); p.on('pageerror', e => errs.push(locale + ': ' + e.message));
+  const p = await ctx.newPage(); railify(p); p.on('pageerror', e => errs.push(locale + ': ' + e.message));
   await p.goto(U);
   const early = await p.evaluate(() => document.getElementById('amgLoaderText')?.textContent);
   await p.waitForTimeout(4500);
@@ -34,7 +35,7 @@ for (const [locale, wantLoader, wantSel] of [['en-US', 'Drawing Georgia…', 'en
 }
 // Выбор запоминается: английский браузер → выбрали грузинский → новый визит на грузинском.
 const ctx = await b.newContext({ locale: 'en-US', serviceWorkers: 'block' });
-const p = await ctx.newPage(); p.on('pageerror', e => errs.push('persist: ' + e.message));
+const p = await ctx.newPage(); railify(p); p.on('pageerror', e => errs.push('persist: ' + e.message));
 await p.goto(U); await p.waitForTimeout(4500);
 await p.selectOption('#lang', 'ka'); await p.waitForTimeout(800);
 await p.reload();

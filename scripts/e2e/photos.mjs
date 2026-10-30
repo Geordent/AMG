@@ -1,5 +1,6 @@
 // Фото Commons: карточка «Впечатления» (десктоп-попап и телефон), галерея места в «Подробно».
 import { chromium } from 'playwright-core';
+import { railify } from './rail.mjs';
 import http from 'http';
 import fs from 'fs';
 import path from 'path';
@@ -36,7 +37,7 @@ async function openExp(p, name) {
 {
   const ctx = await b.newContext({ viewport: { width: 1360, height: 860 }, locale: 'ru-RU', serviceWorkers: 'block' });
   await ctx.addInitScript(() => { try { localStorage.setItem('amg-packhint', JSON.stringify({ tbilisi: 99 })); } catch (_) {} });
-  const p = await ctx.newPage(); p.on('pageerror', e => errs.push('detail: ' + e.message));
+  const p = await ctx.newPage(); railify(p); p.on('pageerror', e => errs.push('detail: ' + e.message));
   await p.goto(U); await p.waitForTimeout(4000);
   for (const [id, want] of [['site-0039', 2], ['site-0041', 2], ['site-0541', 2], ['site-0558', 2], ['site-0569', 2]]) {
     await p.evaluate(h => { location.hash = '#s=' + h; }, id); await p.waitForTimeout(3000);

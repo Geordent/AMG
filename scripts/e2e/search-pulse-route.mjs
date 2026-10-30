@@ -1,5 +1,6 @@
 // Проверка: поиск, пульс выбранного объекта, прорисовка маршрута «Мой день», мобильная раскладка.
 import { chromium } from 'playwright-core';
+import { railify } from './rail.mjs';
 import http from 'http';
 import fs from 'fs';
 import path from 'path';
@@ -21,7 +22,7 @@ const out = [], errs = [];
 const ok = (n, c, x = '') => out.push(`${c ? 'PASS' : 'FAIL'}  ${n}${x ? ' — ' + x : ''}`);
 const b = await chromium.launch({ channel: 'msedge', headless: true, args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader'] });
 const ctx = await b.newContext({ viewport: { width: 1360, height: 860 }, locale: 'ru-RU', serviceWorkers: 'block' });
-const p = await ctx.newPage(); p.on('pageerror', e => errs.push(e.message));
+const p = await ctx.newPage(); railify(p); p.on('pageerror', e => errs.push(e.message));
 await p.goto(U); await p.waitForTimeout(5000);
 
 const hits = async q => { await p.fill('#searchInput', q); await p.waitForTimeout(150); return p.$$eval('#searchResults .srch-nm', a => a.map(x => x.textContent)); };
@@ -64,12 +65,12 @@ const len = () => p.evaluate(() => { const l = window.__lens; return l.length ? 
 await p.waitForTimeout(250); const mid = await len();
 await p.waitForTimeout(2200); const end = await len();
 const frames = await p.evaluate(() => window.__lens.length);
-ok('маршрут прорисовывается (сначала частично, потом целиком)', mid > 0 && mid < 5 && end === 4 && frames > 10, `mid=${mid} end=${end} frames=${frames}`);
+ok('маршрут прорисовывается (сначала частично, потом целиком)', mid > 0 && mid < end && end === 3 * 36 + 1 && frames > 10, `mid=${mid} end=${end} frames=${frames}`);
 await p.screenshot({ path: path.join(OUT, 's2-route.png') });
 
 // Мобильная раскладка: лупа рядом с меню, без наложения.
 const m = await b.newContext({ viewport: { width: 390, height: 800 }, isMobile: true, hasTouch: true, locale: 'ru-RU', serviceWorkers: 'block' });
-const mp = await m.newPage(); mp.on('pageerror', e => errs.push('mobile: ' + e.message));
+const mp = await m.newPage(); railify(mp); mp.on('pageerror', e => errs.push('mobile: ' + e.message));
 await mp.goto(U); await mp.waitForTimeout(5000);
 const boxes = await mp.evaluate(() => ['searchBtn', 'menuBtn', 'brand'].map(id => { const r = document.getElementById(id).getBoundingClientRect(); return [id, Math.round(r.left), Math.round(r.right), Math.round(r.top), Math.round(r.bottom)]; }));
 const [sb, mb, br] = boxes;

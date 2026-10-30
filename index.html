@@ -74,14 +74,14 @@
     #nearby .amg-shrug { animation:none; }
   }
   /* ---- Краудсорсинг, этап 0: паспорт путешественника, «Мой день», «Сообщить о проблеме» ---- */
-  #passport, #day, #report { position:absolute; left:0; right:0; bottom:0; z-index:20; background:#FFFBF5; border-radius:16px 16px 0 0;
+  #passport, #day, #report, #myroutes { position:absolute; left:0; right:0; bottom:0; z-index:20; background:#FFFBF5; border-radius:16px 16px 0 0;
     box-shadow:0 -6px 24px rgba(0,0,0,.2); padding:14px 16px calc(14px + env(safe-area-inset-bottom,0px)); max-height:78%; overflow-y:auto; -webkit-overflow-scrolling:touch; }
-  #passport[hidden], #day[hidden], #report[hidden] { display:none; }
+  #passport[hidden], #day[hidden], #report[hidden], #myroutes[hidden] { display:none; }
   /* Десктоп: панель слева и поверх «Подробно» (z 30), чтобы не уходить под неё */
-  @media (min-width:769px) { #passport, #day, #report { z-index:32; left:16px; right:auto; bottom:16px; width:min(440px, calc(100vw - 32px));
+  @media (min-width:769px) { #passport, #day, #report, #myroutes { z-index:32; left:16px; right:auto; bottom:16px; width:min(440px, calc(100vw - 32px));
     border-radius:16px; max-height:calc(100% - 190px); box-shadow:0 10px 32px rgba(0,0,0,.22); } }
   #report a.btn { text-decoration:none; }
-  #passport h2, #day h2, #report h2 { margin:0 0 2px; font-size:20px; font-family:'Playfair Display','Noto Serif Georgian',Georgia,serif; }
+  #passport h2, #day h2, #report h2, #myroutes h2 { margin:0 0 2px; font-size:20px; font-family:'Playfair Display','Noto Serif Georgian',Georgia,serif; }
   .amg-sub { margin:0 0 8px; font-size:24px; line-height:1.15; }
   .amg-sub.plain { font-size:14px; }
   .amg-coll { display:flex; flex-wrap:wrap; gap:6px; margin:4px 0 12px; }
@@ -108,7 +108,21 @@
   .amg-day-list .ctl:disabled { opacity:.35; cursor:default; }
   .amg-day-total { margin:0 0 10px; font-size:22px; }
   .amg-day-total.plain { font-size:14px; }
-  #day .btns, #report .btns, #passport .btns { flex-wrap:wrap; }
+  #day .btns, #report .btns, #passport .btns, #myroutes .btns { flex-wrap:wrap; }
+  .amg-ready-link { display:flex; gap:8px; flex-wrap:wrap; margin:10px 0; }
+  /* ---- Мои маршруты (хранятся на устройстве) ---- */
+  #myroutes .myr-list { list-style:none; margin:10px 0; padding:0; display:flex; flex-direction:column; gap:8px; }
+  #myroutes .myr-row { display:flex; align-items:stretch; border:1px solid #E6D9C6; border-radius:12px; background:#fff; overflow:hidden; }
+  #myroutes .myr-row.cur { border-color:#B8482A; box-shadow:0 0 0 1px #B8482A inset; }
+  #myroutes .myr-open { flex:1; min-width:0; display:flex; flex-direction:column; gap:2px; text-align:left; border:0; background:none; padding:10px 12px; font:inherit; color:#2B2420; cursor:pointer; }
+  #myroutes .myr-open b { font-size:14px; overflow-wrap:anywhere; }
+  #myroutes .myr-open span { font-size:12px; color:#1F6F78; }
+  #myroutes .myr-open:hover, #myroutes .myr-open:focus-visible { background:#FFF8F2; outline:none; }
+  #myroutes .myr-act { display:flex; flex:none; }
+  #myroutes .myr-act button { width:38px; border:0; border-left:1px solid #EFE4D2; background:#FFFBF5; color:#2B2420; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+  #myroutes .myr-act button:hover, #myroutes .myr-act button:focus-visible { background:#F3D9CF; outline:none; }
+  #myroutes .myr-act svg { width:18px; height:18px; }
+  @media (pointer: coarse) { #myroutes .myr-act button { width:46px; min-height:46px; } }
   .amg-ready-h { margin:14px 0 6px; font-size:16px; font-family:'Playfair Display','Noto Serif Georgian',Georgia,serif; }
   .amg-ready { display:flex; flex-direction:column; gap:8px; margin-bottom:10px; }
   .amg-ready-r { display:flex; flex-direction:column; gap:2px; text-align:left; padding:10px 12px; border:1px solid #E0D0B8; border-radius:12px; background:#FFFFFF; cursor:pointer; font:inherit; color:#2B2420; }
@@ -172,7 +186,7 @@
   #topui { position:absolute; left:0; right:0; top:calc(8px + env(safe-area-inset-top,0px)); z-index:6;
     display:flex; flex-direction:column; gap:6px; padding:0 8px; pointer-events:none; }
   #topui > #bar, #topui > #chips { pointer-events:auto; }
-  #bar { display:flex; gap:6px; }
+  #bar { display:flex; flex-wrap:wrap; gap:6px; }
   #bar select, #bar button { font-size:14px; padding:9px 10px; border-radius:10px; border:1px solid #E0D0B8; background:#FFFBF5; color:#2B2420; cursor:pointer; }
   #bar button#btnNearby { margin-left:auto; }
   #bar button#btnPacks { margin-left:0; }
@@ -203,10 +217,9 @@
      иначе счётчик/обратная связь прятались в бургер-меню и их не находили. */
   #topui > #amgMeta { pointer-events:auto; align-self:flex-end; background:rgba(255,255,255,.94); border:1px solid #e0d8cc; border-radius:999px; padding:2px 10px; box-shadow:0 4px 12px rgba(43,38,34,.08); }
   #topui > #amgMeta #amgFeedbackBtn { font-size:13px; padding:8px 4px; }
-  /* Глаз (счётчик) — отдельной компактной пилюлей ПОД линией чипов, чтобы не рвать ряд кнопок */
-  #topui > #amgHits { pointer-events:auto; align-self:flex-end; background:rgba(255,255,255,.94); border:1px solid #e0d8cc;
-    border-radius:999px; padding:3px 11px; box-shadow:0 4px 12px rgba(43,38,34,.08); font-size:12px; color:#6b6259; }
-  #topui > #amgHits[hidden] { display:none; }
+  /* Глаз (счётчик) — внутри баннера проекта, справа в строке ссылок */
+  #legalLinks #amgHits { margin-left:auto; padding-left:10px; font-size:11px; color:#8a5a44; pointer-events:auto; }
+  #legalLinks #amgHits b { color:#6b4a3a; }
   #feedback { position:absolute; left:0; right:0; bottom:0; z-index:20; background:#FFFBF5; border-radius:16px 16px 0 0; box-shadow:0 -6px 24px rgba(0,0,0,.2); padding:14px 16px calc(14px + env(safe-area-inset-bottom,0px)); max-height:75%; overflow-y:auto; }
   #feedback[hidden] { display:none; }
   #feedback h2 { margin:0 0 8px; font-size:18px; }
@@ -235,6 +248,69 @@
   #nearby .amg-geo-diag { margin-top:8px; font-size:12px; color:#6b6259; }
   #nearby .amg-geo-diag summary { cursor:pointer; }
   #nearby .amg-geo-diag div { margin-top:4px; word-break:break-word; font-family:ui-monospace,Menlo,Consolas,monospace; font-size:11px; line-height:1.4; }
+  /* ---- Витрина «Путешествуем по Грузии»: темы → карточки маршрутов ---- */
+  #explore { position:absolute; left:0; right:0; bottom:0; z-index:20; background:#FFFBF5; border-radius:16px 16px 0 0;
+    box-shadow:0 -6px 24px rgba(0,0,0,.2); padding:14px 14px calc(14px + env(safe-area-inset-bottom,0px)); max-height:86%; overflow-y:auto;
+    -webkit-overflow-scrolling:touch; overscroll-behavior:contain; box-sizing:border-box; }
+  #explore[hidden] { display:none; }
+  #explore.route { max-height:46%; }
+  @media (min-width:769px) { #explore { z-index:32; left:16px; right:auto; bottom:16px; width:min(480px, calc(100vw - 32px));
+    border-radius:16px; max-height:calc(100% - 160px); box-shadow:0 10px 32px rgba(0,0,0,.22); }
+    #explore.route { max-height:calc(100% - 160px); } }
+  #explore .ex-head { display:flex; align-items:flex-start; gap:8px; margin:0 0 6px; }
+  #explore h2 { flex:1; margin:0; font-size:21px; line-height:1.15; font-family:'Playfair Display','Noto Serif Georgian',Georgia,serif; }
+  #explore .ex-close { flex:none; width:34px; height:34px; border:0; border-radius:50%; background:#EFE4D2; color:#2B2420; font-size:19px; line-height:1; cursor:pointer; margin-left:auto; }
+  #explore .ex-back { flex:none; border:0; background:transparent; color:#1F6F78; font:inherit; font-size:14px; font-weight:600; padding:8px 4px; cursor:pointer; }
+  #explore .ex-lead { margin:0 0 6px; font-size:13px; line-height:1.45; color:#6B5D52; }
+  #explore .ex-theme { display:flex; align-items:center; gap:10px; margin:18px 0 10px; font:700 17px/1.2 'Playfair Display','Noto Serif Georgian',Georgia,serif; color:#6E2639; }
+  #explore .ex-theme::after { content:''; flex:1; height:1px; background:repeating-linear-gradient(90deg,#D9C4A6 0 6px,transparent 6px 11px); }
+  #explore .ex-cards { display:flex; flex-direction:column; gap:14px; }
+  #explore .ex-card { display:block; width:100%; text-align:left; padding:0; border:1px solid #E6D9C6; border-radius:16px; overflow:hidden; background:#fff;
+    color:#2B2420; font:inherit; cursor:pointer; box-shadow:0 2px 10px rgba(43,38,34,.07); transition:transform .18s ease, box-shadow .18s ease; }
+  #explore .ex-card:hover, #explore .ex-card:focus-visible { transform:translateY(-2px); box-shadow:0 8px 20px rgba(43,38,34,.16); outline:none; }
+  #explore .ex-card:focus-visible { box-shadow:0 0 0 2px #B8482A, 0 8px 20px rgba(43,38,34,.16); }
+  #explore .ex-cover { position:relative; display:flex; align-items:center; justify-content:center; height:164px; overflow:hidden;
+    background:radial-gradient(circle at 30% 25%, #fff6 0 18%, transparent 19%), radial-gradient(circle at 78% 80%, #fff5 0 22%, transparent 23%), var(--tint,#F3E6D0); }
+  #explore .ex-cover .ph { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+  #explore .ex-cover .ic { width:78px; height:78px; filter:drop-shadow(0 4px 6px rgba(43,38,34,.22)); transform:rotate(-4deg); }
+  #explore .ex-badge { position:absolute; left:10px; top:10px; padding:3px 10px; border-radius:999px; background:rgba(255,251,245,.95); color:#6E2639; font-size:11px; font-weight:700; letter-spacing:.2px; }
+  #explore .ex-credit { position:absolute; right:8px; bottom:6px; padding:1px 6px; border-radius:6px; background:rgba(0,0,0,.5); color:#fff; font-size:10px; max-width:70%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  #explore .ex-body { display:block; padding:11px 13px 13px; }
+  #explore .ex-title { display:block; font:700 17px/1.2 'Playfair Display','Noto Serif Georgian',Georgia,serif; margin:0 0 5px; }
+  #explore .ex-teaser { display:block; margin:0; font-size:13px; line-height:1.5; color:#4A3F38; }
+  #explore .ex-count { display:block; margin-top:8px; font-size:11px; color:#1F6F78; font-weight:600; }
+  #explore .ex-own { margin-top:18px; padding:14px; border:1.5px dashed #D9C4A6; border-radius:16px; background:#FFF8EE; }
+  #explore .ex-own b { display:block; font:700 16px/1.2 'Playfair Display','Noto Serif Georgian',Georgia,serif; margin-bottom:4px; }
+  #explore .ex-own p { margin:0 0 10px; font-size:13px; line-height:1.45; color:#4A3F38; }
+  #explore .ex-note { padding:18px 4px; font-size:14px; color:#6B5D52; }
+  #explore .ex-rtitle { margin:2px 0 6px; }
+  #explore .ex-tag { flex:none; margin-left:auto; padding:2px 8px; border-radius:999px; background:#F3E6D0; color:#6B5D52; font-size:11px; font-weight:600; white-space:nowrap; }
+  #explore .ex-stops .nm { flex:1; min-width:0; overflow-wrap:anywhere; }
+  #explore .ex-photo { margin:10px 0 0; font-size:11px; color:#6B5D52; }
+  #explore .ex-photo a { color:#1F6F78; }
+  #explore .ex-sub { margin:12px 0 6px; font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.6px; color:#8a5a3b; }
+  #explore .ex-stops { list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:4px; }
+  #explore .ex-stops button { display:flex; align-items:center; gap:10px; width:100%; text-align:left; padding:8px 10px; border:1px solid #E6D9C6; border-radius:12px; background:#fff; color:#2B2420; font:inherit; font-size:14px; cursor:pointer; }
+  #explore .ex-stops button:hover, #explore .ex-stops button:focus-visible { border-color:#B8482A; background:#FFF8F2; outline:none; }
+  #explore .ex-stops .n { flex:none; width:24px; height:24px; border-radius:50%; background:#6E2639; color:#fff; font-size:12px; font-weight:700; display:flex; align-items:center; justify-content:center; }
+  #explore .ex-actions { position:sticky; bottom:-14px; display:flex; gap:8px; flex-wrap:wrap; margin:12px -14px -14px; padding:10px 14px calc(12px + env(safe-area-inset-bottom,0px)); background:linear-gradient(to top,#FFFBF5 78%,rgba(255,251,245,0)); }
+  #explore .ex-actions .btn { flex:1 1 auto; }
+  #chips #btnExplore { border-color:#B8482A; color:#9A3B22; font-weight:700; }
+  #chips #btnExplore:hover { background:#F3D9CF; }
+  @media (pointer: coarse) { #explore .ex-close { width:44px; height:44px; font-size:22px; } #explore .ex-stops button { min-height:44px; } #explore .ex-back { min-height:44px; } }
+  #explore .ex-arcnote { margin:6px 0 0; font-size:12px; font-style:italic; color:#6B5D52; }
+  /* «Герой» маршрута летит/идёт по дуге; не перехватывает нажатия и не блокирует карту */
+  .amg-hero { position:absolute; left:0; top:0; width:36px; height:36px; pointer-events:none; opacity:1; transition:opacity .5s ease; will-change:transform; }
+  .amg-hero.fade { opacity:0; }
+  .amg-hero .in { width:36px; height:36px; filter:drop-shadow(0 3px 4px rgba(43,38,34,.35)); }
+  .amg-hero svg { width:100%; height:100%; display:block; overflow:visible; }
+  /* Пронумерованные точки выбранного маршрута на карте (загораются по очереди) */
+  .amg-rm { width:34px; height:34px; padding:0; border:0; background:none; cursor:pointer; }
+  .amg-rm .dot { display:block; width:30px; height:30px; margin:2px; border-radius:50%; background:#6E2639; color:#fff; border:2px solid #FFFBF5;
+    font:700 13px/26px Manrope,system-ui,sans-serif; text-align:center; box-shadow:0 3px 8px rgba(43,38,34,.35), 0 0 0 4px rgba(110,38,57,.2);
+    animation:amg-rm-pop .42s cubic-bezier(.2,1.4,.4,1) both; animation-delay:calc(var(--i,0) * 110ms); }
+  @keyframes amg-rm-pop { from { transform:scale(0); opacity:0; } to { transform:scale(1); opacity:1; } }
+  @media (prefers-reduced-motion: reduce) { .amg-rm .dot { animation:none; } #explore .ex-card { transition:none; } }
   .row { display:flex; align-items:center; gap:8px; font-size:14px; margin:6px 0 10px; }
   .pack { border:1px solid #E6D9C6; border-radius:12px; padding:10px 12px; margin-bottom:10px; }
   .pack b { font-size:15px; }
@@ -416,6 +492,36 @@
   }
   html.is-mobile #topui > #bar { display:none; }
   html.is-mobile #menuBtn { display:flex; }
+  /* ---- Верх: баннер + язык/стиль карты рядом с ним; на десктопе остальные кнопки выезжают из-за правого края
+     (наведение мыши, фокус с клавиатуры или клик по язычку закрепляют). Телефон/узкое окно — бургер-меню. ---- */
+  #topHead { display:flex; align-items:flex-start; gap:8px; align-self:flex-start; max-width:100%; pointer-events:none; }
+  #topSel { display:flex; gap:6px; pointer-events:auto; }
+  #topSel:empty { display:none; }
+  #topSel select { font-size:14px; padding:9px 10px; border-radius:10px; border:1px solid #E0D0B8; background:#FFFBF5; color:#2B2420; cursor:pointer; box-shadow:0 2px 8px rgba(0,0,0,.08); }
+  #topSel select:focus-visible { outline:2px solid #B8482A; outline-offset:1px; }
+  #railTab { display:none; }
+  #exploreReturn { pointer-events:auto; align-self:flex-start; display:flex; align-items:stretch; max-width:min(92vw,420px); background:#6E2639; color:#fff; border-radius:999px; box-shadow:0 4px 14px rgba(43,38,34,.3); overflow:hidden; }
+  #exploreReturn[hidden] { display:none; }
+  #exploreReturn button { border:0; background:none; color:inherit; font:inherit; font-size:13px; cursor:pointer; }
+  #exploreReturn .er-go { padding:9px 8px 9px 14px; min-width:0; text-align:left; font-weight:600; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  #exploreReturn .er-x { padding:9px 13px 9px 8px; font-size:17px; line-height:1; opacity:.8; }
+  #exploreReturn button:hover, #exploreReturn button:focus-visible { background:rgba(255,255,255,.14); outline:none; }
+  @media (pointer: coarse) { #exploreReturn button { min-height:44px; } }
+  @media (min-width:769px) and (pointer: fine) {
+    #topui { overflow-x:clip; }
+    html:not(.is-mobile) #topui > #bar { position:absolute; top:124px; right:0; margin:0; width:168px; box-sizing:border-box; flex-direction:column; flex-wrap:nowrap; align-items:stretch; gap:6px;
+      padding:10px 10px 10px 12px; background:rgba(255,251,245,.97); border:1px solid #E6D9C6; border-right:0; border-radius:14px 0 0 14px; box-shadow:-6px 6px 22px rgba(43,38,34,.2);
+      transform:translateX(100%); transition:transform .22s ease .35s; }
+    html:not(.is-mobile) #topui > #bar:hover, html:not(.is-mobile) #topui > #bar:focus-within, html:not(.is-mobile) #topui > #bar.rail-open { transform:translateX(0); transition-delay:0s; }
+    html:not(.is-mobile) #topui > #bar button:not(#railTab) { width:100%; box-sizing:border-box; text-align:center; }
+    html:not(.is-mobile) #topui > #bar button#btnNearby { margin-left:0; }
+    html:not(.is-mobile) #topui > #bar #amgMeta { align-self:stretch; justify-content:center; border-radius:12px; padding:0 6px; }
+    html:not(.is-mobile) #topui > #bar #railTab { display:flex; position:absolute; left:-25px; top:-1px; width:25px; height:48px; padding:0; align-items:center; justify-content:center;
+      border:1px solid #E6D9C6; border-right:0; border-radius:12px 0 0 12px; background:rgba(255,251,245,.97); color:#6B5D52; box-shadow:-3px 3px 10px rgba(43,38,34,.16); cursor:pointer; }
+    html:not(.is-mobile) #topui > #bar #railTab svg { width:15px; height:15px; transition:transform .22s ease; }
+    html:not(.is-mobile) #topui > #bar:hover #railTab svg, html:not(.is-mobile) #topui > #bar:focus-within #railTab svg, html:not(.is-mobile) #topui > #bar.rail-open #railTab svg { transform:rotate(180deg); }
+    @media (prefers-reduced-motion: reduce) { html:not(.is-mobile) #topui > #bar, html:not(.is-mobile) #topui > #bar #railTab svg { transition:none; } }
+  }
   /* ---- Подсказка «скачайте карту города» и справка по маршрутам ---- */
   #packHint { position:fixed; left:50%; transform:translateX(-50%); bottom:calc(14px + env(safe-area-inset-bottom,0px)); z-index:16;
     width:min(460px, calc(100vw - 24px)); box-sizing:border-box; display:flex; flex-direction:column; gap:10px;
@@ -468,6 +574,7 @@
 </script>
 <div id="map"></div>
 <div id="topui">
+  <div id="topHead">
   <div id="brand">
     <div class="wm" id="brandWm">ArtMap Georgia</div>
     <div class="tag" id="brandTag">Карта искусства и необычных городских объектов Грузии</div>
@@ -475,7 +582,11 @@
       <a id="lnkPrivacy" href="privacy.html">Конфиденциальность</a>
       <span class="sep" aria-hidden="true">·</span>
       <a id="lnkLicense" href="license.html">Лицензии</a>
+      <!-- Глаз-счётчик живёт в баннере проекта (справа в строке ссылок) -->
+      <span id="amgHits" title="" hidden><span aria-hidden="true">👁</span>&nbsp;<b id="amgHitsN">—</b></span>
     </span>
+  </div>
+  <div id="topSel"></div><!-- язык и стиль карты (десктоп); на телефоне уезжают в бургер-меню -->
   </div>
   <button id="searchBtn" type="button" aria-label="Поиск" title="Поиск" aria-haspopup="dialog">
     <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="#2B2420" stroke-width="2"/><path d="M15.5 15.5 L20 20" stroke="#2B2420" stroke-width="2.2" stroke-linecap="round"/></svg>
@@ -484,6 +595,7 @@
     <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke="#2a2622" stroke-width="2" stroke-linecap="round"/></svg>
   </button>
   <div id="bar">
+    <button id="railTab" type="button" aria-label="Меню" title="Меню" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5 8 12l7 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
     <select id="flavor"></select>
     <select id="lang">
       <option value="ru">Русский</option>
@@ -499,9 +611,8 @@
       <button type="button" id="amgFeedbackBtn">Обратная связь</button>
     </div>
   </div>
-  <div id="chips"><span id="chipsCat"></span><span class="chip-sep" aria-hidden="true"></span><button class="chip" id="btnExp" type="button" aria-haspopup="dialog">Впечатления</button></div>
-  <!-- Глаз-счётчик: всегда в #topui, сразу под линией переключателей объектов -->
-  <span id="amgHits" title="" hidden><span aria-hidden="true">👁</span>&nbsp;<b id="amgHitsN">—</b></span>
+  <div id="chips"><button class="chip" id="btnExplore" type="button" aria-haspopup="dialog">Путешествуем по Грузии</button><span class="chip-sep" aria-hidden="true"></span><span id="chipsCat"></span><span class="chip-sep" aria-hidden="true"></span><button class="chip" id="btnExp" type="button" aria-haspopup="dialog">Впечатления</button></div>
+  <div id="exploreReturn" hidden><button type="button" class="er-go" data-er-go="1"></button><button type="button" class="er-x" data-er-x="1">×</button></div>
 </div>
 <div id="scrim" hidden></div>
 <div id="sheet" hidden>
@@ -550,11 +661,14 @@
 <div id="nearby" hidden></div>
 <div id="passport" hidden role="dialog" aria-label="Паспорт путешественника"></div>
 <div id="day" hidden role="dialog" aria-label="Мой день"></div>
+<div id="myroutes" hidden role="dialog" aria-label="Мои маршруты"></div>
+<input type="file" id="myFile" accept=".json,application/json" hidden>
 <div id="report" hidden role="dialog" aria-label="Сообщить о проблеме"></div>
 <div id="search" hidden role="dialog" aria-label="Поиск">
   <div class="srch-row"><input id="searchInput" type="search" autocomplete="off" spellcheck="false" enterkeyhint="search" aria-label="Поиск" placeholder="Мурал, художник, улица…"><button type="button" id="searchClose" aria-label="×">×</button></div>
   <div id="searchResults" role="list"></div>
 </div>
+<div id="explore" hidden role="dialog" aria-label="Путешествуем по Грузии"></div>
 <div id="feedback" hidden>
   <h2 id="fbTitle">Обратная связь</h2>
   <p class="small" id="fbText"></p>
@@ -678,7 +792,7 @@ const stage0 = (() => {
   return { day: Array.isArray(day) ? day.filter(x => typeof x === 'string') : [],
     dayName: typeof dayName === 'string' ? dayName.slice(0, 60) : '', sharedName: '',
     passport: passport && typeof passport === 'object' ? passport : {},
-    passportNew: null, dayShared: null, report: null, searchIdx: null, pulse: null, dayAnim: 0 };
+    passportNew: null, dayShared: null, my: [], dayId: null, report: null, searchIdx: null, pulse: null, dayAnim: 0 };
 })();
 
 // ---------- каталог (Stage 0 data) ----------
@@ -857,6 +971,51 @@ const LB = {
   searchNone: { ru:'Ничего не нашлось', en:'Nothing found', ka:'ვერაფერი მოიძებნა' },
   searchNoneHint:{ ru:'Попробуйте короче или на другом языке: «Фабрика», «Fabrika», «ფაბრიკა».', en:'Try something shorter or another language: “Fabrika”, «Фабрика», «ფაბრიკა».', ka:'სცადე უფრო მოკლედ ან სხვა ენაზე: «ფაბრიკა», «Fabrika», «Фабрика».' },
   searchMore: { ru:'Показаны первые 30 из {n} — уточните запрос', en:'Showing the first 30 of {n} — refine your search', ka:'ნაჩვენებია პირველი 30 / {n} — დააზუსტე ძიება' },
+  // --- витрина «Путешествуем по Грузии» ---
+  explore:    { ru:'Путешествуем по Грузии', en:'Explore Georgia', ka:'ვიმოგზაუროთ საქართველოში' },
+  exLead:     { ru:'Выберите маршрут — на карте загорятся его точки. Как добираться, решаете вы.', en:'Pick a route and its stops light up on the map. How you get there is up to you.', ka:'აირჩიეთ მარშრუტი — რუკაზე მისი წერტილები აინთება. როგორ მიხვალთ, თქვენზეა დამოკიდებული.' },
+  exKindCity: { ru:'Прогулка по городу', en:'City walk', ka:'ქალაქში სეირნობა' },
+  exKindTrip: { ru:'По Грузии', en:'Across Georgia', ka:'საქართველოს გასწვრივ' },
+  exStops:    { ru:'Остановок: {n}', en:'Stops: {n}', ka:'გაჩერება: {n}' },
+  exStopsTitle:{ ru:'Остановки', en:'Stops', ka:'გაჩერებები' },
+  exBack:     { ru:'← Все маршруты', en:'← All routes', ka:'← ყველა მარშრუტი' },
+  exSave:     { ru:'Сохранить себе', en:'Save to my routes', ka:'ჩემთვის შენახვა' },
+  exShare:    { ru:'Поделиться', en:'Share', ka:'გაზიარება' },
+  exOwnTitle: { ru:'Соберите свой маршрут', en:'Build your own route', ka:'შეადგინეთ საკუთარი მარშრუტი' },
+  exOwnText:  { ru:'Добавляйте места из карточек на карте, меняйте порядок, назовите маршрут и поделитесь ссылкой.', en:'Add places from the cards on the map, reorder them, name the route and share a link.', ka:'დაამატეთ ადგილები რუკის ბარათებიდან, შეცვალეთ თანმიმდევრობა, დაარქვით სახელი და გააზიარეთ ბმული.' },
+  exOwnBtn:   { ru:'Открыть мои маршруты', en:'Open my routes', ka:'ჩემი მარშრუტები' },
+  exArcNote:  { ru:'Линия показывает порядок, а не дорогу.', en:'The line shows the order, not the road.', ka:'ხაზი თანმიმდევრობას აჩვენებს და არა გზას.' },
+  // --- Мои маршруты ---
+  exSaved:    { ru:'✓ В моих маршрутах', en:'✓ In my routes', ka:'✓ ჩემს მარშრუტებში' },
+  myTitle:    { ru:'Мои маршруты', en:'My routes', ka:'ჩემი მარშრუტები' },
+  myHint:     { ru:'Маршруты хранятся только в этом браузере. Сохраните их в файл, чтобы не потерять.', en:'Routes are stored only in this browser. Save them to a file so you don’t lose them.', ka:'მარშრუტები ინახება მხოლოდ ამ ბრაუზერში. შეინახეთ ფაილში, რომ არ დაკარგოთ.' },
+  myEmpty:    { ru:'Пока пусто. Выберите готовый маршрут и нажмите «Сохранить себе» или соберите свой.', en:'Nothing here yet. Pick a ready route and press “Save to my routes”, or build your own.', ka:'ჯერ ცარიელია. აირჩიეთ მზა მარშრუტი და დააჭირეთ „ჩემთვის შენახვა“ ან შეადგინეთ საკუთარი.' },
+  myCurrent:  { ru:'сейчас на карте', en:'on the map now', ka:'ახლა რუკაზეა' },
+  myRen:      { ru:'Переименовать', en:'Rename', ka:'გადარქმევა' },
+  myFileOne:  { ru:'Сохранить в файл', en:'Save to file', ka:'ფაილში შენახვა' },
+  myDel:      { ru:'Удалить', en:'Delete', ka:'წაშლა' },
+  myDelAsk:   { ru:'Удалить маршрут «{name}»?', en:'Delete the route “{name}”?', ka:'წავშალოთ მარშრუტი „{name}“?' },
+  myNamePrompt:{ ru:'Название маршрута', en:'Route name', ka:'მარშრუტის სახელი' },
+  myExportAll:{ ru:'Сохранить всё в файл', en:'Save all to file', ka:'ყველას ფაილში შენახვა' },
+  myImport:   { ru:'Загрузить из файла', en:'Load from file', ka:'ფაილიდან ჩატვირთვა' },
+  myDefault:  { ru:'Мой маршрут', en:'My route', ka:'ჩემი მარშრუტი' },
+  mySaved:    { ru:'Сохранено в «Мои маршруты»', en:'Saved to My routes', ka:'შენახულია „ჩემი მარშრუტები“-ში' },
+  myOpenList: { ru:'Мои маршруты ({n})', en:'My routes ({n})', ka:'ჩემი მარშრუტები ({n})' },
+  mySaveCur:  { ru:'Сохранить в мои маршруты', en:'Save to my routes', ka:'ჩემს მარშრუტებში შენახვა' },
+  myLinked:   { ru:'✓ Изменения сохраняются в «{name}»', en:'✓ Changes are saved to “{name}”', ka:'✓ ცვლილებები ინახება „{name}“-ში' },
+  myReplace:  { ru:'Текущий маршрут не сохранён. Заменить его выбранным?', en:'The current route is not saved. Replace it with the selected one?', ka:'მიმდინარე მარშრუტი შენახული არ არის. შევცვალოთ არჩეულით?' },
+  myFull:     { ru:'Достигнут предел: {n} маршрутов. Удалите ненужные.', en:'Limit reached: {n} routes. Delete some first.', ka:'ლიმიტი ამოიწურა: {n} მარშრუტი. წაშალეთ ზედმეტი.' },
+  myImpBad:   { ru:'Это не файл маршрутов AMG.', en:'This is not an AMG routes file.', ka:'ეს AMG-ის მარშრუტების ფაილი არ არის.' },
+  myImpNone:  { ru:'В файле нет подходящих маршрутов.', en:'No usable routes in the file.', ka:'ფაილში შესაფერისი მარშრუტები არ არის.' },
+  myImpDone:  { ru:'Загружено маршрутов: {a}.', en:'Routes loaded: {a}.', ka:'ჩატვირთულია მარშრუტი: {a}.' },
+  myImpSkip:  { ru:' Пропущено мест, которых нет на карте: {s}.', en:' Places not on the map were skipped: {s}.', ka:' გამოტოვებულია ადგილები, რომლებიც რუკაზე არ არის: {s}.' },
+  exTicket:   { ru:'платный вход', en:'paid entry', ka:'ფასიანი შესვლა' },
+  exPermit:   { ru:'нужно разрешение', en:'permission needed', ka:'საჭიროა ნებართვა' },
+  exRestricted:{ ru:'ограниченный доступ', en:'restricted access', ka:'შეზღუდული წვდომა' },
+  exPhoto:    { ru:'Обложка:', en:'Cover photo:', ka:'ყდის ფოტო:' },
+  exReturn:   { ru:'Вернуться к маршруту', en:'Back to the route', ka:'მარშრუტთან დაბრუნება' },
+  exLoading:  { ru:'Загружаем маршруты…', en:'Loading routes…', ka:'მარშრუტები იტვირთება…' },
+  exError:    { ru:'Маршруты временно недоступны.', en:'Routes are unavailable right now.', ka:'მარშრუტები დროებით მიუწვდომელია.' },
   walk:       { ru:'пешком', en:'on foot', ka:'ფეხით' },
   min:        { ru:'мин', en:'min', ka:'წთ' },
   hr:         { ru:'ч', en:'h', ka:'სთ' },
@@ -2257,7 +2416,7 @@ const Overlays = {
   register(id, el) { this.els[id] = el; },
   setCloser(id, fn) { this.closer[id] = fn; },
   isOpen(id) { return this.stack.indexOf(id) >= 0; },
-  show(id) { if (!this.els[id]) return; if (!this.isOpen(id)) this.stack.push(id); this.els[id].hidden = false; this.update(); },
+  show(id) { if (this.onShow) this.onShow(id); if (!this.els[id]) return; if (!this.isOpen(id)) this.stack.push(id); this.els[id].hidden = false; this.update(); },
   hide(id) { this.stack = this.stack.filter(x => x !== id); if (this.els[id]) this.els[id].hidden = true; this.update(); },
   closeTop() { const id = this.stack[this.stack.length - 1]; if (!id) return; (this.closer[id] || (() => this.hide(id)))(); },
   closeAll() { while (this.stack.length) this.closeTop(); },
@@ -2317,14 +2476,31 @@ function relocateBar() {
   // «Обратная связь» живёт внутри #bar: на мобиле #bar переезжает в бургер-меню (там ей и место —
   // это не основной элемент), на широком экране остаётся в верхней панели.
   // Глаз-счётчик (#amgHits) — всегда в #topui, под линией чипов, в разметке не двигается.
+  // Язык и стиль карты: на десктопе — наверху рядом с баннером (#topSel), на телефоне — в бургер-меню (#bar).
+  const topSel = document.getElementById('topSel'), fl = document.getElementById('flavor'), lg = document.getElementById('lang'), nearby = document.getElementById('btnNearby');
+  const placeSelects = desktop => {
+    if (!topSel || !fl || !lg) return;
+    if (desktop) { if (fl.parentElement !== topSel) topSel.append(fl, lg); }
+    else if (fl.parentElement !== bar) { bar.insertBefore(fl, nearby); bar.insertBefore(lg, nearby); }
+  };
   if (isMobileUI()) {
     if (bar.parentElement !== menu) menu.appendChild(bar);
+    placeSelects(false);
   }
   else {
     if (bar.parentElement !== topui) topui.insertBefore(bar, chips);
+    placeSelects(true);
     if (Overlays.isOpen('menu')) Overlays.hide('menu');
   }
 }
+// Язычок выезжающей панели (десктоп): клик закрепляет/снимает; клик вне панели снимает закрепление
+(function railPin() {
+  const bar = document.getElementById('bar'), tab = document.getElementById('railTab');
+  if (!bar || !tab) return;
+  const set = on => { bar.classList.toggle('rail-open', on); tab.setAttribute('aria-expanded', on ? 'true' : 'false'); };
+  tab.addEventListener('click', e => { e.stopPropagation(); set(!bar.classList.contains('rail-open')); });
+  document.addEventListener('click', e => { if (bar.classList.contains('rail-open') && !bar.contains(e.target)) set(false); });
+})();
 // Rotate hint: touch + landscape + малая высота → советуем портрет (неблокирующий, dismissible).
 function rotateDismissed() { try { return localStorage.getItem('amg-rotate-dismiss') === '1'; } catch (_) { return false; } }
 function updateRotateHint() {
@@ -2553,6 +2729,7 @@ document.getElementById('detail').addEventListener('click', ev => {
 document.addEventListener('keydown', ev => {
   if (ev.key !== 'Escape') return;
   if (Overlays.stack.length) Overlays.closeTop();   // detail (верх) → card/menu/sheet
+  else if (exploreVisible()) exploreClose();       // витрина в режиме маршрута (карта остаётся живой)
 });
 // closers: закрывать через существующие функции (сброс состояния), не только hidden
 Overlays.setCloser('card', closeCard);
@@ -2931,6 +3108,12 @@ function applyStaticLabels() {
   T('trTrainLabel', pick(LB.transitTrain));
   T('trBusLabel', pick(LB.transitBus));
   T('trAirLabel', pick(LB.transitAir));
+  // витрина «Путешествуем по Грузии»
+  T('btnExplore', pick(LB.explore));
+  { const ex = $('explore'); if (ex) ex.setAttribute('aria-label', pick(LB.explore)); }
+  if (exploreVisible()) renderExplore();
+  try { exploreSyncPill(); } catch (_) {}            // при первом вызове (до объявления explore) — пропустить
+  if (Overlays.isOpen('myroutes')) renderMy();
   // впечатления: подписи панели + кнопки
   T('btnExp', pick(LB.exp));
   T('expTitle', pick(LB.expTitle));
@@ -3135,7 +3318,7 @@ function copyFallback(text, done) {
 }
 function handleHash() {
   const rr = /#ready=([a-z0-9-]+)/.exec(location.hash || '');
-  if (rr) return openReadyRoute(rr[1]);
+  if (rr) return openExploreRoute(rr[1]);
   const r = /#route=([^&]+)/.exec(location.hash || '');
   if (r) { const n = /[&?]n=([^&]*)/.exec(location.hash || ''); return openSharedRoute(r[1], n ? n[1] : ''); }
   const m = /#s=([^&]+)/.exec(location.hash || '');
@@ -3536,7 +3719,10 @@ const DAY_MAX = 25;
 const REPORT_ISSUE_URL = 'https://github.com/artmap-georgia/AMG/issues/new';
 const REPORT_KINDS = ['missing', 'painted', 'damaged', 'location', 'info', 'other'];
 
-function stage0Save(key, value) { try { localStorage.setItem(key, JSON.stringify(value)); } catch (_) {} }
+function stage0Save(key, value) {
+  try { localStorage.setItem(key, JSON.stringify(value)); } catch (_) {}
+  if (stage0.dayId && (key === 'amg-day' || key === 'amg-day-name')) myTouch();   // правки текущего маршрута сохраняются в «Мои маршруты»
+}
 function handCls() { return state.lang === 'ka' ? 'amg-hand plain' : 'amg-hand'; }
 function fmtDay(iso) { const p = String(iso || '').split('-'); return p.length === 3 ? `${p[2]}.${p[1]}` : ''; }
 function siteIconUri(id) {
@@ -3609,10 +3795,27 @@ function toggleDay(id) {
   syncDayButtons(); stage0Labels(); drawDay();
   if (Overlays.isOpen('day')) renderDay();
 }
+// Дуга между двумя точками — приподнятая кривая Безье. Это НЕ дорога и НЕ кратчайший путь: она нужна, чтобы
+// связь точек читалась как «порядок посещения», а не как маршрут проезда (в горах «близко» на карте ≠ близко в пути).
+// Выгибается к северу (при вертикальном отрезке — к востоку), концы ровно в точках.
+function arcPoints(a, b, n = 36) {
+  const k = Math.cos(((a[1] + b[1]) / 2) * Math.PI / 180) || 1;
+  const ax = a[0] * k, ay = a[1], bx = b[0] * k, by = b[1];
+  const dx = bx - ax, dy = by - ay, d = Math.hypot(dx, dy) || 1e-9;
+  let nx = -dy / d, ny = dx / d;
+  if (ny < 0 || (Math.abs(ny) < 1e-9 && nx < 0)) { nx = -nx; ny = -ny; }
+  const h = d * 0.26, cx = (ax + bx) / 2 + nx * h, cy = (ay + by) / 2 + ny * h, out = [];
+  for (let i = 0; i <= n; i++) { const t = i / n, u = 1 - t;
+    out.push([(u * u * ax + 2 * u * t * cx + t * t * bx) / k, u * u * ay + 2 * u * t * cy + t * t * by]); }
+  out[0] = [a[0], a[1]]; out[n] = [b[0], b[1]];
+  return out;
+}
+function arcLegs(pts) { const legs = []; for (let i = 1; i < pts.length; i++) legs.push(arcPoints(pts[i - 1], pts[i])); return legs; }
+function arcPath(pts) { return arcLegs(pts).reduce((acc, l, i) => acc.concat(i ? l.slice(1) : l), []); }
 function dayGeo() {
   const pts = dayList().map(id => catalog.siteById.get(id)).filter(Boolean).map(f => f.geometry.coordinates);
   return { type:'FeatureCollection', features: pts.length > 1
-    ? [{ type:'Feature', properties:{}, geometry:{ type:'LineString', coordinates: pts } }] : [] };
+    ? [{ type:'Feature', properties:{}, geometry:{ type:'LineString', coordinates: arcPath(pts) } }] : [] };
 }
 // Пунктир «карандашом» под маркерами каталога. setStyle пересобирает стиль — слой возвращается на style.load.
 function drawDay() {
@@ -3631,27 +3834,16 @@ function drawDay() {
 function renderDay() {
   const box = $('day'); if (!box) return;
   const ids = dayList(), shared = !!stage0.dayShared, hand = handCls();
-  let sum = 0;
   const rows = ids.map((id, i) => {
     const f = catalog.siteById.get(id);
-    let leg = '';
-    if (i > 0) {
-      const a = catalog.siteById.get(ids[i - 1]).geometry.coordinates, b = f.geometry.coordinates;
-      const d = haversine(a[1], a[0], b[1], b[0]); sum += d;
-      leg = `↳ ${fmtDist(d)} · ${fmtWalk(d)}`;
-    }
     const ctl = shared ? '' :
       `<button type="button" class="ctl" data-day-up="${i}" aria-label="${esc(pick(LB.dayUp))}"${i === 0 ? ' disabled' : ''}>↑</button>` +
       `<button type="button" class="ctl" data-day-down="${i}" aria-label="${esc(pick(LB.dayDown))}"${i === ids.length - 1 ? ' disabled' : ''}>↓</button>` +
       `<button type="button" class="ctl" data-day-del="${i}" aria-label="${esc(pick(LB.dayRemove))}">×</button>`;
-    return `<li><span class="n">${i + 1}</span><button type="button" class="nm" data-day-go="${esc(id)}"><span>${esc(siteTitle(f))}</span>${leg ? `<span class="leg ${hand}">${esc(leg)}</span>` : ''}</button>${ctl}</li>`;
+    return `<li><span class="n">${i + 1}</span><button type="button" class="nm" data-day-go="${esc(id)}"><span>${esc(siteTitle(f))}</span></button>${ctl}</li>`;
   }).join('');
-  const total = ids.length > 1 ? `<p class="amg-day-total ${hand}">${esc(pick(LB.dayTotal))} ${esc(fmtDist(sum))} · ${esc(fmtWalk(sum))}</p>` : '';
   const route = shared ? stage0.dayRoute : null;
-  const ready = !shared && stage0.routes && stage0.routes.length
-    ? `<h3 class="amg-ready-h">${esc(pick(LB.readyTitle))}</h3><div class="amg-ready">` + stage0.routes.map(r =>
-        `<button type="button" class="amg-ready-r" data-ready="${esc(r.id)}"><b>${esc(pick(r.title))}</b><span>${esc(pick(r.theme))} · ${r.stops.length} ${esc(pick(LB.readyStops))} · ${esc(fmtDist(routeLen(r.stops)))} ${esc(pick(LB.readyStraight))}</span></button>`).join('') + '</div>'
-    : '';
+  const ready = shared ? '' : `<p class="amg-ready-link">${ids.length && !stage0.dayId ? `<button type="button" class="btn p" data-my-save="1">${esc(pick(LB.mySaveCur))}</button>` : ''}<button type="button" class="btn" data-my-list="1">${esc(pick(LB.myOpenList).replace('{n}', stage0.my.length))}</button><button type="button" class="btn" data-explore-open="1">${esc(pick(LB.explore))}</button></p>`;
   const btns = shared
     ? `<button type="button" class="btn p" data-day-save="1">${esc(pick(LB.daySave))}</button><button type="button" class="btn" data-day-fit="1">${esc(pick(LB.dayFit))}</button>` +
       (route ? `<button type="button" class="btn" data-day-share="1">${esc(pick(LB.dayShare))}</button>` : '') +
@@ -3660,9 +3852,11 @@ function renderDay() {
   const title = route ? pick(route.title) : shared ? (stage0.sharedName || pick(LB.daySharedTitle)) : pick(LB.dayBtn);
   const nameInput = !shared && ids.length
     ? `<label class="amg-day-name"><span>${esc(pick(LB.dayNameLbl))}</span><input id="dayName" type="text" maxlength="60" autocomplete="off" value="${esc(stage0.dayName)}" placeholder="${esc(pick(LB.dayNamePh))}"></label>` : '';
-  box.innerHTML = `<h2>${esc(title)}</h2>${nameInput}
+  const linked = !shared && stage0.dayId && stage0.my.find(m => m.id === stage0.dayId);
+  const mynote = linked ? `<p class="small">${esc(pick(LB.myLinked).replace('{name}', linked.name))}</p>` : '';
+  box.innerHTML = `<h2>${esc(title)}</h2>${nameInput}${mynote}
     ${route ? `<p class="amg-route-desc">${esc(pick(route.theme))}. ${esc(pick(route.desc))}</p>` : ''}
-    ${ids.length ? `<ol class="amg-day-list">${rows}</ol>${total}` : `<p class="amg-sub ${hand}">${esc(pick(LB.dayEmpty))}</p><p class="small">${esc(pick(LB.dayHow))}</p>`}
+    ${ids.length ? `<ol class="amg-day-list">${rows}</ol>` : `<p class="amg-sub ${hand}">${esc(pick(LB.dayEmpty))}</p><p class="small">${esc(pick(LB.dayHow))}</p>`}
     ${ready}
     ${shared ? '' : routeHelpHtml()}
     <div class="btns">${btns}<button type="button" class="btn" data-close-panel="day">${esc(pick(LB.close))}</button></div>`;
@@ -3677,20 +3871,9 @@ function openDay() {
 // --- Готовые маршруты по районам (data/routes.json; проверка — scripts/validate-routes.mjs) ---
 function loadRoutes() {
   if (!stage0.routesP) stage0.routesP = getJson('data/routes.json')
-    .then(j => (stage0.routes = (j.routes || []).map(r => ({ ...r, stops: r.stops.filter(id => catalog.siteById.get(id)) })).filter(r => r.stops.length > 1)))
+    .then(j => (stage0.routeThemes = j.themes || {}, stage0.routes = (j.routes || []).map(r => ({ ...r, stops: r.stops.filter(id => catalog.siteById.get(id)) })).filter(r => r.stops.length > 1)))
     .catch(() => (stage0.routes = []));
   return stage0.routesP;
-}
-function routeLen(stops) {
-  let d = 0;
-  for (let i = 1; i < stops.length; i++) { const a = catalog.siteById.get(stops[i - 1]).geometry.coordinates, b = catalog.siteById.get(stops[i]).geometry.coordinates; d += haversine(a[1], a[0], b[1], b[0]); }
-  return d;
-}
-async function openReadyRoute(id) {
-  const r = (await loadRoutes()).find(x => x.id === id); if (!r) return;
-  track('route-' + id);
-  stage0.dayShared = r.stops.slice(); stage0.dayRoute = r;
-  drawDay(); fitDayMap(); renderDay(); Overlays.hide('menu'); Overlays.show('day');
 }
 function closeDay() {
   Overlays.hide('day');
@@ -3766,6 +3949,7 @@ function openSharedRoute(raw, name) {
 }
 function saveSharedRoute() {
   if (!stage0.dayShared) return;
+  stage0.dayId = null; stage0Save('amg-day-id', null);        // чужой маршрут — новый несохранённый, не затирает сохранённый
   stage0.day = stage0.dayShared.slice(); stage0.dayShared = null;
   const wasReady = stage0.dayRoute; stage0.dayRoute = null;
   stage0.dayName = wasReady ? cleanDayName(pick(wasReady.title)) : stage0.sharedName; stage0.sharedName = '';
@@ -3780,11 +3964,13 @@ function dayPanelClick(ev) {
   if (d.closePanel === 'day') return closeDay();
   if (d.dayGo) { closeDayPanelOnly(); return focusSite(d.dayGo); }
   if (d.dayFit) return fitDay();
-  if (d.ready) return openReadyRoute(d.ready);
+  if (d.mySave) return mySaveCurrent();
+  if (d.myList) { closeDayPanelOnly(); return openMy(); }
+  if (d.exploreOpen) { closeDayPanelOnly(); return openExplore(); }
   if (d.dayShare) return shareDay();
   if (d.dayCopy) return copyDayList();
   if (d.daySave) return saveSharedRoute();
-  if (d.dayClear) { stage0.day = []; stage0.dayName = ''; stage0Save('amg-day', []); stage0Save('amg-day-name', ''); syncDayButtons(); stage0Labels(); drawDay(); return renderDay(); }
+  if (d.dayClear) { stage0.dayId = null; stage0Save('amg-day-id', null); stage0.day = []; stage0.dayName = ''; stage0Save('amg-day', []); stage0Save('amg-day-name', ''); syncDayButtons(); stage0Labels(); drawDay(); return renderDay(); }
   const move = (from, to) => { if (to < 0 || to >= list.length) return; list.splice(to, 0, list.splice(from, 1)[0]); };
   if (d.dayUp != null) move(+d.dayUp, +d.dayUp - 1);
   else if (d.dayDown != null) move(+d.dayDown, +d.dayDown + 1);
@@ -3792,6 +3978,141 @@ function dayPanelClick(ev) {
   else return;
   stage0Save('amg-day', list); syncDayButtons(); stage0Labels(); drawDay(); renderDay();
 }
+
+// --- Мои маршруты: библиотека на устройстве (localStorage), экспорт/импорт файлом ---
+// Ничего не уходит на сервер. Хранится только список id мест, имя и дата; тексты берутся из каталога.
+const MY_MAX = 50, MY_KEY = 'amg-my-routes';
+const MY_ICONS = {
+  ren:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="m13.5 6.5 4 4"/></svg>',
+  share: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg>',
+  file:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"/></svg>',
+  del:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6 6 18"/></svg>'
+};
+const myToday = () => new Date().toISOString().slice(0, 10);
+function loadMy() {
+  try {
+    const j = JSON.parse(localStorage.getItem(MY_KEY)), a = j && Array.isArray(j.routes) ? j.routes : [];
+    return a.filter(r => r && typeof r.id === 'string' && Array.isArray(r.stops)).slice(0, MY_MAX).map(r => ({
+      id: r.id.slice(0, 40), name: cleanDayName(r.name) || 'Route', stops: r.stops.filter(x => typeof x === 'string').slice(0, DAY_MAX),
+      created: typeof r.created === 'string' ? r.created.slice(0, 10) : myToday(), updated: typeof r.updated === 'string' ? r.updated.slice(0, 10) : myToday(),
+      ...(typeof r.from === 'string' ? { from: r.from.slice(0, 60) } : {}) }));
+  } catch (_) { return []; }
+}
+function saveMy() { stage0Save(MY_KEY, { v: 1, routes: stage0.my }); }
+stage0.my = loadMy();
+{ let id = null; try { id = JSON.parse(localStorage.getItem('amg-day-id')); } catch (_) {}
+  stage0.dayId = typeof id === 'string' && stage0.my.some(m => m.id === id) ? id : null; }
+function myTouch() {
+  const r = stage0.my.find(m => m.id === stage0.dayId);
+  if (!r) { stage0.dayId = null; return; }
+  r.stops = stage0.day.slice(); if (stage0.dayName) r.name = stage0.dayName; r.updated = myToday(); saveMy();
+}
+function myUniqueName(name, selfId) {
+  const base = cleanDayName(name) || pick(LB.myDefault); let n = base, i = 2;
+  while (stage0.my.some(m => m.id !== selfId && m.name === n)) n = `${base.slice(0, 54)} (${i++})`;
+  return n;
+}
+function myAdd({ name, stops, from }) {
+  if (stage0.my.length >= MY_MAX) { toast(pick(LB.myFull).replace('{n}', MY_MAX)); return null; }
+  const r = { id: 'my-' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6), name: myUniqueName(name), stops: stops.slice(0, DAY_MAX), created: myToday(), updated: myToday(), ...(from ? { from } : {}) };
+  stage0.my.push(r); saveMy(); stage0Labels();
+  return r;
+}
+function mySaveCurrent() {
+  if (!stage0.day.length) return;
+  const r = myAdd({ name: stage0.dayName, stops: stage0.day }); if (!r) return;
+  stage0.dayId = r.id; stage0.dayName = r.name; stage0Save('amg-day-id', r.id); stage0Save('amg-day-name', r.name);
+  toast(pick(LB.mySaved)); renderDay();
+}
+function renderMy() {
+  const box = $('myroutes'); if (!box) return;
+  const act = (k, attr, id, label) => `<button type="button" ${attr}="${esc(id)}" aria-label="${esc(label)}" title="${esc(label)}">${MY_ICONS[k]}</button>`;
+  const rows = stage0.my.map(m => `<li class="myr-row${m.id === stage0.dayId ? ' cur' : ''}"><button type="button" class="myr-open" data-my-open="${esc(m.id)}"><b>${esc(m.name)}</b><span>${esc(pick(LB.exStops).replace('{n}', m.stops.length))}${m.id === stage0.dayId ? ' · ' + esc(pick(LB.myCurrent)) : ''}</span></button>` +
+    `<span class="myr-act">${act('ren', 'data-my-ren', m.id, pick(LB.myRen))}${act('share', 'data-my-share', m.id, pick(LB.exShare))}${act('file', 'data-my-file', m.id, pick(LB.myFileOne))}${act('del', 'data-my-del', m.id, pick(LB.myDel))}</span></li>`).join('');
+  box.innerHTML = `<h2>${esc(pick(LB.myTitle))}</h2><p class="small">${esc(pick(LB.myHint))}</p>` +
+    (stage0.my.length ? `<ul class="myr-list">${rows}</ul>` : `<p class="amg-sub plain">${esc(pick(LB.myEmpty))}</p><p><button type="button" class="btn p" data-my-explore="1">${esc(pick(LB.explore))}</button></p>`) +
+    `<div class="btns">${stage0.my.length ? `<button type="button" class="btn" data-my-all="1">${esc(pick(LB.myExportAll))}</button>` : ''}<button type="button" class="btn" data-my-import="1">${esc(pick(LB.myImport))}</button><button type="button" class="btn" data-close-panel="myroutes">${esc(pick(LB.close))}</button></div>`;
+}
+function openMy() { track('my-routes'); Overlays.closeAll(); renderMy(); Overlays.show('myroutes'); }
+function closeMy() { Overlays.hide('myroutes'); }
+function myOpen(id) {
+  const r = stage0.my.find(m => m.id === id); if (!r) return;
+  const stops = r.stops.filter(x => catalog.siteById.get(x)).slice(0, DAY_MAX);
+  if (!stops.length) return toast(pick(LB.myImpNone));
+  if (!stage0.dayId && stage0.day.length && JSON.stringify(stage0.day) !== JSON.stringify(stops) && !confirm(pick(LB.myReplace))) return;
+  stage0.dayShared = null; stage0.dayRoute = null; stage0.sharedName = '';
+  stage0.dayId = id; stage0Save('amg-day-id', id);
+  stage0.day = stops; stage0.dayName = r.name; stage0Save('amg-day', stage0.day); stage0Save('amg-day-name', stage0.dayName);
+  closeMy(); syncDayButtons(); stage0Labels(); drawDay(); renderDay(); Overlays.show('day'); fitDayMap();
+}
+function myRename(id) {
+  const r = stage0.my.find(m => m.id === id); if (!r) return;
+  const v = window.prompt(pick(LB.myNamePrompt), r.name); if (v == null) return;
+  const nm = myUniqueName(v, id); r.name = nm; r.updated = myToday(); saveMy();
+  if (stage0.dayId === id) { stage0.dayName = nm; stage0Save('amg-day-name', nm); }
+  renderMy();
+}
+function myDelete(id) {
+  const r = stage0.my.find(m => m.id === id); if (!r) return;
+  if (!confirm(pick(LB.myDelAsk).replace('{name}', r.name))) return;
+  stage0.my = stage0.my.filter(m => m.id !== id); saveMy();
+  if (stage0.dayId === id) { stage0.dayId = null; stage0Save('amg-day-id', null); }   // маршрут на карте остаётся как несохранённый
+  stage0Labels(); renderMy();
+}
+function myShare(id) {
+  const r = stage0.my.find(m => m.id === id); if (!r) return;
+  track('route-share');
+  const url = location.origin + location.pathname + '#route=' + r.stops.map(encodeURIComponent).join(',') + '&n=' + encodeURIComponent(cleanDayName(r.name));
+  const done = () => toast(pick(LB.dayLinkCopied));
+  if (navigator.share) { navigator.share({ title: r.name, url }).catch(() => {}); return; }
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(url).then(done, () => copyFallback(url, done));
+  else copyFallback(url, done);
+}
+// Файл *.amg-route.json: { app:'amg', schema:1, exported, routes:[{ name, stops, created }] } — только id мест, без текстов и координат
+function myExport(list, fname) {
+  const payload = { app: 'amg', schema: 1, exported: myToday(), routes: list.map(r => ({ name: r.name, stops: r.stops, created: r.created })) };
+  const url = URL.createObjectURL(new Blob([JSON.stringify(payload, null, 1)], { type: 'application/json' }));
+  const a = document.createElement('a'); a.href = url; a.download = fname; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 4000);
+  track('my-export');
+}
+function myImportFile(file) {
+  if (!file) return;
+  if (file.size > 300000) return toast(pick(LB.myImpBad));
+  file.text().then(txt => {
+    let j; try { j = JSON.parse(txt); } catch (_) { return toast(pick(LB.myImpBad)); }
+    if (!j || j.app !== 'amg' || j.schema !== 1 || !Array.isArray(j.routes)) return toast(pick(LB.myImpBad));
+    let added = 0, skipped = 0;
+    for (const r of j.routes.slice(0, MY_MAX)) {
+      if (!r || !Array.isArray(r.stops)) continue;
+      const seen = new Set(), ids = r.stops.filter(x => typeof x === 'string' && catalog.siteById.get(x) && !seen.has(x) && seen.add(x)).slice(0, DAY_MAX);
+      skipped += Math.max(0, r.stops.length - ids.length);
+      if (!ids.length) continue;
+      if (!myAdd({ name: r.name, stops: ids })) break;
+      added++;
+    }
+    if (!added) return toast(pick(LB.myImpNone));
+    track('my-import');
+    toast(pick(LB.myImpDone).replace('{a}', added) + (skipped ? pick(LB.myImpSkip).replace('{s}', skipped) : ''));
+    renderMy();
+  }, () => toast(pick(LB.myImpBad)));
+}
+const mySlug = n => String(n || '').replace(/[^\p{L}\p{N}]+/gu, '-').replace(/^-|-$/g, '').slice(0, 40) || 'route';
+function myPanelClick(ev) {
+  const t = ev.target.closest('button'); if (!t) return;
+  const d = t.dataset;
+  if (d.closePanel === 'myroutes') return closeMy();
+  if (d.myOpen) return myOpen(d.myOpen);
+  if (d.myRen) return myRename(d.myRen);
+  if (d.myShare) return myShare(d.myShare);
+  if (d.myFile) { const r = stage0.my.find(m => m.id === d.myFile); if (r) myExport([r], mySlug(r.name) + '.amg-route.json'); return; }
+  if (d.myDel) return myDelete(d.myDel);
+  if (d.myAll) return myExport(stage0.my, `amg-routes-${myToday()}.amg-route.json`);
+  if (d.myImport) return $('myFile').click();
+  if (d.myExplore) { closeMy(); return openExplore(); }
+}
+$('myroutes').addEventListener('click', myPanelClick);
+$('myFile').addEventListener('change', ev => { myImportFile(ev.target.files && ev.target.files[0]); ev.target.value = ''; });
 
 // --- «Сообщить о проблеме» → заполненная форма GitHub Issue ---
 function openReport(siteId, kind, pos) {
@@ -3838,6 +4159,7 @@ function stage0Click(ev) {
 
 Overlays.register('passport', $('passport'));
 Overlays.register('day', $('day'));
+Overlays.register('myroutes', $('myroutes'));
 Overlays.register('report', $('report'));
 Overlays.setCloser('day', closeDay);
 $('btnPassport').onclick = openPassport;
@@ -3970,6 +4292,247 @@ $('lang').addEventListener('change', () => {
   if (Overlays.isOpen('search')) { $('searchInput').placeholder = pick(LB.searchPh); renderSearch(); }
 });
 $('searchBtn').setAttribute('aria-label', pick(LB.searchBtn)); $('searchBtn').title = pick(LB.searchBtn);
+
+// ---------- Витрина «Путешествуем по Грузии» ----------
+// Темы → карточки готовых маршрутов (data/routes.json) на одном прокручиваемом экране. Нажатие на карточку
+// ставит на карте пронумерованные точки маршрута. Время и расстояния не показываем и линию не рисуем:
+// прямая между точками вводит в заблуждение (горы, транспорт, автостоп) — дуги и «герои» придут отдельным шагом.
+const explore = { route: null, markers: [], legs: [], anim: 0, hero: null, offMove: null };
+Overlays.onShow = id => { if (id !== 'explore' && explore.route && exploreVisible()) { $('explore').hidden = true; exploreSyncPill(); } };   // карточка места не должна лезть на панель маршрута
+function exploreVisible() { const el = $('explore'); return !!el && !el.hidden; }
+// Постоянная кнопка «вернуться к маршруту»: пока маршрут выбран, а его панель скрыта (карточка места, другая кнопка)
+function exploreSyncPill() {
+  const el = $('exploreReturn'); if (!el) return;
+  const show = !!explore.route && !exploreVisible();
+  el.hidden = !show;
+  if (show) { const go = el.querySelector('.er-go'), t = pick(explore.route.title); go.textContent = '↩ ' + t; go.title = pick(LB.exReturn) + ': ' + t; go.setAttribute('aria-label', pick(LB.exReturn) + ': ' + t); el.querySelector('.er-x').setAttribute('aria-label', pick(LB.close)); }
+}
+const EX_TINT = { murals:'#F3D9CF', mosaics:'#DCEBEC' };
+function exploreCover(r) {
+  const c = r.cover || {}, fb = r.stops[0] ? siteIconUri(r.stops[0]) : '';
+  let inner, credit = '';
+  if ((c.type === 'photo' || c.type === 'art') && c.src) {
+    inner = `<img class="ph" src="${esc(c.type === 'photo' ? (thumbFor(c.src) || c.src) : c.src)}" alt="" loading="lazy" data-ex-fallback="${esc(fb)}">`;
+    if (c.type === 'photo' && c.credit) credit = `<span class="ex-credit">© ${esc(c.credit)}</span>`;
+  } else inner = `<img class="ic" src="${esc(c.type === 'icon' && c.site ? siteIconUri(c.site) : fb)}" alt="">`;
+  return `<span class="ex-cover" style="--tint:${EX_TINT[r.theme_key] || '#F3E6D0'}">${inner}<span class="ex-badge">${esc(pick(r.kind === 'intercity' ? LB.exKindTrip : LB.exKindCity))}</span>${credit}</span>`;
+}
+function exploreCard(r) {
+  return `<button type="button" class="ex-card" data-ex-route="${esc(r.id)}">${exploreCover(r)}<span class="ex-body"><span class="ex-title">${esc(pick(r.title))}</span>` +
+    `<span class="ex-teaser">${esc(pick(r.teaser || r.desc))}</span><span class="ex-count">${esc(pick(LB.exStops).replace('{n}', r.stops.length))}</span></span></button>`;
+}
+function exploreListHtml() {
+  const routes = stage0.routes, themes = stage0.routeThemes || {};
+  if (!routes) return `<p class="ex-note">${esc(pick(LB.exLoading))}</p>`;
+  if (!routes.length) return `<p class="ex-note">${esc(pick(LB.exError))}</p>`;
+  const keys = [...new Set([...Object.keys(themes), ...routes.map(r => r.theme_key || '')])];
+  const groups = keys.map(k => [k, routes.filter(r => (r.theme_key || '') === k)]).filter(([, rs]) => rs.length);
+  return groups.map(([k, rs]) => `<section class="ex-group"><h3 class="ex-theme">${esc(pick(themes[k] || rs[0].theme))}</h3><div class="ex-cards">${rs.map(exploreCard).join('')}</div></section>`).join('');
+}
+function exploreFallbacks(box) {
+  box.querySelectorAll('img[data-ex-fallback]').forEach(img => img.addEventListener('error', () => {
+    const fb = img.getAttribute('data-ex-fallback'); img.removeAttribute('data-ex-fallback');
+    if (fb) { img.className = 'ic'; img.setAttribute('src', fb); }
+  }, { once: true }));
+}
+// Платный вход / разрешение / ограничения указываем фактом (данные access), без цен и бронирования
+function exploreAccessTag(id) {
+  const a = (catalog.siteById.get(id) || { properties: {} }).properties.access;
+  const k = a === 'ticket_required' ? LB.exTicket : a === 'permission_required' ? LB.exPermit : a === 'restricted' ? LB.exRestricted : null;
+  return k ? `<span class="ex-tag">${esc(pick(k))}</span>` : '';
+}
+function explorePhotoCredit(r) {
+  const c = r.cover;
+  if (!c || c.type !== 'photo' || !/^https:\/\//.test(c.source_url || '')) return '';
+  return `<p class="ex-photo">${esc(pick(LB.exPhoto))} ${esc(c.credit)}, ${esc(c.license)} · <a href="${esc(c.source_url)}" target="_blank" rel="noopener">Wikimedia Commons</a></p>`;
+}
+function renderExplore() {
+  const box = $('explore'); if (!box) return;
+  const r = explore.route, close = `<button type="button" class="ex-close" data-ex-close="1" aria-label="${esc(pick(LB.close))}">×</button>`;
+  if (r) {
+    box.innerHTML = `<div class="ex-head"><button type="button" class="ex-back" data-ex-back="1">${esc(pick(LB.exBack))}</button>${close}</div>
+      <h2 class="ex-rtitle">${esc(pick(r.title))}</h2><p class="ex-teaser">${esc(pick(r.teaser || r.desc))}</p><p class="ex-arcnote">${esc(pick(LB.exArcNote))}</p>
+      <h3 class="ex-sub">${esc(pick(LB.exStopsTitle))}</h3>
+      <ol class="ex-stops">${r.stops.map((id, i) => `<li><button type="button" data-ex-stop="${esc(id)}"><span class="n">${i + 1}</span><span class="nm">${esc(siteTitle(catalog.siteById.get(id)))}</span>${exploreAccessTag(id)}</button></li>`).join('')}</ol>${explorePhotoCredit(r)}
+      <div class="ex-actions"><button type="button" class="btn p" data-ex-save="1">${esc(pick(stage0.my.some(m => m.from === r.id) ? LB.exSaved : LB.exSave))}</button><button type="button" class="btn" data-ex-share="1">${esc(pick(LB.exShare))}</button></div>`;
+    return;
+  }
+  box.innerHTML = `<div class="ex-head"><h2>${esc(pick(LB.explore))}</h2>${close}</div><p class="ex-lead">${esc(pick(LB.exLead))}</p>${exploreListHtml()}
+    <div class="ex-own"><b>${esc(pick(LB.exOwnTitle))}</b><p>${esc(pick(LB.exOwnText))}</p><button type="button" class="btn" data-ex-own="1">${esc(pick(LB.exOwnBtn))}</button></div>`;
+  exploreFallbacks(box);
+}
+// --- Дуги и «герои» маршрута ---
+const EX_ARC = 'amg-route-arc';
+const HERO_SVG = {
+  plane:   '<svg viewBox="0 0 32 32"><path d="M3 15 29 4 21 28 15 19Z" fill="#FFFBF5" stroke="#2B2420" stroke-width="1.6" stroke-linejoin="round"/><path d="M29 4 15 19 14 27 21 28" fill="none" stroke="#2B2420" stroke-width="1.4" stroke-linejoin="round"/></svg>',
+  kite:    '<svg viewBox="0 0 32 32"><path d="M16 1 27 12 16 25 5 12Z" fill="#B8482A" stroke="#2B2420" stroke-width="1.6" stroke-linejoin="round"/><path d="M16 1v24M5 12h22" stroke="#FFFBF5" stroke-width="1.2"/><path d="M16 25q-5 2 0 4t0 3" fill="none" stroke="#2B2420" stroke-width="1.5" stroke-linecap="round"/></svg>',
+  balloon: '<svg viewBox="0 0 32 32"><circle cx="16" cy="12" r="10" fill="#B8482A" stroke="#2B2420" stroke-width="1.6"/><path d="M16 2C10 6 10 18 16 22 22 18 22 6 16 2Z" fill="#F3D9CF" stroke="#2B2420" stroke-width="1.2"/><path d="M11 21 13 26M21 21 19 26" stroke="#2B2420" stroke-width="1.2"/><rect x="12" y="26" width="8" height="5" rx="1" fill="#8a5a3b" stroke="#2B2420" stroke-width="1.2"/></svg>',
+  hiker:   '<svg viewBox="0 0 32 32"><circle cx="15" cy="6" r="3.4" fill="#FFFBF5" stroke="#2B2420" stroke-width="1.8"/><rect x="16.5" y="10" width="7" height="9" rx="2" fill="#B8482A" stroke="#2B2420" stroke-width="1.5"/><path d="M15 10v10M15 13 10 18M15 20 10 29M15 20 20 28M8 9 7 30" fill="none" stroke="#2B2420" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+};
+// город: самолётик/змей; межгород: шар/турист — чередуются по звеньям
+const heroKind = (r, i) => r.kind === 'intercity' ? (i % 2 ? 'hiker' : 'balloon') : (i % 2 ? 'kite' : 'plane');
+function exploreArcLayer() {
+  try {
+    if (map.getSource(EX_ARC)) return true;       // addSource работает, пока стиль разобран, даже если тайлы ещё грузятся
+    map.addSource(EX_ARC, { type:'geojson', data: { type:'FeatureCollection', features: [] } });
+    map.addLayer({ id:'amg-route-arc-line', type:'line', source:EX_ARC, layout:{ 'line-cap':'round', 'line-join':'round' },
+      paint:{ 'line-color':'#6E2639', 'line-width':3.5, 'line-opacity':0.9, 'line-dasharray':[0.1, 2.2] } },
+      map.getLayer('sites-clusters') ? 'sites-clusters' : undefined);
+    return true;
+  } catch (_) { return false; }
+}
+function exploreSetArcs(legs) {
+  if (!exploreArcLayer()) { if (legs.length) map.once('idle', () => { if (explore.route) exploreSetArcs(legs); }); return; }
+  map.getSource(EX_ARC).setData({ type:'FeatureCollection', features: legs.filter(l => l.length > 1)
+    .map(c => ({ type:'Feature', properties:{}, geometry:{ type:'LineString', coordinates: c } })) });
+}
+map.on('style.load', () => { if (explore.route) exploreSetArcs(explore.legs); });
+function exploreAnimStop(final) {
+  explore.anim++;
+  if (explore.offMove) { map.off('movestart', explore.offMove); explore.offMove = null; }
+  if (explore.hero) { explore.hero.remove(); explore.hero = null; }
+  if (final && explore.route) exploreSetArcs(explore.legs);
+}
+function exploreAnimate(r) {
+  const pts = r.stops.map(id => catalog.siteById.get(id)).filter(Boolean).map(f => f.geometry.coordinates);
+  explore.legs = arcLegs(pts);
+  const legs = explore.legs, token = ++explore.anim;
+  if (!legs.length) return;
+  // prefers-reduced-motion: сразу статичные дуги, без «героя»
+  if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return exploreSetArcs(legs);
+  exploreSetArcs([]);
+  // любое действие пользователя с картой (перетаскивание, зум) завершает анимацию: дуги остаются целиком
+  explore.offMove = ev => { if (ev && ev.originalEvent) exploreAnimStop(true); };
+  map.on('movestart', explore.offMove);
+  // «Герой» — собственный элемент в контейнере карты с дробным смещением (маркер MapLibre округляет до целого пикселя,
+  // и на коротких звеньях движение шло ступеньками). Над маркерами маршрута, нажатия не перехватывает.
+  const el = document.createElement('div'); el.className = 'amg-hero'; el.innerHTML = '<div class="in"></div>';
+  const inner = el.firstChild;
+  // Медленно и неспешно: звено занимает 3–5 с (чем длиннее путь на земле, тем дольше), между звеньями — пауза
+  const legKm = arr => { let d = 0; for (let i = 1; i < arr.length; i++) d += haversine(arr[i - 1][1], arr[i - 1][0], arr[i][1], arr[i][0]); return d / 1000; };
+  const durs = legs.map(l => Math.min(5200, 2800 + 900 * Math.log2(1 + legKm(l))));
+  const at = (arr, f) => { f = Math.max(0, Math.min(arr.length - 1, f)); const i = Math.min(arr.length - 2, Math.floor(f)), u = f - i;
+    return [arr[i][0] + (arr[i + 1][0] - arr[i][0]) * u, arr[i][1] + (arr[i + 1][1] - arr[i][1]) * u]; };
+  const gap = legs.reduce((n, l) => n + l.length, 0) > 400 ? 50 : 20;      // частота обновления линии: длинные маршруты реже
+  let started = false, leg = 0, t0 = performance.now() + 1600, kind = '', lastSet = 0, lastNow = 0, ang = null, lastLeg = -1, flip = 1;
+  const step = now => {
+    if (token !== explore.anim) return;
+    if (now < t0) return requestAnimationFrame(step);
+    if (!started) { started = true; map.getCanvasContainer().appendChild(el); explore.hero = el; }
+    const arr = legs[leg], k = Math.min(1, (now - t0) / durs[leg]), e = k < .5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2;
+    const f = e * (arr.length - 1), pos = at(arr, f), pt = map.project(pos);
+    const kd = heroKind(r, leg);
+    if (kd !== kind) { kind = kd; inner.innerHTML = HERO_SVG[kd]; }
+    // направление — по касательной к дуге (плавно), а не по отрезкам ломаной
+    const p0 = map.project(at(arr, f - 0.9)), p1 = map.project(at(arr, f + 0.9)), dx = p1.x - p0.x, dy = p1.y - p0.y;
+    if (Math.hypot(dx, dy) > 0.05) {
+      const target = Math.atan2(dx, -dy) * 180 / Math.PI, dt = Math.min(100, lastNow ? now - lastNow : 16), al = 1 - Math.exp(-dt / 140);
+      if (ang === null || lastLeg !== leg) ang = target; else ang += (((target - ang + 540) % 360) - 180) * al;
+      if (Math.abs(dx) > 0.15) flip = dx > 0 ? -1 : 1;             // рисунок туриста смотрит ВЛЕВО (рюкзак справа): на восток — зеркалим, на запад — как есть
+    }
+    lastNow = now; lastLeg = leg;
+    const sway = Math.sin(now / 240);
+    inner.style.transform = kd === 'plane' ? `rotate(${((ang || 0) - 45).toFixed(1)}deg)`
+      : kd === 'kite' ? `rotate(${(sway * 9).toFixed(1)}deg)`
+      : kd === 'balloon' ? `rotate(${(sway * 4).toFixed(1)}deg)`
+      : `translateY(${(-Math.abs(Math.sin(now / 130)) * 2.5).toFixed(1)}px) scaleX(${flip})`;           // турист: шаг-подпрыгивание
+    el.style.transform = `translate3d(${(pt.x - 18).toFixed(2)}px, ${(pt.y - 18).toFixed(2)}px, 0)`;
+    if (now - lastSet > gap || k >= 1) { lastSet = now; exploreSetArcs([...legs.slice(0, leg), arr.slice(0, Math.floor(f) + 1).concat([pos])]); }   // тяжёлый setData не чаще ~25–50 раз/с
+    if (k < 1) return requestAnimationFrame(step);
+    if (++leg >= legs.length) {                      // конец: дуги остаются, «герой» растворяется
+      exploreSetArcs(legs); el.classList.add('fade');
+      setTimeout(() => { if (token === explore.anim) exploreAnimStop(true); }, 900);
+      return;
+    }
+    t0 = now + 450; requestAnimationFrame(step);       // короткая «остановка» у точки
+  };
+  requestAnimationFrame(step);
+}
+function exploreClear() { exploreAnimStop(false); explore.markers.forEach(m => m.remove()); explore.markers = []; exploreSetArcs([]); explore.legs = []; }
+// list — обычный оверлей (скрим, карта заблокирована); route — панель внизу/слева, карта остаётся живой
+function exploreShow(mode) {
+  const el = $('explore'); el.classList.toggle('route', mode === 'route'); el.scrollTop = 0;
+  if (mode === 'route') { Overlays.stack = Overlays.stack.filter(x => x !== 'explore'); el.hidden = false; Overlays.update(); }
+  else Overlays.show('explore');
+  exploreSyncPill();
+}
+function exploreClose() { explore.route = null; exploreClear(); Overlays.hide('explore'); exploreSyncPill(); }
+function openExplore() {
+  track('explore'); Overlays.closeAll();             // карточка места / меню не остаются под витриной
+  explore.route = null; exploreClear(); exploreShow('list'); renderExplore();
+  loadRoutes().then(() => { if (exploreVisible() && !explore.route) renderExplore(); });
+}
+function exploreMarkers(r) {
+  exploreClear();
+  r.stops.forEach((id, i) => {
+    const f = catalog.siteById.get(id); if (!f) return;
+    const el = document.createElement('button'); el.type = 'button'; el.className = 'amg-rm'; el.style.setProperty('--i', i);
+    el.setAttribute('aria-label', `${i + 1}. ${siteTitle(f)}`);
+    el.innerHTML = `<span class="dot">${i + 1}</span>`;
+    el.addEventListener('click', ev => { ev.stopPropagation(); exploreStop(id); });
+    explore.markers.push(new maplibregl.Marker({ element: el }).setLngLat(f.geometry.coordinates).addTo(map));
+  });
+}
+function exploreFit(r) {
+  const pts = r.stops.map(id => catalog.siteById.get(id)).filter(Boolean).map(f => f.geometry.coordinates);
+  if (!pts.length) return;
+  const all = pts.length > 1 ? arcLegs(pts).flat() : pts;   // дуги выгибаются за точки — вписываем их тоже
+  const mob = isMobileUI(), H = window.innerHeight;
+  const padding = mob ? { top: 150, bottom: Math.round(H * 0.46) + 24, left: 36, right: 36 } : { top: 150, bottom: 70, left: 540, right: 190 };   // справа — колонка кнопок
+  if (pts.length === 1) { map.flyTo({ center: pts[0], zoom: 14 }); return; }
+  map.fitBounds(all.reduce((bb, p) => bb.extend(p), new maplibregl.LngLatBounds(all[0], all[0])), { padding, maxZoom: 15, duration: 900 });
+}
+async function openExploreRoute(id) {
+  const r = ((await loadRoutes()) || []).find(x => x.id === id); if (!r) return;
+  track('route-' + id);
+  Overlays.closeAll(); exploreClear();
+  explore.route = r; exploreShow('route'); renderExplore(); exploreMarkers(r); exploreFit(r); exploreAnimate(r);
+}
+function ensureExploreSiteVisible(id) {
+  const f = catalog.siteById.get(id); if (!f) return;
+  if (state.categories === null) return;
+  const cat = siteCat(f.properties, catalog.artworksBySite.get(id) || []);
+  if (cat) state.categories.add(cat); else state.categories = null;
+  applyCategoryFilter();
+  renderChips();
+}
+function exploreStop(id) {                            // панель уступает место карточке места; точки остаются на карте
+  if (!catalog.siteById.get(id)) return;
+  exploreAnimStop(true); $('explore').hidden = true; exploreSyncPill(); ensureExploreSiteVisible(id); focusSite(id);
+}
+function exploreSave(r) {
+  if (stage0.my.some(m => m.from === r.id)) { exploreClose(); return openMy(); }   // уже сохранён → к списку
+  if (!myAdd({ name: pick(r.title), stops: r.stops, from: r.id })) return;
+  track('route-save'); toast(pick(LB.mySaved)); renderExplore();
+}
+function exploreShare(r) {
+  track('route-share');
+  const url = location.origin + location.pathname + '#ready=' + encodeURIComponent(r.id);
+  const done = () => toast(pick(LB.dayLinkCopied));
+  if (navigator.share) { navigator.share({ title: pick(r.title), url }).catch(() => {}); return; }
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(url).then(done, () => copyFallback(url, done));
+  else copyFallback(url, done);
+}
+$('exploreReturn').addEventListener('click', ev => {
+  const t = ev.target.closest('button'); if (!t) return;
+  if (t.dataset.erX) return exploreClose();
+  const r = explore.route; if (!r || !t.dataset.erGo) return;
+  Overlays.closeAll(); explore.route = r; exploreShow('route'); renderExplore(); exploreFit(r);   // вернуть панель с остановками; точки и дуги остались на карте
+});
+Overlays.register('explore', $('explore'));
+Overlays.setCloser('explore', exploreClose);
+$('btnExplore').onclick = openExplore;
+$('explore').addEventListener('click', ev => {
+  const t = ev.target.closest('button'); if (!t) return;
+  const d = t.dataset;
+  if (d.exClose) return exploreClose();
+  if (d.exBack) { explore.route = null; exploreClear(); exploreShow('list'); return renderExplore(); }
+  if (d.exRoute) return openExploreRoute(d.exRoute);
+  if (d.exStop) return exploreStop(d.exStop);
+  if (d.exSave && explore.route) return exploreSave(explore.route);
+  if (d.exShare && explore.route) return exploreShare(explore.route);
+  if (d.exOwn) { exploreClose(); return openMy(); }
+});
 
 // ---------- Пульс выбранного объекта ----------
 // Кольцо вокруг острия булавки, пока открыта карточка / «Подробно» / попап. Состояние — stage0.pulse.

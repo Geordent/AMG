@@ -1,5 +1,6 @@
 // Проверка включённого бота на сайте: ссылка «Подтвердить в Telegram», значок «проверено», коррекция точки.
 import { chromium } from 'playwright-core';
+import { railify } from './rail.mjs';
 import http from 'http';
 import fs from 'fs';
 import path from 'path';
@@ -25,7 +26,7 @@ const b = await chromium.launch({ channel: 'msedge', headless: true, args: ['--u
 // 1) У объекта: штамп + ссылка в Telegram с payload c|site-0003|lat|lng; значок «проверено» из фида.
 const c1 = await b.newContext({ viewport: { width: 1360, height: 860 }, locale: 'ru-RU', serviceWorkers: 'block',
   geolocation: { latitude: 41.69731, longitude: 44.80561, accuracy: 10 }, permissions: ['geolocation'] });
-const p1 = await c1.newPage(); p1.on('pageerror', e => errs.push(e.message));
+const p1 = await c1.newPage(); railify(p1); p1.on('pageerror', e => errs.push(e.message));
 await p1.goto(U + '#s=site-0003'); await p1.waitForTimeout(5000);
 const tags = await p1.textContent('#detail .amg-tags');
 ok('значок «Проверено на месте · месяц»', /Проверено на месте · окт/.test(tags), tags.trim().replace(/\s+/g, ' '));
@@ -43,7 +44,7 @@ await p1.screenshot({ path: path.join(OUT, 's1-confirm.png'), clip: { x: 880, y:
 const c2 = await b.newContext({ viewport: { width: 1360, height: 860 }, locale: 'en-GB', serviceWorkers: 'block',
   geolocation: { latitude: 41.69731 + 300 / 111320, longitude: 44.80561, accuracy: 10 }, permissions: ['geolocation'] });
 await c2.addInitScript(() => { window.__opens = []; const o = window.open; window.open = function (u, t) { window.__opens.push(String(u)); return o.apply(this, arguments); }; });
-const p2 = await c2.newPage(); p2.on('pageerror', e => errs.push('fix: ' + e.message));
+const p2 = await c2.newPage(); railify(p2); p2.on('pageerror', e => errs.push('fix: ' + e.message));
 await p2.goto(U + '#s=site-0003'); await p2.waitForTimeout(5000);
 await p2.click('#detail [data-here]'); await p2.waitForTimeout(1500);
 const st = await p2.getAttribute('#detail [data-here]', 'data-state');
