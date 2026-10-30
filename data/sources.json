@@ -46,5 +46,20 @@
   {"id": "src-0046", "type": "map", "title": "OpenStreetMap — Ekaterina spring (node 1185812791)", "url": "https://www.openstreetmap.org/node/1185812791", "license": "ODbL 1.0", "updated": "2026-10-30"},
   {"id": "src-0047", "type": "wiki", "title": "Wikipedia — Nabeghlavi", "url": "https://en.wikipedia.org/wiki/Nabeghlavi", "license": "CC BY-SA 4.0", "updated": "2026-10-30"},
   {"id": "src-0048", "type": "map", "title": "OpenStreetMap — Nabeghlavi mineral spring (node 2294534802)", "url": "https://www.openstreetmap.org/node/2294534802", "license": "ODbL 1.0", "updated": "2026-10-30"},
-  {"id": "src-0049", "type": "wiki", "title": "Wikidata — Nabeglavi (Q7223124)", "url": "https://www.wikidata.org/wiki/Q7223124", "license": "CC0 1.0", "updated": "2026-10-30"}
+  {"id": "src-0049", "type": "wiki", "title": "Wikidata — Nabeglavi (Q7223124)", "url": "https://www.wikidata.org/wiki/Q7223124", "license": "CC0 1.0", "updated": "2026-10-30"},
+  {"id": "src-0050", "type": "wiki", "title": "Wikipedia — Okatse Canyon Natural Monument", "url": "https://en.wikipedia.org/wiki/Okatse_Canyon_Natural_Monument", "license": "CC BY-SA 4.0", "updated": "2026-10-30"},
+  {"id": "src-0051", "type": "wiki", "title": "Wikipedia — Kinchkha Waterfall Natural Monument", "url": "https://en.wikipedia.org/wiki/Kinchkha_Waterfall_Natural_Monument", "license": "CC BY-SA 4.0", "updated": "2026-10-30"},
+  {"id": "src-0052", "type": "wiki", "title": "Wikipedia — Oniore Waterfall and Toba First Cave Natural Monuments", "url": "https://en.wikipedia.org/wiki/Oniore_Waterfall_and_Toba_First_Cave_Natural_Monuments", "license": "CC BY-SA 4.0", "updated": "2026-10-30"},
+  {"id": "src-0053", "type": "wiki", "title": "Wikipedia — Balda Canyon Natural Monument", "url": "https://en.wikipedia.org/wiki/Balda_Canyon_Natural_Monument", "license": "CC BY-SA 4.0", "updated": "2026-10-30"},
+  {"id": "src-0054", "type": "wiki", "title": "Wikipedia — Gachedili Canyon Natural Monument", "url": "https://en.wikipedia.org/wiki/Gachedili_Canyon_Natural_Monument", "license": "CC BY-SA 4.0", "updated": "2026-10-30"},
+  {"id": "src-0055", "type": "wiki", "title": "Wikipedia — Keterisi Mineral Vaucluse Natural Monument", "url": "https://en.wikipedia.org/wiki/Keterisi_Mineral_Vaucluse", "license": "CC BY-SA 4.0", "updated": "2026-10-30"},
+  {"id": "src-0056", "type": "wiki", "title": "Wikipedia — Truso Travertines Natural Monument", "url": "https://en.wikipedia.org/wiki/Truso_Travertines_Natural_Monument", "license": "CC BY-SA 4.0", "updated": "2026-10-30"},
+  {"id": "src-0057", "type": "wiki", "title": "Wikipedia — Jvari Pass Travertine Natural Monument", "url": "https://en.wikipedia.org/wiki/Jvari_Pass_Travertine_Natural_Monument", "license": "CC BY-SA 4.0", "updated": "2026-10-30"},
+  {"id": "src-0058", "type": "wiki", "title": "Wikipedia — Sakhizari Cliff Natural Monument", "url": "https://en.wikipedia.org/wiki/Sakhizari_Cliff_Natural_Monument", "license": "CC BY-SA 4.0", "updated": "2026-10-30"},
+  {"id": "src-0059", "type": "official", "title": "Agency of Protected Areas — Oniore Waterfall and Toba First Cave", "url": "https://apa.gov.ge/En/ProtectedAreas/ProtectedAreaDetails?areaId=103", "updated": "2026-10-30"},
+  {"id": "src-0060", "type": "official", "title": "Agency of Protected Areas — Balda Canyon", "url": "https://apa.gov.ge/En/ProtectedAreas/ProtectedAreaDetails?areaId=84", "updated": "2026-10-30"},
+  {"id": "src-0061", "type": "official", "title": "Agency of Protected Areas — Gachedili (Martvili) Canyon", "url": "https://apa.gov.ge/En/ProtectedAreas/ProtectedAreaDetails?areaId=95", "updated": "2026-10-30"},
+  {"id": "src-0062", "type": "official", "title": "Agency of Protected Areas — Jvari Pass Travertine", "url": "https://apa.gov.ge/En/ProtectedAreas/ProtectedAreaDetails?areaId=120", "updated": "2026-10-30"},
+  {"id": "src-0063", "type": "official", "title": "Agency of Protected Areas — Keterisi Mineral Springs", "url": "https://apa.gov.ge/En/ProtectedAreas/ProtectedAreaDetails?areaId=115", "updated": "2026-10-30"},
+  {"id": "src-0064", "type": "official", "title": "Agency of Protected Areas — Truso Travertines", "url": "https://apa.gov.ge/En/ProtectedAreas/ProtectedAreaDetails?areaId=93", "updated": "2026-10-30"}
 ]

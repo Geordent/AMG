@@ -119,68 +119,6 @@
    "geometry": {
     "type": "Point",
     "coordinates": [
-     42.54984,
-     42.45187
-    ]
-   },
-   "properties": {
-    "kind": "canyon",
-    "name_ru": "Каньон Окаце",
-    "name_en": "Okatse Canyon",
-    "name_ka": "ოკაცეს კანიონი",
-    "note_ru": "Каньон с подвесной тропой (skywalk) над пропастью; от парковки — трансфер.",
-    "minzoom": 7,
-    "approx": false,
-    "addr_ru": "Бангвети, Хонийский муниципалитет, Имеретия, Грузия",
-    "desc_ru": "Памятник природы каньон Окаце — эрозионный каньон реки Окаце в Хонском муниципалитете (Имеретия), у села Зеда Горди, на высоте 520 м над уровнем моря.",
-    "desc_src": "https://en.wikipedia.org/wiki/Okatse_Canyon_Natural_Monument",
-    "phone": "153",
-    "website": "https://apa.gov.ge",
-    "contact_src": "APA — общий контакт",
-    "contact_kind": "agency",
-    "note_en": "Canyon with a skywalk over the abyss; from the parking lot — transfer.",
-    "note_ka": "კანიონი უფსკრულზე გადასასვლელით; ავტოსადგომიდან — ტრანსფერი.",
-    "desc_en": "The natural monument Okatse Canyon is an erosion canyon of the Okatse River in the Khon municipality (Imereti), near the village of Zeda Gordi, at an altitude of 520 m above sea level.",
-    "desc_ka": "ბუნების ძეგლი ოკაცეს კანიონი — მდინარე ოკაცეს ეროზიული კანიონი ხონის მუნიციპალიტეტში (იმერეთი), სოფელ ზედა გორდის მახლობლად, ზღვის დონიდან 520 მ სიმაღლეზე.",
-    "addr_en": "Bangveti, Khonii Municipality, Imereti, Georgia",
-    "addr_ka": "საქართველო, იმერეთი, ხონის მუნიციპალიტეტი, ბანგვეთი",
-    "tr_src": {
-     "note_en": "gtranslate",
-     "note_ka": "gtranslate",
-     "desc_en": "gtranslate",
-     "desc_ka": "gtranslate",
-     "addr_en": "gtranslate",
-     "addr_ka": "gtranslate"
-    },
-    "media": [
-     {
-      "source_id": "src-0002",
-      "role": "photo",
-      "url": "https://commons.wikimedia.org/wiki/File:Okatse_26.jpg",
-      "direct_url": "https://upload.wikimedia.org/wikipedia/commons/5/50/Okatse_26.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
-      "author": "Paata vardanashvili",
-      "license": "CC BY-SA 4.0",
-      "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
-      "attribution_required": true
-     },
-     {
-      "source_id": "src-0002",
-      "role": "photo",
-      "url": "https://commons.wikimedia.org/wiki/File:Pendant_road._Okatse_Canyon_Natural_Monument._foto-4.jpg",
-      "direct_url": "https://upload.wikimedia.org/wikipedia/commons/8/87/Pendant_road._Okatse_Canyon_Natural_Monument._foto-4.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
-      "author": "Zysko serhii",
-      "license": "CC BY-SA 4.0",
-      "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
-      "attribution_required": true
-     }
-    ]
-   }
-  },
-  {
-   "type": "Feature",
-   "geometry": {
-    "type": "Point",
-    "coordinates": [
      42.37288,
      42.45843
     ]
@@ -326,46 +264,6 @@
     "desc_ka": "სამშვილდე — გამაგრებული ქალაქისა და არქეოლოგიური ადგილის ნანგრევები თეთრიწყაროს მუნიციპალიტეტში მდინარე ხრამზე; სოფლის მიმდებარე ტერიტორია დაცულია როგორც ბუნების ძეგლი „სამშვილდის კანიონი“.",
     "addr_en": "Samshvilde, Tetritskaro Municipality, Lower Kartli, Georgia",
     "addr_ka": "საქართველო, ქვემო ქართლი, თეთრიწყაროს მუნიციპალიტეტი სამშვილდე",
-    "tr_src": {
-     "note_en": "gtranslate",
-     "note_ka": "gtranslate",
-     "desc_en": "gtranslate",
-     "desc_ka": "gtranslate",
-     "addr_en": "gtranslate",
-     "addr_ka": "gtranslate"
-    }
-   }
-  },
-  {
-   "type": "Feature",
-   "geometry": {
-    "type": "Point",
-    "coordinates": [
-     42.55019,
-     42.4957
-    ]
-   },
-   "properties": {
-    "kind": "canyon",
-    "name_ru": "Водопад Кинчха",
-    "name_en": "Kinchkha Waterfall",
-    "name_ka": "კინჩხა",
-    "note_ru": "Двухступенчатый водопад у Окаце; верхняя ступень ~100 м.",
-    "minzoom": 10,
-    "approx": false,
-    "addr_ru": "Кинчхаперди, Хонийский муниципалитет, Имеретия, Грузия",
-    "desc_ru": "Двухступенчатый водопад на реке Кинчха рядом с каньоном Окаце; верхняя ступень около 100 м. Точка из OSM.",
-    "desc_src": "OSM",
-    "phone": "153",
-    "website": "https://apa.gov.ge",
-    "contact_src": "APA — общий контакт",
-    "contact_kind": "agency",
-    "note_en": "Two-stage waterfall at Okatse; upper step ~100 m.",
-    "note_ka": "ორსაფეხურიანი ჩანჩქერი ოკაცეში; ზედა საფეხური ~ 100 მ.",
-    "desc_en": "Two-stage waterfall on the Kinchkha River near the Okatse Canyon; the top step is about 100 m. Point from OSM.",
-    "desc_ka": "ორსაფეხურიანი ჩანჩქერი მდინარე კინჩხაზე ოკაცეს კანიონთან; ზედა საფეხური დაახლოებით 100 მ. წერტილი OSM-დან.",
-    "addr_en": "Kinchkhaperdi, Khonii Municipality, Imereti, Georgia",
-    "addr_ka": "საქართველო, იმერეთი, ხონის მუნიციპალიტეტი კინჩხაფერდი",
     "tr_src": {
      "note_en": "gtranslate",
      "note_ka": "gtranslate",
@@ -1343,7 +1241,8 @@
      "desc_ka": "gtranslate",
      "addr_en": "gtranslate",
      "addr_ka": "gtranslate"
-    }
+    },
+    "detail": true
    }
   },
   {
@@ -1434,7 +1333,8 @@
      "addr_ka": "gtranslate",
      "fee_en": "gtranslate",
      "fee_ka": "gtranslate"
-    }
+    },
+    "detail": true
    }
   },
   {
@@ -1478,7 +1378,8 @@
      "addr_ka": "gtranslate",
      "fee_en": "gtranslate",
      "fee_ka": "gtranslate"
-    }
+    },
+    "detail": true
    }
   },
   {
@@ -1514,7 +1415,8 @@
      "desc_ka": "gtranslate",
      "addr_en": "gtranslate",
      "addr_ka": "gtranslate"
-    }
+    },
+    "detail": true
    }
   },
   {
@@ -1559,7 +1461,8 @@
      "addr_ka": "gtranslate",
      "fee_en": "gtranslate",
      "fee_ka": "gtranslate"
-    }
+    },
+    "detail": true
    }
   },
   {

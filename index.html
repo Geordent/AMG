@@ -1606,7 +1606,7 @@ const EXP_LAYER_TOGGLE = {
   paraglide: ['amg-exp-paraglide'], canyon: ['amg-exp-canyon'],
   zipline: ['amg-exp-zipline'], rafting: ['amg-exp-rafting'],
   bike: ['amg-exp-bike'], cablecar: ['amg-exp-cablecar'],
-  bath: ['amg-exp-bath'], waterpark: ['amg-exp-waterpark'], zoo: ['amg-exp-zoo'],
+  bath: ['amg-exp-bath', 'amg-exp-bath-detail'], waterpark: ['amg-exp-waterpark'], zoo: ['amg-exp-zoo'],
   aquarium: ['amg-exp-aquarium'], horse: ['amg-exp-horse'], golf: ['amg-exp-golf'],
   marina: ['amg-exp-marina'],
 };
@@ -2100,10 +2100,11 @@ async function setupCatalogLayers() {
   const egeo = await loadExpGeo();
   if (egeo) {
     if (!map.getSource('amg-exp-local')) map.addSource('amg-exp-local', { type:'geojson', data:egeo });
-    const addExpSymbol = (id, kind, mz, iconSize, textSize, textOpacity) => {
+    // detail=true: точки с `detail` показываем только слою «детально» (тесные группы вроде бань Абанотубани).
+    const addExpSymbol = (id, kind, mz, iconSize, textSize, textOpacity, detail = false) => {
       if (map.getLayer(id)) return;
       map.addLayer({ id, type:'symbol', source:'amg-exp-local', minzoom:mz,
-        filter:['==', ['get','kind'], kind],
+        filter:['all', ['==', ['get','kind'], kind], [detail ? '==' : '!=', ['get','detail'], true]],
         layout:{ 'icon-image':EXP_ICON, 'icon-size':iconSize,
           'icon-allow-overlap':true, 'icon-ignore-placement':true,
           'text-field':expName(), 'text-font':['Noto Sans Medium'], 'text-size':textSize,
@@ -2143,6 +2144,8 @@ async function setupCatalogLayers() {
       ['interpolate',['linear'],['zoom'], 10,10, 14,12], ['interpolate',['linear'],['zoom'], 9,0, 12,1]);
     addExpSymbol('amg-exp-bath','bath',9, midIcon,
       ['interpolate',['linear'],['zoom'], 11,10, 15,12], ['interpolate',['linear'],['zoom'], 10,0, 13,1]);
+    // Бани одного квартала (Абанотубани: десятки метров друг от друга) — только при сильном приближении.
+    addExpSymbol('amg-exp-bath-detail','bath',16, midIcon, 12, 1, true);
   }
   applyExpVisibility();
   applyCategoryFilter();
@@ -2721,7 +2724,7 @@ function expCardHtml(p, coords) {
 }
 // Слои, клик по которым открывает карточку «впечатления».
 const EXP_CLICK_LAYERS = ['amg-exp-paraglide', 'amg-exp-canyon', 'amg-exp-zipline', 'amg-exp-rafting', 'amg-exp-bike', 'amg-exp-cablecar',
-  'amg-exp-bath', 'amg-exp-waterpark', 'amg-exp-zoo', 'amg-exp-aquarium', 'amg-exp-horse', 'amg-exp-golf', 'amg-exp-marina'];
+  'amg-exp-bath', 'amg-exp-bath-detail', 'amg-exp-waterpark', 'amg-exp-zoo', 'amg-exp-aquarium', 'amg-exp-horse', 'amg-exp-golf', 'amg-exp-marina'];
 function renderExpCard(props, coords) {
   const c = document.getElementById('card');
   if (!c) return;

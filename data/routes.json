@@ -6,7 +6,8 @@
     "mosaics": { "ru": "Мозаики", "en": "Mosaics", "ka": "მოზაიკები" },
     "baths": { "ru": "Бани и источники", "en": "Baths & springs", "ka": "აბანოები და წყაროები" },
     "medieval": { "ru": "Средневековая Грузия", "en": "Medieval Georgia", "ka": "შუასაუკუნეების საქართველო" },
-    "caves": { "ru": "Пещеры и карст", "en": "Caves & karst", "ka": "მღვიმეები და კარსტი" }
+    "caves": { "ru": "Пещеры и карст", "en": "Caves & karst", "ka": "მღვიმეები და კარსტი" },
+    "nature": { "ru": "Природа и каньоны", "en": "Nature & canyons", "ka": "ბუნება და კანიონები" }
   },
   "routes": [
     {
@@ -96,6 +97,28 @@
       "teaser": { "ru": "От исторического источника в парке Боржоми до села в Гурии, где к воде, по старому рассказу, первыми пришли буйволы. Минеральные воды Грузии — не только в бутылках.", "en": "From a historic spring in Borjomi Park to a village in Guria where, says an old story, buffalo found the water first. Georgia’s mineral waters are not only in bottles.", "ka": "ბორჯომის პარკის ისტორიული წყაროდან გურიის სოფლამდე, სადაც, ძველი თქმულებით, წყალს პირველებმა კამეჩებმა მიაგნეს. საქართველოს მინერალური წყლები მხოლოდ ბოთლებში არ არის." },
       "cover": { "type": "photo", "src": "icons/covers/mineral-springs.jpg", "credit": "Alexey Komarov", "license": "CC BY-SA 4.0", "source_url": "https://commons.wikimedia.org/wiki/File%3ABorjomi_Sulfur_Pools.jpg" },
       "stops": ["site-0599", "site-0539", "site-0536", "site-0555", "site-0600"]
+    },
+    {
+      "id": "canyons-waterfalls-west",
+      "kind": "intercity",
+      "title": { "ru": "Каньоны и водопады запада Грузии", "en": "Canyons and waterfalls of western Georgia", "ka": "დასავლეთ საქართველოს კანიონები და ჩანჩქერები" },
+      "theme": { "ru": "Природа и каньоны", "en": "Nature & canyons", "ka": "ბუნება და კანიონები" },
+      "theme_key": "nature",
+      "desc": { "ru": "Каньон Окаце, водопад Кинчха, водопад Ониоре с пещерой Тоба I, каньоны Балда и Гачедили.", "en": "Okatse Canyon, Kinchkha Waterfall, Oniore Waterfall with Toba I Cave, Balda and Gachedili canyons.", "ka": "ოკაცეს კანიონი, კინჩხის ჩანჩქერი, ონიორეს ჩანჩქერი ტობას პირველ მღვიმესთან ერთად, ბალდისა და გაჩედილის კანიონები." },
+      "teaser": { "ru": "Река, которая режет камень: от каньона над ущельем до изумрудной воды Мартвили. Запад Грузии, где вода работает скульптором, а известняк — глиной.", "en": "A river that cuts stone: from a canyon above the gorge to the emerald water of Martvili. Western Georgia, where water is the sculptor and limestone the clay.", "ka": "მდინარე, რომელიც ქვას ჭრის: ხეობის თავზე მდებარე კანიონიდან მარტვილის ზურმუხტისფერ წყლამდე. დასავლეთ საქართველო, სადაც წყალი მოქანდაკეა, კირქვა კი — თიხა." },
+      "cover": { "type": "photo", "src": "icons/covers/martvili-canyons.jpg", "credit": "DDohler", "license": "CC BY 2.0", "source_url": "https://commons.wikimedia.org/wiki/File:Gachedili_canyon,_Georgia.jpg" },
+      "stops": ["site-0601", "site-0602", "site-0603", "site-0604", "site-0605"]
+    },
+    {
+      "id": "kazbegi-travertines",
+      "kind": "intercity",
+      "title": { "ru": "Казбеги: травертины и минеральные источники", "en": "Kazbegi: travertines and mineral springs", "ka": "ყაზბეგი: ტრავერტინები და მინერალური წყაროები" },
+      "theme": { "ru": "Природа и каньоны", "en": "Nature & canyons", "ka": "ბუნება და კანიონები" },
+      "theme_key": "nature",
+      "desc": { "ru": "Минеральные источники Кетериси, травертины Трусо, травертин перевала Джвари и скала Сахизари.", "en": "The Keterisi mineral springs, the Truso travertines, the Jvari Pass travertine and the Sakhizari Cliff.", "ka": "ქეთერისის მინერალური წყაროები, თრუსოს ტრავერტინები, ჯვრის უღელტეხილის ტრავერტინი და სახიზარის კლდე." },
+      "teaser": { "ru": "Белые и рыжие «каменные водопады», которые растут прямо на склонах, и родники, бьющие из-под Большого Кавказа. Живая геология Казбегского края.", "en": "White and rusty “stone waterfalls” growing right on the slopes, and springs bursting from beneath the Greater Caucasus. Living geology of the Kazbegi region.", "ka": "თეთრი და მოწითალო «ქვის ჩანჩქერები», რომლებიც პირდაპირ ფერდობებზე იზრდება, და წყაროები, რომლებიც დიდი კავკასიონის ძირიდან მოჩქეფს. ყაზბეგის მხარის ცოცხალი გეოლოგია." },
+      "cover": { "type": "photo", "src": "icons/covers/kazbegi-travertines.jpg", "credit": "Karelj", "license": "CC BY-SA 3.0", "source_url": "https://commons.wikimedia.org/wiki/File:Jvari_Overpass_Travertine_Gruzia_2019_1.jpg" },
+      "stops": ["site-0606", "site-0607", "site-0608", "site-0609"]
     }
   ]
 }

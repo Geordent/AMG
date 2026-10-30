@@ -11,3 +11,5 @@
 | `medieval-samtskhe.jpg` | Alexkom000 | CC BY 4.0 | https://commons.wikimedia.org/wiki/File:2025-05-25_Vardzia_9.jpg |
 | `imereti-underground.jpg` | Marcin Konsek | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:2014_Imeretia,_Jaskinia_Prometeusza_(16).jpg |
 | `mineral-springs.jpg` | Alexey Komarov | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File%3ABorjomi_Sulfur_Pools.jpg |
+| `martvili-canyons.jpg` | DDohler | CC BY 2.0 | https://commons.wikimedia.org/wiki/File:Gachedili_canyon,_Georgia.jpg |
+| `kazbegi-travertines.jpg` | Karelj | CC BY-SA 3.0 | https://commons.wikimedia.org/wiki/File:Jvari_Overpass_Travertine_Gruzia_2019_1.jpg |
