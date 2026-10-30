@@ -62,7 +62,9 @@ ok('темы: по одному заголовку на тему, всё на о
 const panelText = await p.textContent('#explore');
 ok('в витрине нет километров и минут', noUnits(panelText));
 ok('нет чекбоксов и выпадающих списков', (await p.$$('#explore input, #explore select')).length === 0);
-await p.$$eval('#explore .ex-card', a => a.forEach(c => c.scrollIntoView({ block: 'center' }))); await p.waitForTimeout(1200);
+// Карточки прокручиваем по очереди: обложки грузятся лениво, а список растёт вместе с числом маршрутов.
+for (const h of await p.$$('#explore .ex-card')) { await h.scrollIntoViewIfNeeded(); await p.waitForTimeout(150); }
+await p.waitForTimeout(1200);
 const covers = await p.$$eval('#explore .ex-card', a => a.map(c => { const i = c.querySelector('.ex-cover img'); return { id: c.dataset.exRoute, ph: i.classList.contains('ph'), ok: i.complete && i.naturalWidth > 0, credit: !!c.querySelector('.ex-credit') }; }));
 const photoIds = routes.filter(r => r.cover.type === 'photo').map(r => r.id);
 ok('все обложки загрузились с сайта (рисунки и фото, не запасная иконка)', covers.length === routes.length && covers.every(c => c.ph && c.ok), covers.filter(c => !(c.ph && c.ok)).map(c => c.id).join(', '));
@@ -195,7 +197,8 @@ const vake = routes.find(r => r.id === 'vake-murals').stops;
   const p7 = await c7.newPage(); railify(p7); p7.on('pageerror', e => errs.push(e.message));
   await p7.goto(U); await p7.waitForTimeout(5500);
   await p7.click('#btnExplore'); await p7.waitForTimeout(600);
-  await p7.$$eval('#explore .ex-card', a => a.forEach(c => c.scrollIntoView({ block: 'center' }))); await p7.waitForTimeout(1500);
+  for (const h of await p7.$$('#explore .ex-card')) { await h.scrollIntoViewIfNeeded(); await p7.waitForTimeout(150); }
+  await p7.waitForTimeout(1500);
   const st = await p7.$$eval('#explore .ex-card', a => a.map(c => { const i = c.querySelector('.ex-cover img'); return i.classList.contains('ph') && i.complete && i.naturalWidth > 0; }));
   ok('без доступа к Commons все обложки на месте (фото лежат на сайте)', st.length === routes.length && st.every(Boolean) && blocked === 0, `заблокированных запросов к Commons: ${blocked}`);
   await c7.close();

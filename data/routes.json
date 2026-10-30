@@ -7,7 +7,9 @@
     "baths": { "ru": "Бани и источники", "en": "Baths & springs", "ka": "აბანოები და წყაროები" },
     "medieval": { "ru": "Средневековая Грузия", "en": "Medieval Georgia", "ka": "შუასაუკუნეების საქართველო" },
     "caves": { "ru": "Пещеры и карст", "en": "Caves & karst", "ka": "მღვიმეები და კარსტი" },
-    "nature": { "ru": "Природа и каньоны", "en": "Nature & canyons", "ka": "ბუნება და კანიონები" }
+    "nature": { "ru": "Природа и каньоны", "en": "Nature & canyons", "ka": "ბუნება და კანიონები" },
+    "wine": { "ru": "Вино как история", "en": "Wine as history", "ka": "ღვინო და ისტორია" },
+    "soviet": { "ru": "Советское наследие", "en": "Soviet heritage", "ka": "საბჭოთა მემკვიდრეობა" }
   },
   "routes": [
     {
@@ -141,6 +143,39 @@
       "teaser": { "ru": "Земля, куда, по легенде, плыли аргонавты: озеро у моря, болото, которое питает один дождь, и лес, где остались следы динозавров. Колхида — не только пляжи.", "en": "The land where, says the legend, the Argonauts sailed: a lake by the sea, a bog fed by rain alone, and a forest that keeps dinosaur tracks. Colchis is not only beaches.", "ka": "მიწა, სადაც, თქმულების მიხედვით, არგონავტები მიცურავდნენ: ტბა ზღვის პირას, ჭაობი, რომელსაც მხოლოდ წვიმა კვებავს, და ტყე, რომელმაც დინოზავრების კვალი შემოინახა. კოლხეთი მხოლოდ სანაპიროები არ არის." },
       "cover": { "type": "photo", "src": "icons/covers/colchis-wetlands.jpg", "credit": "Kober", "license": "CC BY-SA 4.0", "source_url": "https://commons.wikimedia.org/wiki/File:Kolkheti_National_Park._Paliastomi_Lake_and_Pichori_River._August_2022.jpg" },
       "stops": ["site-0611", "site-0612", "site-0557"]
+    },
+    {
+      "id": "wine-history-kakheti",
+      "kind": "intercity",
+      "title": { "ru": "Вино как история: Кахетия", "en": "Wine as history: Kakheti", "ka": "ღვინო როგორც ისტორია: კახეთი" },
+      "theme": { "ru": "Вино как история", "en": "Wine as history", "ka": "ღვინო და ისტორია" },
+      "theme_key": "wine",
+      "desc": { "ru": "Монастырь Икалто с каменным прессом, музей квеври в Напареули, дом-музей Чавчавадзе в Цинандали и средневековое Греми.", "en": "Ikalto Monastery with its stone press, the qvevri museum in Napareuli, the Chavchavadze house museum in Tsinandali and medieval Gremi.", "ka": "იყალთოს მონასტერი ქვის საწნახლით, ქვევრის მუზეუმი ნაფარეულში, ჭავჭავაძის სახლ-მუზეუმი წინანდალში და შუასაუკუნეების გრემი." },
+      "teaser": { "ru": "Здесь вино не про дегустацию, а про историю: самый большой в Грузии каменный пресс, квеври под стеклом в разрезе, усадьба с погребом и столица, которую разрушил шах.", "en": "Here wine is about history, not tasting: the largest stone press preserved in Georgia, qvevris cut open under glass, an estate with a cellar and a capital razed by a shah.", "ka": "აქ ღვინო დეგუსტაციაზე კი არა, ისტორიაზეა: საქართველოში შემორჩენილი ყველაზე დიდი ქვის საწნახელი, მინის ქვეშ გაჭრილი ქვევრები, მარნიანი მამული და დედაქალაქი, რომელიც შაჰმა გაანადგურა." },
+      "cover": { "type": "photo", "src": "icons/covers/wine-history-kakheti.jpg", "credit": "Bernard Gagnon", "license": "CC BY 4.0", "source_url": "https://commons.wikimedia.org/wiki/File:Winepress_building_(Ikalto).jpg" },
+      "stops": ["site-0613", "site-0614", "site-0585", "site-0615"]
+    },
+    {
+      "id": "soviet-georgia-chiatura-tskaltubo",
+      "kind": "intercity",
+      "title": { "ru": "Советская Грузия: Чиатура и Цхалтубо", "en": "Soviet Georgia: Chiatura and Tskaltubo", "ka": "საბჭოთა საქართველო: ჭიათურა და წყალტუბო" },
+      "theme": { "ru": "Советское наследие", "en": "Soviet heritage", "ka": "საბჭოთა მემკვიდრეობა" },
+      "theme_key": "soviet",
+      "desc": { "ru": "Канатная сеть Чиатуры, заброшенные санатории Цхалтубо и санаторий «Медея».", "en": "Chiatura’s cable network, the abandoned sanatoria of Tskaltubo and the Medea sanatorium.", "ka": "ჭიათურის საბაგირო ქსელი, წყალტუბოს მიტოვებული სანატორიუმები და სანატორიუმი «მედეა»." },
+      "teaser": { "ru": "Город, где шахтёров на работу возили по воздуху, и курорт, куда за радоновой водой ехали около ста двадцати пяти тысяч гостей в год. От большого советского проекта остались станции, колонны и мозаики. Смотрите на них снаружи.", "en": "A city where miners rode to work through the air, and a spa where around a hundred and twenty-five thousand guests a year came for radon water. What remains of a vast Soviet project is stations, columns and mosaics. Look at them from the outside.", "ka": "ქალაქი, სადაც მაღაროელებს სამუშაოდ ჰაერით გადაჰყავდათ, და კურორტი, სადაც რადონის წყლისთვის წელიწადში დაახლოებით ას ოცდახუთი ათასი სტუმარი ჩადიოდა. დიდი საბჭოთა პროექტიდან დარჩა სადგურები, სვეტები და მოზაიკა. უყურეთ მათ გარედან." },
+      "cover": { "type": "photo", "src": "icons/covers/soviet-georgia.jpg", "credit": "Alexey Komarov", "license": "CC BY-SA 4.0", "source_url": "https://commons.wikimedia.org/wiki/File:Sanatorium_Medea_2023-08-22-11.jpg" },
+      "stops": ["site-0540", "site-0567", "site-0566"]
+    },
+    {
+      "id": "tbilisi-soviet-abandoned",
+      "kind": "intercity",
+      "title": { "ru": "Тбилиси: советский модернизм и заброшенное", "en": "Tbilisi: Soviet modernism and the abandoned", "ka": "თბილისი: საბჭოთა მოდერნიზმი და მიტოვებული ობიექტები" },
+      "theme": { "ru": "Советское наследие", "en": "Soviet heritage", "ka": "საბჭოთა მემკვიდრეობა" },
+      "theme_key": "soviet",
+      "desc": { "ru": "Здание бывшего министерства дорожного строительства, заброшенный бассейн «Лагуна Вере» и мозаичные купола бани Гогило.", "en": "The former Ministry of Highway Construction building, the abandoned Laguna Vere pool and the mosaic domes of the Gogilo bathhouse.", "ka": "გზების მშენებლობის ყოფილი სამინისტროს შენობა, მიტოვებული აუზი «ლაგუნა ვერე» და გოგილოს აბანოს მოზაიკური გუმბათები." },
+      "teaser": { "ru": "Башня министерства, которую спроектировал сам заместитель министра, заброшенный олимпийский бассейн и мозаичные купола бани над городом. Советский Тбилиси: смотрите снаружи.", "en": "A ministry tower designed by the deputy minister himself, an abandoned Olympic pool and the mosaic domes of a bathhouse above the city. Soviet Tbilisi: look from the outside.", "ka": "სამინისტროს კოშკი, რომელიც თავად მინისტრის მოადგილემ დააპროექტა, მიტოვებული ოლიმპიური აუზი და აბანოს მოზაიკური გუმბათები ქალაქის თავზე. საბჭოთა თბილისი: უყურეთ გარედან." },
+      "cover": { "type": "photo", "src": "icons/covers/tbilisi-abandoned-modernism.jpg", "credit": "Rob Sinclair", "license": "CC BY-SA 2.0", "source_url": "https://commons.wikimedia.org/wiki/File:Derelict_mosaic_roofs.jpg" },
+      "stops": ["site-0561", "site-0563", "site-0562"]
     }
   ]
 }

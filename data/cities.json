@@ -53,5 +53,8 @@
   "tsageri": {"ru": "Цагери", "en": "Tsageri", "ka": "ცაგერი"},
   "nabeghlavi": {"ru": "Набеглави", "en": "Nabeghlavi", "ka": "ნაბეღლავი"},
   "martvili": {"ru": "Мартвили", "en": "Martvili", "ka": "მარტვილი"},
-  "khoni": {"ru": "Кони", "en": "Khoni", "ka": "ხონი"}
+  "khoni": {"ru": "Кони", "en": "Khoni", "ka": "ხონი"},
+  "ikalto": {"ru": "Икалто", "en": "Ikalto", "ka": "იყალთო"},
+  "napareuli": {"ru": "Напареули", "en": "Napareuli", "ka": "ნაფარეული"},
+  "gremi": {"ru": "Греми", "en": "Gremi", "ka": "გრემი"}
 }

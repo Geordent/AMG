@@ -349,6 +349,8 @@
   .amg-pop .amg-src-text { color:#7a7268; }   /* generic source = plain provenance, не ссылка */
   /* Карточка «Впечатления»: адрес/контакты/источник описания */
   .amg-pop .amg-note { color:#8a8177; font-size:11px; font-style:italic; margin:2px 0; }
+  /* Оговорка о доступе и безопасности (access_note): «осмотр снаружи», условия не подтверждены */
+  .amg-pop .amg-access-note, #detail .amg-access-note { margin:6px 0; padding:6px 10px; border-left:3px solid #B8482A; border-radius:0 8px 8px 0; background:#FBF1E3; color:#5b4a3a; font-size:12.5px; line-height:1.4; }
   .amg-pop .amg-h { color:#5b5147; font-size:11px; text-transform:uppercase; letter-spacing:.4px; margin:9px 0 2px; font-weight:700; }
   .amg-pop .amg-contacts a, .amg-pop .amg-meta a { color:#1F6F78; }
   /* «Подробно» — только информация об объекте; навигация/действия живут на компактной карточке */
@@ -2379,6 +2381,11 @@ function tipHtml(p, arts) {
   if (!t) return '';
   return `<p class="amg-tip amg-hand${state.lang === 'ka' ? ' plain' : ''}"><b>${esc(pick(LB.localTip))}:</b> ${esc(t)}</p>`;
 }
+// Оговорка о доступе/безопасности (access_note {ru,en,ka}): заброшенные места — «осмотр снаружи», условия не подтверждены.
+function accessNoteHtml(p) {
+  const t = pick(p.access_note);
+  return t ? `<div class="amg-access-note">${esc(t)}</div>` : '';
+}
 function sitePopupHtml(siteId) {
   const f = catalog.siteById.get(siteId);
   if (!f) return '<b>—</b>';
@@ -2420,6 +2427,7 @@ function sitePopupHtml(siteId) {
     ${tipHtml(p, arts)}
     ${landmark ? `<div class="amg-meta amg-addr">${esc(landmark)}</div>` : ''}
     <div class="amg-meta">${esc(pick(LB.access))}: ${esc(labelOf(ACCESS_LABELS, p.access))} · ${esc(vis)}</div>
+    ${accessNoteHtml(p)}
     ${media}
     ${src}
     <div class="amg-actions">${routeButtons(lat, lng)}${streetViewBtn(lat, lng)}<button type="button" class="amg-btn ghost" data-share="${esc(siteId)}">${esc(pick(LB.share))}</button><button type="button" class="amg-btn ghost" data-detail="${esc(siteId)}">${esc(pick(LB.detail))}</button>${dayBtnHtml(siteId)}</div>
@@ -2474,6 +2482,7 @@ function detailHtml(siteId) {
     <div class="amg-tags">${tags}</div>
     ${landmark ? `<div class="amg-meta amg-addr">${esc(landmark)}</div>` : ''}
     <div class="amg-meta">${esc(pick(LB.access))}: ${esc(labelOf(ACCESS_LABELS, p.access))} · ${esc(vis)}</div>
+    ${accessNoteHtml(p)}
     ${(AMG_UGC_ENABLED || AMG_STAMPS_ENABLED) ? hereBlockHtml(siteId) : ''}
     <div class="amg-actions">${streetViewBtnFor(siteId)}${dayBtnHtml(siteId)}<button type="button" class="amg-btn ghost" data-report="${esc(siteId)}">${esc(pick(LB.repBtn))}</button></div>
     ${siteDesc ? `<div class="amg-desc">${esc(siteDesc)}</div>` : ''}

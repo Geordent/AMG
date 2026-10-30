@@ -15,3 +15,6 @@
 | `kazbegi-travertines.jpg` | Karelj | CC BY-SA 3.0 | https://commons.wikimedia.org/wiki/File:Jvari_Overpass_Travertine_Gruzia_2019_1.jpg |
 | `kakheti-mud-volcanoes.jpg` | Paata vardanashvili | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:Takhti_tefa_5.jpg |
 | `colchis-wetlands.jpg` | Kober | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:Kolkheti_National_Park._Paliastomi_Lake_and_Pichori_River._August_2022.jpg |
+| `wine-history-kakheti.jpg` | Bernard Gagnon | CC BY 4.0 | https://commons.wikimedia.org/wiki/File:Winepress_building_(Ikalto).jpg |
+| `soviet-georgia.jpg` | Alexey Komarov | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:Sanatorium_Medea_2023-08-22-11.jpg |
+| `tbilisi-abandoned-modernism.jpg` | Rob Sinclair | CC BY-SA 2.0 | https://commons.wikimedia.org/wiki/File:Derelict_mosaic_roofs.jpg |

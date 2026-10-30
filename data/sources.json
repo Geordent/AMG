@@ -66,5 +66,14 @@
   {"id": "src-0066", "type": "wiki", "title": "Wikipedia — Lake Paliastomi", "url": "https://en.wikipedia.org/wiki/Lake_Paliastomi", "license": "CC BY-SA 4.0", "updated": "2026-10-30"},
   {"id": "src-0067", "type": "official", "title": "Agency of Protected Areas — Kobuleti Managed Reserve (Ispani)", "url": "https://apa.gov.ge/En/ProtectedAreas/ProtectedAreaDetails?areaId=30", "updated": "2026-10-30"},
   {"id": "src-0068", "type": "official", "title": "Agency of Protected Areas — Kobuleti Managed Reserve, Ispani II (flora and fauna)", "url": "https://apa.gov.ge/En/ProtectedAreas/ProtectedAreaDetails?areaId=128", "updated": "2026-10-30"},
-  {"id": "src-0069", "type": "wiki", "title": "Wikidata — Ispani peat bogs (Q108037419)", "url": "https://www.wikidata.org/wiki/Q108037419", "license": "CC0 1.0", "updated": "2026-10-30"}
+  {"id": "src-0069", "type": "wiki", "title": "Wikidata — Ispani peat bogs (Q108037419)", "url": "https://www.wikidata.org/wiki/Q108037419", "license": "CC0 1.0", "updated": "2026-10-30"},
+  {"id": "src-0070", "type": "official", "title": "Georgia Travel — Ikalto Monastery Complex", "url": "https://georgia.travel/ikalto-monastery-complex", "updated": "2026-10-30"},
+  {"id": "src-0071", "type": "official", "title": "Georgia Travel — Gremi Monastic Complex", "url": "https://georgia.travel/gremi-monastic-complex", "updated": "2026-10-30"},
+  {"id": "src-0072", "type": "wiki", "title": "Wikipedia — Ikalto Monastery", "url": "https://en.wikipedia.org/wiki/Ikalto_Monastery", "license": "CC BY-SA 4.0", "updated": "2026-10-30"},
+  {"id": "src-0073", "type": "wiki", "title": "Wikipedia — Gremi", "url": "https://en.wikipedia.org/wiki/Gremi", "license": "CC BY-SA 4.0", "updated": "2026-10-30"},
+  {"id": "src-0074", "type": "other", "title": "Twins Wine House — Qvevri and Qvevri Wine Museum", "url": "https://twinswinehouse.com/en/tourism/Qvevri-and-Qvevri-Wine-Museum", "updated": "2026-10-30"},
+  {"id": "src-0075", "type": "map", "title": "OpenStreetMap — Twins Old Cellar (node 4683833155)", "url": "https://www.openstreetmap.org/node/4683833155", "license": "ODbL 1.0", "updated": "2026-10-30"},
+  {"id": "src-0076", "type": "wiki", "title": "Wikipedia — Chiatura", "url": "https://en.wikipedia.org/wiki/Chiatura", "license": "CC BY-SA 4.0", "updated": "2026-10-30"},
+  {"id": "src-0077", "type": "wiki", "title": "Wikipedia — Tsqaltubo", "url": "https://en.wikipedia.org/wiki/Tsqaltubo", "license": "CC BY-SA 4.0", "updated": "2026-10-30"},
+  {"id": "src-0078", "type": "wiki", "title": "Wikipedia — Bank of Georgia headquarters", "url": "https://en.wikipedia.org/wiki/Bank_of_Georgia_headquarters", "license": "CC BY-SA 4.0", "updated": "2026-10-30"}
 ]
