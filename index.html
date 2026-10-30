@@ -683,10 +683,10 @@
 </div>
 <script>
 (function () {
-  // Язык сайта: сохранённый выбор → язык браузера (ka; ru/uk/be/kk → ru; остальные → en). Его же берёт модуль (window.__amgLang).
+  // Язык сайта: сохранённый выбор → язык браузера (ru → ru, ka → ka, всё остальное → en). Его же берёт модуль (window.__amgLang).
   var saved = null; try { saved = localStorage.getItem('amg-lang'); } catch (e) {}
-  var b = (navigator.language || 'ru').slice(0, 2).toLowerCase();
-  var l = /^(ru|en|ka)$/.test(saved || '') ? saved : b === 'ka' ? 'ka' : /^(ru|uk|be|kk)$/.test(b) ? 'ru' : 'en';
+  var b = (navigator.language || 'en').slice(0, 2).toLowerCase();
+  var l = /^(ru|en|ka)$/.test(saved || '') ? saved : b === 'ru' ? 'ru' : b === 'ka' ? 'ka' : 'en';
   window.__amgLang = l;
   var t = document.getElementById('amgLoaderText');
   if (l === 'en') t.textContent = 'Drawing Georgia…';
@@ -828,10 +828,10 @@ try {
   namedFlavor = mod.namedFlavor;
 } catch (e) {
   // Раньше state/pick ещё не существует — выбираем язык напрямую по браузеру.
-  const _bl = (navigator.language || 'ru').slice(0, 2);
+  const _bl = (navigator.language || 'en').slice(0, 2).toLowerCase();
   const _fatal = _bl === 'ka' ? 'რუკის ბიბლიოთეკები ვერ ჩაიტვირთა. გადატვირთეთ გვერდი.'
-               : _bl === 'en' ? 'Failed to load map libraries. Please reload the page.'
-               : 'Не удалось загрузить библиотеки карты. Перезагрузите страницу.';
+               : _bl === 'ru' ? 'Не удалось загрузить библиотеки карты. Перезагрузите страницу.'
+               : 'Failed to load map libraries. Please reload the page.';
   document.body.insertAdjacentHTML('beforeend',
     '<div class="fatal">' + _fatal + '<br><br>' + e + '</div>');
   throw e;

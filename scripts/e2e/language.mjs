@@ -23,7 +23,7 @@ const ok = (n, c, x = '') => out.push(`${c ? 'PASS' : 'FAIL'}  ${n}${x ? ' — '
 const b = await chromium.launch({ channel: 'msedge', headless: true, args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader'] });
 const state = async p => p.evaluate(() => ({ sel: document.getElementById('lang').value, nearby: document.getElementById('btnNearby').textContent.trim() }));
 
-for (const [locale, wantLoader, wantSel] of [['en-US', 'Drawing Georgia…', 'en'], ['ru-RU', 'Рисуем Грузию…', 'ru'], ['ka-GE', 'ვხატავთ საქართველოს…', 'ka'], ['de-DE', 'Drawing Georgia…', 'en']]) {
+for (const [locale, wantLoader, wantSel] of [['en-US', 'Drawing Georgia…', 'en'], ['ru-RU', 'Рисуем Грузию…', 'ru'], ['ka-GE', 'ვხატავთ საქართველოს…', 'ka'], ['de-DE', 'Drawing Georgia…', 'en'], ['uk-UA', 'Drawing Georgia…', 'en'], ['be-BY', 'Drawing Georgia…', 'en'], ['kk-KZ', 'Drawing Georgia…', 'en']]) {
   const ctx = await b.newContext({ locale, serviceWorkers: 'block' });
   const p = await ctx.newPage(); railify(p); p.on('pageerror', e => errs.push(locale + ': ' + e.message));
   await p.goto(U);
@@ -43,5 +43,16 @@ const early = await p.evaluate(() => document.getElementById('amgLoaderText')?.t
 await p.waitForTimeout(4500);
 const s = await state(p);
 ok('выбранный грузинский сохраняется: заставка и сайт на ka', early === 'ვხატავთ საქართველოს…' && s.sel === 'ka', `заставка «${early}», меню ${s.sel}, кнопка «${s.nearby}»`);
+// Обратная проверка: русский браузер → вручную английский → новый визит на английском.
+const ctx2 = await b.newContext({ locale: 'ru-RU', serviceWorkers: 'block' });
+const p2 = await ctx2.newPage(); railify(p2); p2.on('pageerror', e => errs.push('persist-en: ' + e.message));
+await p2.goto(U); await p2.waitForTimeout(4500);
+await p2.selectOption('#lang', 'en'); await p2.waitForTimeout(800);
+await p2.reload();
+const early2 = await p2.evaluate(() => document.getElementById('amgLoaderText')?.textContent);
+await p2.waitForTimeout(4500);
+const s2 = await state(p2);
+ok('выбранный английский сохраняется: заставка и сайт на en', early2 === 'Drawing Georgia…' && s2.sel === 'en', `заставка «${early2}», меню ${s2.sel}, кнопка «${s2.nearby}»`);
+await ctx2.close();
 console.log(out.join('\n')); console.log('pageerrors:', errs.length ? errs : 'none');
 await b.close(); server.close();
