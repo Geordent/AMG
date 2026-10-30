@@ -54,7 +54,7 @@
       "desc": { "ru": "Спальный район, где Тбилиси Мурал Фест расписал десятки фасадов: работы 2021–2024 годов.", "en": "A residential district where Tbilisi Mural Fest painted dozens of facades: works from 2021–2024.", "ka": "საცხოვრებელი უბანი, სადაც Tbilisi Mural Fest-მა ათობით ფასადი მოხატა: 2021–2024 წლების ნამუშევრები." },
       "teaser": { "ru": "Целый район как музей под открытым небом: фестивальные стены на панельных домах, и у каждой работы своя история.", "en": "A whole district as an open-air museum: festival walls on panel blocks, and every work has its own story.", "ka": "მთელი უბანი როგორც ღია ცის ქვეშ მუზეუმი: ფესტივალის მურალები პანელურ კორპუსებზე, სადაც თითოეულ ნამუშევარს თავისი ისტორია აქვს." },
       "cover": { "type": "art", "src": "icons/covers/varketili-open-air.svg" },
-      "stops": ["site-0465", "site-0381", "site-0454", "site-0369", "site-0368", "site-0404", "site-0416", "site-0379", "site-0438", "site-0474", "site-0463", "site-0489", "site-0433", "site-0469", "site-0480", "site-0445", "site-0471"]
+      "stops": ["site-0465", "site-0381", "site-0369", "site-0454", "site-0368", "site-0379", "site-0416", "site-0404", "site-0438", "site-0474", "site-0463", "site-0489", "site-0433", "site-0469", "site-0480", "site-0445", "site-0471"]
     },
     {
       "id": "abanotubani-baths",
@@ -109,7 +109,7 @@
       "desc": { "ru": "Каньон Окаце, водопад Кинчха, водопад Ониоре с пещерой Тоба I, каньоны Балда и Гачедили.", "en": "Okatse Canyon, Kinchkha Waterfall, Oniore Waterfall with Toba I Cave, Balda and Gachedili canyons.", "ka": "ოკაცეს კანიონი, კინჩხის ჩანჩქერი, ონიორეს ჩანჩქერი ტობას პირველ მღვიმესთან ერთად, ბალდისა და გაჩედილის კანიონები." },
       "teaser": { "ru": "Река, которая режет камень: от каньона над ущельем до изумрудной воды Мартвили. Запад Грузии, где вода работает скульптором, а известняк — глиной.", "en": "A river that cuts stone: from a canyon above the gorge to the emerald water of Martvili. Western Georgia, where water is the sculptor and limestone the clay.", "ka": "მდინარე, რომელიც ქვას ჭრის: ხეობის თავზე მდებარე კანიონიდან მარტვილის ზურმუხტისფერ წყლამდე. დასავლეთ საქართველო, სადაც წყალი მოქანდაკეა, კირქვა კი — თიხა." },
       "cover": { "type": "photo", "src": "icons/covers/martvili-canyons.jpg", "credit": "DDohler", "license": "CC BY 2.0", "source_url": "https://commons.wikimedia.org/wiki/File:Gachedili_canyon,_Georgia.jpg" },
-      "stops": ["site-0601", "site-0602", "site-0603", "site-0604", "site-0605"]
+      "stops": ["site-0602", "site-0601", "site-0605", "site-0604", "site-0603"]
     },
     {
       "id": "kazbegi-travertines",
@@ -120,7 +120,7 @@
       "desc": { "ru": "Минеральные источники Кетериси, травертины Трусо, травертин перевала Джвари и скала Сахизари.", "en": "The Keterisi mineral springs, the Truso travertines, the Jvari Pass travertine and the Sakhizari Cliff.", "ka": "ქეთერისის მინერალური წყაროები, თრუსოს ტრავერტინები, ჯვრის უღელტეხილის ტრავერტინი და სახიზარის კლდე." },
       "teaser": { "ru": "Белые и рыжие «каменные водопады», которые растут прямо на склонах, и родники, бьющие из-под Большого Кавказа. Живая геология Казбегского края.", "en": "White and rusty “stone waterfalls” growing right on the slopes, and springs bursting from beneath the Greater Caucasus. Living geology of the Kazbegi region.", "ka": "თეთრი და მოწითალო «ქვის ჩანჩქერები», რომლებიც პირდაპირ ფერდობებზე იზრდება, და წყაროები, რომლებიც დიდი კავკასიონის ძირიდან მოჩქეფს. ყაზბეგის მხარის ცოცხალი გეოლოგია." },
       "cover": { "type": "photo", "src": "icons/covers/kazbegi-travertines.jpg", "credit": "Karelj", "license": "CC BY-SA 3.0", "source_url": "https://commons.wikimedia.org/wiki/File:Jvari_Overpass_Travertine_Gruzia_2019_1.jpg" },
-      "stops": ["site-0606", "site-0607", "site-0608", "site-0609"]
+      "stops": ["site-0608", "site-0607", "site-0606", "site-0609"]
     },
     {
       "id": "kakheti-dedoplistskaro",
@@ -142,7 +142,7 @@
       "desc": { "ru": "Озеро Палиастоми, торфяники Испани и заповедник Сатаплия.", "en": "Lake Paliastomi, the Ispani peat bogs and the Sataplia reserve.", "ka": "პალიასტომის ტბა, ისპანის ჭაობები და სათაფლიის ნაკრძალი." },
       "teaser": { "ru": "Земля, куда, по легенде, плыли аргонавты: озеро у моря, болото, которое питает один дождь, и лес, где остались следы динозавров. Колхида — не только пляжи.", "en": "The land where, says the legend, the Argonauts sailed: a lake by the sea, a bog fed by rain alone, and a forest that keeps dinosaur tracks. Colchis is not only beaches.", "ka": "მიწა, სადაც, თქმულების მიხედვით, არგონავტები მიცურავდნენ: ტბა ზღვის პირას, ჭაობი, რომელსაც მხოლოდ წვიმა კვებავს, და ტყე, რომელმაც დინოზავრების კვალი შემოინახა. კოლხეთი მხოლოდ სანაპიროები არ არის." },
       "cover": { "type": "photo", "src": "icons/covers/colchis-wetlands.jpg", "credit": "Kober", "license": "CC BY-SA 4.0", "source_url": "https://commons.wikimedia.org/wiki/File:Kolkheti_National_Park._Paliastomi_Lake_and_Pichori_River._August_2022.jpg" },
-      "stops": ["site-0611", "site-0612", "site-0557"]
+      "stops": ["site-0612", "site-0611", "site-0557"]
     },
     {
       "id": "wine-history-kakheti",
@@ -153,7 +153,7 @@
       "desc": { "ru": "Монастырь Икалто с каменным прессом, музей квеври в Напареули, дом-музей Чавчавадзе в Цинандали и средневековое Греми.", "en": "Ikalto Monastery with its stone press, the qvevri museum in Napareuli, the Chavchavadze house museum in Tsinandali and medieval Gremi.", "ka": "იყალთოს მონასტერი ქვის საწნახლით, ქვევრის მუზეუმი ნაფარეულში, ჭავჭავაძის სახლ-მუზეუმი წინანდალში და შუასაუკუნეების გრემი." },
       "teaser": { "ru": "Здесь вино не про дегустацию, а про историю: самый большой в Грузии каменный пресс, квеври под стеклом в разрезе, усадьба с погребом и столица, которую разрушил шах.", "en": "Here wine is about history, not tasting: the largest stone press preserved in Georgia, qvevris cut open under glass, an estate with a cellar and a capital razed by a shah.", "ka": "აქ ღვინო დეგუსტაციაზე კი არა, ისტორიაზეა: საქართველოში შემორჩენილი ყველაზე დიდი ქვის საწნახელი, მინის ქვეშ გაჭრილი ქვევრები, მარნიანი მამული და დედაქალაქი, რომელიც შაჰმა გაანადგურა." },
       "cover": { "type": "photo", "src": "icons/covers/wine-history-kakheti.jpg", "credit": "Bernard Gagnon", "license": "CC BY 4.0", "source_url": "https://commons.wikimedia.org/wiki/File:Winepress_building_(Ikalto).jpg" },
-      "stops": ["site-0613", "site-0614", "site-0585", "site-0615"]
+      "stops": ["site-0613", "site-0614", "site-0615", "site-0585"]
     },
     {
       "id": "soviet-georgia-chiatura-tskaltubo",
