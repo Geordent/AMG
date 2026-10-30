@@ -18,7 +18,7 @@
       "theme_key": "murals",
       "desc": { "ru": "Памятник Свободы, муралы Тбилиси Мурал Феста на улицах Асатиани и Атонели и стрит-арт старого города.", "en": "Freedom Monument, Tbilisi Mural Fest walls on Asatiani and Atoneli streets and Old Town street art.", "ka": "თავისუფლების ძეგლი, Tbilisi Mural Fest-ის მურალები ასათიანისა და ათონელის ქუჩებზე და ძველი ქალაქის სტრიტ-არტი." },
       "teaser": { "ru": "Пройдите от площади Свободы вглубь Сололаки: стены здесь рассказывают истории, а во дворах прячутся работы художников со всего мира.", "en": "Walk from Freedom Square into Sololaki: the walls tell stories, and courtyards hide works by artists from around the world.", "ka": "გაიარეთ თავისუფლების მოედნიდან სოლოლაკში: კედლები ისტორიებს ყვებიან, ეზოებში კი მსოფლიოს სხვადასხვა კუთხის მხატვრების ნამუშევრები იმალება." },
-      "cover": { "type": "art", "src": "icons/covers/sololaki-old-town.svg" },
+      "cover": { "type": "photo", "src": "icons/covers/sololaki-old-town.jpg", "credit": "FingerWiki", "license": "CC BY 4.0", "source_url": "https://commons.wikimedia.org/wiki/File:2026-09-17_18_Amaghleba_Street,_Tbilisi_-_wooden_gallery.jpg" },
       "stops": ["site-0022", "site-0533", "site-0428", "site-0355", "site-0482", "site-0415", "site-0534", "site-0009", "site-0461", "site-0010", "site-0035", "site-0003", "site-0450", "site-0425", "site-0508"]
     },
     {
@@ -119,6 +119,28 @@
       "teaser": { "ru": "Белые и рыжие «каменные водопады», которые растут прямо на склонах, и родники, бьющие из-под Большого Кавказа. Живая геология Казбегского края.", "en": "White and rusty “stone waterfalls” growing right on the slopes, and springs bursting from beneath the Greater Caucasus. Living geology of the Kazbegi region.", "ka": "თეთრი და მოწითალო «ქვის ჩანჩქერები», რომლებიც პირდაპირ ფერდობებზე იზრდება, და წყაროები, რომლებიც დიდი კავკასიონის ძირიდან მოჩქეფს. ყაზბეგის მხარის ცოცხალი გეოლოგია." },
       "cover": { "type": "photo", "src": "icons/covers/kazbegi-travertines.jpg", "credit": "Karelj", "license": "CC BY-SA 3.0", "source_url": "https://commons.wikimedia.org/wiki/File:Jvari_Overpass_Travertine_Gruzia_2019_1.jpg" },
       "stops": ["site-0606", "site-0607", "site-0608", "site-0609"]
+    },
+    {
+      "id": "kakheti-dedoplistskaro",
+      "kind": "intercity",
+      "title": { "ru": "Дедоплисцкаро: Орлиное ущелье и грязевые вулканы", "en": "Dedoplistskaro: Eagle Gorge and mud volcanoes", "ka": "დედოფლისწყარო: არწივის ხეობა და ტალახის ვულკანები" },
+      "theme": { "ru": "Природа и каньоны", "en": "Nature & canyons", "ka": "ბუნება და კანიონები" },
+      "theme_key": "nature",
+      "desc": { "ru": "Ущелье Арциви (Орлиное) и грязевые вулканы Тахти-Тепа.", "en": "Artsivi (Eagle) Gorge and the Takhti-Tepha mud volcanoes.", "ka": "არწივის ხეობა და ტახტი-თეფას ტალახის ვულკანები." },
+      "teaser": { "ru": "Известняковый каньон, где гнездятся редкие птицы, и равнина, где из-под земли выдавливаются грязь и газ. Сухая Кахетия — не только виноградники.", "en": "A limestone canyon where rare birds nest, and a plain where mud and gas push up from underground. Dry Kakheti is not only vineyards.", "ka": "კირქვული კანიონი, სადაც იშვიათი ფრინველები ბუდობენ, და ვაკე, სადაც მიწიდან ტალახი და გაზი ამოდის. მშრალი კახეთი მხოლოდ ვენახები არ არის." },
+      "cover": { "type": "photo", "src": "icons/covers/kakheti-mud-volcanoes.jpg", "credit": "Paata vardanashvili", "license": "CC BY-SA 4.0", "source_url": "https://commons.wikimedia.org/wiki/File:Takhti_tefa_5.jpg" },
+      "stops": ["site-0610", "site-0571"]
+    },
+    {
+      "id": "colchis-wetlands",
+      "kind": "intercity",
+      "title": { "ru": "Колхида: озеро, болото и лес", "en": "Colchis: lake, bog and forest", "ka": "კოლხეთი: ტბა, ჭაობი და ტყე" },
+      "theme": { "ru": "Природа и каньоны", "en": "Nature & canyons", "ka": "ბუნება და კანიონები" },
+      "theme_key": "nature",
+      "desc": { "ru": "Озеро Палиастоми, торфяники Испани и заповедник Сатаплия.", "en": "Lake Paliastomi, the Ispani peat bogs and the Sataplia reserve.", "ka": "პალიასტომის ტბა, ისპანის ჭაობები და სათაფლიის ნაკრძალი." },
+      "teaser": { "ru": "Земля, куда, по легенде, плыли аргонавты: озеро у моря, болото, которое питает один дождь, и лес, где остались следы динозавров. Колхида — не только пляжи.", "en": "The land where, says the legend, the Argonauts sailed: a lake by the sea, a bog fed by rain alone, and a forest that keeps dinosaur tracks. Colchis is not only beaches.", "ka": "მიწა, სადაც, თქმულების მიხედვით, არგონავტები მიცურავდნენ: ტბა ზღვის პირას, ჭაობი, რომელსაც მხოლოდ წვიმა კვებავს, და ტყე, რომელმაც დინოზავრების კვალი შემოინახა. კოლხეთი მხოლოდ სანაპიროები არ არის." },
+      "cover": { "type": "photo", "src": "icons/covers/colchis-wetlands.jpg", "credit": "Kober", "license": "CC BY-SA 4.0", "source_url": "https://commons.wikimedia.org/wiki/File:Kolkheti_National_Park._Paliastomi_Lake_and_Pichori_River._August_2022.jpg" },
+      "stops": ["site-0611", "site-0612", "site-0557"]
     }
   ]
 }

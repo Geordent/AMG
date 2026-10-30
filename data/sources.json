@@ -61,5 +61,10 @@
   {"id": "src-0061", "type": "official", "title": "Agency of Protected Areas — Gachedili (Martvili) Canyon", "url": "https://apa.gov.ge/En/ProtectedAreas/ProtectedAreaDetails?areaId=95", "updated": "2026-10-30"},
   {"id": "src-0062", "type": "official", "title": "Agency of Protected Areas — Jvari Pass Travertine", "url": "https://apa.gov.ge/En/ProtectedAreas/ProtectedAreaDetails?areaId=120", "updated": "2026-10-30"},
   {"id": "src-0063", "type": "official", "title": "Agency of Protected Areas — Keterisi Mineral Springs", "url": "https://apa.gov.ge/En/ProtectedAreas/ProtectedAreaDetails?areaId=115", "updated": "2026-10-30"},
-  {"id": "src-0064", "type": "official", "title": "Agency of Protected Areas — Truso Travertines", "url": "https://apa.gov.ge/En/ProtectedAreas/ProtectedAreaDetails?areaId=93", "updated": "2026-10-30"}
+  {"id": "src-0064", "type": "official", "title": "Agency of Protected Areas — Truso Travertines", "url": "https://apa.gov.ge/En/ProtectedAreas/ProtectedAreaDetails?areaId=93", "updated": "2026-10-30"},
+  {"id": "src-0065", "type": "wiki", "title": "Wikipedia — Artsivi Gorge Natural Monument", "url": "https://en.wikipedia.org/wiki/Artsivi_Gorge_Natural_Monument", "license": "CC BY-SA 4.0", "updated": "2026-10-30"},
+  {"id": "src-0066", "type": "wiki", "title": "Wikipedia — Lake Paliastomi", "url": "https://en.wikipedia.org/wiki/Lake_Paliastomi", "license": "CC BY-SA 4.0", "updated": "2026-10-30"},
+  {"id": "src-0067", "type": "official", "title": "Agency of Protected Areas — Kobuleti Managed Reserve (Ispani)", "url": "https://apa.gov.ge/En/ProtectedAreas/ProtectedAreaDetails?areaId=30", "updated": "2026-10-30"},
+  {"id": "src-0068", "type": "official", "title": "Agency of Protected Areas — Kobuleti Managed Reserve, Ispani II (flora and fauna)", "url": "https://apa.gov.ge/En/ProtectedAreas/ProtectedAreaDetails?areaId=128", "updated": "2026-10-30"},
+  {"id": "src-0069", "type": "wiki", "title": "Wikidata — Ispani peat bogs (Q108037419)", "url": "https://www.wikidata.org/wiki/Q108037419", "license": "CC0 1.0", "updated": "2026-10-30"}
 ]
