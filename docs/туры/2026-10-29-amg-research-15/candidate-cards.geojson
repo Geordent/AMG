@@ -1,0 +1,529 @@
+{
+ "type": "FeatureCollection",
+ "name": "AMG Research 15 candidate cards",
+ "features": [
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     45.5669873,
+     41.8963704
+    ]
+   },
+   "properties": {
+    "candidate_id": "AMG15-C-001",
+    "name": "Дом-музей Александра Чавчавадзе в Цинандали",
+    "name_en": "Aleksandre Chavchavadze House Museum in Tsinandali",
+    "name_ka": null,
+    "entity_type": "site",
+    "target_layer": "sites",
+    "decision": "READY_FOR_EDITORIAL_REVIEW",
+    "region": "Кахетия",
+    "municipality": "Телави",
+    "settlement": "Цинандали",
+    "categories": [
+     "wine",
+     "museum",
+     "history"
+    ],
+    "precision": "exact",
+    "amg_city": "telavi",
+    "topic": "heritage",
+    "poi_kind": "museum",
+    "source_ids": [
+     "SRC-GT-TSINANDALI-MUSEUM"
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     42.93137048339843,
+     42.97790594565937
+    ]
+   },
+   "properties": {
+    "candidate_id": "AMG15-C-002",
+    "name": "Адиши",
+    "name_en": "Adishi",
+    "name_ka": null,
+    "entity_type": "settlement",
+    "target_layer": "sites",
+    "decision": "READY_FOR_EDITORIAL_REVIEW",
+    "region": "Самегрело — Земо-Сванети",
+    "municipality": "Местиа",
+    "settlement": "Адиши",
+    "categories": [
+     "settlement",
+     "heritage",
+     "mountain"
+    ],
+    "precision": "approximate",
+    "amg_city": "mestia",
+    "topic": "heritage",
+    "poi_kind": "settlement",
+    "source_ids": [
+     "SRC-GT-ADISHI-VILLAGE"
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     42.7263987,
+     43.0410887
+    ]
+   },
+   "properties": {
+    "candidate_id": "AMG15-C-003",
+    "name": "Музей истории и этнографии Сванетии",
+    "name_en": "Svaneti Museum of History and Ethnography",
+    "name_ka": null,
+    "entity_type": "site",
+    "target_layer": "sites",
+    "decision": "READY_FOR_EDITORIAL_REVIEW",
+    "region": "Самегрело — Земо-Сванети",
+    "municipality": "Местиа",
+    "settlement": "Местиа",
+    "categories": [
+     "museum",
+     "ethnography",
+     "heritage"
+    ],
+    "precision": "building",
+    "amg_city": "mestia",
+    "topic": "heritage",
+    "poi_kind": "museum",
+    "source_ids": [
+     "SRC-GT-SVANETI-MUSEUM"
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     44.512923,
+     41.388925
+    ]
+   },
+   "properties": {
+    "candidate_id": "AMG15-C-004",
+    "name": "Болнисский Сион",
+    "name_en": "Bolnisi Sioni",
+    "name_ka": "ბოლნისის სიონი",
+    "entity_type": "site",
+    "target_layer": "sites",
+    "decision": "READY_FOR_EDITORIAL_REVIEW",
+    "region": "Квемо-Картли",
+    "municipality": "Болниси",
+    "settlement": "Болниси",
+    "categories": [
+     "heritage",
+     "architecture",
+     "religion"
+    ],
+    "precision": "exact",
+    "amg_city": "bolnisi",
+    "topic": "heritage",
+    "poi_kind": "church",
+    "source_ids": [
+     "SRC-MEMK-24984",
+     "SRC-GT-BOLNISI"
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     43.21942,
+     42.541766
+    ]
+   },
+   "properties": {
+    "candidate_id": "AMG15-C-005",
+    "name": "Баракони",
+    "name_en": "Barakoni",
+    "name_ka": "ბარაკონის ღვთისმშობლის ტაძარი",
+    "entity_type": "site",
+    "target_layer": "sites",
+    "decision": "READY_FOR_EDITORIAL_REVIEW",
+    "region": "Рача-Лечхуми и Квемо-Сванети",
+    "municipality": "Амбролаури",
+    "settlement": "Цеси",
+    "categories": [
+     "heritage",
+     "architecture",
+     "religion"
+    ],
+    "precision": "exact",
+    "amg_city": null,
+    "topic": "heritage",
+    "poi_kind": "church",
+    "source_ids": [
+     "SRC-MEMK-8471",
+     "SRC-GT-BARAKONI"
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     44.095804,
+     41.903969
+    ]
+   },
+   "properties": {
+    "candidate_id": "AMG15-C-006",
+    "name": "Атени Сиони",
+    "name_en": "Ateni Sioni",
+    "name_ka": "ატენის სიონი",
+    "entity_type": "site",
+    "target_layer": "sites",
+    "decision": "READY_FOR_EDITORIAL_REVIEW",
+    "region": "Шида-Картли",
+    "municipality": "Гори",
+    "settlement": "Атени",
+    "categories": [
+     "heritage",
+     "architecture",
+     "religion"
+    ],
+    "precision": "exact",
+    "amg_city": "gori",
+    "topic": "heritage",
+    "poi_kind": "church",
+    "source_ids": [
+     "SRC-MEMK-6548",
+     "SRC-GT-ATENI"
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     44.529891,
+     41.380451
+    ]
+   },
+   "properties": {
+    "candidate_id": "AMG15-C-007",
+    "name": "Цугругашени",
+    "name_en": "Tsughrughasheni",
+    "name_ka": "წუღრუღაშენი",
+    "entity_type": "site",
+    "target_layer": "sites",
+    "decision": "READY_FOR_EDITORIAL_REVIEW",
+    "region": "Квемо-Картли",
+    "municipality": "Болниси",
+    "settlement": "Земо-Болниси",
+    "categories": [
+     "heritage",
+     "architecture",
+     "religion"
+    ],
+    "precision": "exact",
+    "amg_city": "bolnisi",
+    "topic": "heritage",
+    "poi_kind": "church",
+    "source_ids": [
+     "SRC-MEMK-6821",
+     "SRC-GT-TSUGH",
+     "SRC-WIKI-TSUGH"
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     43.030216,
+     41.602245
+    ]
+   },
+   "properties": {
+    "candidate_id": "AMG15-C-008",
+    "name": "Сапара",
+    "name_en": "Sapara Monastery",
+    "name_ka": "საფარის მონასტერი",
+    "entity_type": "site",
+    "target_layer": "sites",
+    "decision": "READY_FOR_EDITORIAL_REVIEW",
+    "region": "Самцхе-Джавахети",
+    "municipality": "Ахалцихе",
+    "settlement": "Сапара",
+    "categories": [
+     "heritage",
+     "architecture",
+     "religion"
+    ],
+    "precision": "exact",
+    "amg_city": null,
+    "topic": "heritage",
+    "poi_kind": "monastery",
+    "source_ids": [
+     "SRC-MEMK-9368",
+     "SRC-WIKI-SAPARA"
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     42.653624,
+     41.679784
+    ]
+   },
+   "properties": {
+    "candidate_id": "AMG15-C-009",
+    "name": "Зарзма",
+    "name_en": "Zarzma Monastery",
+    "name_ka": "ზარზმის მონასტერი",
+    "entity_type": "site",
+    "target_layer": "sites",
+    "decision": "READY_FOR_EDITORIAL_REVIEW",
+    "region": "Самцхе-Джавахети",
+    "municipality": "Адигени",
+    "settlement": "Зарзма",
+    "categories": [
+     "heritage",
+     "architecture",
+     "religion"
+    ],
+    "precision": "exact",
+    "amg_city": null,
+    "topic": "heritage",
+    "poi_kind": "monastery",
+    "source_ids": [
+     "SRC-MEMK-24646",
+     "SRC-GT-ZARZMA"
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     45.099475,
+     42.056201
+    ]
+   },
+   "properties": {
+    "candidate_id": "AMG15-C-010",
+    "name": "Кветера",
+    "name_en": "Kvetera",
+    "name_ka": "კვეტერა",
+    "entity_type": "site",
+    "target_layer": "sites",
+    "decision": "READY_FOR_EDITORIAL_REVIEW",
+    "region": "Кахетия",
+    "municipality": "Ахмета",
+    "settlement": "Кветера",
+    "categories": [
+     "heritage",
+     "architecture",
+     "fortress"
+    ],
+    "precision": "exact",
+    "amg_city": "akhmeta",
+    "topic": "heritage",
+    "poi_kind": "fortress",
+    "source_ids": [
+     "SRC-MEMK-11788",
+     "SRC-MEMK-6783",
+     "SRC-GT-KVETERA",
+     "SRC-WIKI-KVETERA"
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     43.300534,
+     42.2974
+    ]
+   },
+   "properties": {
+    "candidate_id": "AMG15-C-011",
+    "name": "Мгвимеви",
+    "name_en": "Mghvimevi Monastery",
+    "name_ka": "მღვიმევის დედათა მონასტერი",
+    "entity_type": "site",
+    "target_layer": "sites",
+    "decision": "READY_FOR_EDITORIAL_REVIEW",
+    "region": "Имерети",
+    "municipality": "Чиатура",
+    "settlement": "Мгвимеви",
+    "categories": [
+     "heritage",
+     "architecture",
+     "religion",
+     "cave"
+    ],
+    "precision": "exact",
+    "amg_city": "chiatura",
+    "topic": "heritage",
+    "poi_kind": "monastery",
+    "source_ids": [
+     "SRC-MEMK-16875",
+     "SRC-GT-MGHVIMEVI",
+     "SRC-WIKI-MGHVIMEVI"
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     42.859688,
+     42.610601
+    ]
+   },
+   "properties": {
+    "candidate_id": "AMG15-C-012",
+    "name": "Синагога в Лайлаши",
+    "name_en": "Lailashi Synagogue",
+    "name_ka": "სინაგოგა",
+    "entity_type": "site",
+    "target_layer": "sites",
+    "decision": "READY_FOR_EDITORIAL_REVIEW",
+    "region": "Рача-Лечхуми и Квемо-Сванети",
+    "municipality": "Цагери",
+    "settlement": "Лайлаши",
+    "categories": [
+     "heritage",
+     "jewish",
+     "architecture"
+    ],
+    "precision": "exact",
+    "amg_city": null,
+    "topic": "heritage",
+    "poi_kind": "synagogue",
+    "source_ids": [
+     "SRC-MEMK-17280",
+     "SRC-GT-LAILASHI"
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     42.701432,
+     42.2720639
+    ]
+   },
+   "properties": {
+    "candidate_id": "AMG15-C-013",
+    "name": "Кутаисский зелёный базар",
+    "name_en": "Kutaisi Green Bazaar",
+    "name_ka": null,
+    "entity_type": "site",
+    "target_layer": "sites",
+    "decision": "READY_FOR_EDITORIAL_REVIEW",
+    "region": "Имерети",
+    "municipality": "Кутаиси",
+    "settlement": "Кутаиси",
+    "categories": [
+     "gastronomy",
+     "market"
+    ],
+    "precision": "building",
+    "amg_city": "kutaisi",
+    "topic": "unusual",
+    "poi_kind": "market",
+    "source_ids": [
+     "SRC-GT-KUTAISI-GREEN-BAZAAR"
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     42.2421126,
+     42.7844337
+    ]
+   },
+   "properties": {
+    "candidate_id": "AMG15-C-014",
+    "name": "Озеро Тобаварчхили",
+    "name_en": "Tobavarchkhili Lake",
+    "name_ka": null,
+    "entity_type": "site",
+    "target_layer": "sites",
+    "decision": "READY_FOR_EDITORIAL_REVIEW",
+    "region": "Самегрело — Земо-Сванети",
+    "municipality": "Местиа",
+    "settlement": "Тобаварчхили",
+    "categories": [
+     "nature",
+     "hiking",
+     "lakes"
+    ],
+    "precision": "approximate",
+    "amg_city": "mestia",
+    "topic": "unusual",
+    "poi_kind": "lake",
+    "source_ids": [
+     "SRC-GT-TOBAVARCHKHILI-LAKE"
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     41.7804668,
+     41.9976499
+    ]
+   },
+   "properties": {
+    "candidate_id": "AMG15-C-015",
+    "name": "Уреки",
+    "name_en": "Ureki",
+    "name_ka": "ურეკი",
+    "entity_type": "settlement",
+    "target_layer": "sites",
+    "decision": "READY_FOR_EDITORIAL_REVIEW",
+    "region": "Гурия",
+    "municipality": "Озургети",
+    "settlement": "Уреки",
+    "categories": [
+     "coast",
+     "resort",
+     "family"
+    ],
+    "precision": "approximate",
+    "amg_city": "ureki",
+    "topic": "unusual",
+    "poi_kind": "resort",
+    "source_ids": [
+     "SRC-GT-UREKI"
+    ]
+   }
+  }
+ ]
+}

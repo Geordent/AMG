@@ -1,0 +1,22 @@
+﻿region,municipality,themes,existing_researched,research13_new,research14_new,official_heritage_records,official_context_records,research_depth,verification_summary,gaps_next
+Кахетия,Ахмета,heritage/settlement,1,1,0,1,0,deep,Kvetera official; Dartlo R13; access unknown,Official access/visitor rules; more villages
+Кахетия,Сагареджо,heritage,1,0,0,1,0,deep,Ujarma official complex; access unknown,Trail/walls condition
+Кахетия,Телави,wine/museum/gastronomy,1,0,1,0,0,partial,Telavi market R13; Tsinandali new,Museum hours/access; winery visits
+Рача-Лечхуми и Квемо-Сванети,Амбролаури,heritage/settlement/museum,2,2,1,2,0,deep,Nikortsminda/Barakoni official; Gogolati/Khotevi; Ambrolauri Museum new,Museum/access; official Gogolati act
+Рача-Лечхуми и Квемо-Сванети,Они,heritage/museum/resort,2,0,1,1,0,deep,Oni synagogue official; Shovi new; Oni museum partial,Hours/access; resort status
+Рача-Лечхуми и Квемо-Сванети,Цагери,heritage/jewish,0,1,0,1,0,deep,Lailashi synagogue official; AMG site-0549 city conflict,Correct site-0549 city; synagogue visit rules
+Имерети,Чиатура,heritage,1,0,0,1,0,deep,Mghvimevi official,Monastery access
+Имерети,Цхалтубо,baths/resort/nature,2,0,0,0,10,deep,Tskaltubo related site-0567; Mukhura route/status unresolved,Split resort/sanatoria; access/safety
+Имерети,Кутаиси,gastronomy/market,0,0,1,0,0,partial,Kutaisi Green Bazaar new,Hours/access; vendor permissions
+Аджария,Батуми,architecture,1,0,0,0,0,partial,Old Batumi UNRESOLVED; individual buildings in AMG,Address-level mapping; official ensemble?
+Аджария,unknown (Makhuntseti),nature/waterfall,0,1,0,0,0,partial,Makhuntseti MATCH existing experience,No new object; close as duplicate
+Гурия,Озургети,museum/settlement/coast,1,2,0,0,0,partial,Radiani PARTIAL; Gomismta/Ureki R13,Hours/season; access
+Гурия,Чохатаури,settlement/mountain,0,1,0,0,0,partial,Bakhmaro R13,Season/road
+Квемо-Картли,Тетрицкаро,heritage/nature,1,0,0,1,0,deep,Birtvisi official fortress + APA natural,Split/merge decision; trail
+Квемо-Картли,Болниси,heritage/museum,0,2,1,2,0,deep,Bolnisi Sioni/Tsugh official; Bolnisi Museum new,Museum hours/access
+Шида-Картли,Гори,heritage,0,1,0,1,0,deep,Ateni Sioni official,Access/hours
+Самцхе-Джавахети,Ахалцихе,heritage,0,1,0,1,0,deep,Sapara official,Road/access
+Самцхе-Джавахети,Адигени,heritage,0,1,0,1,0,deep,Zarzma official,Access/hours
+Самегрело — Земо-Сванети,Местиа,hiking/nature/museum/settlement,1,2,3,0,0,deep,TCT official; Koruldi/Shdugra R13; Adishi/Tobavarchkhili/Svaneti Museum new,GPX/season/access; museum hours
+Мцхета-Мтианети,various,heritage/nature,0,0,0,0,0,not_researched,—,Next pass
+Тбилиси,various,urban,0,0,0,0,0,not_researched,—,Not focus of R14

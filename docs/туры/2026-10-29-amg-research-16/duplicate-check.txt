@@ -1,0 +1,3 @@
+AMG15-C-001..C-012, C-014, C-015: no exact name hits and no other site/experience within 500 m (checked against current data/sites.geojson and data/experiences.geojson).
+AMG15-C-013: 14 m from site-0151 "Green Bazaar mosaic" (site-0151); same location, different entity (market vs mosaic). Excluded from patch.
+AMG15-C-012: 357 m from site-0549 "Okronishi Fountain / Lailashi Secret Pool"; different object, RELATED_EXISTING, not a duplicate; included.

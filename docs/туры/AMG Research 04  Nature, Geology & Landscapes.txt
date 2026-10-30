@@ -1,0 +1,560 @@
+# AMG Research 04 — Nature, Geology & Landscapes
+
+## 1. Основной результат
+
+Для AMG наиболее полезный первичный реестр — официальный каталог природных памятников Агентства охраняемых территорий Грузии. В актуальной версии он перечисляет 45 Natural Monuments: пещеры, каньоны, водопады, минеральные источники, скальные формы и отдельные природные экосистемы. Другие официальные страницы всё ещё показывают старое число 40, поэтому при построении реестра следует ориентироваться на актуальный список и проверять карточки по отдельности.&#x20;
+
+[image](https://www.google.com/s2/favicons?domain=https://apa.gov.ge\&sz=32)
+
+Agency of Protected Areas+2
+
+
+
+Второй уровень — крупные охраняемые территории: национальные парки, заповедники, управляемые резерваты и охраняемые ландшафты. Их следует заводить как отдельные территориальные объекты, а не как замену конкретным природным достопримечательностям. В 2026 году Агентство указывает 112 охраняемых территорий шести категорий, занимающих около 15,3% территории страны.&#x20;
+
+[image](https://www.google.com/s2/favicons?domain=https://www.apa.gov.ge\&sz=32)
+
+Agency of Protected Areas+1
+
+
+
+Ниже — выборка кандидатов, а не исчерпывающий каталог. Приоритет отдан объектам с официальными описаниями, научно значимыми особенностями или самостоятельной туристической ценностью.
+
+## 2. Реестр кандидатов
+
+`AMG04-xxx` — временные исследовательские ID, не публичные ID каталога AMG. Координаты включены только там, где они опубликованы Агентством; координаты из исходной системы X/Y не следует напрямую трактовать как широту и долготу.
+
+### Самегрело — Земо-Сванети
+
+[TRAVEL IN GEORGIA -- BALDI CANYON - ONIORE WATERFALL 69 METERS | Embark.org](https://images.openai.com/static-rsc-4/FhwRDaggbbQqD60wOA_z1YEV0x-6uRYVAMsbul2X5FMWmtoUXeI3Pl7ifluSDepzrv0rUQ2r9N_tbhuw7X-jTTqH7rGLg5J0sYkT9QCAnqqeAIyokPqxTQzMjNGiHQrA6etXvp-TcUHu9EBJZ0-SaggYK2JPf_RC0zXTHqg69B0?purpose=inline)
+
+AMG04-001 — Водопад Ониоре и пещера Тоба I
+
+&#x20;NATURAL_SITE&#x20;
+
+Муниципалитет Мартвили, долина Тоба
+
+Комплекс включает пещеру, образованную в верхнемеловых слоистых известняках, подземный водопад и водопад Ониоре высотой 67 м. Официальная страница указывает координаты 42°28.643′ N, 42°27.520′ E. От села Пирвели-Балда до комплекса описана маркированная тропа длиной 6,1 км, около 1 ч 30 мин в одну сторону.
+
+Доступ: горная тропа; условия и проходимость проверять перед посещением. Пещера и водопад — связанные, но различимые компоненты одного комплекса.
+
+Источник: [Agency of Protected Areas](https://apa.gov.ge/En/ProtectedAreas/ProtectedAreaDetails?areaId=103\&utm_source=chatgpt.com).&#x20;
+
+[image](https://www.google.com/s2/favicons?domain=https://apa.gov.ge\&sz=32)
+
+Agency of Protected Areas
+
+
+
+[Toba Waterfall and Arsen Okrojanashvili Cave | Georgian Travel Guide](https://images.openai.com/static-rsc-4/SNzdR9SzVDQgO9a76UCer6r98VkWYkhqIwmCguz2IN0sIq1PAnUpDnGZyLxJwEgEy57EPRDnSQ4S08epYyXQNlv5rnCFoCCFGQMZ5J_W2LTbBOzf9TsGs_RHDhkpM_-GUX06IoQemJYASHnp3U2XL7cQ9n4r0Wg045U5e_ze5IE?purpose=inline)
+
+AMG04-002 — Каскадный водопад Тоба и пещера Арсена Окроджанашвили
+
+NATURAL_SITE
+
+Мартвили, долина Тоба
+
+Система пещеры Тоба II и выходящего из неё каскадного водопада. Агентство описывает многокамерную пещеру длиной около 1 300 м, подземные озёра и водопад, для которого приводится высота 234 м. Координаты официальной карточки: 42°28.325′ N, 42°27.315′ E.
+
+Безопасность: объект труднодоступен; Агентство не рекомендует подъём без специального снаряжения. Исследование пещеры требует дополнительного оборудования, в том числе резиновой лодки для прохождения водных участков. Это не обычная прогулочная достопримечательность.
+
+Источник: [Agency of Protected Areas](https://apa.gov.ge/En/ProtectedAreas/ProtectedAreaDetails?areaId=114\&utm_source=chatgpt.com).&#x20;
+
+[image](https://www.google.com/s2/favicons?domain=https://apa.gov.ge\&sz=32)
+
+Agency of Protected Areas
+
+
+
+[ბალდის კანიონი](https://images.openai.com/static-rsc-4/x26HQlAIOKj_hMrvFRqxnqGzDx1T4s3ErCNANE9bkTqQQ70wTvFq6ocb3C-CY6cSfiGecEe9a64Pu8dNtFQsBhKkDvbOf4YnRYciIH0or4s6j-pWZxeffiOgkjT4iLNlHRkFbk6uLH8y6F7zp1ZCF5ajd03ggqQ9zxJNukENWok?purpose=inline)
+
+AMG04-003 — Каньон Балди
+
+NATURAL_SITE
+
+Мартвили, село Меоре-Балда
+
+Известняковый каньон длиной около 1,4 км, шириной 5–10 м и глубиной 25–30 м по данным Агентства. Координаты: 42°29.319′ N, 42°24.580′ E. Ближайший крупный населённый пункт — Мартвили; от него около 11,4 км по дороге.
+
+В каталоге следует отличать этот объект от более крупного каньона реки Абаша и от коммерческой инфраструктуры, если она присутствует рядом.
+
+Источник: [Agency of Protected Areas](https://apa.gov.ge/En/ProtectedAreas/ProtectedAreaDetails?areaId=84\&utm_source=chatgpt.com).&#x20;
+
+[image](https://www.google.com/s2/favicons?domain=https://apa.gov.ge\&sz=32)
+
+Agency of Protected Areas
+
+
+
+[Abasha - Town in Georgia | Georgia Travel](https://images.openai.com/static-rsc-4/_8Gi5hdeE5byJXz-sA7pWFmLdhEZlrzoBQq1yY08mVge3g96M_k3e8mg9JB1AyGZG2uEHS8TlmLZbSCjy-LzHso2Pm-fezkAH3mEVhVudf0dXDNs6j7Y9z-Nvh_f8Aczv8Tdk9GD8euAC8nU4bgX7E4aOmB7tlVcJ7Vsw3dlEuc?purpose=inline)
+
+AMG04-004 — Каньон реки Абаша
+
+NATURAL_SITE
+
+Мартвили, район Гачедили / Балда
+
+Официальное описание приводит длину каньонного участка около 2,4 км, глубину 50–70 м и ширину 5–7 м. Упомянуты естественные известняковые мосты, небольшие водопады, ископаемые остатки морских организмов и характерная колхидская растительность.
+
+Оговорка: страница содержит некоторые палеонтологические интерпретации, которые обозначены самим источником как предположительные или требующие исследования. Не следует публиковать их как установленные факты без научной ссылки.
+
+Источник: [Agency of Protected Areas — Abasha Canyon](https://apa.gov.ge/En/ProtectedAreas/ProtectedAreaDetails?areaId=95\&utm_source=chatgpt.com).&#x20;
+
+[image](https://www.google.com/s2/favicons?domain=https://apa.gov.ge\&sz=32)
+
+Agency of Protected Areas
+
+
+
+### Имерети
+
+[The BEST Imereti Nature & adventure 2026 - FREE Cancellation | GetYourGuide](https://images.openai.com/static-rsc-4/OdJojV5WlV9oegp_-m06Dz1fyqmhRliYP8mvof2QSMZE3zkHwOL7O1faRgRFWNcAM9Fiw9OjbgtD22oiCcM2EbRDE7xjTRfph70V-u3HQIjf9Fy8filC5FMjn3cqV9LmEYYcfKVsgB1EhXyiggm5ALqlP_YnZTOvX3yKGiTKmeA?purpose=inline)
+
+AMG04-005 — Пещера Прометея
+
+NATURAL_SITE
+
+Цхалтубо, Имерети
+
+Крупная карстовая пещера с подземными залами и оборудованным туристическим маршрутом. Агентство указывает, что посещения организуются круглый год; актуальные часы, цены и доступность лодочной части следует сверять с официальной страницей перед публикацией.
+
+Для AMG это самостоятельный объект, а не просто часть «пещер Имерети». Экскурсионная инфраструктура и природная геологическая система должны быть связаны, но не смешаны в одной сущности.
+
+Источник: [Agency of Protected Areas — Prometheus Cave](https://www.apa.gov.ge/ge/eco-tourism/servisebi-da-tarifebi/Prometheuscave?utm_source=chatgpt.com).&#x20;
+
+[image](https://www.google.com/s2/favicons?domain=https://www.apa.gov.ge\&sz=32)
+
+site_title
+
+
+
+[Kutaisi, Georgia caucasus region. Beautiful view to glass bottomed Observation Platform With Clear Floor At Highest Point Of State Sataplia Reserve With Wonderful View Of Kutaisi And Its Surroundings.](https://images.openai.com/static-rsc-4/VIckQY5CYkv6iabwJk58TKzL46UF6-cKYaxCxAP9dcC4sFhgUvY8JOBIhh8YZhm6TwyzSCHRHUtoYtqi11WNwtEoL4zhrpKd5POpzrhYIBmJEe78hCpx_nhjTgMq7IKmkvEFnDaG2vl6JgT3XbinrYoiD1bMiRJCsK79Z39boRPD296eyIbq6p6t4XiRm5AY?purpose=inline)
+
+AMG04-006 — Сатаплия: следы динозавров, карстовая пещера и колхидский лес
+
+NATURAL_SITE
+
+Цхалтубо, близ Кутаиси
+
+Официально описанный комплекс включает следы динозавров, карстовую пещеру, колхидский лес и панорамную площадку. Агентство указывает лёгкий пешеходный маршрут и круглогодичные экскурсии; панорамная площадка закрывается для прохода в дождливую и снежную погоду из соображений безопасности.
+
+В реестре разумно использовать один основной объект-комплекс и, при необходимости, отдельные дочерние точки — только если у них есть самостоятельная ценность и подтверждённая локализация.
+
+Источник: [Agency of Protected Areas — Sataplia](https://apa.gov.ge/en/eco-tourism/servisebi-da-tarifebi/sataflia?utm_source=chatgpt.com).&#x20;
+
+[image](https://www.google.com/s2/favicons?domain=https://apa.gov.ge\&sz=32)
+
+Agency of Protected Areas of Georgia
+
+
+
+[მელოურის მღვიმე | Georgia Travel](https://images.openai.com/static-rsc-4/-_-XLuq5QveCLCIG7lPvilFGiI7C03oynDzxxGGCqh5YhQ6rk0vHv0-6vXymp-2VN9ig75gQ1ZZu-rmQajzN5LCMzoZ-s_eYfsNxvnhJH5SCuJTfL5QPvXvFJSm7tBIMn2BcsSCl2BSu9kohemWqgHmJJirhmf25vNBq4Qnd420?purpose=inline)
+
+AMG04-007 — Пещера Мелоури
+
+
+
+NATURAL_SITE
+
+Технический доступ
+
+
+
+Цхалтубо, окрестности села Мелоури
+
+Крупная известняковая пещера с обширными залами, постоянным водотоком, порогами и сифоном. Официальная карточка приводит координаты 42°23.241′ N, 42°37.670′ E и указывает ориентировочно 8–9 часов на исследование.
+
+Безопасность: Агентство рекомендует посещение со знающим опытным гидом, каску с освещением и водонепроницаемую обувь с высоким голенищем. Это спелеологический объект, а не оборудованная семейная пещера.
+
+Источник: [Agency of Protected Areas — Melouri Cave](https://apa.gov.ge/En/ProtectedAreas/ProtectedAreaDetails?areaId=97\&utm_source=chatgpt.com).&#x20;
+
+[image](https://www.google.com/s2/favicons?domain=https://apa.gov.ge\&sz=32)
+
+Agency of Protected Areas
+
+
+
+[იმერეთი: კურორტები და ღირსშესანიშნაობები](https://images.openai.com/static-rsc-4/JmB3DaKSWi7y7ecPmI4CThV7YbXBGrf7BqULA5x8Iz302b0uTeU8d1sE3HJtL65lwDUwyi78oI3BlAJFVfFNLo5yn0_UvYPOqkgB99FgAE8EkvD9Qle54poDEqd__gT3ueWQg4c1gnayzIJdNgi1kM4E1pp0dZx6tpXijfAZBJU?purpose=inline)
+
+AMG04-008 — Габзарули-Тба («Рассечённое озеро»)
+
+NATURAL_SITE
+
+Цхалтубо, бассейн реки Куми
+
+Природная карстовая трещина в нижнемеловом известняке, ведущая к сифону с озером на глубине. Координаты: 42°22.709′ N, 42°35.445′ E. Объект имеет самостоятельную геологическую ценность и отличается от обычного открытого озера.
+
+Ограничение: наличие объекта в реестре природных памятников не доказывает, что спуск в трещину разрешён или безопасен для неподготовленного посетителя. До уточнения условий лучше описывать его как природную точку с ограниченной информацией о доступе.
+
+Источник: [Agency of Protected Areas](https://apa.gov.ge/En/ProtectedAreas/ProtectedAreaDetails?areaId=88\&utm_source=chatgpt.com).&#x20;
+
+[image](https://www.google.com/s2/favicons?domain=https://apa.gov.ge\&sz=32)
+
+Agency of Protected Areas
+
+
+
+### Квемо-Картли и Кахетия
+
+[File:Dashbashi 10.jpg - Wikimedia Commons](https://images.openai.com/static-rsc-4/t7DSa3ss3zBAUX63Q61S3w8KDIH6N0mkCY46U1uTexeJUszBGJ10q7XXg6aK3olXWL6yap7K3I_deUeJTor0vF_tRUPBacYdRASPizgX82aoQv0z2wYTPXcwfUvZryd4akbr1UaEZgz8jHb5A3nXFWiqMnw1RPsOwJPl1tfW28I?purpose=inline)
+
+AMG04-009 — Каньон Дашбаши (Цалка)
+
+NATURAL_SITE
+
+Цалкский муниципалитет, Квемо-Картли
+
+Каньон реки Кция (Храми), прорезанный в вулканогенных породах Дашбашского плато. Официально указаны высоты участка 1 110–1 448 м и тропа около 1,8 км от центра посетителей в долину каньона и к водопаду; пешая прогулка туда и обратно занимает около часа.
+
+В опубликованной карточке координаты стартовой и конечной точек представлены с неоднозначным форматированием. Поэтому перед переносом в AMG их нужно перепроверить по исходной карте, а не копировать как точные координаты.
+
+Источник: [Agency of Protected Areas — Dashbash Canyon](https://apa.gov.ge/En/ProtectedAreas/ProtectedAreaDetails?areaId=90\&utm_source=chatgpt.com).&#x20;
+
+[image](https://www.google.com/s2/favicons?domain=https://apa.gov.ge\&sz=32)
+
+Agency of Protected Areas
+
+
+
+[Takhti-Tepha Natural Monument](https://images.openai.com/static-rsc-4/Tn3_7QaWee0uyIY7D3bOtwGdT3Q7NLWDpeYP1ANfmOYB2l_FWZogXz_6H_koPPsow4-geikl00PxNsXXJTXJdsnV-4Jn6jmEQJ-E12_p7ovxOqbqcnMLLjiaaCEalcHkCzTMQZeetxLn65kKxhbgiPp38EqdpMSQ46CGKnSPEIE?purpose=inline)
+
+AMG04-010 — Такти-Тепа: грязевые вулканические кратеры
+
+NATURAL_SITE
+
+Дедоплисцкаро, Кахетия
+
+Природный памятник с постоянно активными грязевыми кратерами и небольшими выходами газа и нефти. Официальное описание указывает короткий подход около 0,5 км, приблизительно 30 минут пешком. Последняя часть подъезда проходит по грунтовой дороге.
+
+Это отдельный геологический объект, не тождественный всему национальному парку Вашловани. Для каталога следует отдельно проверить состояние дороги и доступность в конкретный сезон.
+
+Источник: [Agency of Protected Areas — Takhti-Tepha](https://apa.gov.ge/En/ProtectedAreas/ProtectedAreaDetails?areaId=113\&utm_source=chatgpt.com).&#x20;
+
+[image](https://www.google.com/s2/favicons?domain=https://apa.gov.ge\&sz=32)
+
+Agency of Protected Areas
+
+
+
+[Kakliskure | Georgian Travel Guide](https://images.openai.com/static-rsc-4/uR65C2QWkZaqermLZUnlXYixaZdnIzug-QIcCWJ23Epq_LNhJv7iGXNP5Ov2NhbGZ92wbSfOcsTprs0PZJBPopSqfhpe9ugHrAmFDD6TTe9YO1zkJPEohgKHYGjp_FcJDbLjF7Pfm3XrlFnFvru0ktIPlU8zaJ9caeFKpte2-Uk?purpose=inline)
+
+AMG04-011 — Пойменный лес Алазани
+
+ECOSYSTEM / NATURAL_SITE
+
+Кахетия, долина Алазани
+
+Официальный реестр включает пойменные леса Алазани в категорию природных памятников. Для AMG объект интересен как экосистема, отличная от горных лесов и полупустынных ландшафтов восточной Грузии.
+
+Пока недостаточно для детальной геоточки: нужна проверка границ памятника, допустимых мест посещения и наличия конкретной смотровой или пешеходной точки. Нельзя считать всю пойму свободно доступной туристической зоной.
+
+Источники: [реестр природных памятников](https://apa.gov.ge/En/NaturalMonuments?utm_source=chatgpt.com), [описание категорий охраняемых территорий](https://apa.gov.ge/En/TerritorialAdministrations?utm_source=chatgpt.com).&#x20;
+
+[image](https://www.google.com/s2/favicons?domain=https://apa.gov.ge\&sz=32)
+
+Agency of Protected Areas+1
+
+
+
+### Мцхета-Мтианети и Большой Кавказ
+
+[Travertines in Truso Valley, Georgia](https://images.openai.com/static-rsc-4/Zz7AX4g4ksTOkayJ47_UHZ2jiLaj3V0ZI_wkgZ6w87kpOt4PkDoXN2pb1GF6VRX7w6iRnUviGwhQbFd_LESIPBVeVeWMcJdFa6p82j7SHZd-H0O2esIsf6s1EHRJakfNB6IdsZkVkEMR7WtSW_HCgwxmZzGf2ghV3RggM54cOTNsYT0ThYo-_Jb6zoYsalSD?purpose=inline)
+
+AMG04-012 — Трусские травертины
+
+GEOLOGICAL_SITE
+
+Казбегский муниципалитет, долина Трусо
+
+Белые и розоватые известковые отложения, формирующиеся при осаждении карбоната из воды. Памятник расположен примерно на высоте 2 200 м; Агентство описывает активное развитие травертиновых поверхностей и площадь около 20 га.
+
+Охрана: не следует ходить по хрупким отложениям или вмешиваться в водотоки. Подъезд и проходимость долины зависят от состояния дороги и сезона.
+
+Источник: [Agency of Protected Areas — Truso Travertines](https://apa.gov.ge/En/ProtectedAreas/ProtectedAreaDetails?areaId=93\&utm_source=chatgpt.com).&#x20;
+
+[image](https://www.google.com/s2/favicons?domain=https://apa.gov.ge\&sz=32)
+
+Agency of Protected Areas
+
+
+
+[Travertines of Jvari Pass](https://images.openai.com/static-rsc-4/oHrRBi5IfdOYZtW0OMVuOJ1BsjoCGgzzxdm9Nv_sw29ohHl907-A4nOik8nS9wAQibaw58KdZYnofdfs9d1FiSNfkEqBGgrvNu2olhAv-6aJMHya27NWAs0bMNRuO8W1MBfL39g2YdQDORKngUjKZjTMDjxeqUYcw8_VMp7PnOXohnFz89k5g_5tNlW2q9YG?purpose=inline)
+
+AMG04-013 — Травертин перевала Джвари
+
+GEOLOGICAL_SITE
+
+Казбегский муниципалитет, долина Бидара
+
+Активно формирующиеся известковые отложения, связанные с источниками. Официальная точка находится возле дорожного тоннеля на трассе Коби—Гудаури, на высоте около 2 197 м. Координаты Агентства: 42°31.913′ N, 44°28.325′ E.
+
+Этот объект отличается от Трусских травертинов местоположением и самостоятельной геоморфологической ценностью. Для карты следует хранить две отдельные точки и не объединять их в одну «травертиновую долину».
+
+Источник: [Agency of Protected Areas — Jvari Pass Travertine](https://apa.gov.ge/En/ProtectedAreas/ProtectedAreaDetails?areaId=120\&utm_source=chatgpt.com).&#x20;
+
+[image](https://www.google.com/s2/favicons?domain=https://apa.gov.ge\&sz=32)
+
+Agency of Protected Areas
+
+
+
+[Keterisi Mineral Vaucluse](https://images.openai.com/static-rsc-4/F5QYL6A7-ZDnYGrukxUIZr0qxkR9Pj8Iuu1aNuJ7gGhkjOPfcVYObuFZjqvd80eVagwa21JJF2QLhL-I6sKUxgvrKihtfXYcRbG59eU5td5R47xNeATVIYgbe1mpEvcm4sMmpv0NQ2bZJskLK7ShQEZ3CEjKlDJ3nHaGzQWPVHg?purpose=inline)
+
+AMG04-014 — Минеральные источники Кетериси
+
+GEOLOGICAL_SITE
+
+Долина Трусо, Казбегский муниципалитет
+
+Мощная группа источников, выходящих у подножия Большого Кавказа из-под лавовых обломков. Агентство описывает воду как кальций-гидрокарбонатную и приводит расход 25–30 млн литров в сутки. Поток проходит через Кетериси, где исторически использовались водяные мельницы.
+
+Координаты официальной карточки: 42°35.672′ N, 44°23.739′ E. От села Кетериси до источников около 0,5 км пешком.
+
+Не следует представлять воду как лечебную или пригодную для питья без соответствующего подтверждения качества.
+
+Источник: [Agency of Protected Areas — Keterisi Mineral Vauclusian Spring](https://apa.gov.ge/En/ProtectedAreas/ProtectedAreaDetails?areaId=115\&utm_source=chatgpt.com).&#x20;
+
+[image](https://www.google.com/s2/favicons?domain=https://apa.gov.ge\&sz=32)
+
+Agency of Protected Areas
+
+
+
+[Abano Mineral Lake Natural Monument | Georgia Travel](https://images.openai.com/static-rsc-4/puoJ5yN9j1K9W39-t2oXUln6KdZ4cV3Tmyw1yKbe7uOAC7Tv2sJCtHkeqkr8BW5ta425mTq7YuujROKq1_EURfneo2FUsa8yg_QE-wXqj6GqiIM21w5XBBsqM_QrnDHBjJwxcloH-diAB--5meRuRs1OeJ9YG7aUqXl9aBYPi_U?purpose=inline)
+
+AMG04-015 — Минеральное озеро Абано
+
+GEOLOGICAL_SITE
+
+Долина Трусо, восточнее села Абано
+
+Небольшой водоём, где выделение углекислого газа вызывает постоянное пузырение. Агентство предупреждает о накоплении CO₂ в нижних слоях воздуха при слабом ветре и риске удушья для животных. Площадь озера указана как 0,04 га.
+
+Риск: не спускаться в понижения и не приближаться к источнику без понимания местных условий. Не описывать объект как обычный минеральный бассейн для купания.
+
+В официальной карточке координаты даны в системе X/Y, а не в широте/долготе; для AMG их нужно преобразовать с подтверждением системы координат.
+
+Источник: [Agency of Protected Areas — Abano Mineral Lake](https://apa.gov.ge/En/ProtectedAreas/ProtectedAreaDetails?areaId=53\&utm_source=chatgpt.com).&#x20;
+
+[image](https://www.google.com/s2/favicons?domain=https://apa.gov.ge\&sz=32)
+
+Agency of Protected Areas
+
+
+
+[Abudelauri Lakes | Georgia Travel](https://images.openai.com/static-rsc-4/tP7Rb_9r6zWIwuBmUaCiGnmDTTcOdxmwwRPoYbOkRJjdY4JENxa6v7pGrio2_ldDsLYTPCjSMTMkts1Jehv46LjELti1FlCT0v9ij2FJiyEvLpwIxuXZcU7Eb3joCU6PQU3NsSINAnxqT3ljBVsaz9eIZxEBfd5NNIk0zu1TaX8?purpose=inline)
+
+AMG04-016 — Рошкинские валуны
+
+GEOLOGICAL_SITE
+
+Хевсуретия, окрестности Рошки
+
+Крупные валуны, перенесённые плейстоценовым ледником из массива Чаухи. Агентство приводит размеры нескольких валунов, включая «Расколотый валун», и указывает высоту местности около 2 067 м.
+
+Координаты официальной карточки: 42°32.695′ N, 44°53.354′ E. От села Рошка до памятника около 1 км пешком.
+
+Это особенно хороший кандидат для геологического слоя: научное объяснение ледникового переноса можно хранить отдельно от местных названий и легенд.
+
+Источник: [Agency of Protected Areas — Roshka Natural Monument](https://apa.gov.ge/En/ProtectedAreas/ProtectedAreaDetails?areaId=107\&utm_source=chatgpt.com).&#x20;
+
+[image](https://www.google.com/s2/favicons?domain=https://apa.gov.ge\&sz=32)
+
+Agency of Protected Areas
+
+
+
+[ბოდორნის კლდის სვეტების ბუნების ძეგლი](https://images.openai.com/static-rsc-4/90aW0yF3ms5jQlr6qidbuxcoKgpHSalRsTfYvKW6NvaJDW8zVDN37yvelSm9-OV-ihFaeglmyCsVmYvg-bBF-xzbQq7NBlcCPc1daYXuiSmRQPxY92tiUKzXVMKwxfsiRbvNzqQ1ylvcb39ISrHZdUPpZlqO9wgl7xijoShDHpA?purpose=inline)
+
+AMG04-017 — Скальная колонна Бодорна
+
+GEOLOGICAL_SITE
+
+Душетский муниципалитет, долина Арагви
+
+Естественная скальная колонна высотой около 15 м, сформированная в неогеновых конгломератах. У основания есть две ниши; в окрестных склонах находятся другие небольшие пещеры.
+
+Агентство приводит координаты в системе X/Y и описывает подъезд через село Бодорна. Перед публикацией нужно проверить систему координат и точку подхода по карте.
+
+Источник: [Agency of Protected Areas — Bodorna Rock Column](https://apa.gov.ge/En/ProtectedAreas/ProtectedAreaDetails?areaId=86\&utm_source=chatgpt.com).&#x20;
+
+[image](https://www.google.com/s2/favicons?domain=https://apa.gov.ge\&sz=32)
+
+Agency of Protected Areas
+
+
+
+### Аджария и юго-западная Грузия
+
+[გოდერძის ნამარხი ტყის ბუნების ძეგლი - Travel in Georgia](https://images.openai.com/static-rsc-4/Me3zkZdg3mUUXiesOTlakEeKLFPrfS_dkYUPgd9g6uySx5oiJYwAEQHbBWYb274KbN3a_70BLujyJm7PJd-doOrlnnaivsa1ydZGexhVLwdR4L6m-xUGbLuUAh6fUNgDok5zdNHABp_pFdPxWgkARCdfC7KjvMPWx3WoeIhc3zs?purpose=inline)
+
+AMG04-018 — Окаменевший лес Годердзи
+
+GEOLOGICAL_SITE
+
+Адигени и Хуло, Аджария / Самцхе-Джавахети
+
+Природный памятник площадью 365 га с ископаемыми остатками растений плиоценового возраста в вулканогенных слоях. Официальное описание упоминает отпечатки листьев и стеблей пальм, магнолий, лавровых и других растений.
+
+Памятник включает три участка на высотах примерно 1 600–2 100 м. Подъезд к одному из участков описан через гравийную дорогу длиной около 18 км от Зарзмы.
+
+Ограничения: это не единая оборудованная прогулочная площадка. Перед визитом нужно уточнять, какой из участков доступен и каковы дорожные условия.
+
+Источник: [Agency of Protected Areas — Goderdzi Petrified Forest](https://apa.gov.ge/En/ProtectedAreas/ProtectedAreaDetails?areaId=89\&utm_source=chatgpt.com).&#x20;
+
+[image](https://www.google.com/s2/favicons?domain=https://apa.gov.ge\&sz=32)
+
+Agency of Protected Areas
+
+
+
+[კოლხეთის ეროვნული პარკი](https://images.openai.com/static-rsc-4/9N5rmD41UBrvKN33miJlU0MZdz3ZrdvVOd04O3sym87UhQessRUkEJcvUvibbloJ1QsFzexKzQug-cCuWs3iKtrgkp2_XD3tSVYjTJib_oywkAasoZWnhpCHonNO5-AiEzibUNb_QV_PV6ZsehtobwZl36GnFGKr3AqZsLeQlbg?purpose=inline)
+
+AMG04-019 — Колхидские дождевые леса и водно-болотные угодья
+
+ECOSYSTEM / PROTECTED_AREA
+
+Самегрело — Земо-Сванети, Гурия и побережье Чёрного моря
+
+Серийный объект Всемирного наследия ЮНЕСКО, внесённый в список в 2021 году с последующим небольшим изменением границ в 2023 году. Он охватывает компоненты колхидских дождевых лесов и водно-болотных экосистем; общая площадь объекта Всемирного наследия указана как 31 253 га.
+
+Модель AMG: отдельная запись для объекта Всемирного наследия плюс отдельные записи для посещаемых парков, болот, озёр и смотровых точек. Не все участки объекта доступны для свободного посещения.
+
+Источник: [UNESCO World Heritage Centre — Colchic Rainforests and Wetlands](https://whc.unesco.org/en/list/1616/?utm_source=chatgpt.com).&#x20;
+
+[image](https://www.google.com/s2/favicons?domain=https://whc.unesco.org\&sz=32)
+
+UNESCO World Heritage Centre+1
+
+
+
+## 3. Дополнительные кандидаты из официального реестра
+
+Следующие объекты официально зарегистрированы как природные памятники, но для части из них в рамках этого исследования не удалось достаточно проверить точный доступ, туристическую инфраструктуру или параметры посещения. Их стоит сохранить в реестре со статусом `needs_verification`, а не отбрасывать.
+
+| Временный ID | Объект                     | Регион             | Почему интересен                                                                                                        |
+| ------------ | -------------------------- | ------------------ | ----------------------------------------------------------------------------------------------------------------------- |
+| `AMG04-020`  | Birtvisi Rocks             | Квемо-Картли       | Скальные формы и крепостной ландшафт; требуется разделить природный объект и историческую крепость.                     |
+| `AMG04-021`  | Eagle Gorge / Artsivi      | Кахетия, Вашловани | Узкое ущелье в засушливом ландшафте, самостоятельный природный памятник.                                                |
+| `AMG04-022`  | Alazani Floodplain Forests | Кахетия            | Пойменная экосистема; точные доступные точки посещения требуют проверки.                                                |
+| `AMG04-023`  | Tsutskhvati Cave Complex   | Имерети            | Комплекс карстовых полостей; нужно уточнить доступные части и требования к спелеологическому сопровождению.             |
+| `AMG04-024`  | Navenakhevi Cave           | Имерети            | Пещера с туристической инфраструктурой; актуальный режим посещения следует проверить.                                   |
+| `AMG04-025`  | Tskaltsitela River Valley  | Имерети            | Речная долина с природной и ландшафтной ценностью; необходима локализация самостоятельных точек.                        |
+| `AMG04-026`  | Samshvilde Canyon          | Квемо-Картли       | Каньон и ландшафт с природной и археологической ценностью; следует связать с отдельными историческими объектами.        |
+| `AMG04-027`  | Sakhizari Rock             | Казбеги            | Скальная форма высокогорного района; нужны подтверждённые описание подхода и условия доступа.                           |
+| `AMG04-028`  | Ochkhomuri Waterfall       | Гурия              | Водопад, включённый в официальный перечень природных памятников; требуется проверить тропу и сезонную доступность.      |
+| `AMG04-029`  | Abasha River Waterfall     | Самегрело          | Отдельный водопад из реестра; нужно установить его точное отношение к каньону Абаша и не допустить дублирования.        |
+| `AMG04-030`  | Tetra Cave                 | Имерети            | Пещера, представленная в официальном каталоге парков; необходимы актуальные данные об экскурсиях и доступе.             |
+| `AMG04-031`  | Jortsku Cave               | Самегрело          | Официально зарегистрированная пещера; туристическая доступность и характеристики требуют дополнительного подтверждения. |
+
+Источники для первоначального реестра: [официальный перечень Natural Monuments](https://apa.gov.ge/En/NaturalMonuments?utm_source=chatgpt.com) и [портал национальных парков](https://nationalparks.ge/en/main?utm_source=chatgpt.com). Наличие объекта в официальном перечне подтверждает его статус, но не гарантирует доступность для посетителей.&#x20;
+
+[image](https://www.google.com/s2/favicons?domain=https://apa.gov.ge\&sz=32)
+
+Agency of Protected Areas+1
+
+
+
+## 4. Сводка по регионам и категориям
+
+| Регион                   | Основные природные категории                                                | Покрытие                                                                                                             |
+| ------------------------ | --------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| Самегрело — Земо-Сванети | Каньоны, водопады, пещеры, колхидские леса                                  | Хорошее начало по природным памятникам, но недостаточно по ледникам и высокогорным озёрам.                           |
+| Имерети                  | Карст, пещеры, подземные реки, каньоны                                      | Наиболее насыщенная выборка; важны разграничение оборудованных и технических пещер и точная локализация.             |
+| Мцхета-Мтианети          | Высокогорные ландшафты, травертины, минеральные источники, ледниковые формы | Есть несколько хорошо документированных геологических точек; ледники и вершины требуют отдельного исследования.      |
+| Квемо-Картли             | Вулканогенные плато, каньоны, скальные образования                          | Дашбаши и Бодорна документированы; нужны дополнительные геологические объекты и точки наблюдения.                    |
+| Кахетия                  | Полупустынные ландшафты, пойменные леса, грязевые вулканы                   | Такти-Тепа подтверждён; мало охвачены менее известные природные точки Вашловани и Чачуны.                            |
+| Аджария                  | Окаменевшие леса, влажные леса, горные водопады                             | Есть Годердзи; требуется больше данных о реликтовых лесах, водопадах и высокогорных озёрах.                          |
+| Гурия                    | Леса, болота, реки и водопады                                               | Недостаточное покрытие.                                                                                              |
+| Рача — Лечхуми           | Карст, горные озёра, скальные и ледниковые формы                            | Требуется самостоятельный поиск природных памятников и локальных геологических объектов.                             |
+| Самцхе-Джавахети         | Вулканические плато, озёра, окаменелости                                    | Годердзи и часть плато охвачены; нужны отдельные карточки природных объектов и подтверждённые точки доступа.         |
+| Шида-Картли              | Горные долины, скалы, лесные массивы                                        | Недостаточное покрытие природных объектов вне популярных туристических зон.                                          |
+| Тбилиси и окрестности    | Низкогорные хребты, леса, скальные формы                                    | Недостаточно локальных точек и научно подтверждённых описаний.                                                       |
+| Сванетия                 | Ледники, морены, высокогорные озёра, вершины                                | Серьёзный пробел именно в этом исследовании: требуется отдельная работа по конкретным природным объектам и подходам. |
+
+## 5. Крупные охраняемые территории: отдельный слой
+
+В AMG стоит завести отдельные сущности `PROTECTED_AREA`, а затем связывать с ними природные объекты и доступные туристические точки.
+
+К приоритетным территориям относятся:
+
+- [Вaшловани](https://apa.gov.ge/En/NationalParks?utm_source=chatgpt.com) — полупустынные ландшафты, каньоны, пойменные леса.
+- [Лагодехи](https://apa.gov.ge/En/NationalParks?utm_source=chatgpt.com) — лесные и высокогорные экосистемы.
+- [Казбеги](https://apa.gov.ge/En/NationalParks?utm_source=chatgpt.com) — высокогорные ландшафты и ледниковая геоморфология.
+- [Имеретинские пещерные охраняемые территории](https://nationalparks.ge/en/main?utm_source=chatgpt.com) — карстовые системы и оборудованные пещеры.
+- [Колхетский национальный парк](https://nationalparks.ge/en/main?utm_source=chatgpt.com) — водно-болотные угодья и озёрные ландшафты.
+- [Кинтриши и Мтирала](https://apa.gov.ge/En/NationalParks?utm_source=chatgpt.com) — влажные колхидские леса и горные экосистемы.
+- [Рача и Пшав-Хевсурети](https://apa.gov.ge/En/NationalParks?utm_source=chatgpt.com) — горные долины и малоизученные природные районы.
+- [Тбилисский национальный парк](https://nationalparks.ge/en/main?utm_source=chatgpt.com) — важен для расширения каталога коротких природных поездок из столицы.
+
+Важное юридическое различие: Агентство сообщает, что вход на территории категории Strict Nature Reserve разрешён для образовательных целей и неинвазивных научных исследований. Нельзя автоматически рекламировать такие территории как обычные туристические зоны.&#x20;
+
+[image](https://www.google.com/s2/favicons?domain=https://apa.gov.ge\&sz=32)
+
+Agency of Protected Areas of Georgia
+
+
+
+## 6. Поля реестра кандидатов Research 02
+
+Для этого тематического слоя предлагаю следующую структуру:
+
+| Поле                      | Содержание                                                                    |
+| ------------------------- | ----------------------------------------------------------------------------- |
+| `candidate_id`            | Временный ID исследовательской записи                                         |
+| `canonical_name`          | Основное название и подтверждённые варианты                                   |
+| `record_type`             | `NATURAL_SITE`, `GEOLOGICAL_SITE`, `ECOSYSTEM`, `PROTECTED_AREA`, `VIEWPOINT` |
+| `region`, `municipality`  | Регион и муниципалитет                                                        |
+| `description`             | Краткое описание с проверяемыми фактами                                       |
+| `coordinates`             | Только подтверждённая точка с указанием системы координат и источника         |
+| `geometry_type`           | `Point`, `LineString`, `Polygon` — только при наличии подходящих данных       |
+| `geometry_source`         | Источник границы или геометрии                                                |
+| `scientific_significance` | Геологическое, гидрологическое или экологическое значение                     |
+| `access_status`           | Подтверждённый, ограниченный, неизвестный                                     |
+| `hazards`                 | Только документированные риски                                                |
+| `seasonality`             | Подтверждённые сезонные ограничения                                           |
+| `protection_status`       | Категория охраны и официальный источник                                       |
+| `related_routes`          | Связанные маршруты, если они подтверждены                                     |
+| `last_verified`           | Дата проверки источника                                                       |
+| `source_primary`          | Основной официальный или научный источник                                     |
+| `verification_notes`      | Противоречия и недостающие сведения                                           |
+
+Не следует подменять неизвестную геометрию точкой из поисковой выдачи. Для линейных и площадных объектов необходимо брать геометрию из официальной карты, подтверждённого GIS-слоя или другого надёжного картографического источника.
+
+## 7. Источники и запросы для расширения
+
+Основные источники:
+
+- [Agency of Protected Areas — Natural Monuments](https://apa.gov.ge/En/NaturalMonuments?utm_source=chatgpt.com)
+- [Agency of Protected Areas — National Parks](https://apa.gov.ge/En/NationalParks?utm_source=chatgpt.com)
+- [National Parks of Georgia](https://nationalparks.ge/en/main?utm_source=chatgpt.com)
+- [UNESCO — Colchic Rainforests and Wetlands](https://whc.unesco.org/en/list/1616/?utm_source=chatgpt.com)
+
+Поисковые запросы для следующей итерации:
+
+```
+site:apa.gov.ge/En/ProtectedAreas/ProtectedAreaDetails Georgia natural monument
+Georgia geological heritage scientific publication karst caves
+Georgia glaciers moraines mountain lakes scientific study
+Georgia mineral springs geological survey
+Georgia fossil sites paleontology geological heritage
+Georgia endemic trees relict forests natural monuments
+Georgia coastal dunes wetlands geomorphology
+საქართველოს ბუნების ძეგლები გეოლოგია მღვიმეები
+საქართველოს მყინვარები მორენები ტბები გეოლოგია
+აჭარის ბუნების ძეგლები ჩანჩქერები ტყეები
+რაჭა ლეჩხუმის ბუნების ძეგლები
+გურიის ბუნების ძეგლები ჩანჩქერები
+```
+
+## 8. Пробелы и ограничения исследования
+
+1. Ледники, вершины и морены: недостаточно отдельных записей с научными источниками и подтверждёнными точками доступа.
+2. Гурия и Рача — Лечхуми: мало локальных природных объектов в текущей выборке.
+3. Пещеры: официальный статус подтверждён у ряда объектов, но туристический доступ, необходимость снаряжения и актуальная инфраструктура требуют отдельной проверки.
+4. Приграничные и труднодоступные районы: наличие объекта не доказывает возможность посещения; необходимы актуальные ограничения и условия доступа.
+5. Геометрия: часть официальных страниц использует систему координат X/Y, часть — широту и долготу; для точек в X/Y нужно установить систему координат перед преобразованием.
+6. Научные утверждения: некоторые описания природных памятников содержат гипотезы или устаревшие формулировки. Их нельзя превращать в установленные факты без независимого научного источника.
+7. Полнота: полный перебор всех 45 природных памятников, всех парков и муниципальных природных реестров не выполнен. Полная сверка с текущими данными AMG также не проводилась.
+
+Итог: исследование даёт основу для слоя природы и геологии, с приоритетом на официально зарегистрированные объекты и отдельно подтверждённые геологические особенности. Самые готовые к дальнейшей каталогизации кандидаты — Трусские травертины, травертины перевала Джвари, источники Кетериси, Рошкинские валуны, Такти-Тепа, окаменевший лес Годердзи и комплекс природных памятников Мартвили. Ни данные, ни код, ни геометрии production-каталога AMG не изменялись.

@@ -1,0 +1,19 @@
+### data
+STAGE 0 DATA VALIDATION
+files: sites.geojson, artworks.json, artists.json, sources.json, cities.json
+counts: {"sites":587,"artworks":539,"artists":188,"sources":43,"cities":52}
+
+RESULT: PASS
+
+### experiences
+EXPERIENCES VALIDATION
+features: 60 kinds: {"paraglide":2,"canyon":10,"zipline":1,"rafting":2,"bike":3,"cablecar":4,"bath":18,"waterpark":4,"zoo":7,"aquarium":1,"horse":6,"golf":1,"marina":1}
+
+RESULT: PASS
+
+### routes
+sololaki-old-town: 15 точек, 2.81 км по прямой
+vake-murals: 8 точек, 3.07 км по прямой
+saburtalo-mosaic-murals: 11 точек, 2.61 км по прямой
+varketili-open-air: 17 точек, 4.22 км по прямой
+ROUTES PASS: 4

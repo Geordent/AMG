@@ -1,0 +1,2 @@
+﻿candidate_id,source_candidate_id,decision,reason,missing
+AMG15-C-013,AMG14-N-001,NEEDS_MORE_EVIDENCE,"Точка рынка совпадает с site-0151 «Мозаика Зелёного базара» (14 м): это родительское место и мозаика, а не один объект. Нужно решение — связать с site-0151 или создать area/parent-сущность; отдельную точку не добавлять.",entity model for market; relation to site-0151; area geometry

@@ -1,0 +1,259 @@
+diff --git a/index.html b/index.html
+index 03f26a5..8ae7402 100644
+--- a/index.html
++++ b/index.html
+@@ -235,6 +235,40 @@
+   #nearby .amg-geo-diag { margin-top:8px; font-size:12px; color:#6b6259; }
+   #nearby .amg-geo-diag summary { cursor:pointer; }
+   #nearby .amg-geo-diag div { margin-top:4px; word-break:break-word; font-family:ui-monospace,Menlo,Consolas,monospace; font-size:11px; line-height:1.4; }
++  /* ---- Каталог «Путешествуем по Грузии» ---- */
++  #explore { position:absolute; left:0; right:0; bottom:0; z-index:20; background:#FFFBF5; border-radius:16px 16px 0 0;
++    box-shadow:0 -6px 24px rgba(0,0,0,.2); padding:14px 16px calc(14px + env(safe-area-inset-bottom,0px)); max-height:84%; overflow-y:auto; -webkit-overflow-scrolling:touch; }
++  #explore[hidden] { display:none; }
++  @media (min-width:769px) { #explore { z-index:32; left:16px; right:auto; bottom:16px; width:min(520px, calc(100vw - 32px));
++    border-radius:16px; max-height:calc(100% - 130px); box-shadow:0 10px 32px rgba(0,0,0,.22); } }
++  #explore .ex-head { display:flex; align-items:flex-start; gap:8px; margin:0 0 8px; }
++  #explore h2 { flex:1; margin:0; font-size:20px; line-height:1.15; font-family:'Playfair Display','Noto Serif Georgian',Georgia,serif; }
++  #explore .ex-close { flex:none; width:32px; height:32px; border:0; border-radius:50%; background:#EFE4D2; color:#2B2420; font-size:18px; line-height:1; cursor:pointer; }
++  #explore .ex-hint { margin:-2px 0 8px; font-size:12px; line-height:1.4; color:#6B5D52; }
++  #explore .ex-search { width:100%; box-sizing:border-box; font:inherit; font-size:16px; padding:11px 12px; border:1px solid #E0D0B8; border-radius:12px; background:#FFFFFF; color:#2B2420; }
++  #explore .ex-search:focus { outline:2px solid #B8482A; outline-offset:0; border-color:#B8482A; }
++  #explore .ex-filters { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:8px 0; }
++  #explore .ex-field { display:flex; flex-direction:column; gap:3px; min-width:0; font-size:11px; color:#6B5D52; }
++  #explore .ex-field select { width:100%; min-width:0; font:inherit; font-size:13px; padding:9px 8px; border:1px solid #E0D0B8; border-radius:10px; background:#FFFFFF; color:#2B2420; }
++  #explore .ex-bottom { display:flex; align-items:center; gap:8px; margin:2px 0 8px; }
++  #explore .ex-count { flex:1; min-width:0; font-size:12px; color:#6B5D52; }
++  #explore .ex-reset { flex:none; border:1px solid #E0D0B8; border-radius:9px; background:#FFFBF5; color:#1F6F78; font:inherit; font-size:12px; padding:7px 9px; cursor:pointer; }
++  #explore .ex-list { display:flex; flex-direction:column; gap:7px; }
++  #explore .ex-item { display:flex; align-items:flex-start; gap:10px; width:100%; text-align:left; padding:9px; border:1px solid #E6D9C6; border-radius:12px; background:#FFFFFF; color:#2B2420; font:inherit; cursor:pointer; }
++  #explore .ex-item:hover, #explore .ex-item:focus-visible { border-color:#B8482A; background:#FFF8F2; outline:none; }
++  #explore .ex-thumb { flex:none; width:58px; height:58px; border-radius:10px; object-fit:cover; background:#EFE4D2; }
++  #explore .ex-txt { display:flex; flex-direction:column; gap:2px; min-width:0; flex:1; }
++  #explore .ex-name { font-size:14px; font-weight:700; line-height:1.25; }
++  #explore .ex-desc { font-size:12px; line-height:1.35; color:#5B5147; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
++  #explore .ex-meta { font-size:11px; line-height:1.25; color:#1F6F78; overflow-wrap:anywhere; }
++  #explore .ex-empty { padding:18px 6px; text-align:center; font-size:14px; color:#6B5D52; }
++  #explore .ex-empty b { display:block; font-size:16px; color:#2B2420; margin-bottom:4px; }
++  #explore .ex-empty button { margin-top:8px; }
++  #explore .ex-note { padding:8px 2px; font-size:12px; color:#6B5D52; }
++  #explore .ex-note.amg-hand { font-size:21px; color:#6E2639; }
++  #chips #btnExplore { border-color:#B8482A; color:#9A3B22; font-weight:700; }
++  #chips #btnExplore:hover { background:#F3D9CF; }
++  @media (pointer: coarse) { #explore .ex-close { width:44px; height:44px; font-size:22px; } }
+   .row { display:flex; align-items:center; gap:8px; font-size:14px; margin:6px 0 10px; }
+   .pack { border:1px solid #E6D9C6; border-radius:12px; padding:10px 12px; margin-bottom:10px; }
+   .pack b { font-size:15px; }
+@@ -499,7 +533,7 @@
+       <button type="button" id="amgFeedbackBtn">Обратная связь</button>
+     </div>
+   </div>
+-  <div id="chips"><span id="chipsCat"></span><span class="chip-sep" aria-hidden="true"></span><button class="chip" id="btnExp" type="button" aria-haspopup="dialog">Впечатления</button></div>
++  <div id="chips"><button class="chip" id="btnExplore" type="button" aria-haspopup="dialog">Путешествуем по Грузии</button><span class="chip-sep" aria-hidden="true"></span><span id="chipsCat"></span><span class="chip-sep" aria-hidden="true"></span><button class="chip" id="btnExp" type="button" aria-haspopup="dialog">Впечатления</button></div>
+   <!-- Глаз-счётчик: всегда в #topui, сразу под линией переключателей объектов -->
+   <span id="amgHits" title="" hidden><span aria-hidden="true">👁</span>&nbsp;<b id="amgHitsN">—</b></span>
+ </div>
+@@ -555,6 +589,20 @@
+   <div class="srch-row"><input id="searchInput" type="search" autocomplete="off" spellcheck="false" enterkeyhint="search" aria-label="Поиск" placeholder="Мурал, художник, улица…"><button type="button" id="searchClose" aria-label="×">×</button></div>
+   <div id="searchResults" role="list"></div>
+ </div>
++<div id="explore" hidden role="dialog" aria-label="Путешествуем по Грузии">
++  <div class="ex-head">
++    <h2 id="exploreTitle">Путешествуем по Грузии</h2>
++    <button type="button" class="ex-close" id="exploreClose" aria-label="Закрыть">×</button>
++  </div>
++  <p class="ex-hint" id="exploreHint">Выберите место — карта переместится к нему и откроется существующая карточка.</p>
++  <input id="exploreSearch" class="ex-search" type="search" autocomplete="off" spellcheck="false" enterkeyhint="search" placeholder="Название, место, описание…" aria-label="Поиск по каталогу">
++  <div class="ex-filters">
++    <label class="ex-field"><span id="exploreThemeLabel">Тема</span><select id="exploreTheme" aria-label="Тема"></select></label>
++    <label class="ex-field"><span id="exploreCityLabel">География</span><select id="exploreCity" aria-label="География"></select></label>
++  </div>
++  <div class="ex-bottom"><span class="ex-count" id="exploreCount" aria-live="polite"></span><button type="button" class="ex-reset" id="exploreReset">Сбросить фильтры</button></div>
++  <div class="ex-list" id="exploreList" role="list"></div>
++</div>
+ <div id="feedback" hidden>
+   <h2 id="fbTitle">Обратная связь</h2>
+   <p class="small" id="fbText"></p>
+@@ -857,6 +905,22 @@ const LB = {
+   searchNone: { ru:'Ничего не нашлось', en:'Nothing found', ka:'ვერაფერი მოიძებნა' },
+   searchNoneHint:{ ru:'Попробуйте короче или на другом языке: «Фабрика», «Fabrika», «ფაბრიკა».', en:'Try something shorter or another language: “Fabrika”, «Фабрика», «ფაბრიკა».', ka:'სცადე უფრო მოკლედ ან სხვა ენაზე: «ფაბრიკა», «Fabrika», «Фабрика».' },
+   searchMore: { ru:'Показаны первые 30 из {n} — уточните запрос', en:'Showing the first 30 of {n} — refine your search', ka:'ნაჩვენებია პირველი 30 / {n} — დააზუსტე ძიება' },
++  // --- каталог «Путешествуем по Грузии» ---
++  explore:    { ru:'Путешествуем по Грузии', en:'Explore Georgia', ka:'ვიმოგზაუროთ საქართველოში' },
++  exploreTitle:{ ru:'Путешествуем по Грузии', en:'Explore Georgia', ka:'ვიმოგზაუროთ საქართველოში' },
++  exploreHint:{ ru:'Выберите место — карта переместится к нему и откроется существующая карточка.', en:'Choose a place — the map will move to it and its existing card will open.', ka:'აირჩიეთ ადგილი — რუკა მასთან გადავა და არსებული ბარათი გაიხსნება.' },
++  exploreSearchPh:{ ru:'Название, место, описание…', en:'Name, place, description…', ka:'სახელი, ადგილი, აღწერა…' },
++  exploreTheme:{ ru:'Тема', en:'Theme', ka:'თემა' },
++  exploreAllThemes:{ ru:'Все темы', en:'All themes', ka:'ყველა თემა' },
++  exploreCity:{ ru:'География', en:'Geography', ka:'გეოგრაფია' },
++  exploreAllCities:{ ru:'Все города', en:'All cities', ka:'ყველა ქალაქი' },
++  exploreReset:{ ru:'Сбросить фильтры', en:'Reset filters', ka:'ფილტრების გასუფთავება' },
++  exploreCount:{ ru:'{n} объектов', en:'{n} places', ka:'{n} ობიექტი' },
++  exploreEmpty:{ ru:'Ничего не найдено', en:'Nothing found', ka:'ვერაფერი მოიძებნა' },
++  exploreEmptyHint:{ ru:'Измените запрос или сбросьте фильтры.', en:'Change the query or reset filters.', ka:'შეცვალეთ ძიება ან გაასუფთავეთ ფილტრები.' },
++  exploreNoDesc:{ ru:'Описание уточняется.', en:'Description pending.', ka:'აღწერა დაზუსტების პროცესშია.' },
++  exploreError:{ ru:'Каталог недоступен.', en:'Catalog unavailable.', ka:'კატალოგი მიუწვდომელია.' },
++  exploreOpen:{ ru:'Открыть на карте', en:'Show on map', ka:'რუკაზე ჩვენება' },
+   walk:       { ru:'пешком', en:'on foot', ka:'ფეხით' },
+   min:        { ru:'мин', en:'min', ka:'წთ' },
+   hr:         { ru:'ч', en:'h', ka:'სთ' },
+@@ -2931,6 +2995,21 @@ function applyStaticLabels() {
+   T('trTrainLabel', pick(LB.transitTrain));
+   T('trBusLabel', pick(LB.transitBus));
+   T('trAirLabel', pick(LB.transitAir));
++  // каталог «Путешествуем по Грузии»
++  T('btnExplore', pick(LB.explore));
++  T('exploreTitle', pick(LB.exploreTitle));
++  T('exploreHint', pick(LB.exploreHint));
++  T('exploreThemeLabel', pick(LB.exploreTheme));
++  T('exploreCityLabel', pick(LB.exploreCity));
++  T('exploreReset', pick(LB.exploreReset));
++  {
++    const ex = $('explore'); if (ex) ex.setAttribute('aria-label', pick(LB.exploreTitle));
++    const exc = $('exploreClose'); if (exc) exc.setAttribute('aria-label', pick(LB.close));
++    const inp = $('exploreSearch'); if (inp) { inp.placeholder = pick(LB.exploreSearchPh); inp.setAttribute('aria-label', pick(LB.exploreSearchPh)); }
++    const th = $('exploreTheme'); if (th) th.setAttribute('aria-label', pick(LB.exploreTheme));
++    const ct = $('exploreCity'); if (ct) ct.setAttribute('aria-label', pick(LB.exploreCity));
++  }
++  if (Overlays.isOpen('explore')) renderExplore();
+   // впечатления: подписи панели + кнопки
+   T('btnExp', pick(LB.exp));
+   T('expTitle', pick(LB.expTitle));
+@@ -3971,6 +4050,138 @@ $('lang').addEventListener('change', () => {
+ });
+ $('searchBtn').setAttribute('aria-label', pick(LB.searchBtn)); $('searchBtn').title = pick(LB.searchBtn);
+ 
++// ---------- Каталог «Путешествуем по Грузии» ----------
++// Каталог — адаптер над существующим SITE-слоем. ARTWORK остаётся отдельной моделью:
++// из него берутся только название/описание/медиа для превью; «Мой день» и маршруты не меняются.
++const exploreState = { q:'', theme:'all', city:'all' };
++const exploreCatLabel = key => {
++  const c = CATEGORIES.find(x => x.key === key);
++  return c ? pick(c.label) : key;
++};
++function exploreIndex() {
++  if (catalog.exploreIdx) return catalog.exploreIdx;
++  catalog.exploreIdx = catalog.sites.map(f => {
++    const p = f.properties, arts = catalog.artworksBySite.get(p.id) || [];
++    const values = [];
++    const add = o => { for (const v of searchValues(o)) if (v) values.push(v); };
++    add(p.name); add(p.address); add(p.description); add(catalog.cities.get(p.city));
++    add(arts[0] && arts[0].title); add(arts[0] && arts[0].description);
++    for (const a of arts.slice(0, 3)) for (const id of (a.artist_ids || [])) {
++      const artist = catalog.artists.get(id); if (artist) add(artist.name);
++    }
++    return { id:p.id, cat:siteCat(p, arts), city:p.city || '', text:' ' + searchNorm(values.join(' | ')) };
++  });
++  return catalog.exploreIdx;
++}
++function exploreDescription(f) {
++  const p = f.properties, arts = catalog.artworksBySite.get(p.id) || [];
++  return shortText(pick(p.description) || (arts[0] && pick(arts[0].description)) || '', 170) || pick(LB.exploreNoDesc);
++}
++function exploreThumb(f) {
++  const p = f.properties, arts = catalog.artworksBySite.get(p.id) || [];
++  const lists = [p.media, ...arts.slice(0, 2).map(a => a.media)];
++  for (const list of lists) for (const m of (list || [])) {
++    if (!m || (m.role !== 'photo' && m.role !== 'detail')) continue;
++    const direct = typeof m.direct_url === 'string' ? m.direct_url.trim() : '';
++    const raw = direct || (typeof m.url === 'string' && /^https:\/\/upload\.wikimedia\.org\//i.test(m.url) ? m.url.trim() : '');
++    if (!raw || isGenericUrl(raw)) continue;
++    return `<img class="ex-thumb" src="${esc(thumbFor(raw) || raw)}" alt="" loading="lazy" data-explore-fallback="${esc(siteIconUri(p.id))}">`;
++  }
++  return `<img class="ex-thumb" src="${esc(siteIconUri(p.id))}" alt="" loading="lazy">`;
++}
++function exploreItem(f) {
++  const p = f.properties, arts = catalog.artworksBySite.get(p.id) || [];
++  const city = pick(catalog.cities.get(p.city) || {}) || p.city || '';
++  const cat = exploreCatLabel(siteCat(p, arts));
++  const meta = [cat, city, pick(p.address)].filter(Boolean).join(' · ');
++  return `<button type="button" class="ex-item" data-explore-site="${esc(p.id)}" role="listitem">
++    ${exploreThumb(f)}
++    <span class="ex-txt"><span class="ex-name">${esc(siteTitle(f))}</span><span class="ex-desc">${esc(exploreDescription(f))}</span>${meta ? `<span class="ex-meta">${esc(meta)}</span>` : ''}</span>
++  </button>`;
++}
++function renderExplore() {
++  const list = $('exploreList'), themeSel = $('exploreTheme'), citySel = $('exploreCity');
++  if (!list || !themeSel || !citySel) return;
++  const q = $('exploreSearch')?.value ?? exploreState.q;
++  exploreState.q = q;
++  const idx = exploreIndex();
++  const toks = searchNorm(q).split(' ').filter(Boolean);
++  const themeOn = exploreState.theme;
++  const cityOn = exploreState.city;
++  // Filters use only fields that already exist in SITE/ARTWORK: category (derived by siteCat), city code.
++  const rows = [];
++  for (const e of idx) {
++    if (themeOn !== 'all' && e.cat !== themeOn) continue;
++    if (cityOn !== 'all' && e.city !== cityOn) continue;
++    if (toks.length) {
++      let ok = true;
++      for (const t of toks) if (!e.text.includes(t)) { ok = false; break; }
++      if (!ok) continue;
++    }
++    rows.push(e);
++  }
++  rows.sort((a, b) => siteTitle(catalog.siteById.get(a.id)).localeCompare(siteTitle(catalog.siteById.get(b.id)), state.lang));
++  // Build the two filters from real fields, preserving current choice.
++  const cityEntries = [...new Set(catalog.sites.map(f => f.properties.city).filter(Boolean))]
++    .map(code => ({ code, label: pick(catalog.cities.get(code) || {}) || code }))
++    .sort((a, b) => a.label.localeCompare(b.label, state.lang));
++  themeSel.innerHTML = `<option value="all">${esc(pick(LB.exploreAllThemes))}</option>` +
++    CATEGORIES.map(c => `<option value="${esc(c.key)}">${esc(pick(c.label))}</option>`).join('');
++  if (!(CATEGORIES.some(c => c.key === themeOn) || themeOn === 'all')) exploreState.theme = 'all';
++  themeSel.value = exploreState.theme;
++  citySel.innerHTML = `<option value="all">${esc(pick(LB.exploreAllCities))}</option>` +
++    cityEntries.map(c => `<option value="${esc(c.code)}">${esc(c.label)}</option>`).join('');
++  if (!(cityOn === 'all' || cityEntries.some(c => c.code === cityOn))) exploreState.city = 'all';
++  citySel.value = exploreState.city;
++  const count = $('exploreCount');
++  if (count) count.textContent = pick(LB.exploreCount).replace('{n}', rows.length);
++  if (!rows.length) {
++    list.innerHTML = `<div class="ex-empty"><b>${esc(pick(LB.exploreEmpty))}</b>${esc(pick(LB.exploreEmptyHint))}<br><button type="button" class="ex-reset" data-explore-reset="1">${esc(pick(LB.exploreReset))}</button></div>`;
++  } else {
++    list.innerHTML = rows.map(e => exploreItem(catalog.siteById.get(e.id))).join('');
++  }
++  list.querySelectorAll('img[data-explore-fallback]').forEach(img => {
++    img.addEventListener('error', () => {
++      const fb = img.getAttribute('data-explore-fallback');
++      if (fb && img.getAttribute('src') !== fb) { img.removeAttribute('data-explore-fallback'); img.setAttribute('src', fb); }
++    }, { once:true });
++  });
++}
++function openExplore() {
++  track('explore');
++  Overlays.hide('menu');
++  renderExplore();
++  Overlays.show('explore');
++}
++function ensureExploreSiteVisible(id) {
++  const f = catalog.siteById.get(id); if (!f) return;
++  if (state.categories === null) return;
++  const cat = siteCat(f.properties, catalog.artworksBySite.get(id) || []);
++  if (cat) state.categories.add(cat); else state.categories = null;
++  applyCategoryFilter();
++  renderChips();
++}
++function pickExploreSite(id) {
++  if (!catalog.siteById.get(id)) return;
++  Overlays.hide('explore');
++  ensureExploreSiteVisible(id);
++  focusSite(id);
++}
++Overlays.register('explore', $('explore'));
++$('btnExplore').onclick = openExplore;
++$('exploreClose').onclick = () => Overlays.hide('explore');
++$('exploreSearch').addEventListener('input', renderExplore);
++$('exploreTheme').addEventListener('change', e => { exploreState.theme = e.target.value; renderExplore(); });
++$('exploreCity').addEventListener('change', e => { exploreState.city = e.target.value; renderExplore(); });
++$('exploreReset').onclick = () => { exploreState.q = ''; exploreState.theme = 'all'; exploreState.city = 'all'; $('exploreSearch').value = ''; renderExplore(); };
++$('exploreList').addEventListener('click', ev => {
++  if (ev.target.closest('[data-explore-reset]')) {
++    exploreState.q = ''; exploreState.theme = 'all'; exploreState.city = 'all'; $('exploreSearch').value = ''; renderExplore(); return;
++  }
++  const b = ev.target.closest('[data-explore-site]');
++  if (b) pickExploreSite(b.dataset.exploreSite);
++});
++
+ // ---------- Пульс выбранного объекта ----------
+ // Кольцо вокруг острия булавки, пока открыта карточка / «Подробно» / попап. Состояние — stage0.pulse.
+ function syncPulse() {

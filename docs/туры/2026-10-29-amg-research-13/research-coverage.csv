@@ -1,0 +1,23 @@
+﻿region,municipality,themes,existing_researched,new_discoveries,research_depth,verification_summary,gaps_next
+Кахетия,Ахмета,heritage/settlement,1,1,deep,Kvetera WELL_SUPPORTED; Dartlo WELL_SUPPORTED,official access/status; more villages
+Кахетия,Сагареджо,heritage,1,0,partial,Ujarma PARTIALLY_VERIFIED,official heritage/access
+Кахетия,Телави,gastronomy/market,1,0,partial,Telavi market PARTIALLY_VERIFIED,hours/address/vendors
+Рача-Лечхуми и Квемо-Сванети,Амбролаури,heritage/settlement,2,2,deep,Nikortsminda WELL; Gogolati WELL; Barakoni WELL; Khotevi PARTIAL,official acts/access
+Рача-Лечхуми и Квемо-Сванети,Они,heritage/museum,2,0,deep,Oni synagogue WELL; Oni museum PARTIAL,visit rules/hours
+Рача-Лечхуми и Квемо-Сванети,unknown (Lechkhumi),heritage/jewish,0,1,partial,Lailashi CONFLICTING,municipality/synagogue coords
+Имерети,Чиатура,heritage,1,0,deep,Mghvimevi WELL,monastery access
+Имерети,Цхалтубо,baths/resort,1,0,deep,Tskaltubo WELL; relation to site-0567,official access/safety
+Имерети,Ткибули,nature/waterfall,1,0,partial,Mukhura PARTIALLY_VERIFIED,APA/access/trail
+Аджария,Батуми,architecture,1,0,partial,Old Batumi PARTIALLY_VERIFIED,building coordinates/interiors
+Аджария,unknown (Makhuntseti),nature/waterfall,0,1,partial,Makhuntseti PARTIALLY_VERIFIED,municipality/access
+Гурия,Озургети,museum/settlement/coast,1,2,deep,Radiani PARTIAL; Gomismta WELL; Ureki WELL,hours/season
+Гурия,Чохатаури,settlement/mountain,0,1,deep,Bakhmaro WELL,season/road
+Квемо-Картли,Тетрицкаро,nature/heritage,1,0,deep,Birtvisi WELL,trail/access
+Квемо-Картли,Болниси,heritage,0,2,deep,Bolnisi Sioni WELL; Tsughrughasheni WELL,access
+Шида-Картли,Гори,heritage,0,1,deep,Ateni Sioni WELL,access
+Самцхе-Джавахети,Ахалцихе,heritage,0,1,partial,Sapara PARTIALLY_VERIFIED,road/access
+Самцхе-Джавахети,Адигени,heritage,0,1,deep,Zarzma WELL,access
+Самегрело — Земо-Сванети,Местиа,hiking/nature,1,2,deep,TCT WELL; Koruldi PARTIAL; Shdugra PARTIAL,season/GPS/access
+Мцхета-Мтианети,various,heritage/nature,0,0,not_researched,—,next pass
+Тбилиси,various,urban,0,0,not_researched,—,not focus
+Абхазия,various,unknown,0,0,not_researched,—,legal/access constraints

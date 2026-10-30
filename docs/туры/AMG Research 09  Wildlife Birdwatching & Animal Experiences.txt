@@ -1,0 +1,612 @@
+# AMG Research 09 — Wildlife, Birdwatching & Animal Experiences
+
+Дата проверки источников: 29 октября 2026 года · География: вся Грузия · Режим: исследование без изменения production
+
+## 1. Главные выводы
+
+В Грузии есть несколько очень разных типов природных впечатлений: массовая миграция хищных птиц над Аджарией, водоплавающие птицы в колхидских болотах и озёрах Джавахети, степная орнитофауна на юго-востоке страны и высокогорные виды Большого Кавказа. Для AMG это должны быть отдельные объекты или маршруты, а не одна общая запись «наблюдение за птицами».
+
+Особенно хорошо документированы четыре направления:
+
+- Батуми и Аджария: один из мировых центров осенней миграции хищных птиц. Официальный туристический ресурс региона сообщает о более чем миллионе пролетающих хищников в год; регулярный подсчёт Batumi Raptor Count позволяет проверять динамику по сезонам.&#x20;
+
+  [image](https://www.google.com/s2/favicons?domain=https://visitbatumi.com\&sz=32)
+
+  Visit Batumi+1
+
+- Джавахети: система высокогорных озёр и болот с водоплавающими птицами, цаплями, пеликанами и другими мигрантами; официально выделены маршруты наблюдения и возможность взять бинокль.&#x20;
+
+  [image](https://www.google.com/s2/favicons?domain=https://georgia.travel\&sz=32)
+
+  Georgia Travel+1
+
+- Колхида и Имеретинская низменность: озеро Палиастоми, реки и болота национального парка Колхети, а также торфяники Испани в Кобулети. Здесь доступны организованные лодочные и экологические экскурсии, а в Кобулети — оборудованные маршруты по болотам.&#x20;
+
+  [image](https://www.google.com/s2/favicons?domain=https://www.apa.ge\&sz=32)
+
+  Agency of Protected Areas of Georgia+1
+
+- Тушети и Вashловани: наблюдение за безоаровыми козлами, хищными птицами и степными видами. В Тушети наблюдение за козлами включено в описание туристических маршрутов; для Вашловани официально опубликованы сезонность и ограничения транспорта.&#x20;
+
+  [image](https://www.google.com/s2/favicons?domain=https://apa.gov.ge\&sz=32)
+
+  Agency of Protected Areas of Georgia+2
+
+
+
+Принцип каталога: место обитания вида — не гарантия встречи. В карточках нужно отдельно указывать подтверждённый ареал, сезон наблюдения, наличие оборудования или гида и фактическую доступность.
+
+## 2. Реестр кандидатов
+
+ID ниже (`AMG09-*`) — временные исследовательские идентификаторы, а не публичные ID AMG. Координаты уязвимых мест гнездования не приводятся. Там, где источник описывает территорию, а не отдельную точку, объект предложен как территория или маршрут.
+
+### A. Миграция птиц и водно-болотные угодья
+
+[Sakhalvasho - Batumi Raptor Count | Birdingplaces](https://images.openai.com/static-rsc-4/nBBOpPbrDAQeJEagVcCmqumW536RiikX7mzQFMynphxbAr7ZRMhXhxRWxI1rVERqH6UI6eK6oaLWdVuUQkLFMXk3KvQzu8olBdvK3Lc3Miy8jxvlfbLUuuBXuc7dlRoBBz2IkWurNwQHyPhxuEHzvzOcsbKb4QLTX1s0yDrlEko?purpose=inline)
+
+## AMG09-001 — Площадки наблюдения за миграцией хищных птиц в Сахалвашо и Шуамта
+
+საკალვაშო და შუამთა · Sakhalvasho & Shuamta · Аджария, муниципалитет Кобулети
+
+Приоритет A
+
+Тип: специализированные площадки наблюдения, сезонный природный феномен.
+
+Что можно наблюдать: мигрирующих осоедов, канюков, луней, орлов и соколов. Batumi Raptor Count ведёт стандартизированные сезонные подсчёты и публикует данные по годам и видам. В 2025 году организация снова зарегистрировала более миллиона хищных птиц за сезон; результаты по сезонам отличаются.&#x20;
+
+[image](https://www.google.com/s2/favicons?domain=https://www.batumiraptorcount.org\&sz=32)
+
+Batumi Raptor Count+1
+
+
+
+Сезон: основной осенний учёт проходит с 12 августа по 21 октября. Пик и видовой состав меняются в течение сезона; особенно заметны осоеды в конце августа — начале сентября, а позже увеличивается доля других хищников.&#x20;
+
+[image](https://www.google.com/s2/favicons?domain=https://www.batumiraptorcount.org\&sz=32)
+
+Batumi Raptor Count+1
+
+
+
+Доступ: официальные наблюдательные площадки и организованные наблюдения. Бинокль или зрительная труба полезны; встреча с конкретным видом не гарантируется.
+
+Источники: [Batumi Raptor Count](https://www.batumiraptorcount.org/data/?utm_source=chatgpt.com), [Visit Batumi](https://visitbatumi.com/en/birdwatching?utm_source=chatgpt.com). Проверено 29.10.2026.
+
+AMG: вероятный новый SITE или связанная группа площадок. Нужно проверить наличие существующих объектов на карте и не заводить каждую сезонную площадку как отдельное произведение или достопримечательность.
+
+[Birdwatching to be Held at Chorokhi Delta on August 24 - Georgia Today on the Web](https://images.openai.com/static-rsc-4/LFOw9Rgxp4S_BNI7hfR-IIVEAfZIigmrXHJpZn0OmuV0zJ3prHazXSy5omAE0EHa9SDVhF1PclKbrXiYc06GyqA5cjegbmuzw6_dRZSZTI3jJEL4A99V7YFHW7RrgLRaCnavsRxf0VAdf0edNiaCIibItC9sE0t2ump8cpYo1S0?purpose=inline)
+
+## AMG09-002 — Дельта реки Чорохи
+
+ჭოროხის დელტა · Chorokhi River Delta · Аджария, муниципалитет Хелвачаури
+
+Тип: прибрежные водно-болотные угодья и место наблюдения за птицами.
+
+Что можно наблюдать: водоплавающих птиц, чаек, поганок и лысух; официальные сведения по чувствительной фауне указывают на сезонные скопления птиц в устье реки и на соседних водоёмах.&#x20;
+
+[image](https://www.google.com/s2/favicons?domain=https://airnav.ge\&sz=32)
+
+airnav.ge+1
+
+
+
+Сезон: осень — весна для крупных скоплений чаек; в конце зимы отмечаются стаи поганок и лысух. Летом часть чаек гнездится на островках в устье. Это сезонная возможность, а не гарантия наблюдения.
+
+Доступ: наблюдать следует с разрешённых и устойчивых береговых точек. Не приближаться к местам гнездования и не выходить на островки.
+
+Источники: [Visit Batumi — Birdwatching](https://www.visitbatumi.com/en/type-of-tourism/birdwatching?utm_source=chatgpt.com), [AIP Georgia, раздел ENR 5.6](https://airnav.ge/eaip/2026-02-19-000000/html/eAIP/UG-ENR-5.6-en-GB.html?utm_source=chatgpt.com). Проверено 29.10.2026.
+
+AMG: кандидат на SITE. Чувствительные участки гнездования не отмечать точечными координатами.
+
+[National Parks Of Georgia](https://images.openai.com/static-rsc-4/jEAGKAw1HDYMi42fbyADTuSouDeSz1pROwcE8RBuQaQRkE85YAZeh6xSrEVC1ArT75w3z0_IjFOffQCL7pL8VWWCzWSURzA8njCkLdq9R7tsg8TawXSqXB8-EvB8bTtk9DbKYGfb6KjemjKUPmjH8pzHfvOT9CKwpiff7cztFjw?purpose=inline)
+
+## AMG09-003 — Озеро Палиастоми и маршруты национального парка Колхети
+
+პალიასტომის ტბა · Lake Paliastomi · Гурия и Самегрело — Земо-Сванети
+
+Приоритет A
+
+Тип: водно-болотная экосистема, лодочные маршруты, birdwatching.
+
+Что можно наблюдать: водоплавающих и мигрирующих птиц в системе озера, болот и колхидских лесов. Администрация парка предлагает лодочные маршруты у Поти и Зугдиди, а также экскурсии по наблюдению за птицами и экологическому просвещению.&#x20;
+
+[image](https://www.google.com/s2/favicons?domain=https://www.apa.ge\&sz=32)
+
+Agency of Protected Areas of Georgia
+
+
+
+Сезон: лучшее время для birdwatching по официальному источнику — ранняя весна и осень. Экскурсии проводятся по предварительному бронированию в течение года, если позволяют погодные условия.
+
+Доступ: организованные лодочные и экологические экскурсии; в плохую погоду выходы не проводятся.
+
+Источник: [Agency of Protected Areas — Kolkheti National Park](https://www.apa.ge/en/eco-tourism/servisebi-da-tarifebi/kolxetis-erovnuli-parki?utm_source=chatgpt.com). Проверено 29.10.2026.
+
+AMG: отдельный SITE озера или маршрута; не дублировать весь национальный парк, если он уже представлен. Точки отправления и доступные экскурсии лучше хранить как связанные места/сервисы.
+
+[National Parks Of Georgia](https://images.openai.com/static-rsc-4/9teFprAmFA5Yd2ycQQXngfuhDH2fR8M8EpafsqkPXZqt0BM9-VLOo4B1ZgVuyyIdN7V-LFz_p1J8k6D7JX_-kA03nSeHlvitH4PmVXss9T_smtUYZQG7isAwGUvG-Rx7dyLANL0QPieJsVkFeCxrdxk4hFxFdEd4i769emedj3Y?purpose=inline)
+
+## AMG09-004 — Торфяники Испани (охраняемые территории Кобулети)
+
+ისპანის ჭაობები · Ispani Peatlands · Аджария, Кобулети
+
+Тип: Ramsar-угодье, сфагновое болото, экологический маршрут.
+
+Что можно наблюдать: мигрирующих, гнездящихся и зимующих водоплавающих птиц. Также интересны плотные сфагновые сообщества и насекомоядная росянка. Для посетителей устроены маршруты и образовательные экскурсии; можно арендовать специальные болотные лыжи.&#x20;
+
+[image](https://www.google.com/s2/favicons?domain=https://apa.gov.ge\&sz=32)
+
+Agency of Protected Areas of Georgia+2
+
+
+
+Сезон: посещение туристической территории — примерно май–октябрь по странице услуг; лучшие периоды birdwatching — весна и осень, особенно апрель и октябрь.&#x20;
+
+[image](https://www.google.com/s2/favicons?domain=https://apa.gov.ge\&sz=32)
+
+Agency of Protected Areas of Georgia
+
+
+
+Доступ: по организованным маршрутам; уточнить у администрации условия посещения и наличие гида.
+
+Источники: [Agency of Protected Areas — Kobuleti Protected Areas](https://apa.gov.ge/en/eco-tourism/servisebi-da-tarifebi/qobuletis-daculi-teritoriebi?utm_source=chatgpt.com), [официальное описание резервата](https://www.apa.gov.ge/En/ProtectedAreas/ProtectedAreaDetails?areaId=146\&utm_source=chatgpt.com). Проверено 29.10.2026.
+
+AMG: кандидат на SITE. Не раскрывать неофициальные проходы по чувствительному торфянику; посетителей направлять на утверждённые маршруты.
+
+[Pelicans](https://images.openai.com/static-rsc-4/7A1NcUKlO5j-BKSA5J343nDUlH1TjbuuZenwe-8UKMjpFmF4fJ0uozARibmDs09djoz7_UMO55OsTHFLl656w8j8q6FF77nIDYV0KV1MgrYJkmOhkfs8ft3QoZg0EjY9_6VeJyxJWWzhHIgOQS3L-4bSi2dS4h3dRv3b2O0Hj_yWLtKjKlVLNt3TEzg1ZsTt?purpose=inline)
+
+## AMG09-005 — Озёра и болота Джавахети
+
+ჯავახეთის ტბები და ჭაობები · Javakheti Lakes and Wetlands · Самцхе-Джавахети
+
+Приоритет A
+
+Тип: система водно-болотных угодий и сеть маршрутов наблюдения.
+
+Ключевые участки: Мадатапа, Ханчали, Бугдашени, Карцахи и болото Сулда. Georgia Travel описывает в регионе пеликанов, журавлей, цапель, уток, болотных крачек и другие водные виды. Для озера Табацкури отдельно отмечена белокрылая чернеть, редкая в пределах Грузии; это не означает, что её можно гарантированно увидеть при каждом визите.&#x20;
+
+[image](https://www.google.com/s2/favicons?domain=https://georgia.travel\&sz=32)
+
+Georgia Travel
+
+
+
+Сезон: официально рекомендуемый период наблюдения в Джавахетском национальном парке — апрель–октябрь.&#x20;
+
+[image](https://www.google.com/s2/favicons?domain=https://apa.gov.ge\&sz=32)
+
+Agency of Protected Areas of Georgia
+
+
+
+Доступ: официальный ресурс национальных парков указывает маршруты для наблюдения за птицами на Мадатапе, Бугдашени, Ханчали и Сулде; бинокль можно взять в центре посетителей. Зимой погода резко меняется, необходима предварительная проверка условий.
+
+Источники: [Georgia Travel — Birdwatching in Javakheti Lakes](https://georgia.travel/birdwatching-in-javakheti-lakes?utm_source=chatgpt.com), [National Parks of Georgia](https://nationalparks.ge/en/site/javakhetinp/adventuresInner/4?utm_source=chatgpt.com). Проверено 29.10.2026.
+
+AMG: предпочтительно завести несколько отдельных SITE или один тематический маршрут с дочерними точками, а не одну запись на все озёра.
+
+### B. Менее известные маршруты и места наблюдения
+
+[Birdwatching: Chachuna Managed Reserve | Georgia Travel](https://images.openai.com/static-rsc-4/F4HmZjS1oDXuFaShGYpS3AklAQaozcmkdNroBfyW5ONjL8YTsqWpyinN2a3QCauVzgmhPbOaUXA9vamXVC6fRPSIwN1pwPXhG81Wn4zopi24YyG0t1SkOPL54UFoOin5i8B-3WuNsVVV4l0Rt8XJnmB-tBLorMdmfFktpaPfFVY?purpose=inline)
+
+## AMG09-006 — Чачуна: долина Иори и засушливые экосистемы
+
+ჭაჭუნას აღკვეთილი · Chachuna Managed Reserve · Кахетия, Дедоплисцкаро
+
+Тип: охраняемая территория, степи, полупустыня и пойменные леса.
+
+Что можно наблюдать: птиц открытых ландшафтов и пойменных экосистем. Администрация прямо предлагает birdwatching и образовательные туры; территория тянется вдоль реки Иори примерно на 70 км.&#x20;
+
+[image](https://www.google.com/s2/favicons?domain=https://apa.gov.ge\&sz=32)
+
+Agency of Protected Areas of Georgia
+
+
+
+Сезон: экскурсии заявлены круглый год; лучшее время для птиц — апрель–май и октябрь–ноябрь.&#x20;
+
+[image](https://www.google.com/s2/favicons?domain=https://apa.gov.ge\&sz=32)
+
+Agency of Protected Areas of Georgia
+
+
+
+Доступ: через администрацию охраняемой территории; перед поездкой уточнять состояние маршрутов и доступность размещения.
+
+Источник: [Agency of Protected Areas — Chachuna](https://apa.gov.ge/en/eco-tourism/servisebi-da-tarifebi/chachunas-daculi-teritoriebi?utm_source=chatgpt.com), проверено 29.10.2026.
+
+AMG: кандидат на SITE или birdwatching-маршрут. Точные координаты птиц и гнёзд не требуются.
+
+[ვაშლოვანის ცაში მონავარდე ჯადოსნური ფრინველები (13 ფოტო)](https://images.openai.com/static-rsc-4/LT0C9Q-i2Wxlkd_gJDag2eEr-dlzXNRrtCpu1cl3cARaZi7m9uQpxUXklbqv6YYjmWdYMyP14MzLTlChHVCUaR_KkYf_d_iFSpLP94AD8vMtJMf-IVZ57_msnY7IJbpxOSnm59f9RgJkHnMier47wsaKT1UedXKMoxd5KEXEdSs?purpose=inline)
+
+## AMG09-007 — Вашловани: степные и полупустынные местообитания
+
+ვაშლოვანის ეროვნული პარკი · Vashlovani National Park · Кахетия, Дедоплисцкаро
+
+Приоритет A
+
+Тип: национальный парк, сеть маршрутов для наблюдения за дикой природой.
+
+Что можно наблюдать: хищных птиц, степных видов и сезонных мигрантов. Официальный ресурс указывает на большое разнообразие птиц, в том числе краснокнижных видов; в описании фауны упоминаются императорский орёл, чёрный гриф, сипы, болотный лунь и другие хищники.&#x20;
+
+[image](https://www.google.com/s2/favicons?domain=https://www.apa.gov.ge\&sz=32)
+
+Agency of Protected Areas of Georgia+1
+
+
+
+Сезон: активный сезон — май–ноябрь; лучшее время birdwatching — апрель, октябрь и ноябрь.&#x20;
+
+[image](https://www.google.com/s2/favicons?domain=https://apa.gov.ge\&sz=32)
+
+Agency of Protected Areas of Georgia
+
+
+
+Доступ: некоторые пограничные участки, включая Mijniskure, Takhti-Tepa и Kaklis Kure, требуют регистрации в центре посетителей и поездки на внедорожнике. Это официальное ограничение, а не рекомендация ехать самостоятельно без подготовки.
+
+Источники: [Agency of Protected Areas — Vashlovani](https://apa.gov.ge/en/eco-tourism/servisebi-da-tarifebi/VashlovaniProtectedAreas?utm_source=chatgpt.com), [National Parks of Georgia — Birdwatching](https://nationalparks.ge/en/site/vashlovaninp/adventuresInner/35?utm_source=chatgpt.com). Проверено 29.10.2026.
+
+AMG: отдельный SITE или маршрут. При наличии карточки национального парка не дублировать её; добавить именно туристическую возможность наблюдения за птицами и сезонность.
+
+[Batumi to Mtirala National park - Half day hiking group tour | GetYourGuide](https://images.openai.com/static-rsc-4/fo55xUBdkC-ovc4nFl71C1PFxhNmYAw9vccsA7ka3WsIDrCVPCk5V3rxu9e-oWKS6E6h02SYbF1O012b2kuZfNS2hQlTfjyMSrqNlfveRFEZ31Yf8H8bdUVvubZoSZEkgWEvNQmG4qt40z0CvB4Y8pl02crCIzP4xP-26ssseeA?purpose=inline)
+
+## AMG09-008 — Площадка birdwatching в Королисцкали у национального парка Мтирала
+
+კოროლისწყალი · Korolistavi/Korolistkali birdwatching area · Аджария
+
+Тип: оборудованная площадка наблюдения за птицами в лесной экосистеме.
+
+Что можно наблюдать: мигрирующих птиц и лесные виды. Официальный ресурс национальных парков указывает на наблюдательную башню в районе Королисцкали и рекомендует период со второй половины августа по октябрь.&#x20;
+
+[image](https://www.google.com/s2/favicons?domain=https://nationalparks.ge\&sz=32)
+
+National Parks+1
+
+
+
+Сезон: весна–осень для birdwatching; особо рекомендуемый период — вторая половина августа–октябрь.
+
+Доступ: маршрут указан в официальном ресурсе парка; перед посещением уточнить актуальное состояние площадки и транспорт.
+
+Источники: [National Parks of Georgia — Mtirala](https://nationalparks.ge/en/site/mtiralanp/adventures?utm_source=chatgpt.com), [Agency of Protected Areas — Mtirala](https://apa.gov.ge/en/eco-tourism/servisebi-da-tarifebi/mtiralas-erovnuli-parki?utm_source=chatgpt.com). Проверено 29.10.2026.
+
+AMG: кандидат на отдельный SITE, если точка наблюдения ещё не представлена. Не считать её синонимом всего национального парка.
+
+[Kolkheti National Park  | Ecotours Georgia](https://images.openai.com/static-rsc-4/r5lpxXuAxzdjpCPt2C_0WizloxXs2yu8-tPCS5jt7g96UtKzYA7YV7Sv7hZwh6iwP2Wvd_0TE1yNbE5aw92Cr8KJrx8SD1XsCa9drF2CvJnJon9Bp34O_XkjXiURXJhgso4l3Hpftqt7QqfbNI87oOH4X7SiKEPt1bi4N0uG4QA?purpose=inline)
+
+## AMG09-009 — Зимние скопления водоплавающих птиц у Поти
+
+ფოთის სანაპირო · Poti Coastal Waterfowl Area · Самегрело — Земо-Сванети
+
+Тип: сезонное наблюдение птиц у морского побережья и колхидских болот.
+
+Что можно наблюдать: в официальной авиационной информации Грузии описаны большие зимние скопления водоплавающих птиц у берега Поти. В сумерках птицы перемещаются к болотам Колхидской низменности, а утром возвращаются к морю.&#x20;
+
+[image](https://www.google.com/s2/favicons?domain=https://airnav.ge\&sz=32)
+
+საქაერონავიგაცია
+
+
+
+Сезон: зима; размер и видовой состав скоплений меняются по погоде и году.
+
+Доступ: это описание региональной возможности, а не оборудованная площадка с гарантированным обзором. Перед публикацией следует определить легальную точку наблюдения с берега.
+
+Источник: [AIP Georgia, ENR 5.6 — Bird migration and areas with sensitive fauna](https://airnav.ge/eaip/2026-02-19-000000/html/eAIP/UG-ENR-5.6-en-GB.html?utm_source=chatgpt.com), проверено 29.10.2026.
+
+AMG: `NEEDS_COORDINATES`. До определения подходящей общественной точки не размещать точный пин.
+
+### C. Высокогорная фауна и крупные животные
+
+[გარეული თხის გადასარჩენად... - კვირის პალიტრა](https://images.openai.com/static-rsc-4/2yN9hbV3qdfkxD79oGWrS5sCfNQRO5CVwQFn93NQoj9kD-IZMnMZWds11QYC7fH5D80pA4XSCM5Yca2rmLLbGGisXyHswX2knz6M16e7Ahq78VTDkj_eASelO9uqvKrmZzTND7DZo3hgvU1j3zuuL9faW1yOHKNSkj9ubRwlVqw?purpose=inline)
+
+## AMG09-010 — Маршрут Кесело–Куе: наблюдение за безоаровыми козлами
+
+ქესელო–კუე · Keselo–Kue Trail · Кахетия, Тушети
+
+Приоритет A
+
+Тип: пешеходный маршрут, наблюдение за дикими млекопитающими и хищными птицами.
+
+Что можно наблюдать: безоаровых козлов и хищных птиц. В описании официального маршрута указано, что вероятность увидеть козлов выше во второй половине дня, особенно примерно с 17:00 до 19:00, когда они выходят кормиться на открытые участки. Это рекомендация по вероятности встречи, не гарантия.&#x20;
+
+[image](https://www.google.com/s2/favicons?domain=https://apa.gov.ge\&sz=32)
+
+Agency of Protected Areas of Georgia
+
+
+
+Маршрут: около 10 км, примерно 8 часов пешком по официальному описанию. Уровень сложности обозначен как лёгкий, но продолжительность и горные условия требуют соответствующей подготовки.
+
+Сезон: туристический сезон Тушети — июнь–октябрь; официальная администрация указывает, что наблюдение за безоаровыми козлами возможно в течение всего сезона.&#x20;
+
+[image](https://www.google.com/s2/favicons?domain=https://apa.gov.ge\&sz=32)
+
+Agency of Protected Areas of Georgia+1
+
+
+
+Доступ: старт от центра посетителей охраняемых территорий Тушети. До Омало из Квемо-Алвани можно добраться только на внедорожнике. Перед выходом уточнить состояние маршрута и погоду.
+
+Источники: [Agency of Protected Areas — Keselo–Kue](https://apa.gov.ge/en/eco-tourism/Trails/tushetis-turistuli-bilikebi-satesto/2-keselo-que?utm_source=chatgpt.com), [Tusheti Protected Areas](https://apa.gov.ge/en/eco-tourism/servisebi-da-tarifebi/tushetis-daculi-teritoriebi1?utm_source=chatgpt.com). Проверено 29.10.2026.
+
+AMG: сильный кандидат на SITE/маршрут. Не публиковать координаты конкретных мест отдыха животных за пределами официально описанного маршрута.
+
+[Georgia in Spring - Naturetrek](https://images.openai.com/static-rsc-4/0PTr4lI5_hLY7V8dSXX9JAJKrjfz_a-i1VV5BSajprvZbeebfVMr6ydzEzChfWlYl07ZrvqF0kjrW4lC4FWTLqEtx7FKcAmLDhQ4XTWKprzRTMckxmmLgzw9dz3oIvhT7pkGqmyqfEOt4DM_8AOWnD5WMFveZ4dFwCiDn-6PU-c?purpose=inline)
+
+## AMG09-011 — Высокогорные местообитания Казбеги
+
+ყაზბეგის ეროვნული პარკი · Kazbegi National Park · Мцхета-Мтианети
+
+Тип: горная природная территория, наблюдение за птицами и дикой фауной.
+
+Что можно наблюдать: кавказского уларa, кавказского тетерева, беркута, сипа и бородача. В официальном описании биоразнообразия парка перечислены эти виды, а также восточнокавказский тур, серна и бурый медведь. Это подтверждает наличие подходящих местообитаний, но не частоту наблюдений с туристических троп.&#x20;
+
+[image](https://www.google.com/s2/favicons?domain=https://www.apa.gov.ge\&sz=32)
+
+Agency of Protected Areas of Georgia
+
+
+
+Сезон: доступность конкретных маршрутов зависит от высоты, снега и погоды; точный оптимальный сезон для каждого вида в использованном источнике не установлен.
+
+Доступ: только с соблюдением правил парка и горной безопасности. Не сходить с маршрутов ради приближения к животным.
+
+Источник: [Agency of Protected Areas — Biodiversity of Kazbegi National Park](https://www.apa.gov.ge/en/biomravalferovneba/yazbegis-erovnuli-parkis-biomravalferovneba?utm_source=chatgpt.com), проверено 29.10.2026.
+
+AMG: кандидат на тематический маршрут. Нужна дополнительная проверка конкретных общедоступных обзорных точек и сезонности.
+
+[Lagodekhi Reserve Wildlife Watching - Discover Georgia's Biodiverse Sanctuary](https://images.openai.com/static-rsc-4/0QdJ9D2RGuxoGnCQre82e8wUNNG3jFJ7w3Z6zAcvh9tRHi_7bmwE0QHh7-gF6TWTOPl_S1eqWGqSPIvAMhSAJ8g83p1bZTvl8utC5-Bb7-KWY0RwmE6UayWZ6eW1M30MJySMUhxNVkOfi66zypvqwr8cFamNXnIvW1zwgnaqjsA?purpose=inline)
+
+## AMG09-012 — Охраняемые территории Лагодехи
+
+ლაგოდეხის დაცული ტერიტორიები · Lagodekhi Protected Areas · Кахетия, Лагодехи
+
+Тип: лесные и высокогорные местообитания, экологические и пешие маршруты.
+
+Что можно наблюдать: разнообразных лесных птиц и хищников, в том числе беркута, бородача, соколов и орлов. Официальный источник также перечисляет бурого медведя, волка, рысь и других млекопитающих. Встречи с крупными животными нельзя считать гарантированным туристическим опытом.&#x20;
+
+[image](https://www.google.com/s2/favicons?domain=https://www.apa.gov.ge\&sz=32)
+
+Agency of Protected Areas of Georgia
+
+
+
+Сезон: парк предлагает маршруты в течение года, но тропа к Чёрному озеру открыта для туристов в период июнь–октябрь. Сезон наблюдения за конкретными видами в просмотренном источнике не уточнён.&#x20;
+
+[image](https://www.google.com/s2/favicons?domain=https://apa.gov.ge\&sz=32)
+
+Agency of Protected Areas of Georgia
+
+
+
+Доступ: через центр посетителей и официальные маршруты; для отдельных троп требуется регистрация с документом.
+
+Источник: [Agency of Protected Areas — Lagodekhi](https://apa.gov.ge/en/eco-tourism/servisebi-da-tarifebi/LagodekhiProtectedAreas?utm_source=chatgpt.com), проверено 29.10.2026.
+
+AMG: кандидат на SITE/маршрут. Нужно избегать формулировок вроде «увидите медведя» и не обозначать точные места нахождения хищников.
+
+### D. Реабилитация животных и этичные впечатления
+
+[Bear's Shelter in Tskhvarichamia: A Haven for Wildlife](https://images.openai.com/static-rsc-4/r8eL6ZW5gIcvL4yMpeKYtQnso6mwzU3d8RG9ipMKVi9y_OMs5O7v1yEWMUE9e_AnnRdh0WpO8sOTk6DTM5fCMlf9jhyeBB4QRLPSbUDBXVWC05fNW-hVfB-BH1rlNlNU0U7gZLFJhpwhkfnYC7RH8pkQKqOr1edqwffoCiqEi84?purpose=inline)
+
+## AMG09-013 — Центр реабилитации домашних и диких животных в Цхваричамиа
+
+ზოოლოგიური ცენტრი · Zoological Center · Мцхета-Мтианети, Цхваричамиа
+
+Приоритет A — проверить визиты
+
+Тип: частный некоммерческий центр спасения и содержания животных.
+
+Ценность: по описанию организатора, центр основан в 2010 году для защиты редких видов из Красного списка Грузии. Здесь содержатся, в частности, бурые медведи, волки и лисицы, изъятые из незаконного содержания или оставшиеся сиротами. Центр объясняет, почему выпуск животных, выросших в неволе, не всегда возможен.&#x20;
+
+[image](https://www.google.com/s2/favicons?domain=https://biletebi.ge\&sz=32)
+
+Biletebi.ge+1
+
+
+
+Сезонность: актуальный график публичных посещений в просмотренном источнике не установлен.
+
+Доступ и этика: прежде чем включать в туристический каталог, необходимо напрямую подтвердить, принимает ли центр обычных посетителей и на каких условиях. Правила запрещают приближаться к вольерам, трогать животных и кормить их вне установленного порядка. Это не контактный зоопарк.
+
+Источник: [Zoological Center — информация организатора и билеты](https://biletebi.ge/en/tourism/zoologiuri-centri?utm_source=chatgpt.com), проверено 29.10.2026.
+
+AMG: перспективный кандидат, но статус `NEEDS_ACCESS_VERIFICATION`. Не публиковать как свободно посещаемый объект без подтверждения администрации.
+
+[თუშეთის გზაზე ტრანსპორტის მოძრაობა აიკრძალა](https://images.openai.com/static-rsc-4/o0XwZDOa_AJduWA3cz1H07CtPytMUVrjvmjzDsMKjmie5pNR2q6tB4uAjKe7Q_kPP0FG7fNi5B2KZAgr3G1J2XbfZxhT83jhcOdxBoBw7gdKjj_RiFRz8XWTV1JgZFeKnq6AIdwqw8VIVwl015Pmcc9ymbpno2arLXi5jZdfaF0?purpose=inline)
+
+## AMG09-014 — Традиционное пастушеское хозяйство Тушети
+
+თუშური მესაქონლეობა · Tushetian Pastoral Traditions · Кахетия, Тушети
+
+Тип: живая культурная практика, сезонное животноводство.
+
+Ценность: пастбища, сезонные перемещения стад и работа пастухов — важная часть культурного ландшафта высокогорной Грузии. Это потенциально интересное дополнение к маршрутам Тушети, но пока нет подтверждённой карточки конкретного хозяйства, которое регулярно принимает туристов.
+
+Сезон: сезонность зависит от пастбищного цикла и доступности региона; конкретные даты посещения хозяйств не подтверждены.
+
+Доступ и этика: только по согласованию с хозяевами. Нельзя заходить в загоны, приближаться к стадам с собаками или мешать работе пастухов.
+
+Источник для регионального контекста: [Tusheti Protected Areas](https://apa.gov.ge/en/eco-tourism/servisebi-da-tarifebi/tushetis-daculi-teritoriebi1?utm_source=chatgpt.com), проверено 29.10.2026.
+
+AMG: `NEEDS_LOCAL_PARTNER`. Добавлять как туристический опыт только после подтверждения хозяйства, программы и условий посещения.
+
+[Horsetoursguide.com | Horse Riding Tours in Georgia & Worldwide | 1-hour Lagodekhi horse riding tour](https://images.openai.com/static-rsc-4/D5aNnr3WVGCAJ3c0XR-bzvPxgpbkBEqe6vvSN3d7j0d5mkm5WUKNYksxePRGpuMqpUd700pQvGXz8j5_zw8vch8gic_uClhZWgkBfko6O3bBs1HTMDKn-BUtv3vD5cPdeRKdHQSwGQh4JeWEtwj-ev5NQ7xkZPYhDExD_FLTVt4?purpose=inline)
+
+## AMG09-015 — Конные маршруты охраняемых территорий Лагодехи
+
+ლაგოდეხის საცხენოსნო მარშრუტები · Lagodekhi Horse-Riding Routes · Кахетия
+
+Тип: организованная конная прогулка в природном ландшафте.
+
+Ценность: администрация Лагодехи указывает конные услуги и туристические маршруты как часть инфраструктуры посещения охраняемой территории.&#x20;
+
+[image](https://www.google.com/s2/favicons?domain=https://apa.gov.ge\&sz=32)
+
+Agency of Protected Areas of Georgia
+
+
+
+Сезон: зависит от выбранного маршрута; для маршрута к Чёрному озеру официальный сезон — июнь–октябрь.
+
+Доступ: уточнять у администрации, какие маршруты и лошади доступны на конкретную дату. Источник подтверждает наличие услуги, но не раскрывает все условия содержания животных.
+
+Источник: [Agency of Protected Areas — Lagodekhi](https://apa.gov.ge/en/eco-tourism/servisebi-da-tarifebi/LagodekhiProtectedAreas?utm_source=chatgpt.com), проверено 29.10.2026.
+
+AMG: кандидат на туристический опыт, но не на отдельный SITE животного. Для включения нужны актуальные тарифы, описание маршрута и минимальные сведения о благополучии лошадей.
+
+[Grey Horse on the Javakheti Plateau with Snow-Capped Mountains, Georgia](https://images.openai.com/static-rsc-4/MZvFD8Uoy0w5dQq9Bvd5kG8lM8ZTGkc0ba_GCyHySOf8AD5DBMFwuJUkxbW0dwng8B5YbdAEs0-YKS7Bd-5MwT-pBZiChE5X7D8WgE-U00HzfU8ElJGEpuABY3-0-YJYFjfBlHvYtwyLbzNNc3vojgpeK99PF4joCwcaraF0Lqwu-CAjdfp8S_M7ca5wnPR2?purpose=inline)
+
+## AMG09-016 — Конные прогулки в районе озёр Джавахети
+
+ჯავახეთის საცხენოსნო ტურები · Javakheti Horse-Riding Experiences · Самцхе-Джавахети
+
+Тип: локальная конная услуга, связанная с высокогорным ландшафтом.
+
+Ценность: официальная страница охраняемых территорий Джавахети перечисляет аренду лошадей в селе Самеба. Это подтверждает существование услуги, но не позволяет без дополнительной проверки обещать наблюдение за животными во время прогулки.&#x20;
+
+[image](https://www.google.com/s2/favicons?domain=https://apa.gov.ge\&sz=32)
+
+Agency of Protected Areas of Georgia
+
+
+
+Сезон: туристический сезон охраняемых территорий — апрель–ноябрь; актуальная доступность конкретной конной услуги требует подтверждения.
+
+Доступ: связаться с администрацией или местным организатором и уточнить маршрут, продолжительность, состояние лошадей и ограничения для участников.
+
+Источник: [Agency of Protected Areas — Javakheti](https://apa.gov.ge/en/eco-tourism/servisebi-da-tarifebi/djavaxetis-daculi-teritoriebi?utm_source=chatgpt.com), проверено 29.10.2026.
+
+AMG: кандидат на запись о туристической услуге, не на природоохранную точку.
+
+## 3. Сезонный календарь наблюдений
+
+Это ориентир по подтверждённым региональным источникам. Конкретная интенсивность миграции и доступность маршрутов зависят от погоды и года.
+
+Апр–май
+
+Весенняя миграция и водно-болотные угодья
+
+Джавахети, Чачуна, Кобулети и другие участки Колхидской низменности. На Чачуне официальный оптимум birdwatching — апрель–май; для Джавахети указан более широкий период апрель–октябрь.&#x20;
+
+[image](https://www.google.com/s2/favicons?domain=https://apa.gov.ge\&sz=32)
+
+Agency of Protected Areas of Georgia+2
+
+
+
+Июн–июл
+
+Высокогорные маршруты и дикая фауна
+
+Тушети и высокогорье Казбеги доступны в зависимости от погодных условий. В Тушети официально заявлено наблюдение за безоаровыми козлами в течение туристического сезона июнь–октябрь.&#x20;
+
+[image](https://www.google.com/s2/favicons?domain=https://apa.gov.ge\&sz=32)
+
+Agency of Protected Areas of Georgia+1
+
+
+
+Авг–окт
+
+Главный сезон миграции хищников
+
+Сахалвашо и Шуамта, а также район Мтиралы. Осенний учёт Batumi Raptor Count проходит с 12 августа по 21 октября; в Мтирале особенно рекомендуется вторая половина августа — октябрь.&#x20;
+
+[image](https://www.google.com/s2/favicons?domain=https://www.batumiraptorcount.org\&sz=32)
+
+Batumi Raptor Count+1
+
+
+
+Ноя–фев
+
+Зимующие водоплавающие птицы
+
+Побережье Поти и дельта Чорохи — потенциальные точки для наблюдения зимних скоплений водоплавающих птиц. Для точного выбора дня полезны свежие наблюдения и погодные данные; сами скопления меняются по условиям.&#x20;
+
+[image](https://www.google.com/s2/favicons?domain=https://airnav.ge\&sz=32)
+
+საქაერონავიგაცია
+
+
+
+## 4. Сводка кандидатов и статус готовности
+
+| ID        | Кандидат                         | Тип                                   | Статус данных                                   |
+| --------- | -------------------------------- | ------------------------------------- | ----------------------------------------------- |
+| AMG09-001 | Сахалвашо и Шуамта               | Миграция хищных птиц                  | Высокая готовность                              |
+| AMG09-002 | Дельта Чорохи                    | Водно-болотные угодья                 | Нужны точки публичного доступа                  |
+| AMG09-003 | Озеро Палиастоми / Колхети       | Лодочные и birdwatching-маршруты      | Высокая готовность                              |
+| AMG09-004 | Торфяники Испани                 | Ramsar, болотные маршруты             | Высокая готовность                              |
+| AMG09-005 | Озёра Джавахети                  | Водно-болотная сеть                   | Высокая готовность                              |
+| AMG09-006 | Чачуна                           | Степь, пойма Иори                     | Высокая готовность                              |
+| AMG09-007 | Вашловани                        | Степные и полупустынные местообитания | Высокая готовность                              |
+| AMG09-008 | Площадка Мтиралы                 | Лесное birdwatching                   | Высокая готовность                              |
+| AMG09-009 | Зимние скопления у Поти          | Сезонная возможность                  | Нужны точные общественные точки                 |
+| AMG09-010 | Маршрут Кесело–Куе               | Безоаровые козлы, птицы               | Высокая готовность                              |
+| AMG09-011 | Высокогорье Казбеги              | Горные птицы и млекопитающие          | Нужна сезонная детализация                      |
+| AMG09-012 | Лагодехи                         | Лесные и горные местообитания         | Высокая готовность                              |
+| AMG09-013 | Центр реабилитации в Цхваричамиа | Спасённые животные                    | Нужно подтвердить посещение                     |
+| AMG09-014 | Пастушеские хозяйства Тушети     | Живая традиция                        | Нужен локальный партнёр                         |
+| AMG09-015 | Конные маршруты Лагодехи         | Организованная услуга                 | Нужно проверить условия и благополучие животных |
+| AMG09-016 | Конные прогулки Джавахети        | Организованная услуга                 | Нужно подтвердить текущую доступность           |
+
+Готовность здесь означает достаточность найденных источников для исследовательской записи, а не автоматическую готовность к публикации. Для окончательного статуса `READY` потребуются координаты или точный адрес, проверка актуальности и сверка с действующим каталогом.
+
+## 5. Географические и тематические пробелы
+
+Несмотря на широкий охват, это не полная инвентаризация всех муниципалитетов Грузии. Особенно важно продолжить поиск в следующих направлениях:
+
+- Рача-Лечхуми и Квемо-Сванети: локальные наблюдательные точки, лесные и горные птицы, сезонные скопления у водоёмов.
+- Гурия: малые водно-болотные участки, поймы рек и общественные точки наблюдения вне основных туристических маршрутов.
+- Самегрело: небольшие водоёмы, речные долины и зимние скопления птиц за пределами наиболее известных маршрутов Колхети.
+- Самцхе-Джавахети: отдельные точки наблюдения у озёр и болот, включая актуальные ограничения приграничных участков.
+- Кахетия: дополнительные места наблюдения за степными птицами и хищниками за пределами Вашловани и Чачуны.
+- Мцхета-Мтианети: конкретные доступные точки наблюдения за высокогорными видами вне основных треккинговых маршрутов.
+- Реабилитация и образовательные центры: нужно отдельно проверить статус посещения, условия содержания животных и образовательную программу. Сам факт существования центра не означает, что он является туристической достопримечательностью.
+- Зоопарки и питомники: в эту партию не добавлены без достаточных данных о самостоятельной образовательной ценности и этических условиях.
+
+## 6. Источники и методика
+
+Основные использованные источники:
+
+- [Agency of Protected Areas of Georgia](https://apa.gov.ge/?utm_source=chatgpt.com) — режим охраны, услуги, сезонность и официальные маршруты.
+- [National Parks of Georgia](https://nationalparks.ge/?utm_source=chatgpt.com) — доступные виды активностей и маршруты наблюдения.
+- [Batumi Raptor Count](https://www.batumiraptorcount.org/data/?utm_source=chatgpt.com) — сезонные подсчёты мигрирующих хищных птиц и статистика по годам.
+- [Georgia Travel](https://georgia.travel/birdwatching-in-javakheti-lakes?utm_source=chatgpt.com) — природные районы и виды птиц Джавахети.
+- [Visit Batumi](https://visitbatumi.com/en/birdwatching?utm_source=chatgpt.com) — места наблюдения за миграцией в Аджарии.
+- [AIP Georgia, ENR 5.6](https://airnav.ge/eaip/2026-02-19-000000/html/eAIP/UG-ENR-5.6-en-GB.html?utm_source=chatgpt.com) — региональные сведения о миграции и чувствительной фауне.
+- [Zoological Center](https://biletebi.ge/en/tourism/zoologiuri-centri?utm_source=chatgpt.com) — описание центра реабилитации животных, требующее дополнительного подтверждения режима посещения.
+
+Поисковые запросы включали:
+
+- `Georgia birdwatching hotspots migration corridor Batumi Raptor Count official`
+- `site:apa.gov.ge birdwatching Georgia national parks wetlands`
+- `Georgia birdwatching sites Javakheti lakes Kolkheti National Park`
+- `Georgia wildlife rehabilitation center visitors conservation`
+- `Georgia wildlife observation Vashlovani Chachuna Tusheti Lagodekhi`
+- `Georgia bird migration Poti Chorokhi winter waterfowl official`
+
+В этой партии преобладали англоязычные источники и официальные сайты. Полный поиск по грузиноязычным локальным ресурсам и научным публикациям по каждому муниципалитету не выполнен.
+
+## 7. Дедупликация с AMG и рекомендации по модели
+
+Актуальное полное содержимое `data/sites.geojson` и всех тематических списков в этом проходе не было проверено, поэтому ни один кандидат нельзя честно объявить гарантированно новым.
+
+Для сопоставления с каталогом следует различать:
+
+- SITE: озеро, болото, дельта, национальный парк, общественная площадка наблюдения, центр реабилитации.
+- Маршрут или опыт: birdwatching-экскурсия, конный маршрут, наблюдение за безоаровыми козлами.
+- Сезонное событие: ежегодный пик миграции или фестиваль наблюдения за птицами.
+- Вид: отдельная запись о животном или виде нужна только при наличии подходящей модели; чувствительные координаты не должны переноситься в публичную карточку.
+- Сервис: аренда биноклей, гид, лодочная экскурсия или конная услуга — не самостоятельный природный объект.
+
+Для каждого кандидата стоит сохранить источник и дату проверки, сезон, доступ, уровень уверенности в наблюдении и статус совпадения с существующим SITE. Отдельно отмечать, подтверждает ли источник само существование местообитания, возможность посещения или реальные наблюдения вида.
+
+Итог: сформировано 16 кандидатов в нескольких регионах Грузии. Самые сильные направления для дальнейшей работы — миграция хищных птиц в Аджарии, водно-болотные угодья Джавахети и Колхети, степные маршруты Вашловани и Чачуны и наблюдение за безоаровыми козлами в Тушети. Центр реабилитации и локальные животноводческие/конные впечатления требуют отдельной проверки этики и доступности.
+
+Production-каталог, код и опубликованные данные AMG не изменялись.
