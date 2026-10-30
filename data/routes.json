@@ -1,34 +1,101 @@
 {
-  "version": 1,
-  "note": "Готовые маршруты по районам. stops — id мест в порядке обхода (ближайший следующий; только объекты со статусом active). Расстояние и время сайт считает сам. Проверка: node scripts/validate-routes.mjs",
+  "version": 2,
+  "note": "Готовые маршруты. kind: city (прогулка) | intercity (межгород). theme — подпись темы для карточки; theme_key — ключ из themes. stops — id мест в порядке обхода. Время и расстояние в маршруте не указываем (турист едет по-разному), сайт показывает порядок, а не дорогу. Обложка (cover) обязательна: photo (файл Commons, скопированный в icons/covers/*.jpg, + автор/лицензия/ссылка; либо прямая ссылка upload.wikimedia.org) | icon (иконка места из stops) | art (icons/covers/*.svg — рисованная обложка; assets/ в .gitignore, туда нельзя). Проверка: node scripts/validate-routes.mjs",
+  "themes": {
+    "murals": { "ru": "Муралы и стрит-арт", "en": "Murals & street art", "ka": "მურალები და სტრიტ-არტი" },
+    "mosaics": { "ru": "Мозаики", "en": "Mosaics", "ka": "მოზაიკები" },
+    "baths": { "ru": "Бани и источники", "en": "Baths & springs", "ka": "აბანოები და წყაროები" },
+    "medieval": { "ru": "Средневековая Грузия", "en": "Medieval Georgia", "ka": "შუასაუკუნეების საქართველო" },
+    "caves": { "ru": "Пещеры и карст", "en": "Caves & karst", "ka": "მღვიმეები და კარსტი" }
+  },
   "routes": [
     {
       "id": "sololaki-old-town",
+      "kind": "city",
       "title": { "ru": "Старый город: от площади Свободы по Сололаки", "en": "Old Town: from Freedom Square through Sololaki", "ka": "ძველი ქალაქი: თავისუფლების მოედნიდან სოლოლაკში" },
       "theme": { "ru": "Муралы и стрит-арт", "en": "Murals & street art", "ka": "მურალები და სტრიტ-არტი" },
+      "theme_key": "murals",
       "desc": { "ru": "Памятник Свободы, муралы Тбилиси Мурал Феста на улицах Асатиани и Атонели и стрит-арт старого города.", "en": "Freedom Monument, Tbilisi Mural Fest walls on Asatiani and Atoneli streets and Old Town street art.", "ka": "თავისუფლების ძეგლი, Tbilisi Mural Fest-ის მურალები ასათიანისა და ათონელის ქუჩებზე და ძველი ქალაქის სტრიტ-არტი." },
+      "teaser": { "ru": "Пройдите от площади Свободы вглубь Сололаки: стены здесь рассказывают истории, а во дворах прячутся работы художников со всего мира.", "en": "Walk from Freedom Square into Sololaki: the walls tell stories, and courtyards hide works by artists from around the world.", "ka": "გაიარეთ თავისუფლების მოედნიდან სოლოლაკში: კედლები ისტორიებს ყვებიან, ეზოებში კი მსოფლიოს სხვადასხვა კუთხის მხატვრების ნამუშევრები იმალება." },
+      "cover": { "type": "art", "src": "icons/covers/sololaki-old-town.svg" },
       "stops": ["site-0022", "site-0533", "site-0428", "site-0355", "site-0482", "site-0415", "site-0534", "site-0009", "site-0461", "site-0010", "site-0035", "site-0003", "site-0450", "site-0425", "site-0508"]
     },
     {
       "id": "vake-murals",
+      "kind": "city",
       "title": { "ru": "Ваке: муралы на Чавчавадзе и Чиковани", "en": "Vake: murals on Chavchavadze and Chikovani", "ka": "ვაკე: მურალები ჭავჭავაძესა და ჩიქოვანზე" },
       "theme": { "ru": "Муралы", "en": "Murals", "ka": "მურალები" },
+      "theme_key": "murals",
       "desc": { "ru": "Работы Тбилиси Мурал Феста и уличных художников в зелёном районе Ваке — от проспекта Чавчавадзе до улицы Чиковани.", "en": "Tbilisi Mural Fest and street artists in leafy Vake — from Chavchavadze Avenue to Chikovani Street.", "ka": "Tbilisi Mural Fest-ისა და ქუჩის მხატვრების ნამუშევრები მწვანე ვაკეში — ჭავჭავაძის გამზირიდან ჩიქოვანის ქუჩამდე." },
+      "teaser": { "ru": "Зелёный район, где обычные фасады вдруг оживают: гигантские лица, птицы и целые сюжеты над проспектом.", "en": "A leafy district where plain façades suddenly come alive: giant faces, birds and whole stories above the avenue.", "ka": "მწვანე უბანი, სადაც უბრალო ფასადები უცებ ცოცხლდება: გიგანტური სახეები, ფრინველები და მთელი სიუჟეტები პროსპექტის თავზე." },
+      "cover": { "type": "art", "src": "icons/covers/vake-murals.svg" },
       "stops": ["site-0420", "site-0453", "site-0449", "site-0356", "site-0405", "site-0006", "site-0380", "site-0426"]
     },
     {
       "id": "saburtalo-mosaic-murals",
+      "kind": "city",
       "title": { "ru": "Сабуртало: советская мозаика и муралы", "en": "Saburtalo: Soviet mosaic and murals", "ka": "საბურთალო: საბჭოთა მოზაიკა და მურალები" },
       "theme": { "ru": "Мозаика и муралы", "en": "Mosaic & murals", "ka": "მოზაიკა და მურალები" },
+      "theme_key": "mosaics",
       "desc": { "ru": "Мозаика Дворца профсоюзов, муралы на проспекте Важа-Пшавела и скопление работ фестиваля на улице Бахтриони.", "en": "The Trade Unions Palace mosaic, murals on Vazha-Pshavela Avenue and a cluster of festival walls on Bakhtrioni Street.", "ka": "პროფკავშირების სასახლის მოზაიკა, მურალები ვაჟა-ფშაველას გამზირზე და ფესტივალის ნამუშევრები ბახტრიონის ქუჩაზე." },
+      "teaser": { "ru": "Советская мозаика никуда не ушла: она смотрит со стен домов и общественных зданий, а рядом появились новые муралы.", "en": "Soviet mosaics never left: they look down from apartment blocks and public buildings, joined by new murals.", "ka": "საბჭოთა მოზაიკა არსად წასულა: ის კორპუსებისა და საზოგადოებრივი შენობების კედლებიდან გიყურებთ, გვერდით კი ახალი მურალები გაჩენილა." },
+      "cover": { "type": "art", "src": "icons/covers/saburtalo-mosaic-murals.svg" },
       "stops": ["site-0017", "site-0442", "site-0396", "site-0447", "site-0408", "site-0444", "site-0503", "site-0483", "site-0417", "site-0354", "site-0478"]
     },
     {
       "id": "varketili-open-air",
+      "kind": "city",
       "title": { "ru": "Варкетили: музей под открытым небом", "en": "Varketili: an open-air museum", "ka": "ვარკეთილი: მუზეუმი ღია ცის ქვეშ" },
       "theme": { "ru": "Муралы Тбилиси Мурал Феста", "en": "Tbilisi Mural Fest walls", "ka": "Tbilisi Mural Fest-ის მურალები" },
+      "theme_key": "murals",
       "desc": { "ru": "Спальный район, где Тбилиси Мурал Фест расписал десятки фасадов: работы 2021–2024 годов.", "en": "A residential district where Tbilisi Mural Fest painted dozens of facades: works from 2021–2024.", "ka": "საცხოვრებელი უბანი, სადაც Tbilisi Mural Fest-მა ათობით ფასადი მოხატა: 2021–2024 წლების ნამუშევრები." },
+      "teaser": { "ru": "Целый район как музей под открытым небом: фестивальные стены на панельных домах, и у каждой работы своя история.", "en": "A whole district as an open-air museum: festival walls on panel blocks, and every work has its own story.", "ka": "მთელი უბანი როგორც ღია ცის ქვეშ მუზეუმი: ფესტივალის მურალები პანელურ კორპუსებზე, სადაც თითოეულ ნამუშევარს თავისი ისტორია აქვს." },
+      "cover": { "type": "art", "src": "icons/covers/varketili-open-air.svg" },
       "stops": ["site-0465", "site-0381", "site-0454", "site-0369", "site-0368", "site-0404", "site-0416", "site-0379", "site-0438", "site-0474", "site-0463", "site-0489", "site-0433", "site-0469", "site-0480", "site-0445", "site-0471"]
+    },
+    {
+      "id": "abanotubani-baths",
+      "kind": "city",
+      "title": { "ru": "Абанотубани: горячая вода Тбилиси", "en": "Abanotubani: Tbilisi’s hot water", "ka": "აბანოთუბანი: თბილისის ცხელი წყალი" },
+      "theme": { "ru": "Бани и источники", "en": "Baths & springs", "ka": "აბანოები და წყაროები" },
+      "theme_key": "baths",
+      "desc": { "ru": "Памятник Вахтангу Горгасали и серные бани Абанотубани.", "en": "The Vakhtang Gorgasali monument and the Abanotubani sulfur baths.", "ka": "ვახტანგ გორგასლის ძეგლი და აბანოთუბნის გოგირდის აბანოები." },
+      "teaser": { "ru": "По легенде, Тбилиси родился там, где королевский сокол нашёл горячие источники. От памятника основателю — к кирпичным куполам старых бань.", "en": "Legend says Tbilisi was born where the king’s falcon found hot springs. From the founder’s monument to the brick domes of the old baths.", "ka": "ლეგენდის თანახმად, თბილისი იქ დაიბადა, სადაც მეფის შევარდენმა ცხელი წყაროები იპოვა. დამაარსებლის ძეგლიდან ძველი აბანოების აგურის გუმბათებამდე." },
+      "cover": { "type": "photo", "src": "icons/covers/abanotubani-baths.jpg", "credit": "Marcin Konsek", "license": "CC BY-SA 4.0", "source_url": "https://commons.wikimedia.org/wiki/File%3A2014_Tbilisi%2C_%C5%81a%C5%BAnie_siarkowe_w_Abanotubani_%2801%29.jpg" },
+      "stops": ["site-0024", "site-0560"]
+    },
+    {
+      "id": "medieval-samtskhe",
+      "kind": "intercity",
+      "title": { "ru": "Средневековая Грузия: скалы, леса и тишина", "en": "Medieval Georgia: cliffs, forests and silence", "ka": "შუასაუკუნეების საქართველო: კლდეები, ტყეები და სიჩუმე" },
+      "theme": { "ru": "Средневековая Грузия", "en": "Medieval Georgia", "ka": "შუასაუკუნეების საქართველო" },
+      "theme_key": "medieval",
+      "desc": { "ru": "Вардзия, Сапара и Зарзма — средневековые монастыри Самцхе-Джавахети.", "en": "Vardzia, Sapara and Zarzma — medieval monasteries of Samtskhe-Javakheti.", "ka": "ვარძია, საფარა და ზარზმა — სამცხე-ჯავახეთის შუასაუკუნეების მონასტრები." },
+      "teaser": { "ru": "Монастырь, вырубленный в скале над рекой, и два тихих монастыря в горах Самцхе-Джавахети. Далеко от толп, ближе к средним векам.", "en": "A monastery carved into a cliff above the river and two quiet monasteries in the mountains of Samtskhe-Javakheti. Far from the crowds, closer to the Middle Ages.", "ka": "კლდეში ამოკვეთილი მონასტერი მდინარის თავზე და ორი მყუდრო მონასტერი სამცხე-ჯავახეთის მთებში. ბრბოსგან შორს, შუა საუკუნეებთან ახლოს." },
+      "cover": { "type": "photo", "src": "icons/covers/medieval-samtskhe.jpg", "credit": "Alexkom000", "license": "CC BY 4.0", "source_url": "https://commons.wikimedia.org/wiki/File:2025-05-25_Vardzia_9.jpg" },
+      "stops": ["site-0570", "site-0592", "site-0593"]
+    },
+    {
+      "id": "imereti-underground",
+      "kind": "intercity",
+      "title": { "ru": "Подземная Имерети: пещеры и следы динозавров", "en": "Underground Imereti: caves and dinosaur tracks", "ka": "მიწისქვეშა იმერეთი: მღვიმეები და დინოზავრების კვალი" },
+      "theme": { "ru": "Пещеры и карст", "en": "Caves & karst", "ka": "მღვიმეები და კარსტი" },
+      "theme_key": "caves",
+      "desc": { "ru": "Пещера Прометея, заповедник Сатаплия со следами динозавров и пещера Навенахеви.", "en": "Prometheus Cave, the Sataplia reserve with dinosaur tracks and Navenakhevi Cave.", "ka": "პრომეთეს მღვიმე, სათაფლიის ნაკრძალი დინოზავრების კვალით და ნავენახევის მღვიმე." },
+      "teaser": { "ru": "Залы с именами из мифов, окаменевшие следы динозавров и пещера с четырьмя залами. Имерети под землёй интереснее, чем кажется сверху.", "en": "Halls named after myths, fossilized dinosaur tracks and a cave with four chambers. Imereti is more exciting underground than it looks from above.", "ka": "მითებიდან სახელდებული დარბაზები, დინოზავრების გამოქვაბული კვალი და ოთხდარბაზიანი მღვიმე. იმერეთი მიწის ქვეშ უფრო საინტერესოა, ვიდრე ზემოდან ჩანს." },
+      "cover": { "type": "photo", "src": "icons/covers/imereti-underground.jpg", "credit": "Marcin Konsek", "license": "CC BY-SA 4.0", "source_url": "https://commons.wikimedia.org/wiki/File:2014_Imeretia,_Jaskinia_Prometeusza_(16).jpg" },
+      "stops": ["site-0554", "site-0557", "site-0550"]
+    },
+    {
+      "id": "mineral-springs",
+      "kind": "intercity",
+      "title": { "ru": "Минеральные воды Грузии: от Боржоми до Гурии", "en": "Mineral waters of Georgia: from Borjomi to Guria", "ka": "საქართველოს მინერალური წყლები: ბორჯომიდან გურიამდე" },
+      "theme": { "ru": "Бани и источники", "en": "Baths & springs", "ka": "აბანოები და წყაროები" },
+      "theme_key": "baths",
+      "desc": { "ru": "Источник Екатерины и серные бассейны Боржоми, бани Абастумани, курорт Сайрме и источник Набеглави.", "en": "Ekaterine Spring and the sulfur pools of Borjomi, the Abastumani baths, the Sairme resort and the Nabeghlavi spring.", "ka": "ეკატერინეს წყარო და ბორჯომის გოგირდის აუზები, აბასთუმნის აბანოები, საირმის კურორტი და ნაბეღლავის წყარო." },
+      "teaser": { "ru": "От исторического источника в парке Боржоми до села в Гурии, где к воде, по старому рассказу, первыми пришли буйволы. Минеральные воды Грузии — не только в бутылках.", "en": "From a historic spring in Borjomi Park to a village in Guria where, says an old story, buffalo found the water first. Georgia’s mineral waters are not only in bottles.", "ka": "ბორჯომის პარკის ისტორიული წყაროდან გურიის სოფლამდე, სადაც, ძველი თქმულებით, წყალს პირველებმა კამეჩებმა მიაგნეს. საქართველოს მინერალური წყლები მხოლოდ ბოთლებში არ არის." },
+      "cover": { "type": "photo", "src": "icons/covers/mineral-springs.jpg", "credit": "Alexey Komarov", "license": "CC BY-SA 4.0", "source_url": "https://commons.wikimedia.org/wiki/File%3ABorjomi_Sulfur_Pools.jpg" },
+      "stops": ["site-0599", "site-0539", "site-0536", "site-0555", "site-0600"]
     }
   ]
 }

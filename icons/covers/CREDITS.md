@@ -1,0 +1,13 @@
+# Обложки маршрутов: авторство
+
+Нарисованные обложки (`*.svg`) — оригинальные рисунки проекта AMG.
+
+Фотографии (`*.jpg`) — копии файлов Wikimedia Commons, уменьшенные до ширины 960 px (миниатюры Commons), без иных изменений.
+Каждый файл остаётся под своей лицензией; автор и лицензия показаны в панели маршрута на сайте.
+
+| Файл | Автор | Лицензия | Страница файла |
+|---|---|---|---|
+| `abanotubani-baths.jpg` | Marcin Konsek | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File%3A2014_Tbilisi%2C_%C5%81a%C5%BAnie_siarkowe_w_Abanotubani_%2801%29.jpg |
+| `medieval-samtskhe.jpg` | Alexkom000 | CC BY 4.0 | https://commons.wikimedia.org/wiki/File:2025-05-25_Vardzia_9.jpg |
+| `imereti-underground.jpg` | Marcin Konsek | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:2014_Imeretia,_Jaskinia_Prometeusza_(16).jpg |
+| `mineral-springs.jpg` | Alexey Komarov | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File%3ABorjomi_Sulfur_Pools.jpg |
