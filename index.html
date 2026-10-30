@@ -573,7 +573,7 @@
     padding:8px 14px; border:2px solid rgba(43,36,32,.85); border-radius:16px; overflow:hidden; text-align:left; cursor:pointer; color:#fff;
     font-family:'Playfair Display','Noto Serif Georgian',Georgia,serif; font-weight:700; font-size:17px; line-height:1.15; text-shadow:0 1px 3px rgba(0,0,0,.5);
     box-shadow:0 4px 14px rgba(43,38,34,.3); transition:transform .18s ease, box-shadow .18s ease; }
-  #feature .feat::before { content:""; position:absolute; inset:0; z-index:-1; background-position:0 0, 78% center; background-size:100% 100%, cover; background-repeat:no-repeat; opacity:.68; transition:opacity .2s ease, filter .2s ease, background-position .35s ease; }
+  #feature .feat::before { content:""; position:absolute; inset:0; z-index:-1; background-position:0 0, 78% center; background-size:100% 100%, cover; background-repeat:no-repeat; opacity:.68; transform:scale(1.02); transform-origin:78% 50%; transition:opacity .2s ease, filter .2s ease, background-position .8s ease, transform .8s cubic-bezier(.2,.8,.3,1); }
   #feature .feat::after { content:attr(data-sub); display:block; font-family:Manrope,system-ui,sans-serif; font-weight:600; font-size:11.5px; letter-spacing:.2px; opacity:.94; text-shadow:0 1px 2px rgba(0,0,0,.45); }
   #feature .feat:not([data-sub=""])::after { content:attr(data-sub); }
   #feature .feat[data-sub=""]::after { display:none; }
@@ -582,7 +582,7 @@
   #feature .feat-trips::before { background-image:linear-gradient(90deg, rgba(24,10,4,.72) 0%, rgba(24,10,4,.42) 46%, rgba(24,10,4,0) 78%), url("icons/banners/trips.svg"); }
   #feature .feat-fun::before { background-image:linear-gradient(90deg, rgba(24,10,4,.72) 0%, rgba(24,10,4,.42) 46%, rgba(24,10,4,0) 78%), url("icons/banners/fun.svg"); }
   #feature .feat:hover, #feature .feat:focus-visible { transform:translateY(-3px) scale(1.02); box-shadow:0 10px 22px rgba(43,38,34,.4); outline:none; }
-  #feature .feat:hover::before, #feature .feat:focus-visible::before { opacity:.84; filter:brightness(1.08) saturate(1.06); background-position:0 0, 84% center; }
+  #feature .feat:hover::before, #feature .feat:focus-visible::before { opacity:.84; filter:brightness(1.08) saturate(1.06); background-position:0 0, 88% center; transform:scale(1.08); }
   #feature .feat:focus-visible { box-shadow:0 0 0 3px #FFFBF5, 0 0 0 5.5px #B8482A, 0 10px 22px rgba(43,38,34,.4); }
   #feature .feat:active { transform:translateY(-1px) scale(.99); box-shadow:0 3px 8px rgba(43,38,34,.3); }
   #feature .feat.on { box-shadow:0 0 0 3px #FBF3DC, 0 0 0 5.5px #E6B422, 0 4px 14px rgba(43,38,34,.3); }
@@ -617,7 +617,7 @@
     #chips .chip-ico { width:30px; height:30px; border-width:0; }
     #chips .chip-lbl, #chips .chip .cnt, #chips .chip-x { display:none; }
   }
-  @media (prefers-reduced-motion: reduce) { #feature .feat, #chips .chip, #chips .chip::before { transition:none; } #feature .feat:hover, #chips .chip:hover { transform:none; } }
+  @media (prefers-reduced-motion: reduce) { #feature .feat, #feature .feat::before, #chips .chip, #chips .chip::before { transition:none; } #feature .feat:hover, #feature .feat:hover::before, #chips .chip:hover { transform:none; } }
   /* ---- Панели «Развлечения» и «Транспорт»: вместо чекбоксов — кнопки-переключатели (как в меню с шаром) ---- */
   #transit .row, #experiences .row { position:relative; display:flex; align-items:center; gap:11px; margin:0 0 8px; padding:10px 14px; background:#fff; border:1.5px solid #E0D0B8; border-radius:12px;
     box-shadow:0 2px 0 #E6D9C6; font-size:14px; font-weight:600; cursor:pointer; transition:transform .16s ease, background-color .16s ease, border-color .16s ease, color .16s ease, box-shadow .16s ease; }
