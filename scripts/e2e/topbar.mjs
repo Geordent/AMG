@@ -1,4 +1,4 @@
-// Верхняя панель. Десктоп: баннер + язык и стиль карты рядом с ним, счётчик внутри баннера; кнопки «Рядом / Маршруты /
+// Верхняя панель (раскладка «категории выше баннеров», 2026-10-30). Десктоп: баннер + язык и стиль карты рядом с ним, счётчик внутри баннера проекта; крупные кнопки-баннеры стоят под рядом категорий; кнопки «Рядом / Маршруты /
 // Паспорт / Транспорт / Офлайн / Обратная связь» выезжают из-за правого края (наведение, фокус, клик по язычку).
 // Телефон: бургер-меню. Проверяется: нет пересечений и выхода за экран при любых размерах и языках ru/ka/en.
 // Запуск: node scripts/e2e/topbar.mjs <папка сайта> <папка скриншотов>
@@ -65,11 +65,11 @@ for (const c of cases) {
   await p.mouse.move(Math.round(c.w / 2), Math.round(c.h / 2));
   const closed = await measure(p, { rail: false });
   ok(`${tag}: закрытое состояние — нет пересечений и выхода за экран`, closed.bad.length === 0 && closed.outside.length === 0, `${closed.n} эл.${closed.bad.length ? ' пересекаются: ' + closed.bad.join(', ') : ''}${closed.outside.length ? ' за экраном: ' + closed.outside.join(', ') : ''}`);
-  ok(`${tag}: счётчик просмотров внутри баннера`, closed.eyeInBrand);
+  ok(`${tag}: счётчик просмотров — ${c.mobile ? 'внутри бургер-меню' : 'внутри баннера проекта'}`, c.mobile ? await p.evaluate(() => !!document.querySelector('#menu #amgHits')) : closed.eyeInBrand);
   const ft = await p.evaluate(() => { const f = document.getElementById('feature'), t = document.getElementById('btnExplore'), e = document.getElementById('btnExp'), ch = document.getElementById('chips'), r = el => el.getBoundingClientRect();
-    return { sep: !!f && f.contains(t) && f.contains(e) && !ch.contains(t) && !ch.contains(e), above: !!f && r(f).bottom <= r(ch).top + 1, w: [r(t).width, r(e).width], h: [r(t).height, r(e).height], label: e.textContent.trim(), vis: r(f).right <= innerWidth + 1 }; });
-  ok(`${tag}: «Путешествуем» и «Развлечения» — отдельный ряд над чипами, не в ряду категорий`, ft.sep && ft.above && ft.vis, JSON.stringify({ w: ft.w.map(Math.round), h: ft.h.map(Math.round) }));
-  ok(`${tag}: баннеры крупнее чипов (высота ≥ 56 px, ширина ≥ 150 px)`, Math.min(...ft.h) >= 56 && Math.min(...ft.w) >= 150);
+    return { sep: !!f && f.contains(t) && f.contains(e) && !ch.contains(t) && !ch.contains(e), below: !!f && r(f).top >= r(ch).bottom - 1, w: [r(t).width, r(e).width], h: [r(t).height, r(e).height], label: e.textContent.trim(), vis: r(f).right <= innerWidth + 1 }; });
+  ok(`${tag}: «Путешествуем» и «Развлечения» — отдельные кнопки под рядом категорий, не среди чипов`, ft.sep && ft.below && ft.vis, JSON.stringify({ w: ft.w.map(Math.round), h: ft.h.map(Math.round) }));
+  ok(`${tag}: баннеры крупнее чипов (высота ≥ ${c.mobile ? 52 : 60} px, ширина ≥ 150 px)`, Math.min(...ft.h) >= (c.mobile ? 52 : 60) && Math.min(...ft.w) >= 150);
   if (!c.mobile) {
     ok(`${tag}: язык и стиль карты — справа от баннера, в одной строке`, closed.selRight);
     ok(`${tag}: кнопки спрятаны за правым краем, виден только язычок`, closed.barVisible === 0 && closed.n >= 6);

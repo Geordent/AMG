@@ -1,1 +1,119 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 280" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Муралы Ваке"><title>Муралы Ваке</title><desc>Зелёный район и огромный мурал на стене дома</desc><defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FBF3DC"/><stop offset="1" stop-color="#DCEBEC"/></linearGradient></defs><rect width="640" height="280" fill="url(#sky)"/><g stroke="#fff" stroke-opacity=".55" stroke-width="2" stroke-linecap="round" fill="none"><path d="M40 40 q30.0 -8 60 0"/><path d="M120 62 q20.0 -8 40 0"/><path d="M480 36 q35.0 -8 70 0"/><path d="M560 70 q22.0 -8 44 0"/><path d="M300 28 q25.0 -8 50 0"/><path d="M250 52 q15.0 -8 30 0"/></g><circle cx="80" cy="62" r="28" fill="#E6B422" opacity=".9" stroke="#2B2420" stroke-width="2.5"/><g transform="translate(70 176) scale(1.1)" stroke="#2B2420" stroke-width="2.5" stroke-linejoin="round"><rect x="-6" y="0" width="12" height="46" fill="#8a5a3b"/><circle cx="0" cy="-8" r="26" fill="#6B8F5B"/><circle cx="-20" cy="6" r="20" fill="#8DB07A"/><circle cx="20" cy="6" r="20" fill="#8DB07A"/></g><g transform="translate(578 186) scale(1.0)" stroke="#2B2420" stroke-width="2.5" stroke-linejoin="round"><rect x="-6" y="0" width="12" height="46" fill="#8a5a3b"/><circle cx="0" cy="-8" r="26" fill="#6B8F5B"/><circle cx="-20" cy="6" r="20" fill="#8DB07A"/><circle cx="20" cy="6" r="20" fill="#8DB07A"/></g><g stroke="#2B2420" stroke-width="2.5" stroke-linejoin="round"><rect x="150" y="32" width="340" height="210" fill="#EFE4D2"/><rect x="142" y="24" width="356" height="14" fill="#E6D9C6"/></g><rect x="178" y="58" width="284" height="168" rx="6" fill="#1F6F78" stroke="#2B2420" stroke-width="3"/><g stroke="#2B2420" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"><path d="M262 150 q-16 -78 58 -84 q74 6 58 84 q-6 56 -58 62 q-52 -6 -58 -62z" fill="#F3D9CF"/><path d="M258 130 q-14 -64 62 -78 q80 -4 66 74 q-22 -34 -56 -36 q-40 -2 -72 40z" fill="#B8482A"/><path d="M292 128 q10 -9 22 0 M326 128 q10 -9 22 0" fill="none"/><path d="M320 138 v22 q-5 3 -10 0" fill="none" stroke-width="2"/><path d="M298 178 q22 18 44 0 q-22 -6 -44 0z" fill="#6E2639"/><path d="M388 86 q20 -22 46 -10 q-18 4 -22 22 q-8 -14 -24 -12z" fill="#E6B422"/><path d="M388 86 q-4 14 8 20" fill="none"/><circle cx="206" cy="200" r="9" fill="#B8482A"/><circle cx="206" cy="200" r="3" fill="#2B2420"/><circle cx="228" cy="212" r="9" fill="#E6B422"/><circle cx="228" cy="212" r="3" fill="#2B2420"/><circle cx="252" cy="204" r="9" fill="#F3D9CF"/><circle cx="252" cy="204" r="3" fill="#2B2420"/><circle cx="430" cy="206" r="9" fill="#E6B422"/><circle cx="430" cy="206" r="3" fill="#2B2420"/><circle cx="446" cy="190" r="9" fill="#B8482A"/><circle cx="446" cy="190" r="3" fill="#2B2420"/></g><path d="M0 240 H640 V280 H0Z" fill="#E6D9C6" stroke="#2B2420" stroke-width="2.5"/><g fill="none" stroke="#2B2420" stroke-opacity=".25" stroke-width="2" stroke-linecap="round"><path d="M10 258 h18 M30 270 h14"/><path d="M56 258 h18 M76 270 h14"/><path d="M102 258 h18 M122 270 h14"/><path d="M148 258 h18 M168 270 h14"/><path d="M194 258 h18 M214 270 h14"/><path d="M240 258 h18 M260 270 h14"/><path d="M286 258 h18 M306 270 h14"/><path d="M332 258 h18 M352 270 h14"/><path d="M378 258 h18 M398 270 h14"/><path d="M424 258 h18 M444 270 h14"/><path d="M470 258 h18 M490 270 h14"/><path d="M516 258 h18 M536 270 h14"/><path d="M562 258 h18 M582 270 h14"/><path d="M608 258 h18 M628 270 h14"/></g><path transform="translate(520 48) scale(0.9)" d="M0 0 q10 -12 20 0 q10 -12 20 0" fill="none" stroke="#2B2420" stroke-width="3" stroke-linecap="round"/><path transform="translate(110 120) scale(0.7)" d="M0 0 q10 -12 20 0 q10 -12 20 0" fill="none" stroke="#2B2420" stroke-width="3" stroke-linecap="round"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 280" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Ваке: муралы на Чавчавадзе и Чиковани">
+  <title>Ваке: муралы на Чавчавадзе и Чиковани</title>
+  <desc>Двор Ваке: большая стена с муралом, деревья, прохожие и тёплый свет.</desc>
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#CFE3E4"/>
+      <stop offset=".62" stop-color="#E8E3D4"/>
+      <stop offset="1" stop-color="#F6EBDC"/>
+    </linearGradient>
+    <linearGradient id="wall" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2C858B"/>
+      <stop offset=".6" stop-color="#1F6F78"/>
+      <stop offset="1" stop-color="#15545C"/>
+    </linearGradient>
+    <linearGradient id="skin" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#F7DFCB"/>
+      <stop offset=".62" stop-color="#EFCBB4"/>
+      <stop offset="1" stop-color="#DCAE96"/>
+    </linearGradient>
+    <linearGradient id="scarf" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#C85A34"/>
+      <stop offset=".7" stop-color="#A9472B"/>
+      <stop offset="1" stop-color="#87361F"/>
+    </linearGradient>
+    <linearGradient id="road" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#C9B79D"/>
+      <stop offset="1" stop-color="#A98E70"/>
+    </linearGradient>
+    <filter id="soft"><feGaussianBlur stdDeviation="2.4"/></filter>
+    <filter id="grain">
+      <feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="8" stitchTiles="stitch"/>
+      <feColorMatrix type="saturate" values="0"/>
+      <feComponentTransfer><feFuncA type="table" tableValues="0 .09"/></feComponentTransfer>
+    </filter>
+  </defs>
+
+  <rect width="640" height="280" fill="url(#sky)"/>
+  <path d="M0 178 C96 154 172 168 252 158 C342 147 420 164 508 152 C566 145 610 154 640 150 L640 280 L0 280Z" fill="#DCE2D3" opacity=".65"/>
+  <circle cx="92" cy="62" r="34" fill="#F5C95A" opacity=".55"/>
+  <circle cx="92" cy="62" r="22" fill="#F3C44B"/>
+
+  <!-- стена с муралом -->
+  <g>
+    <path d="M150 54 L520 42 L540 224 L170 244Z" fill="url(#wall)" stroke="#3B332B" stroke-width="4"/>
+    <path d="M150 54 L520 42 L524 62 L154 74Z" fill="#3B332B" opacity=".18"/>
+    <path d="M170 244 L540 224 L540 246 L170 266Z" fill="#12464C" opacity=".6"/>
+    <!-- окна по краям -->
+    <g fill="#BFE3E2" stroke="#2B2420" stroke-width="3" opacity=".9">
+      <rect x="176" y="92" width="43" height="66" rx="2"/>
+      <rect x="462" y="82" width="46" height="70" rx="2"/>
+    </g>
+    <path d="M178 96 L215 154 M466 86 L504 146" stroke="#FFFBF5" stroke-width="5" opacity=".35"/>
+    <path d="M198 92 V158 M485 82 V152" stroke="#2B2420" stroke-width="2.5" opacity=".55"/>
+
+    <!-- лицо -->
+    <path d="M300 72 C336 60 380 64 401 92 C420 118 415 162 392 188 C370 212 330 216 305 193 C280 170 276 122 288 98 C291 90 295 80 300 72Z" fill="url(#skin)" stroke="#8A3A28" stroke-width="3"/>
+    <path d="M300 72 C324 64 356 64 377 76 C356 72 328 76 310 86 C304 92 299 102 297 116 C292 100 294 82 300 72Z" fill="#F9E7D7" opacity=".6"/>
+    <path d="M392 188 C402 170 408 146 405 122 C412 144 410 174 395 196Z" fill="#C98F79" opacity=".55"/>
+    <!-- платок -->
+    <path d="M288 96 C294 66 322 52 353 54 C384 56 407 74 411 104 C390 88 366 80 342 80 C318 80 300 86 288 96Z" fill="url(#scarf)" stroke="#6E2639" stroke-width="2.5"/>
+    <path d="M292 94 C310 76 338 70 364 76 C386 81 401 92 407 106" fill="none" stroke="#E58A5E" stroke-width="3" opacity=".7"/>
+    <path d="M285 100 C280 114 282 134 292 148 C286 126 288 112 296 102Z" fill="#87361F"/>
+    <path d="M410 104 C418 120 416 140 405 156 C407 136 404 120 398 108Z" fill="#87361F"/>
+    <!-- глаза, брови, нос, губы -->
+    <path d="M315 122 C324 116 334 117 341 123" fill="none" stroke="#4A2A20" stroke-width="3" stroke-linecap="round"/>
+    <path d="M365 121 C374 115 384 116 391 122" fill="none" stroke="#4A2A20" stroke-width="3" stroke-linecap="round"/>
+    <path d="M317 113 C326 108 335 109 342 113" fill="none" stroke="#6E2639" stroke-width="2.4" stroke-linecap="round"/>
+    <path d="M366 112 C375 107 384 108 391 112" fill="none" stroke="#6E2639" stroke-width="2.4" stroke-linecap="round"/>
+    <path d="M351 127 C348 140 347 151 352 158 C356 160 361 158 363 154" fill="none" stroke="#C98F79" stroke-width="2.6" stroke-linecap="round"/>
+    <path d="M331 174 C342 168 360 168 372 174 C362 184 342 184 331 174Z" fill="#6E2639"/>
+    <path d="M336 175 C346 172 358 172 367 175" fill="none" stroke="#C98F79" stroke-width="1.5"/>
+    <!-- серьги и блики -->
+    <circle cx="296" cy="147" r="7" fill="#E6B422" stroke="#4A2A20" stroke-width="2"/>
+    <circle cx="405" cy="144" r="7" fill="#E6B422" stroke="#4A2A20" stroke-width="2"/>
+    <path d="M318 92 C334 84 352 82 369 86" fill="none" stroke="#FFFBF5" stroke-width="4" opacity=".25"/>
+    <!-- птица -->
+    <path d="M404 106 C420 96 436 98 444 108 C434 106 424 112 420 120 C416 112 410 108 404 106Z" fill="#E6B422" stroke="#4A2A20" stroke-width="2.4" stroke-linejoin="round"/>
+    <path d="M440 108 L452 104 L444 112" fill="#A9472B" stroke="#4A2A20" stroke-width="1.6"/>
+    <!-- трещины и потёки -->
+    <g fill="none" stroke="#0F3F45" stroke-width="1.5" opacity=".65">
+      <path d="M188 174 l10 18 l-4 12 l8 10"/>
+      <path d="M452 158 l-7 15 l4 10"/>
+      <path d="M238 62 l4 28"/>
+    </g>
+    <g fill="#1F6F78" opacity=".6">
+      <path d="M272 206 C270 218 274 226 270 236 L276 236 C279 226 276 216 278 206Z"/>
+      <path d="M404 202 C402 214 406 222 402 232 L408 232 C411 222 408 212 410 202Z"/>
+    </g>
+  </g>
+
+  <!-- деревья и улица -->
+  <g>
+    <path d="M0 280 L0 196 C10 174 18 168 28 176 L28 280Z" fill="#6E4A2E"/>
+    <path d="M28 176 C60 144 104 148 124 172 C142 194 124 226 96 232 C64 240 34 218 28 176Z" fill="#5C7A4A"/>
+    <path d="M44 176 C66 158 94 160 108 176 C122 192 110 212 90 216 C66 222 48 204 44 176Z" fill="#74925C"/>
+    <path d="M510 280 L510 198 C520 178 528 172 540 180 L540 280Z" fill="#6E4A2E"/>
+    <path d="M540 180 C574 150 614 156 630 180 C646 202 626 230 598 234 C568 238 544 220 540 180Z" fill="#557447"/>
+    <path d="M552 182 C574 166 600 168 614 184 C626 198 614 216 596 220 C574 224 556 208 552 182Z" fill="#6E8C57"/>
+    <path d="M0 238 L640 226 L640 280 L0 280Z" fill="url(#road)"/>
+    <path d="M0 238 L640 226" stroke="#8E7358" stroke-width="3"/>
+    <path d="M20 280 L54 240 M104 280 L128 237 M192 280 L206 235 M280 280 L284 233 M368 280 L362 231 M456 280 L440 230 M544 280 L518 228 M624 280 L596 227" stroke="#B79B7C" stroke-width="2" opacity=".55"/>
+    <ellipse cx="112" cy="262" rx="56" ry="8" fill="#3B332B" opacity=".13" filter="url(#soft)"/>
+    <ellipse cx="536" cy="250" rx="66" ry="8" fill="#3B332B" opacity=".13" filter="url(#soft)"/>
+  </g>
+
+  <!-- люди и детали -->
+  <g fill="#3A3028" opacity=".78">
+    <circle cx="236" cy="230" r="4"/><path d="M231 236 C231 245 232 252 232 260 L238 260 C238 252 239 245 239 236 C236 233 234 233 231 236Z"/>
+    <path d="M232 240 L225 250 L227 252 L233 244 M238 240 L245 250 L243 252 L237 244" fill="none" stroke="#3A3028" stroke-width="2.5"/>
+    <circle cx="430" cy="224" r="4"/><path d="M425 230 C425 239 426 246 426 254 L432 254 C432 246 433 239 433 230 C430 227 428 227 425 230Z"/>
+    <path d="M426 234 L419 244 L421 246 L427 238 M432 234 L439 244 L437 246 L431 238" fill="none" stroke="#3A3028" stroke-width="2.5"/>
+  </g>
+  <g fill="#FFFBF5" opacity=".22">
+    <rect x="146" y="58" width="6" height="180"/>
+    <rect x="526" y="46" width="6" height="180"/>
+  </g>
+
+  <rect width="640" height="280" filter="url(#grain)" opacity=".5" style="mix-blend-mode:multiply"/>
+</svg>

@@ -137,10 +137,12 @@ const vake = routes.find(r => r.id === 'vake-murals').stops;
   ok('R2 «герой» не перехватывает нажатия', m.pe === 'none');
   ok('R2 во время анимации карта живая: перетаскивание и зум включены, скрима нет', m.drag && m.zoom && m.scrim);
   ok('R1 в панели есть пометка «линия показывает порядок, а не дорогу»', /порядок, а не дорогу/.test(await p2.textContent('#explore')));
-  // пользователь двигает карту → анимация завершается, дуги остаются целиком
-  await p2.mouse.move(900, 500); await p2.mouse.down(); await p2.mouse.move(860, 470, { steps: 6 }); await p2.mouse.up(); await p2.waitForTimeout(1500);
-  ok('R2 перетаскивание карты останавливает анимацию (героя нет)', !(await p2.$('.amg-hero')));
+  // пользователь двигает карту → анимация останавливается, дуги остаются целиком; после отпускания анимация быстро стартует заново
+  await p2.mouse.move(900, 500); await p2.mouse.down(); await p2.mouse.move(860, 470, { steps: 6 }); await p2.waitForTimeout(300);
+  ok('R2 перетаскивание карты останавливает анимацию (героя нет, пока карту держат)', !(await p2.$('.amg-hero')));
   ok('R1/R2 после остановки дуги целиком: концы в точках, выгнуты, длиннее хорды', arcsOk(await arcs(p2), vake));
+  await p2.mouse.up(); await p2.waitForTimeout(1500);
+  ok('R2 после отпускания карты анимация быстро перезапускается (герой снова на дуге)', !!(await p2.$('.amg-hero')));
   await p2.click('#explore [data-ex-back]'); await p2.waitForTimeout(1200);
   const gone = await arcs(p2);
   ok('«← Все маршруты» убирает дуги и точки', (!gone || gone.length === 0) && (await p2.$$('.amg-rm')).length === 0);
@@ -290,8 +292,8 @@ const vake = routes.find(r => r.id === 'vake-murals').stops;
   const c0 = await css('#chips .chip[data-cat="mosaic"]', 'backgroundColor'); await pA.hover('#chips .chip[data-cat="mosaic"]'); await pA.waitForTimeout(350);
   ok('чип при наведении меняет цвет и приподнимается', (await css('#chips .chip[data-cat="mosaic"]', 'backgroundColor')) !== c0 && (await css('#chips .chip[data-cat="mosaic"]', 'transform')) !== 'none', `${c0} → ${await css('#chips .chip[data-cat="mosaic"]', 'backgroundColor')}`);
   await pA.mouse.move(700, 600);
-  const dots = await pA.$$eval('#chips .chip', a => a.map(c => getComputedStyle(c, '::before').backgroundColor));
-  ok('у чипов категорий свои цветные точки (разные цвета)', new Set(dots).size >= 6, `${new Set(dots).size} цветов`);
+  const dots = await pA.$$eval('#chips .chip .chip-ico', a => a.map(c => getComputedStyle(c).borderTopColor));
+  ok('у чипов категорий свои значки с цветным кольцом семейства (разные цвета)', dots.length >= 9 && new Set(dots).size >= 6, `${dots.length} значков, ${new Set(dots).size} цветов`);
   // панель «Развлечения»: кнопки-переключатели вместо чекбоксов
   await pA.click('#btnExp'); await pA.waitForTimeout(700);
   const row = '#experiences label.row:has(#exCanyon)';

@@ -1,1 +1,80 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 136" preserveAspectRatio="xMaxYMid slice" role="img" aria-label="Развлечения"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#175b63"/><stop offset="1" stop-color="#4FA6AD"/></linearGradient></defs><rect width="640" height="136" fill="url(#g)"/><circle cx="360" cy="34" r="16" fill="#E6B422" opacity=".85" stroke="#2B2420" stroke-width="2"/><path d="M0 136 L0 104 L70 70 L120 96 L190 48 L260 92 L330 62 L400 100 L470 56 L560 98 L640 72 L640 136Z" fill="#9fd0d4" opacity=".55"/><path d="M0 136 L0 118 L90 92 L160 112 L250 80 L340 110 L430 86 L520 112 L640 90 L640 136Z" fill="#CFE7E6" opacity=".85"/><path d="M250 14 L640 64" stroke="#2B2420" stroke-width="2.4" fill="none" stroke-linecap="round"/><circle cx="430" cy="37" r="5" fill="#E6B422" stroke="#2B2420" stroke-width="2"/><path d="M430 42v12M424 54h12" stroke="#2B2420" stroke-width="2.4" stroke-linecap="round"/><g stroke="#2B2420" stroke-width="2.4" stroke-linecap="round" fill="none"><circle cx="540" cy="70" r="46" fill="#FBF3DC" fill-opacity=".25"/><circle cx="540" cy="70" r="32"/><path d="M540 70 L586.0 70.0"/><path d="M540 70 L577.2 97.0"/><path d="M540 70 L554.2 113.7"/><path d="M540 70 L525.8 113.7"/><path d="M540 70 L502.8 97.0"/><path d="M540 70 L494.0 70.0"/><path d="M540 70 L502.8 43.0"/><path d="M540 70 L525.8 26.3"/><path d="M540 70 L554.2 26.3"/><path d="M540 70 L577.2 43.0"/><path d="M540 70 L510 134 M540 70 L570 134"/></g><circle cx="586.0" cy="70.0" r="5.2" fill="#B8482A" stroke="#2B2420" stroke-width="2"/><circle cx="577.2" cy="97.0" r="5.2" fill="#E6B422" stroke="#2B2420" stroke-width="2"/><circle cx="554.2" cy="113.7" r="5.2" fill="#6E2639" stroke="#2B2420" stroke-width="2"/><circle cx="525.8" cy="113.7" r="5.2" fill="#fff" stroke="#2B2420" stroke-width="2"/><circle cx="502.8" cy="97.0" r="5.2" fill="#B8482A" stroke="#2B2420" stroke-width="2"/><circle cx="494.0" cy="70.0" r="5.2" fill="#E6B422" stroke="#2B2420" stroke-width="2"/><circle cx="502.8" cy="43.0" r="5.2" fill="#6E2639" stroke="#2B2420" stroke-width="2"/><circle cx="525.8" cy="26.3" r="5.2" fill="#fff" stroke="#2B2420" stroke-width="2"/><circle cx="554.2" cy="26.3" r="5.2" fill="#B8482A" stroke="#2B2420" stroke-width="2"/><circle cx="577.2" cy="43.0" r="5.2" fill="#E6B422" stroke="#2B2420" stroke-width="2"/><circle cx="540" cy="70" r="5" fill="#2B2420"/><g stroke="#2B2420" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"><path d="M372 78 C390 54 430 54 448 78 C430 70 390 70 372 78z" fill="#B8482A"/><path d="M386 72 L408 98 M434 72 L412 98" fill="none" stroke-width="1.6"/><circle cx="410" cy="102" r="4.5" fill="#F3D9CF"/></g><g stroke="#2B2420" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"><path d="M610 18l12 14-12 16-12-16z" fill="#E6B422"/><path d="M610 18v30M598 32h24" stroke-width="1.4"/><path d="M610 48q-7 8 0 14t0 12" fill="none"/></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 136" preserveAspectRatio="xMaxYMid slice" role="img" aria-label="Развлечения">
+  <title>Развлечения</title>
+  <desc>Колесо обозрения, параплан, зиплайн и воздушный змей над горами.</desc>
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#175B63"/>
+      <stop offset=".58" stop-color="#2F8D94"/>
+      <stop offset="1" stop-color="#6BB7B9"/>
+    </linearGradient>
+    <linearGradient id="far" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#A9D3D2"/>
+      <stop offset="1" stop-color="#8FC2C3"/>
+    </linearGradient>
+    <linearGradient id="near" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#D5E8E4"/>
+      <stop offset="1" stop-color="#BFDCD8"/>
+    </linearGradient>
+    <filter id="soft"><feGaussianBlur stdDeviation="4"/></filter>
+    <filter id="grain">
+      <feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="13" stitchTiles="stitch"/>
+      <feColorMatrix type="saturate" values="0"/>
+      <feComponentTransfer><feFuncA type="table" tableValues="0 .08"/></feComponentTransfer>
+    </filter>
+  </defs>
+
+  <rect width="640" height="136" fill="url(#sky)"/>
+  <circle cx="430" cy="30" r="20" fill="#E6B422"/>
+  <circle cx="430" cy="30" r="34" fill="#E6B422" opacity=".13" filter="url(#soft)"/>
+  <path d="M0 96 L70 64 L126 92 L192 46 L254 84 L326 58 L390 96 L458 54 L530 90 L594 66 L640 82 L640 136 L0 136Z" fill="url(#far)" opacity=".75"/>
+  <path d="M0 112 L86 88 L156 110 L230 78 L304 108 L380 86 L456 114 L534 84 L606 110 L640 98 L640 136 L0 136Z" fill="url(#near)" opacity=".9"/>
+
+  <!-- колесо обозрения -->
+  <g transform="translate(544 72)" stroke="#2B2420" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+    <circle r="47" fill="#FBF3DC" fill-opacity=".16"/>
+    <circle r="43" fill="none"/>
+    <circle r="31" fill="none"/>
+    <g fill="none">
+      <path d="M0 0 L43 0 M0 0 L37.2 21.5 M0 0 L21.5 37.2 M0 0 L0 43 M0 0 L-21.5 37.2 M0 0 L-37.2 21.5 M0 0 L-43 0 M0 0 L-37.2 -21.5 M0 0 L-21.5 -37.2 M0 0 L0 -43 M0 0 L21.5 -37.2 M0 0 L37.2 -21.5"/>
+    </g>
+    <circle r="5" fill="#2B2420"/>
+    <g stroke-width="2">
+      <circle cx="43" cy="0" r="5.2" fill="#B8482A"/>
+      <circle cx="37.2" cy="21.5" r="5.2" fill="#E6B422"/>
+      <circle cx="21.5" cy="37.2" r="5.2" fill="#6E2639"/>
+      <circle cx="0" cy="43" r="5.2" fill="#CFE7E6"/>
+      <circle cx="-21.5" cy="37.2" r="5.2" fill="#B8482A"/>
+      <circle cx="-37.2" cy="21.5" r="5.2" fill="#E6B422"/>
+      <circle cx="-43" cy="0" r="5.2" fill="#6E2639"/>
+      <circle cx="-37.2" cy="-21.5" r="5.2" fill="#CFE7E6"/>
+      <circle cx="-21.5" cy="-37.2" r="5.2" fill="#B8482A"/>
+      <circle cx="0" cy="-43" r="5.2" fill="#E6B422"/>
+      <circle cx="21.5" cy="-37.2" r="5.2" fill="#6E2639"/>
+      <circle cx="37.2" cy="-21.5" r="5.2" fill="#CFE7E6"/>
+    </g>
+    <path d="M0 43 L-22 64 M0 43 L22 64" fill="none" stroke-width="3"/>
+    <path d="M-28 64 H28" fill="none" stroke-width="3"/>
+  </g>
+
+  <!-- параплан -->
+  <g transform="translate(370 86)" stroke="#2B2420" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round">
+    <path d="M-52 0 C-38 -22 -16 -30 0 -20 C16 -30 38 -22 52 0 C32 -8 16 -6 0 2 C-16 -6 -32 -8 -52 0Z" fill="#B8482A"/>
+    <path d="M-44 -8 C-28 -16 -12 -16 0 -8 C12 -16 28 -16 44 -8" fill="none" stroke="#F3D9CF" stroke-width="2.2" opacity=".7"/>
+    <path d="M-38 0 L-8 26 M38 0 L8 26 M-20 4 L-5 26 M20 4 L5 26" fill="none" stroke-width="1.8"/>
+    <circle cx="0" cy="30" r="5" fill="#F3D9CF"/>
+    <path d="M0 35 L0 42" fill="none" stroke-width="2"/>
+  </g>
+
+  <!-- змей -->
+  <g transform="translate(608 26)" stroke="#2B2420" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round">
+    <path d="M0 -18 L18 0 L0 18 L-18 0Z" fill="#E6B422"/>
+    <path d="M0 -18 L0 18 M-18 0 H18" fill="none" stroke-width="1.6"/>
+    <path d="M0 18 C-8 26 8 30 0 40 C-6 48 4 50 2 58" fill="none" stroke-width="2"/>
+  </g>
+
+  <g fill="none" stroke="#FBF3DC" stroke-width="1.8" stroke-linecap="round" opacity=".55">
+    <path d="M96 38 q7 -6 14 0 q7 -6 14 0"/>
+    <path d="M154 58 q6 -5 12 0 q6 -5 12 0"/>
+  </g>
+  <rect width="640" height="136" filter="url(#grain)" opacity=".45" style="mix-blend-mode:multiply"/>
+</svg>

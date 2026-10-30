@@ -79,7 +79,7 @@
   #passport[hidden], #day[hidden], #report[hidden], #myroutes[hidden] { display:none; }
   /* Десктоп: панель слева и поверх «Подробно» (z 30), чтобы не уходить под неё */
   @media (min-width:769px) { #passport, #day, #report, #myroutes { z-index:32; left:16px; right:auto; bottom:16px; width:min(440px, calc(100vw - 32px));
-    border-radius:16px; max-height:calc(100% - 247px); box-shadow:0 10px 32px rgba(0,0,0,.22); } }
+    border-radius:16px; max-height:calc(100% - var(--panel-top, 336px) - 44px); box-shadow:0 10px 32px rgba(0,0,0,.22); } }
   #report a.btn { text-decoration:none; }
   #passport h2, #day h2, #report h2, #myroutes h2 { margin:0 0 2px; font-size:20px; font-family:'Playfair Display','Noto Serif Georgian',Georgia,serif; }
   .amg-sub { margin:0 0 8px; font-size:24px; line-height:1.15; }
@@ -180,6 +180,7 @@
     .amg-pulse i { animation:none; transform:scale(2.2); opacity:.7; }
     .amg-pulse i:last-child { display:none; }
   }
+  :root { --panel-top: 336px; }
   html, body { margin:0; height:100%; font-family:Manrope,system-ui,-apple-system,"Segoe UI",sans-serif; color:#2B2420; }
   #map { position:absolute; inset:0; }
   /* Верхний overlay — нормальный flex-стек (без хардкод top:64/112) */
@@ -202,7 +203,7 @@
   #transit, #experiences { position:absolute; left:0; right:0; bottom:0; z-index:20; background:#FFFBF5; border-radius:16px 16px 0 0; box-shadow:0 -6px 24px rgba(0,0,0,.2); padding:14px 16px calc(14px + env(safe-area-inset-bottom,0px)); max-height:75%; overflow-y:auto; }
   #transit[hidden], #experiences[hidden] { display:none; }
   #transit h2, #experiences h2 { margin:0 0 8px; font-size:18px; }
-  @media (min-width:769px) { #transit, #experiences { z-index:32; left:16px; right:auto; bottom:16px; width:min(440px, calc(100vw - 32px)); border-radius:16px; max-height:calc(100% - 247px); box-shadow:0 10px 32px rgba(0,0,0,.22); } }
+  @media (min-width:769px) { #transit, #experiences, #sheet, #nearby, #feedback { z-index:32; left:16px; right:auto; bottom:16px; width:min(440px, calc(100vw - 32px)); border-radius:16px; max-height:calc(100% - var(--panel-top, 336px) - 44px); box-shadow:0 10px 32px rgba(0,0,0,.22); } }
   #transit input[type=checkbox], #experiences input[type=checkbox] { width:20px; height:20px; accent-color:#B8482A; flex:0 0 auto; }
   #transit .row, #experiences .row { justify-content:flex-start; padding:6px 0; }
   #experiences .exp-sep { border-top:1px solid #E6D9C6; margin:10px 0 2px; }
@@ -219,6 +220,11 @@
   #legalLinks a { color:#8a5a44; text-decoration:none; border-bottom:1px dotted #c9b7a7; }
   #legalLinks a:hover { color:#1F6F78; border-bottom-color:#1F6F78; }
   #legalLinks .sep { color:#c2b8ad; }
+  #menu #legalLinks { display:flex; justify-content:center; gap:10px; margin:14px 0 0; padding-top:10px; border-top:1px solid #E6D9C6; font-size:12px; }
+  #menu #legalLinks #amgHits { margin-left:0; padding-left:0; }
+  @media (pointer: coarse) { #brand .tag { display:none; } #brand { padding:8px 12px; } }
+  html.is-mobile #brand .tag { display:none; }
+  html.is-mobile #brand { padding:8px 12px; }
   /* Mobile: служебная строка переезжает в #topui и видна всегда (компактная «пилюля»),
      иначе счётчик/обратная связь прятались в бургер-меню и их не находили. */
   #topui > #amgMeta { pointer-events:auto; align-self:flex-end; background:rgba(255,255,255,.94); border:1px solid #e0d8cc; border-radius:999px; padding:2px 10px; box-shadow:0 4px 12px rgba(43,38,34,.08); }
@@ -232,6 +238,12 @@
   #feedback .small { font-size:12px; color:#6b6259; line-height:1.5; margin:0 0 4px; }
   #feedback .btns { display:flex; gap:8px; flex-wrap:wrap; margin-top:12px; }
   #feedback .btns .btn { flex:1 1 auto; text-align:center; text-decoration:none; display:inline-flex; align-items:center; justify-content:center; }
+  /* Единая кнопка закрытия панелей */
+  .panel-x { position:absolute; top:10px; right:10px; z-index:3; width:34px; height:34px; border:0; border-radius:50%; background:#EFE4D2; color:#2B2420;
+    font-size:19px; line-height:1; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+  .panel-x:hover, .panel-x:focus-visible { background:#F3D9CF; color:#9A3B22; outline:none; }
+  #sheet h2, #transit h2, #experiences h2, #feedback h2, #nearby h2, #passport h2, #day h2, #report h2, #myroutes h2 { padding-right:40px; }
+  @media (pointer: coarse) { .panel-x { width:44px; height:44px; font-size:22px; } }
   /* --- «Что рядом» (UGC Этап 1) --- */
   #nearby { position:absolute; left:0; right:0; bottom:0; z-index:20; background:#FFFBF5; border-radius:16px 16px 0 0; box-shadow:0 -6px 24px rgba(0,0,0,.2); padding:14px 16px calc(14px + env(safe-area-inset-bottom,0px)); max-height:78%; overflow-y:auto; -webkit-overflow-scrolling:touch; }
   #nearby[hidden] { display:none; }
@@ -261,8 +273,8 @@
   #explore[hidden] { display:none; }
   #explore.route { max-height:46%; }
   @media (min-width:769px) { #explore { z-index:32; left:16px; right:auto; bottom:16px; width:min(480px, calc(100vw - 32px));
-    border-radius:16px; max-height:calc(100% - 215px); box-shadow:0 10px 32px rgba(0,0,0,.22); }
-    #explore.route { max-height:calc(100% - 215px); } }
+    border-radius:16px; max-height:calc(100% - var(--panel-top, 336px) - 44px); box-shadow:0 10px 32px rgba(0,0,0,.22); }
+    #explore.route { max-height:calc(100% - var(--panel-top, 336px) - 44px); } }
   #explore .ex-head { display:flex; align-items:flex-start; gap:8px; margin:0 0 6px; }
   #explore h2 { flex:1; margin:0; font-size:21px; line-height:1.15; font-family:'Playfair Display','Noto Serif Georgian',Georgia,serif; }
   #explore .ex-close { flex:none; width:34px; height:34px; border:0; border-radius:50%; background:#EFE4D2; color:#2B2420; font-size:19px; line-height:1; cursor:pointer; margin-left:auto; }
@@ -295,13 +307,22 @@
   #explore .ex-photo { margin:10px 0 0; font-size:11px; color:#6B5D52; }
   #explore .ex-photo a { color:#1F6F78; }
   #explore .ex-sub { margin:12px 0 6px; font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.6px; color:#8a5a3b; }
+  #explore .ex-subrow { display:flex; align-items:center; justify-content:space-between; gap:8px; margin:12px 0 6px; }
+  #explore .ex-subrow .ex-sub { margin:0; }
+  #explore .ex-reset { flex:none; padding:4px 8px; border:1px solid #E0D0B8; border-radius:999px; background:#FFF8EE; color:#8a5a3b; font:600 11px/1.2 Manrope,system-ui,sans-serif; cursor:pointer; }
+  #explore .ex-reset:hover, #explore .ex-reset:focus-visible { border-color:#B8482A; color:#9A3B22; background:#F3D9CF; outline:none; }
   #explore .ex-stops { list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:4px; }
-  #explore .ex-stops button { display:flex; align-items:center; gap:10px; width:100%; text-align:left; padding:8px 10px; border:1px solid #E6D9C6; border-radius:12px; background:#fff; color:#2B2420; font:inherit; font-size:14px; cursor:pointer; }
-  #explore .ex-stops button:hover, #explore .ex-stops button:focus-visible { border-color:#B8482A; background:#FFF8F2; outline:none; }
-  #explore .ex-stops .n { flex:none; width:24px; height:24px; border-radius:50%; background:#6E2639; color:#fff; font-size:12px; font-weight:700; display:flex; align-items:center; justify-content:center; }
+  #explore .ex-stop { display:flex; align-items:center; gap:6px; }
+  #explore .ex-stop-go { display:flex; align-items:center; gap:10px; flex:1; min-width:0; text-align:left; padding:8px 10px; border:1px solid #E6D9C6; border-radius:12px; background:#fff; color:#2B2420; font:inherit; font-size:14px; cursor:pointer; }
+  #explore .ex-stop-go:hover, #explore .ex-stop-go:focus-visible { border-color:#B8482A; background:#FFF8F2; outline:none; }
+  #explore .ex-stop .n { flex:none; width:24px; height:24px; border-radius:50%; background:#6E2639; color:#fff; font-size:12px; font-weight:700; display:flex; align-items:center; justify-content:center; }
+  #explore .ex-move { display:flex; flex:none; gap:3px; }
+  #explore .ex-move button { width:30px; height:30px; padding:0; border:1px solid #E6D9C6; border-radius:9px; background:#fff; color:#6E2639; font:700 15px/1 Manrope,system-ui,sans-serif; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+  #explore .ex-move button:hover, #explore .ex-move button:focus-visible { border-color:#B8482A; background:#F3D9CF; outline:none; }
+  #explore .ex-move button:disabled { opacity:.32; cursor:default; background:#fff; border-color:#E6D9C6; }
   #explore .ex-actions { position:sticky; bottom:-14px; display:flex; gap:8px; flex-wrap:wrap; margin:12px -14px -14px; padding:10px 14px calc(12px + env(safe-area-inset-bottom,0px)); background:linear-gradient(to top,#FFFBF5 78%,rgba(255,251,245,0)); }
   #explore .ex-actions .btn { flex:1 1 auto; }
-  @media (pointer: coarse) { #explore .ex-close { width:44px; height:44px; font-size:22px; } #explore .ex-stops button { min-height:44px; } #explore .ex-back { min-height:44px; } }
+  @media (pointer: coarse) { #explore .ex-close { width:44px; height:44px; font-size:22px; } #explore .ex-stop-go { min-height:44px; } #explore .ex-move button { width:40px; height:44px; } #explore .ex-back { min-height:44px; } }
   #explore .ex-arcnote { margin:6px 0 0; font-size:12px; font-style:italic; color:#6B5D52; }
   /* «Герой» маршрута летит/идёт по дуге; не перехватывает нажатия и не блокирует карту */
   .amg-hero { position:absolute; left:0; top:0; width:36px; height:36px; pointer-events:none; opacity:1; transition:opacity .5s ease; will-change:transform; }
@@ -461,8 +482,7 @@
   #brand .wm { font-size:16px; font-weight:700; color:#B8482A; line-height:1.1; letter-spacing:.2px; }
   #brand .tag { font-size:11px; color:#6b6258; line-height:1.15; margin-top:2px; }
   #chipsCat { display:contents; }
-  #chips { display:flex; gap:6px; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none; padding-bottom:2px; }
-  #chips::-webkit-scrollbar { display:none; }
+  #chips { display:flex; flex-wrap:wrap; gap:6px; overflow:visible; padding-bottom:2px; }
   #chips .chip { flex:0 0 auto; font-size:13px; padding:7px 11px; border-radius:16px; border:1px solid #E0D0B8;
     background:#FFFBF5; color:#2B2420; white-space:nowrap; cursor:pointer; font-family:inherit; }
   #chips .chip.on { background:#B8482A; border-color:#B8482A; color:#fff; font-weight:600; }
@@ -489,7 +509,16 @@
     box-shadow:0 -6px 24px rgba(0,0,0,.2); padding:16px 16px calc(16px + env(safe-area-inset-bottom,0px)); max-height:80%; overflow-y:auto; }
   #menu[hidden] { display:none; }
   #menu::before { content:''; position:absolute; top:6px; left:50%; transform:translateX(-50%); width:40px; height:4px; border-radius:2px; background:#E0D0B8; }
-  #menu #bar { flex-wrap:wrap; margin-top:6px; }
+  #menu #bar { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:10px; }
+  #menu #bar > * { width:100%; box-sizing:border-box; min-width:0; }
+  #menu #bar #btnNearby { margin-left:0; }
+  #menu #bar select { width:100%; }
+  #menu #amgMeta { display:block; margin:0; padding:0; }
+  #menu #amgFeedbackBtn { width:100%; min-height:44px; display:flex; align-items:center; justify-content:center; gap:8px; padding:9px 10px;
+    border:1.5px solid #E0D0B8; border-radius:12px; background:#fff; box-shadow:0 2px 0 #E6D9C6; color:#2B2420; font-weight:600;
+    text-decoration:none; }
+  #menu #amgFeedbackBtn::before { content:''; flex:none; width:19px; height:19px; background:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%231F6F78%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M21 11.5a8.4 8.4 0 0 1-9 8.4 9.3 9.3 0 0 1-3.2-.6L3 21l1.7-5.2A8.4 8.4 0 1 1 21 11.5z%22/%3E%3C/svg%3E") center/contain no-repeat; }
+  #menu #amgFeedbackBtn:hover, #menu #amgFeedbackBtn:focus-visible { background:#F3D9CF; border-color:#B8482A; color:#9A3B22; outline:none; }
   /* Mobile shell: capability-based. pointer:coarse — сразу (без вспышки); html.is-mobile — фолбэк по ширине */
   @media (pointer: coarse) {
     #topui > #bar { display:none; }
@@ -538,43 +567,56 @@
     @keyframes amg-bob { 0%,100% { transform:translateY(0) rotate(-4deg); } 50% { transform:translateY(-4px) rotate(4deg); } }
     @media (prefers-reduced-motion: reduce) { html:not(.is-mobile) #topui > #bar, html:not(.is-mobile) #topui > #bar #railTab, html:not(.is-mobile) #topui > #bar button { transition:none !important; } html:not(.is-mobile) #topui > #bar #railTab svg { animation:none; } }
   }
-  /* ---- Крупные кнопки-баннеры («Путешествуем по Грузии», «Развлечения») — отдельно от чипов категорий ---- */
-  #feature { display:flex; gap:10px; align-self:flex-start; max-width:100%; pointer-events:auto; }
-  #feature .feat { position:relative; flex:0 1 auto; min-width:0; width:270px; height:76px; box-sizing:border-box; display:flex; flex-direction:column; justify-content:flex-end; gap:1px;
-    padding:9px 14px; border:2px solid rgba(43,36,32,.85); border-radius:16px; overflow:hidden; text-align:left; cursor:pointer; color:#fff;
+  /* ---- Крупные кнопки-баннеры («Путешествуем по Грузии», «Развлечения») — под чипами, друг под другом ---- */
+  #feature { display:flex; flex-direction:column; gap:6px; align-self:flex-start; width:min(300px,100%); max-width:100%; pointer-events:auto; }
+  #feature .feat { position:relative; isolation:isolate; flex:0 0 auto; min-width:0; width:100%; height:64px; box-sizing:border-box; display:flex; flex-direction:column; justify-content:flex-end; gap:1px;
+    padding:8px 14px; border:2px solid rgba(43,36,32,.85); border-radius:16px; overflow:hidden; text-align:left; cursor:pointer; color:#fff;
     font-family:'Playfair Display','Noto Serif Georgian',Georgia,serif; font-weight:700; font-size:17px; line-height:1.15; text-shadow:0 1px 3px rgba(0,0,0,.5);
-    background-size:100% 100%, cover; background-position:0 0, 100% center; background-repeat:no-repeat; box-shadow:0 4px 14px rgba(43,38,34,.3);
-    transition:transform .18s ease, box-shadow .18s ease, filter .18s ease, background-position .35s ease; }
+    box-shadow:0 4px 14px rgba(43,38,34,.3); transition:transform .18s ease, box-shadow .18s ease; }
+  #feature .feat::before { content:""; position:absolute; inset:0; z-index:-1; background-position:0 0, 78% center; background-size:100% 100%, cover; background-repeat:no-repeat; opacity:.68; transition:opacity .2s ease, filter .2s ease, background-position .35s ease; }
   #feature .feat::after { content:attr(data-sub); display:block; font-family:Manrope,system-ui,sans-serif; font-weight:600; font-size:11.5px; letter-spacing:.2px; opacity:.94; text-shadow:0 1px 2px rgba(0,0,0,.45); }
   #feature .feat:not([data-sub=""])::after { content:attr(data-sub); }
   #feature .feat[data-sub=""]::after { display:none; }
-  #feature .feat-trips { background-color:#B8482A; background-image:linear-gradient(90deg, rgba(24,10,4,.72) 0%, rgba(24,10,4,.42) 46%, rgba(24,10,4,0) 78%), url("icons/banners/trips.svg"); }
-  #feature .feat-fun { background-color:#1F6F78; background-image:linear-gradient(90deg, rgba(24,10,4,.72) 0%, rgba(24,10,4,.42) 46%, rgba(24,10,4,0) 78%), url("icons/banners/fun.svg"); }
-  #feature .feat:hover, #feature .feat:focus-visible { transform:translateY(-3px) scale(1.02); box-shadow:0 10px 22px rgba(43,38,34,.4); filter:brightness(1.08) saturate(1.06); background-position:0 0, 78% center; outline:none; }
+  #feature .feat-trips { background-color:rgba(184,72,42,.72); }
+  #feature .feat-fun { background-color:rgba(31,111,120,.72); }
+  #feature .feat-trips::before { background-image:linear-gradient(90deg, rgba(24,10,4,.72) 0%, rgba(24,10,4,.42) 46%, rgba(24,10,4,0) 78%), url("icons/banners/trips.svg"); }
+  #feature .feat-fun::before { background-image:linear-gradient(90deg, rgba(24,10,4,.72) 0%, rgba(24,10,4,.42) 46%, rgba(24,10,4,0) 78%), url("icons/banners/fun.svg"); }
+  #feature .feat:hover, #feature .feat:focus-visible { transform:translateY(-3px) scale(1.02); box-shadow:0 10px 22px rgba(43,38,34,.4); outline:none; }
+  #feature .feat:hover::before, #feature .feat:focus-visible::before { opacity:.84; filter:brightness(1.08) saturate(1.06); background-position:0 0, 84% center; }
   #feature .feat:focus-visible { box-shadow:0 0 0 3px #FFFBF5, 0 0 0 5.5px #B8482A, 0 10px 22px rgba(43,38,34,.4); }
   #feature .feat:active { transform:translateY(-1px) scale(.99); box-shadow:0 3px 8px rgba(43,38,34,.3); }
   #feature .feat.on { box-shadow:0 0 0 3px #FBF3DC, 0 0 0 5.5px #E6B422, 0 4px 14px rgba(43,38,34,.3); }
   @media (max-width:768px), (pointer: coarse) {
-    #feature { align-self:stretch; gap:8px; }
-    #feature .feat { flex:1 1 0; width:auto; height:60px; padding:7px 10px; font-size:14px; }
+    #feature { align-self:stretch; width:100%; gap:6px; }
+    #feature .feat { width:100%; height:54px; padding:6px 12px; font-size:14px; }
     #feature .feat::after { display:none !important; }
   }
   /* ---- Чипы категорий (Все, Муралы, Мозаики…): тот же язык, что у кнопок выезжающего меню ---- */
   #chips { padding:5px 2px 9px; margin-top:-1px; }
-  #chips .chip { display:inline-flex; align-items:center; gap:8px; padding:8px 15px; background:#fff; border:1.5px solid #E0D0B8; border-radius:999px; color:#2B2420; font-size:13px; font-weight:600;
+  #chips .chip { display:inline-flex; align-items:center; gap:7px; padding:6px 13px 6px 8px; background:#fff; border:1.5px solid #E0D0B8; border-radius:999px; color:#2B2420; font-size:13px; font-weight:600;
     box-shadow:0 2px 0 #E6D9C6; transition:transform .16s ease, background-color .16s ease, border-color .16s ease, color .16s ease, box-shadow .16s ease; }
-  #chips .chip::before { content:''; flex:none; width:11px; height:11px; border-radius:50%; background:var(--dot,#B8482A); border:1.5px solid rgba(43,36,32,.55); transition:transform .2s ease, border-color .16s ease; }
-  #chips .chip[data-all]::before { background:conic-gradient(#B8482A 0 25%, #E6B422 0 50%, #1F6F78 0 75%, #6E2639 0); }
-  #chips .chip[data-cat="mural"] { --dot:#B8482A; } #chips .chip[data-cat="street_art"] { --dot:#A0640F; } #chips .chip[data-cat="mosaic"] { --dot:#1F6F78; }
-  #chips .chip[data-cat="sculpture"] { --dot:#4E5B66; } #chips .chip[data-cat="installation"] { --dot:#6E2639; } #chips .chip[data-cat="architecture"] { --dot:#8A5A2B; }
-  #chips .chip[data-cat="unusual"] { --dot:#B07A1E; } #chips .chip[data-cat="other"] { --dot:#5A4636; }
+  #chips .chip::before { display:none; content:none; }
+  #chips .chip-ico { flex:none; width:22px; height:22px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; overflow:hidden;
+    background:#FFFBF5; border:1.5px solid var(--ring,#B8482A); box-shadow:inset 0 0 0 1px rgba(255,255,255,.7); }
+  #chips .chip-ico svg { width:100%; height:100%; display:block; }
+  #chips .chip[data-all] .chip-ico { --ring:#6E2639; background:conic-gradient(from 210deg,#B8482A 0 25%,#E6B422 0 50%,#1F6F78 0 75%,#6E2639 0); }
+  #chips .chip[data-all] .chip-ico svg { width:15px; height:15px; }
+  #chips .chip[data-cat="mural"] .chip-ico { --ring:#B8482A; } #chips .chip[data-cat="street_art"] .chip-ico { --ring:#A0640F; } #chips .chip[data-cat="mosaic"] .chip-ico { --ring:#1F6F78; }
+  #chips .chip[data-cat="sculpture"] .chip-ico { --ring:#4E5B66; } #chips .chip[data-cat="installation"] .chip-ico { --ring:#6E2639; } #chips .chip[data-cat="architecture"] .chip-ico { --ring:#8A5A2B; }
+  #chips .chip[data-cat="unusual"] .chip-ico { --ring:#B07A1E; } #chips .chip[data-cat="other"] .chip-ico { --ring:#5A4636; }
   #chips .chip:hover, #chips .chip:focus-visible { transform:translateY(-2px); background:#F3D9CF; border-color:#B8482A; color:#9A3B22; box-shadow:0 6px 12px rgba(184,72,42,.25); outline:none; }
-  #chips .chip:hover::before { transform:scale(1.25); }
+  #chips .chip:hover .chip-ico { transform:scale(1.08); }
   #chips .chip:active { transform:translateY(0) scale(.97); }
   #chips .chip.on { background:#B8482A; border-color:#9A3B22; color:#fff; box-shadow:0 4px 10px rgba(184,72,42,.4); }
-  #chips .chip.on::before { border-color:#fff; }
+  #chips .chip.on .chip-ico { border-color:#fff; background:#FFF8F2; }
   #chips .chip.on:hover { background:#9A3B22; }
-  @media (pointer: coarse) { #chips .chip { min-height:44px; padding:9px 16px; } }
+  @media (max-width:768px), (pointer: coarse) {
+    #chips { flex-wrap:nowrap; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none; gap:3px; padding-bottom:4px; margin-top:8px; }
+    #chips::-webkit-scrollbar { display:none; }
+    #chips .chip { flex:1 1 0; min-width:32px; max-width:44px; min-height:40px; padding:0; border-radius:50%; justify-content:center; gap:0; }
+    #chips .chip-ico { width:30px; height:30px; border-width:0; }
+    #chips .chip-lbl, #chips .chip .cnt, #chips .chip-x { display:none; }
+  }
   @media (prefers-reduced-motion: reduce) { #feature .feat, #chips .chip, #chips .chip::before { transition:none; } #feature .feat:hover, #chips .chip:hover { transform:none; } }
   /* ---- Панели «Развлечения» и «Транспорт»: вместо чекбоксов — кнопки-переключатели (как в меню с шаром) ---- */
   #transit .row, #experiences .row { position:relative; display:flex; align-items:center; gap:11px; margin:0 0 8px; padding:10px 14px; background:#fff; border:1.5px solid #E0D0B8; border-radius:12px;
@@ -591,6 +633,19 @@
   #transit .row input[type=checkbox]:checked, #experiences .row input[type=checkbox]:checked { background-color:#B8482A; border-color:#B8482A; background-image:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%23fff%22 stroke-width=%223.4%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M5 12.5l4.5 4.5L19 7.5%22/%3E%3C/svg%3E"); animation:amg-pop .28s cubic-bezier(.2,1.5,.4,1); }
   @keyframes amg-pop { 0% { transform:scale(.4); } 100% { transform:scale(1); } }
   @media (prefers-reduced-motion: reduce) { #transit .row, #experiences .row, #transit .row .row-ico, #experiences .row .row-ico { transition:none; } #transit .row:hover, #experiences .row:hover { transform:none; } #transit .row input[type=checkbox]:checked, #experiences .row input[type=checkbox]:checked { animation:none; } }
+  /* «Офлайн»: та же строка-переключатель, что в «Развлечениях» */
+  #sheet .row { position:relative; display:flex; align-items:center; gap:11px; margin:0 0 10px; padding:10px 14px; background:#fff; border:1.5px solid #E0D0B8; border-radius:12px;
+    box-shadow:0 2px 0 #E6D9C6; font-size:14px; font-weight:600; cursor:pointer; transition:transform .16s ease, background-color .16s ease, border-color .16s ease, color .16s ease, box-shadow .16s ease; }
+  #sheet .row input[type=checkbox] { -webkit-appearance:none; appearance:none; flex:none; order:3; margin:0 0 0 auto; width:22px; height:22px; box-sizing:border-box; border-radius:50%;
+    border:2px solid #D9C4A6; background-color:#fff; background-repeat:no-repeat; background-position:center; background-size:14px; pointer-events:none; transition:background-color .16s ease, border-color .16s ease; }
+  #sheet .row:hover { transform:translateX(4px); background:#FFF3EB; border-color:#B8482A; box-shadow:0 6px 12px rgba(184,72,42,.22); }
+  #sheet .row:has(input:checked) { background:#F3D9CF; border-color:#B8482A; color:#9A3B22; }
+  #sheet .row input[type=checkbox]:checked { background-color:#B8482A; border-color:#B8482A; background-image:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%23fff%22 stroke-width=%223.4%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M5 12.5l4.5 4.5L19 7.5%22/%3E%3C/svg%3E"); animation:amg-pop .28s cubic-bezier(.2,1.5,.4,1); }
+  #sheet .pack .btns { flex-wrap:nowrap; gap:6px; }
+  #sheet .pack .btns .btn { flex:0 0 auto; padding:7px 12px; font-size:13px; }
+  #sheet .pack .btns .btn.p { flex:1 1 auto; }
+  #sheet .pack .btns .btn:not(.p) { min-width:96px; }
+  @media (prefers-reduced-motion: reduce) { #sheet .row, #sheet .row input[type=checkbox] { transition:none; } #sheet .row:hover { transform:none; } }
   /* ---- Подсказка «скачайте карту города» и справка по маршрутам ---- */
   #packHint { position:fixed; left:50%; transform:translateX(-50%); bottom:calc(14px + env(safe-area-inset-bottom,0px)); z-index:16;
     width:min(460px, calc(100vw - 24px)); box-sizing:border-box; display:flex; flex-direction:column; gap:10px;
@@ -608,6 +663,8 @@
     background:rgba(42,38,34,.94); color:#fff; padding:10px 12px; border-radius:12px; font-size:13px; box-shadow:0 6px 20px rgba(0,0,0,.25); }
   #rotateHint[hidden] { display:none; }
   #rotateHint button { border:0; background:transparent; color:#fff; font-size:18px; line-height:1; cursor:pointer; padding:4px; }
+  /* Панели «Что рядом» и «Обратная связь» на десктопе — такие же плавающие карточки, как остальные (их базовые стили идут позже общего правила) */
+  @media (min-width:769px) { #nearby, #feedback { left:16px; right:auto; bottom:16px; border-radius:16px; box-shadow:0 10px 32px rgba(0,0,0,.22); } }
 </style>
 </head>
 <body>
@@ -680,8 +737,8 @@
       <button type="button" id="amgFeedbackBtn">Обратная связь</button>
     </div>
   </div>
-  <div id="feature"><button class="feat feat-trips" id="btnExplore" type="button" aria-haspopup="dialog" data-sub="">Путешествуем по Грузии</button><button class="feat feat-fun" id="btnExp" type="button" aria-haspopup="dialog" data-sub="">Развлечения</button></div>
   <div id="chips"><span id="chipsCat"></span></div>
+  <div id="feature"><button class="feat feat-trips" id="btnExplore" type="button" aria-haspopup="dialog" data-sub="">Путешествуем по Грузии</button><button class="feat feat-fun" id="btnExp" type="button" aria-haspopup="dialog" data-sub="">Развлечения</button></div>
   <div id="exploreReturn" hidden><button type="button" class="er-go" data-er-go="1"></button><button type="button" class="er-x" data-er-x="1">×</button></div>
 </div>
 <div id="scrim" hidden></div>
@@ -1048,6 +1105,7 @@ const LB = {
   exKindTrip: { ru:'По Грузии', en:'Across Georgia', ka:'საქართველოს გასწვრივ' },
   exStops:    { ru:'Остановок: {n}', en:'Stops: {n}', ka:'გაჩერება: {n}' },
   exStopsTitle:{ ru:'Остановки', en:'Stops', ka:'გაჩერებები' },
+  exResetOrder:{ ru:'Сбросить порядок', en:'Reset order', ka:'რიგის აღდგენა' },
   exBack:     { ru:'← Все маршруты', en:'← All routes', ka:'← ყველა მარშრუტი' },
   exSave:     { ru:'Сохранить себе', en:'Save to my routes', ka:'ჩემთვის შენახვა' },
   exShare:    { ru:'Поделиться', en:'Share', ka:'გაზიარება' },
@@ -2532,6 +2590,23 @@ Overlays.register('detail', document.getElementById('detail'));
 Overlays.register('nearby', document.getElementById('nearby'));
 Overlays.register('transit', document.getElementById('transit'));
 Overlays.register('experiences', document.getElementById('experiences'));
+// Одна кнопка закрытия для всех панелей (панели с innerHTML перерисовываются — возвращаем её наблюдателем).
+(function panelCloseButtons() {
+  const ids = ['sheet', 'nearby', 'transit', 'experiences', 'passport', 'day', 'myroutes', 'report', 'feedback'];
+  const ensure = id => {
+    const el = document.getElementById(id); if (!el) return;
+    if (el.querySelector(':scope > .panel-x')) return;
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'panel-x'; b.setAttribute('aria-label', pick(LB.close)); b.title = pick(LB.close); b.textContent = '×';
+    b.addEventListener('click', () => { const cl = Overlays.closer[id]; if (cl) cl(); else Overlays.hide(id); });
+    el.prepend(b);
+  };
+  for (const id of ids) {
+    ensure(id);
+    const el = document.getElementById(id);
+    if (el && window.MutationObserver) new MutationObserver(() => ensure(id)).observe(el, { childList: true });
+  }
+})();
 // scrim закрывает только по «тапу» (не по drag/свайпу, чтобы обычный жест не закрывал card)
 (function scrimTap() {
   const s = document.getElementById('scrim');
@@ -2560,6 +2635,7 @@ function relocateBar() {
   // Глаз-счётчик (#amgHits) — всегда в #topui, под линией чипов, в разметке не двигается.
   // Язык и стиль карты: на десктопе — наверху рядом с баннером (#topSel), на телефоне — в бургер-меню (#bar).
   const topSel = document.getElementById('topSel'), fl = document.getElementById('flavor'), lg = document.getElementById('lang'), nearby = document.getElementById('btnNearby');
+  const legal = document.getElementById('legalLinks'), brand = document.getElementById('brand');
   const placeSelects = desktop => {
     if (!topSel || !fl || !lg) return;
     if (desktop) { if (fl.parentElement !== topSel) topSel.append(fl, lg); }
@@ -2567,13 +2643,16 @@ function relocateBar() {
   };
   if (isMobileUI()) {
     if (bar.parentElement !== menu) menu.appendChild(bar);
+    if (legal && legal.parentElement !== menu) menu.appendChild(legal);
     placeSelects(false);
   }
   else {
     if (bar.parentElement !== topui) topui.insertBefore(bar, chips);
+    if (legal && brand && legal.parentElement !== brand) brand.appendChild(legal);
     placeSelects(true);
     if (Overlays.isOpen('menu')) Overlays.hide('menu');
   }
+  requestAnimationFrame(() => window.dispatchEvent(new Event('resize')));
 }
 // Язычок выезжающей панели (десктоп): клик закрепляет/снимает; клик вне панели снимает закрепление
 (function railPin() {
@@ -2581,8 +2660,20 @@ function relocateBar() {
   if (!bar || !tab) return;
   const set = on => { bar.classList.toggle('rail-open', on); tab.setAttribute('aria-expanded', on ? 'true' : 'false'); };
   // Язычок встаёт ниже фактического края ряда чипов (высота шапки зависит от языка и ширины)
-  const topui = document.getElementById('topui'), chips = document.getElementById('chips');
-  const sync = () => { if (!chips || bar.parentElement !== topui) return; bar.style.setProperty('--rail-tab-top', Math.max(0, Math.ceil(chips.getBoundingClientRect().bottom + 8 - bar.getBoundingClientRect().top)) + 'px'); };
+  const topui = document.getElementById('topui'), chips = document.getElementById('chips'), feature = document.getElementById('feature');
+  const sync = () => {
+    if (!chips || bar.parentElement !== topui) return;
+    const topuiTop = topui.getBoundingClientRect().top;
+    const stackBottom = Math.max(chips.getBoundingClientRect().bottom, feature ? feature.getBoundingClientRect().bottom : 0);
+    const chipsBottom = chips.getBoundingClientRect().bottom;      // справа баннеров нет: панель не должна уезжать вниз на их высоту
+    const top = Math.max(0, Math.ceil(chipsBottom + 8 - topuiTop));
+    bar.style.top = top + 'px';
+    // низ панели — не ниже кнопок карты (зум/геолокация справа внизу); на низких окнах внутри панели появляется прокрутка
+    const ctl = document.querySelector('.maplibregl-ctrl-bottom-right'), limit = ctl ? ctl.getBoundingClientRect().top - 8 : innerHeight - 16;
+    bar.style.maxHeight = Math.max(140, limit - topuiTop - top) + 'px';
+    bar.style.setProperty('--rail-tab-top', '0px');
+    document.documentElement.style.setProperty('--panel-top', Math.ceil(stackBottom + 12) + 'px');
+  };
   if (window.ResizeObserver && topui) new ResizeObserver(sync).observe(topui);
   window.addEventListener('resize', sync); if (document.fonts && document.fonts.ready) document.fonts.ready.then(sync); sync();
   tab.addEventListener('click', e => { e.stopPropagation(); set(!bar.classList.contains('rail-open')); });
@@ -3195,6 +3286,7 @@ function applyStaticLabels() {
   T('btnNearby', pick(LB.nearby));
   T('btnPacks', pick(LB.offline));
   T('btnClose', pick(LB.close));
+  document.querySelectorAll('.panel-x').forEach(b => { b.setAttribute('aria-label', pick(LB.close)); b.title = pick(LB.close); });
   T('brandTag', pick(LB.brandTag));
   T('sheetTitle', pick(LB.offlineMap));
   T('offlineOnlyLabel', pick(LB.offlineOnlyTxt));
@@ -3416,8 +3508,8 @@ function copyFallback(text, done) {
   ta.remove();
 }
 function handleHash() {
-  const rr = /#ready=([a-z0-9-]+)/.exec(location.hash || '');
-  if (rr) return openExploreRoute(rr[1]);
+  const rr = /#ready=([a-z0-9-]+)(?:&order=([^&]+))?/.exec(location.hash || '');
+  if (rr) return openExploreRoute(rr[1], rr[2] ? decodeURIComponent(rr[2]).split(',').map(s => s.trim()).filter(Boolean) : null);
   const r = /#route=([^&]+)/.exec(location.hash || '');
   if (r) { const n = /[&?]n=([^&]*)/.exec(location.hash || ''); return openSharedRoute(r[1], n ? n[1] : ''); }
   const m = /#s=([^&]+)/.exec(location.hash || '');
@@ -3678,17 +3770,36 @@ function categoryCounts() {
   counts._all = catalog.sites.length;
   return counts;
 }
+const CHIP_ART = {
+  mural:        [ART_MURAL,        'translate(6 6) scale(.75)'],
+  street_art:   [ART_SPRAY,        'translate(6 6) scale(.75)'],
+  mosaic:       [ART_MOSAIC,       'translate(2.4 2.4) scale(.9)'],
+  sculpture:    [ART_SCULPTURE,    'translate(6 6) scale(.75)'],
+  architecture: [ART_ARCH,         'translate(6 6) scale(.75)'],
+  installation: [ART_INSTALLATION, 'translate(6 6) scale(.75)'],
+  unusual:      [ART_STAR,         'translate(6 6) scale(.75)'],
+  other:        [ART_VESSEL,       'translate(6 6) scale(.75)'],
+};
+const CHIP_ALL_ART = `<path d="M24 6 28.6 18.4 41.8 19 31.4 27.2 35 40 24 32.8 13 40 16.6 27.2 6.2 19 19.4 18.4Z" fill="#FFFBF5" stroke="#6E2639" stroke-width="1.8" stroke-linejoin="round"/>`;
+function chipIcon(key) {
+  if (key === '_all') return `<span class="chip-ico"><svg viewBox="0 0 48 48" aria-hidden="true"><g transform="translate(7.2 7.2) scale(.7)">${CHIP_ALL_ART}</g></svg></span>`;
+  const [art, fit] = CHIP_ART[key] || CHIP_ART.other;
+  return `<span class="chip-ico"><svg viewBox="0 0 48 48" aria-hidden="true"><g transform="${fit}">${art}</g></svg></span>`;
+}
 function renderChips() {
   const counts = categoryCounts();
   const allOn = state.categories === null;
   const active = state.categories || new Set();
-  let html = `<button class="chip${allOn ? ' on' : ''}" data-all>${esc(pick(ALL_LABEL))} <span class="cnt">${counts._all}</span>`;
+  const allLabel = esc(pick(ALL_LABEL));
+  let html = `<button class="chip${allOn ? ' on' : ''}" data-all aria-label="${allLabel} (${counts._all})" title="${allLabel}">${chipIcon('_all')}<span class="chip-lbl">${allLabel}</span> <span class="cnt">${counts._all}</span>`;
   if (!allOn) html += ` <span class="chip-x" data-reset title="${esc(pick(RESET_LABEL))}">×</span>`;
   html += `</button>`;
   for (const c of CATEGORIES) {
-    html += `<button class="chip${active.has(c.key) ? ' on' : ''}" data-cat="${c.key}">${esc(pick(c.label))} <span class="cnt">${counts[c.key] || 0}</span></button>`;
+    const label = esc(pick(c.label));
+    html += `<button class="chip${active.has(c.key) ? ' on' : ''}" data-cat="${c.key}" aria-label="${label} (${counts[c.key] || 0})" title="${label}">${chipIcon(c.key)}<span class="chip-lbl">${label}</span> <span class="cnt">${counts[c.key] || 0}</span></button>`;
   }
   $('chipsCat').innerHTML = html;
+  requestAnimationFrame(() => window.dispatchEvent(new Event('resize')));
 }
 $('chips').onclick = e => {
   if (e.target.closest('[data-reset]')) state.categories = null;                          // сброс → All
@@ -3968,9 +4079,28 @@ function openDay() {
   loadRoutes().then(() => { if (Overlays.isOpen('day')) renderDay(); });
 }
 // --- Готовые маршруты по районам (data/routes.json; проверка — scripts/validate-routes.mjs) ---
+const EX_ORDER_KEY = id => 'amg-route-order:' + id;
+function applyRouteOrder(id, stops) {
+  try {
+    const saved = JSON.parse(localStorage.getItem(EX_ORDER_KEY(id)) || 'null');
+    if (Array.isArray(saved)) {
+      const keep = [];
+      for (const x of saved) if (stops.includes(x) && !keep.includes(x)) keep.push(x);
+      const rest = stops.filter(x => !keep.includes(x));
+      return [...keep, ...rest];
+    }
+  } catch (_) {}
+  return stops.slice();
+}
+function saveRouteOrder(r) { try { localStorage.setItem(EX_ORDER_KEY(r.id), JSON.stringify(r.stops)); } catch (_) {} }
+function resetRouteOrder(r) { try { localStorage.removeItem(EX_ORDER_KEY(r.id)); } catch (_) {} if (r._baseStops) r.stops = r._baseStops.slice(); }
+function routeOrderCustom(r) { return !!(r._baseStops && r.stops.join('|') !== r._baseStops.join('|')); }
 function loadRoutes() {
   if (!stage0.routesP) stage0.routesP = getJson('data/routes.json')
-    .then(j => (stage0.routeThemes = j.themes || {}, stage0.routes = (j.routes || []).map(r => ({ ...r, stops: r.stops.filter(id => catalog.siteById.get(id)) })).filter(r => r.stops.length > 1)))
+    .then(j => (stage0.routeThemes = j.themes || {}, stage0.routes = (j.routes || []).map(r => {
+      const base = r.stops.filter(id => catalog.siteById.get(id));
+      return { ...r, stops: applyRouteOrder(r.id, base), _baseStops: base };
+    }).filter(r => r.stops.length > 1)))
     .catch(() => (stage0.routes = []));
   return stage0.routesP;
 }
@@ -4396,7 +4526,7 @@ $('searchBtn').setAttribute('aria-label', pick(LB.searchBtn)); $('searchBtn').ti
 // Темы → карточки готовых маршрутов (data/routes.json) на одном прокручиваемом экране. Нажатие на карточку
 // ставит на карте пронумерованные точки маршрута. Время и расстояния не показываем и линию не рисуем:
 // прямая между точками вводит в заблуждение (горы, транспорт, автостоп) — дуги и «герои» придут отдельным шагом.
-const explore = { route: null, markers: [], legs: [], anim: 0, hero: null, offMove: null };
+const explore = { route: null, markers: [], legs: [], anim: 0, hero: null, ignoreMoveEnd: 0, moveTimer: 0, userMoved: false };
 Overlays.onShow = id => { if (id !== 'explore' && explore.route && exploreVisible()) { $('explore').hidden = true; exploreSyncPill(); } };   // карточка места не должна лезть на панель маршрута
 function exploreVisible() { const el = $('explore'); return !!el && !el.hidden; }
 // Постоянная кнопка «вернуться к маршруту»: пока маршрут выбран, а его панель скрыта (карточка места, другая кнопка)
@@ -4449,10 +4579,14 @@ function renderExplore() {
   const box = $('explore'); if (!box) return;
   const r = explore.route, close = `<button type="button" class="ex-close" data-ex-close="1" aria-label="${esc(pick(LB.close))}">×</button>`;
   if (r) {
+    const stopsHead = routeOrderCustom(r)
+      ? `<div class="ex-subrow"><h3 class="ex-sub">${esc(pick(LB.exStopsTitle))}</h3><button type="button" class="ex-reset" data-ex-reset="1">${esc(pick(LB.exResetOrder))}</button></div>`
+      : `<h3 class="ex-sub">${esc(pick(LB.exStopsTitle))}</h3>`;
+    const stops = r.stops.map((id, i) => `<li class="ex-stop"><button type="button" class="ex-stop-go" data-ex-stop="${esc(id)}"><span class="n">${i + 1}</span><span class="nm">${esc(siteTitle(catalog.siteById.get(id)))}</span>${exploreAccessTag(id)}</button><span class="ex-move"><button type="button" data-ex-up="${i}" aria-label="${esc(pick(LB.dayUp))}" title="${esc(pick(LB.dayUp))}"${i === 0 ? ' disabled' : ''}>↑</button><button type="button" data-ex-down="${i}" aria-label="${esc(pick(LB.dayDown))}" title="${esc(pick(LB.dayDown))}"${i === r.stops.length - 1 ? ' disabled' : ''}>↓</button></span></li>`).join('');
     box.innerHTML = `<div class="ex-head"><button type="button" class="ex-back" data-ex-back="1">${esc(pick(LB.exBack))}</button>${close}</div>
       <h2 class="ex-rtitle">${esc(pick(r.title))}</h2><p class="ex-teaser">${esc(pick(r.teaser || r.desc))}</p><p class="ex-arcnote">${esc(pick(LB.exArcNote))}</p>
-      <h3 class="ex-sub">${esc(pick(LB.exStopsTitle))}</h3>
-      <ol class="ex-stops">${r.stops.map((id, i) => `<li><button type="button" data-ex-stop="${esc(id)}"><span class="n">${i + 1}</span><span class="nm">${esc(siteTitle(catalog.siteById.get(id)))}</span>${exploreAccessTag(id)}</button></li>`).join('')}</ol>${explorePhotoCredit(r)}
+      ${stopsHead}
+      <ol class="ex-stops">${stops}</ol>${explorePhotoCredit(r)}
       <div class="ex-actions"><button type="button" class="btn p" data-ex-save="1">${esc(pick(stage0.my.some(m => m.from === r.id) ? LB.exSaved : LB.exSave))}</button><button type="button" class="btn" data-ex-share="1">${esc(pick(LB.exShare))}</button></div>`;
     return;
   }
@@ -4488,11 +4622,11 @@ function exploreSetArcs(legs) {
 map.on('style.load', () => { if (explore.route) exploreSetArcs(explore.legs); });
 function exploreAnimStop(final) {
   explore.anim++;
-  if (explore.offMove) { map.off('movestart', explore.offMove); explore.offMove = null; }
   if (explore.hero) { explore.hero.remove(); explore.hero = null; }
   if (final && explore.route) exploreSetArcs(explore.legs);
 }
-function exploreAnimate(r) {
+function exploreAnimate(r, quick) {
+  if (explore.hero) { explore.hero.remove(); explore.hero = null; }
   const pts = r.stops.map(id => catalog.siteById.get(id)).filter(Boolean).map(f => f.geometry.coordinates);
   explore.legs = arcLegs(pts);
   const legs = explore.legs, token = ++explore.anim;
@@ -4500,9 +4634,6 @@ function exploreAnimate(r) {
   // prefers-reduced-motion: сразу статичные дуги, без «героя»
   if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return exploreSetArcs(legs);
   exploreSetArcs([]);
-  // любое действие пользователя с картой (перетаскивание, зум) завершает анимацию: дуги остаются целиком
-  explore.offMove = ev => { if (ev && ev.originalEvent) exploreAnimStop(true); };
-  map.on('movestart', explore.offMove);
   // «Герой» — собственный элемент в контейнере карты с дробным смещением (маркер MapLibre округляет до целого пикселя,
   // и на коротких звеньях движение шло ступеньками). Над маркерами маршрута, нажатия не перехватывает.
   const el = document.createElement('div'); el.className = 'amg-hero'; el.innerHTML = '<div class="in"></div>';
@@ -4513,7 +4644,7 @@ function exploreAnimate(r) {
   const at = (arr, f) => { f = Math.max(0, Math.min(arr.length - 1, f)); const i = Math.min(arr.length - 2, Math.floor(f)), u = f - i;
     return [arr[i][0] + (arr[i + 1][0] - arr[i][0]) * u, arr[i][1] + (arr[i + 1][1] - arr[i][1]) * u]; };
   const gap = legs.reduce((n, l) => n + l.length, 0) > 400 ? 50 : 20;      // частота обновления линии: длинные маршруты реже
-  let started = false, leg = 0, t0 = performance.now() + 1600, kind = '', lastSet = 0, lastNow = 0, ang = null, lastLeg = -1, flip = 1;
+  let started = false, leg = 0, t0 = performance.now() + (quick ? 180 : 1600), kind = '', lastSet = 0, lastNow = 0, ang = null, lastLeg = -1, flip = 1;
   const step = now => {
     if (token !== explore.anim) return;
     if (now < t0) return requestAnimationFrame(step);
@@ -4577,13 +4708,37 @@ function exploreFit(r) {
   if (!pts.length) return;
   const all = pts.length > 1 ? arcLegs(pts).flat() : pts;   // дуги выгибаются за точки — вписываем их тоже
   const mob = isMobileUI(), H = window.innerHeight;
-  const chipsEl = $('chips'), top = chipsEl ? Math.ceil(chipsEl.getBoundingClientRect().bottom) + 16 : 215;      // под реальной шапкой (баннер, ряд баннеров, чипы)
+  const chipsEl = $('chips'), featEl = $('feature'), top = chipsEl ? Math.ceil(Math.max(chipsEl.getBoundingClientRect().bottom, mob && featEl ? featEl.getBoundingClientRect().bottom : 0)) + 16 : 215;      // под реальной шапкой (баннер, ряд баннеров, чипы)
   const padding = mob ? { top, bottom: Math.round(H * 0.46) + 24, left: 36, right: 36 } : { top, bottom: 70, left: 540, right: 190 };   // справа — колонка кнопок
+  explore.ignoreMoveEnd = performance.now() + 1400;         // программный fitBounds не должен перезапускать анимацию
   if (pts.length === 1) { map.flyTo({ center: pts[0], zoom: 14 }); return; }
-  map.fitBounds(all.reduce((bb, p) => bb.extend(p), new maplibregl.LngLatBounds(all[0], all[0])), { padding, maxZoom: 15, duration: 900 });
+  map.fitBounds(all.reduce((bb, p) => bb.extend(p), new maplibregl.LngLatBounds(all[0], all[0])), { padding, maxZoom: r.kind === 'city' ? 17 : 15, duration: 900 });
 }
-async function openExploreRoute(id) {
+// Любое ручное движение карты (drag, pinch, колесо, кнопки зума) останавливает анимацию.
+// После moveend возвращаем её быстро — уже на новом масштабе/участке. На телефоне это ещё и способ развести близкие точки.
+map.on('movestart', () => {
+  if (!explore.route || performance.now() < explore.ignoreMoveEnd) return;
+  explore.userMoved = true;
+  exploreAnimStop(true);
+});
+map.on('moveend', () => {
+  if (!explore.route || !exploreVisible()) { explore.userMoved = false; return; }
+  if (performance.now() < explore.ignoreMoveEnd) { explore.userMoved = false; return; }
+  if (!explore.userMoved) return;
+  explore.userMoved = false;
+  if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  clearTimeout(explore.moveTimer);
+  explore.moveTimer = setTimeout(() => {
+    if (explore.route && exploreVisible()) exploreAnimate(explore.route, true);
+  }, 80);
+});
+async function openExploreRoute(id, order) {
   const r = ((await loadRoutes()) || []).find(x => x.id === id); if (!r) return;
+  if (Array.isArray(order) && order.length) {
+    const seen = new Set(), valid = [];
+    for (const x of order) if (r.stops.includes(x) && !seen.has(x)) { seen.add(x); valid.push(x); }
+    if (valid.length) r.stops = [...valid, ...r.stops.filter(x => !seen.has(x))];
+  }
   track('route-' + id);
   Overlays.closeAll(); exploreClear();
   explore.route = r; exploreShow('route'); renderExplore(); exploreMarkers(r); exploreFit(r); exploreAnimate(r);
@@ -4600,6 +4755,25 @@ function exploreStop(id) {                            // панель уступ
   if (!catalog.siteById.get(id)) return;
   exploreAnimStop(true); $('explore').hidden = true; exploreSyncPill(); ensureExploreSiteVisible(id); focusSite(id);
 }
+function exploreMoveStop(from, to) {
+  const r = explore.route;
+  if (!r || from === to || to < 0 || to >= r.stops.length) return;
+  const [id] = r.stops.splice(from, 1);
+  r.stops.splice(to, 0, id);
+  saveRouteOrder(r);
+  const box = $('explore'), y = box ? box.scrollTop : 0;
+  exploreMarkers(r); renderExplore();
+  if (box) box.scrollTop = y;
+  exploreAnimate(r, true);
+}
+function exploreResetOrder() {
+  const r = explore.route; if (!r) return;
+  resetRouteOrder(r);
+  const box = $('explore'), y = box ? box.scrollTop : 0;
+  exploreMarkers(r); renderExplore();
+  if (box) box.scrollTop = y;
+  exploreAnimate(r, true);
+}
 function exploreSave(r) {
   if (stage0.my.some(m => m.from === r.id)) { exploreClose(); return openMy(); }   // уже сохранён → к списку
   if (!myAdd({ name: pick(r.title), stops: r.stops, from: r.id })) return;
@@ -4607,7 +4781,8 @@ function exploreSave(r) {
 }
 function exploreShare(r) {
   track('route-share');
-  const url = location.origin + location.pathname + '#ready=' + encodeURIComponent(r.id);
+  const base = location.origin + location.pathname;
+  const url = base + '#ready=' + encodeURIComponent(r.id) + (routeOrderCustom(r) ? '&order=' + r.stops.map(encodeURIComponent).join(',') : '');
   const done = () => toast(pick(LB.dayLinkCopied));
   if (navigator.share) { navigator.share({ title: pick(r.title), url }).catch(() => {}); return; }
   if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(url).then(done, () => copyFallback(url, done));
@@ -4629,6 +4804,9 @@ $('explore').addEventListener('click', ev => {
   if (d.exBack) { explore.route = null; exploreClear(); exploreShow('list'); return renderExplore(); }
   if (d.exRoute) return openExploreRoute(d.exRoute);
   if (d.exStop) return exploreStop(d.exStop);
+  if (d.exUp != null) return exploreMoveStop(+d.exUp, +d.exUp - 1);
+  if (d.exDown != null) return exploreMoveStop(+d.exDown, +d.exDown + 1);
+  if (d.exReset && explore.route) return exploreResetOrder();
   if (d.exSave && explore.route) return exploreSave(explore.route);
   if (d.exShare && explore.route) return exploreShare(explore.route);
   if (d.exOwn) { exploreClose(); return openMy(); }
