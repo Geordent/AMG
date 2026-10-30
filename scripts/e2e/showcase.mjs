@@ -42,7 +42,7 @@ const arcQ = (c, a, b) => { const k = Math.cos((a[1] + b[1]) / 2 * Math.PI / 180
 const arcsOk = (legs, ids) => !!legs && legs.length === ids.length - 1 && legs.every((c, i) => { const q = arcQ(c, sitesXY.get(ids[i]), sitesXY.get(ids[i + 1])); return q.ends && q.dev >= 0.08 && q.len >= 1.02; });
 // ни одна точка маршрута не под панелью, колонкой кнопок, лупой/бургером, брендом или чипами; и в пределах экрана
 const markersFree = p => p.evaluate(() => {
-  const rects = ['#explore', '#topui > #bar', '#searchBtn', '#menuBtn', '#brand', '#chips'].map(q => document.querySelector(q)).filter(e => e && e.getClientRects().length).map(e => [e.id || e.tagName, e.getBoundingClientRect()]);
+  const rects = ['#explore', '#topui > #bar', '#searchBtn', '#menuBtn', '#brand', '#feature', '#chips'].map(q => document.querySelector(q)).filter(e => e && e.getClientRects().length).map(e => [e.id || e.tagName, e.getBoundingClientRect()]);
   const bad = [];
   document.querySelectorAll('.amg-rm').forEach((m, i) => { const r = m.getBoundingClientRect();
     if (r.left < 0 || r.top < 0 || r.right > innerWidth || r.bottom > innerHeight) bad.push((i + 1) + ':экран');
@@ -238,14 +238,14 @@ const vake = routes.find(r => r.id === 'vake-murals').stops;
   const samples = await p8.evaluate(async () => {
     const out = [];
     for (let i = 0; i < 40; i++) {
-      const h = document.querySelector('.amg-hero'); if (h) { const m = /translate3d\(([-\d.]+)px, ([-\d.]+)px/.exec(h.style.transform || ''); const rot = /rotate\(([-\d.]+)deg/.exec(h.firstChild.style.transform || ''); if (m) out.push({ x: +m[1], y: +m[2], rot: rot ? +rot[1] : null }); }
+      const h = document.querySelector('.amg-hero'); if (h) { const m = /translate3d\(([-\d.]+)px, ([-\d.]+)px/.exec(h.style.transform || ''); const rot = /rotate\(([-\d.]+)deg/.exec(h.firstChild.style.transform || ''); if (m) out.push({ x: +m[1], y: +m[2], rot: rot ? +rot[1] : null, plane: !!h.querySelector('path[d^="M3 15"]') }); }
       await new Promise(r => setTimeout(r, 60));
     }
     return out;
   });
   const frac = v => Math.abs(v - Math.round(v)) > 0.01;
   const fracShare = samples.filter(s => frac(s.x) || frac(s.y)).length / Math.max(1, samples.length);
-  let maxRot = 0; for (let i = 1; i < samples.length; i++) if (samples[i].rot != null && samples[i - 1].rot != null) maxRot = Math.max(maxRot, Math.abs(((samples[i].rot - samples[i - 1].rot + 540) % 360) - 180));
+  let maxRot = 0; for (let i = 1; i < samples.length; i++) if (samples[i].rot != null && samples[i - 1].rot != null && samples[i].plane && samples[i - 1].plane) maxRot = Math.max(maxRot, Math.abs(((samples[i].rot - samples[i - 1].rot + 540) % 360) - 180));
   ok('короткое звено: положение «героя» дробное (не ступеньками по пикселям)', samples.length > 20 && fracShare > 0.7, `${samples.length} кадров, дробных ${(fracShare * 100).toFixed(0)}%`);
   ok('короткое звено: поворот самолётика плавный (скачок между кадрами ≤ 25°)', maxRot <= 25, `макс. ${maxRot.toFixed(1)}°`);
   await c8.close();
@@ -274,6 +274,46 @@ const vake = routes.find(r => r.id === 'vake-murals').stops;
   ok('крестик на кнопке возврата убирает маршрут: точки и кнопка исчезают', !(await vis('#exploreReturn')) && (await p9.$$('.amg-rm')).length === 0);
   await p9.screenshot({ path: path.join(OUT, 'sc-return.png') });
   await c9.close();
+}
+
+// ---------- Ряд баннеров, чипы и панели-переключатели: оформление и анимация ----------
+{
+  const [cA, pA] = await open({ viewport: { width: 1360, height: 860 } });
+  const css = (sel, prop) => pA.$eval(sel, (e, k) => getComputedStyle(e)[k], prop);
+  ok('«Впечатления» переименованы в «Развлечения» (кнопка и заголовок панели)', (await pA.textContent('#btnExp')).trim() === 'Развлечения' && /Развлечения на карте/.test(await pA.textContent('#expTitle')));
+  const m0 = await css('#btnExp', 'transform'); await pA.hover('#btnExp'); await pA.waitForTimeout(450);
+  ok('баннер при наведении «приподнимается» (меняется transform)', (await css('#btnExp', 'transform')) !== m0, `${m0} → ${await css('#btnExp', 'transform')}`);
+  await pA.mouse.move(700, 600);
+  const c0 = await css('#chips .chip[data-cat="mosaic"]', 'backgroundColor'); await pA.hover('#chips .chip[data-cat="mosaic"]'); await pA.waitForTimeout(350);
+  ok('чип при наведении меняет цвет и приподнимается', (await css('#chips .chip[data-cat="mosaic"]', 'backgroundColor')) !== c0 && (await css('#chips .chip[data-cat="mosaic"]', 'transform')) !== 'none', `${c0} → ${await css('#chips .chip[data-cat="mosaic"]', 'backgroundColor')}`);
+  await pA.mouse.move(700, 600);
+  const dots = await pA.$$eval('#chips .chip', a => a.map(c => getComputedStyle(c, '::before').backgroundColor));
+  ok('у чипов категорий свои цветные точки (разные цвета)', new Set(dots).size >= 6, `${new Set(dots).size} цветов`);
+  // панель «Развлечения»: кнопки-переключатели вместо чекбоксов
+  await pA.click('#btnExp'); await pA.waitForTimeout(700);
+  const row = '#experiences label.row:has(#exCanyon)';
+  const ind = await pA.$eval('#exCanyon', e => { const s = getComputedStyle(e); return (s.appearance === 'none' || s.webkitAppearance === 'none') && s.borderRadius !== '0px' && s.pointerEvents === 'none'; });
+  ok('чекбокс — круглый индикатор, клик ловит вся строка', ind);
+  ok('в строках иконки (те же, что на карте)', (await pA.$$('#experiences .row .row-ico')).length >= 13, `${(await pA.$$('#experiences .row .row-ico')).length}`);
+  const bg0 = await css(row, 'backgroundColor'); await pA.click(row); await pA.waitForTimeout(400);
+  const on = await pA.$eval('#exCanyon', e => e.checked);
+  ok('нажатие на строку включает слой; строка меняет цвет; кнопка «Развлечения» показывает число', on && (await css(row, 'backgroundColor')) !== bg0 && /· 1/.test(await pA.textContent('#btnExp')), `${bg0} → ${await css(row, 'backgroundColor')}`);
+  ok('включённая строка отмечена галочкой (индикатор справа закрашен, без :has)', await pA.$eval('#exCanyon', e => getComputedStyle(e).backgroundImage.startsWith('url(') && getComputedStyle(e).backgroundColor !== 'rgb(255, 255, 255)'));
+  await pA.click(row); await pA.waitForTimeout(300);
+  ok('повторное нажатие выключает слой', !(await pA.$eval('#exCanyon', e => e.checked)));
+  await pA.mouse.move(900, 700); await pA.waitForTimeout(400);
+  const tr0 = await css(row, 'transform'); await pA.hover(row); await pA.waitForTimeout(350);
+  ok('наведение на строку сдвигает её (анимация)', (await css(row, 'transform')) !== tr0);
+  const box = await pA.$eval('#experiences', e => { const r = e.getBoundingClientRect(); return [r.left, r.width, r.top]; });
+  ok('на десктопе панель — компактная карточка слева, не на всю ширину; не заходит на ряд категорий', box[0] < 40 && box[1] < 480 && box[2] >= 195, `${Math.round(box[1])} px, верх ${Math.round(box[2])}`);
+  await pA.keyboard.press('Escape'); await pA.waitForTimeout(400);
+  // панель «Транспорт»
+  await pA.click('#btnTransit'); await pA.waitForTimeout(700);
+  ok('«Транспорт»: те же кнопки-переключатели с иконками', (await pA.$$('#transit .row .row-ico')).length === 4 && await pA.$eval('#trMetro', e => (getComputedStyle(e).appearance === 'none')));
+  await pA.click('#transit label.row:has(#trBus)'); await pA.waitForTimeout(400);
+  ok('«Транспорт»: нажатие включает слой автовокзалов и окрашивает строку', await pA.$eval('#trBus', e => e.checked) && (await pA.$eval('#transit label.row:has(#trBus)', e => getComputedStyle(e).backgroundColor)) !== 'rgb(255, 255, 255)');
+  await pA.screenshot({ path: path.join(OUT, 'sc-panels.png') });
+  await cA.close();
 }
 
 // ---------- Ссылка #ready= ----------

@@ -79,7 +79,7 @@
   #passport[hidden], #day[hidden], #report[hidden], #myroutes[hidden] { display:none; }
   /* Десктоп: панель слева и поверх «Подробно» (z 30), чтобы не уходить под неё */
   @media (min-width:769px) { #passport, #day, #report, #myroutes { z-index:32; left:16px; right:auto; bottom:16px; width:min(440px, calc(100vw - 32px));
-    border-radius:16px; max-height:calc(100% - 190px); box-shadow:0 10px 32px rgba(0,0,0,.22); } }
+    border-radius:16px; max-height:calc(100% - 247px); box-shadow:0 10px 32px rgba(0,0,0,.22); } }
   #report a.btn { text-decoration:none; }
   #passport h2, #day h2, #report h2, #myroutes h2 { margin:0 0 2px; font-size:20px; font-family:'Playfair Display','Noto Serif Georgian',Georgia,serif; }
   .amg-sub { margin:0 0 8px; font-size:24px; line-height:1.15; }
@@ -188,6 +188,11 @@
   #topui > #bar, #topui > #chips { pointer-events:auto; }
   #bar { display:flex; flex-wrap:wrap; gap:6px; }
   #bar select, #bar button { font-size:14px; padding:9px 10px; border-radius:10px; border:1px solid #E0D0B8; background:#FFFBF5; color:#2B2420; cursor:pointer; }
+  #bar button#btnNearby::before { content:''; flex:none; display:inline-block; width:19px; height:19px; margin-right:9px; vertical-align:-4px; background:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%231F6F78%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M12 21s-6.5-5.6-6.5-10.5a6.5 6.5 0 1 1 13 0C18.5 15.4 12 21 12 21z%22/%3E%3Ccircle cx=%2212%22 cy=%2210.5%22 r=%222.4%22/%3E%3C/svg%3E") center/contain no-repeat; }
+  #bar button#btnDay::before { content:''; flex:none; display:inline-block; width:19px; height:19px; margin-right:9px; vertical-align:-4px; background:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%23B8482A%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Ccircle cx=%226%22 cy=%2218%22 r=%222.2%22/%3E%3Ccircle cx=%2218%22 cy=%226%22 r=%222.2%22/%3E%3Cpath d=%22M8 17.5c4 .5 2-5 6.5-5.5 3.5-.4 2.5-3 1.5-4%22/%3E%3C/svg%3E") center/contain no-repeat; }
+  #bar button#btnPassport::before { content:''; flex:none; display:inline-block; width:19px; height:19px; margin-right:9px; vertical-align:-4px; background:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%236E2639%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%225%22 y=%223%22 width=%2214%22 height=%2218%22 rx=%222%22/%3E%3Ccircle cx=%2212%22 cy=%2210%22 r=%223%22/%3E%3Cpath d=%22M8.5 16.5h7%22/%3E%3C/svg%3E") center/contain no-repeat; }
+  #bar button#btnTransit::before { content:''; flex:none; display:inline-block; width:19px; height:19px; margin-right:9px; vertical-align:-4px; background:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%231F6F78%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%224%22 y=%224%22 width=%2216%22 height=%2213%22 rx=%223%22/%3E%3Cpath d=%22M4 11h16M8 20v-3M16 20v-3%22/%3E%3Ccircle cx=%228%22 cy=%2214%22 r=%22.6%22 fill=%22%231F6F78%22/%3E%3Ccircle cx=%2216%22 cy=%2214%22 r=%22.6%22 fill=%22%231F6F78%22/%3E%3C/svg%3E") center/contain no-repeat; }
+  #bar button#btnPacks::before { content:''; flex:none; display:inline-block; width:19px; height:19px; margin-right:9px; vertical-align:-4px; background:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%23A0640F%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M12 4v10M8 10.5l4 4 4-4M5 19h14%22/%3E%3C/svg%3E") center/contain no-repeat; }
   #bar button#btnNearby { margin-left:auto; }
   #bar button#btnPacks { margin-left:0; }
   #sheet { position:absolute; left:0; right:0; bottom:0; z-index:20; background:#FFFBF5; border-radius:16px 16px 0 0; box-shadow:0 -6px 24px rgba(0,0,0,.2); padding:14px 16px calc(14px + env(safe-area-inset-bottom,0px)); max-height:75%; overflow-y:auto; }
@@ -197,6 +202,7 @@
   #transit, #experiences { position:absolute; left:0; right:0; bottom:0; z-index:20; background:#FFFBF5; border-radius:16px 16px 0 0; box-shadow:0 -6px 24px rgba(0,0,0,.2); padding:14px 16px calc(14px + env(safe-area-inset-bottom,0px)); max-height:75%; overflow-y:auto; }
   #transit[hidden], #experiences[hidden] { display:none; }
   #transit h2, #experiences h2 { margin:0 0 8px; font-size:18px; }
+  @media (min-width:769px) { #transit, #experiences { z-index:32; left:16px; right:auto; bottom:16px; width:min(440px, calc(100vw - 32px)); border-radius:16px; max-height:calc(100% - 247px); box-shadow:0 10px 32px rgba(0,0,0,.22); } }
   #transit input[type=checkbox], #experiences input[type=checkbox] { width:20px; height:20px; accent-color:#B8482A; flex:0 0 auto; }
   #transit .row, #experiences .row { justify-content:flex-start; padding:6px 0; }
   #experiences .exp-sep { border-top:1px solid #E6D9C6; margin:10px 0 2px; }
@@ -255,8 +261,8 @@
   #explore[hidden] { display:none; }
   #explore.route { max-height:46%; }
   @media (min-width:769px) { #explore { z-index:32; left:16px; right:auto; bottom:16px; width:min(480px, calc(100vw - 32px));
-    border-radius:16px; max-height:calc(100% - 160px); box-shadow:0 10px 32px rgba(0,0,0,.22); }
-    #explore.route { max-height:calc(100% - 160px); } }
+    border-radius:16px; max-height:calc(100% - 215px); box-shadow:0 10px 32px rgba(0,0,0,.22); }
+    #explore.route { max-height:calc(100% - 215px); } }
   #explore .ex-head { display:flex; align-items:flex-start; gap:8px; margin:0 0 6px; }
   #explore h2 { flex:1; margin:0; font-size:21px; line-height:1.15; font-family:'Playfair Display','Noto Serif Georgian',Georgia,serif; }
   #explore .ex-close { flex:none; width:34px; height:34px; border:0; border-radius:50%; background:#EFE4D2; color:#2B2420; font-size:19px; line-height:1; cursor:pointer; margin-left:auto; }
@@ -295,8 +301,6 @@
   #explore .ex-stops .n { flex:none; width:24px; height:24px; border-radius:50%; background:#6E2639; color:#fff; font-size:12px; font-weight:700; display:flex; align-items:center; justify-content:center; }
   #explore .ex-actions { position:sticky; bottom:-14px; display:flex; gap:8px; flex-wrap:wrap; margin:12px -14px -14px; padding:10px 14px calc(12px + env(safe-area-inset-bottom,0px)); background:linear-gradient(to top,#FFFBF5 78%,rgba(255,251,245,0)); }
   #explore .ex-actions .btn { flex:1 1 auto; }
-  #chips #btnExplore { border-color:#B8482A; color:#9A3B22; font-weight:700; }
-  #chips #btnExplore:hover { background:#F3D9CF; }
   @media (pointer: coarse) { #explore .ex-close { width:44px; height:44px; font-size:22px; } #explore .ex-stops button { min-height:44px; } #explore .ex-back { min-height:44px; } }
   #explore .ex-arcnote { margin:6px 0 0; font-size:12px; font-style:italic; color:#6B5D52; }
   /* «Герой» маршрута летит/идёт по дуге; не перехватывает нажатия и не блокирует карту */
@@ -509,19 +513,82 @@
   @media (pointer: coarse) { #exploreReturn button { min-height:44px; } }
   @media (min-width:769px) and (pointer: fine) {
     #topui { overflow-x:clip; }
-    html:not(.is-mobile) #topui > #bar { position:absolute; top:124px; right:0; margin:0; width:168px; box-sizing:border-box; flex-direction:column; flex-wrap:nowrap; align-items:stretch; gap:6px;
-      padding:10px 10px 10px 12px; background:rgba(255,251,245,.97); border:1px solid #E6D9C6; border-right:0; border-radius:14px 0 0 14px; box-shadow:-6px 6px 22px rgba(43,38,34,.2);
-      transform:translateX(100%); transition:transform .22s ease .35s; }
+    /* Панель: плотная «бумага» с терракотовой кромкой, кнопки с иконками; язычок — воздушный шар у края */
+    html:not(.is-mobile) #topui > #bar { position:absolute; top:124px; right:0; margin:0; width:184px; box-sizing:border-box; flex-direction:column; flex-wrap:nowrap; align-items:stretch; gap:7px;
+      padding:12px 12px 10px 14px; background:#FFFBF5; border:1.5px solid #E0D0B8; border-left:4px solid #B8482A; border-right:0; border-radius:16px 0 0 16px; box-shadow:-8px 8px 26px rgba(43,38,34,.28);
+      transform:translateX(100%); transition:transform .24s cubic-bezier(.2,.8,.3,1) .35s; }
     html:not(.is-mobile) #topui > #bar:hover, html:not(.is-mobile) #topui > #bar:focus-within, html:not(.is-mobile) #topui > #bar.rail-open { transform:translateX(0); transition-delay:0s; }
-    html:not(.is-mobile) #topui > #bar button:not(#railTab) { width:100%; box-sizing:border-box; text-align:center; }
-    html:not(.is-mobile) #topui > #bar button#btnNearby { margin-left:0; }
-    html:not(.is-mobile) #topui > #bar #amgMeta { align-self:stretch; justify-content:center; border-radius:12px; padding:0 6px; }
-    html:not(.is-mobile) #topui > #bar #railTab { display:flex; position:absolute; left:-25px; top:-1px; width:25px; height:48px; padding:0; align-items:center; justify-content:center;
-      border:1px solid #E6D9C6; border-right:0; border-radius:12px 0 0 12px; background:rgba(255,251,245,.97); color:#6B5D52; box-shadow:-3px 3px 10px rgba(43,38,34,.16); cursor:pointer; }
-    html:not(.is-mobile) #topui > #bar #railTab svg { width:15px; height:15px; transition:transform .22s ease; }
-    html:not(.is-mobile) #topui > #bar:hover #railTab svg, html:not(.is-mobile) #topui > #bar:focus-within #railTab svg, html:not(.is-mobile) #topui > #bar.rail-open #railTab svg { transform:rotate(180deg); }
-    @media (prefers-reduced-motion: reduce) { html:not(.is-mobile) #topui > #bar, html:not(.is-mobile) #topui > #bar #railTab svg { transition:none; } }
+    html:not(.is-mobile) #topui > #bar button:not(#railTab):not(#amgFeedbackBtn) { display:flex; align-items:center; justify-content:flex-start; width:100%; box-sizing:border-box; text-align:left; margin-left:0;
+      padding:9px 14px; background:#fff; border:1.5px solid #E0D0B8; border-radius:12px; color:#2B2420; font-weight:600; font-size:14px; box-shadow:0 2px 0 #E6D9C6;
+      transition:transform .16s ease, background-color .16s ease, border-color .16s ease, color .16s ease, box-shadow .16s ease; }
+    html:not(.is-mobile) #topui > #bar button:not(#railTab):not(#amgFeedbackBtn):hover, html:not(.is-mobile) #topui > #bar button:not(#railTab):not(#amgFeedbackBtn):focus-visible {
+      background:#F3D9CF; border-color:#B8482A; color:#9A3B22; transform:translateX(-5px); box-shadow:0 6px 14px rgba(184,72,42,.28); outline:none; }
+    html:not(.is-mobile) #topui > #bar button:not(#railTab):not(#amgFeedbackBtn):active { transform:translateX(-2px) scale(.98); box-shadow:0 2px 6px rgba(184,72,42,.25); }
+    html:not(.is-mobile) #topui > #bar #amgMeta { align-self:stretch; justify-content:center; background:none; border:0; box-shadow:none; padding:2px 0 0; }
+    html:not(.is-mobile) #topui > #bar #amgFeedbackBtn { width:100%; padding:8px 4px; font-size:13px; color:#1F6F78; transition:color .15s ease, transform .15s ease; }
+    html:not(.is-mobile) #topui > #bar #amgFeedbackBtn:hover, html:not(.is-mobile) #topui > #bar #amgFeedbackBtn:focus-visible { color:#B8482A; transform:translateX(-3px); outline:none; }
+    html:not(.is-mobile) #topui > #bar #railTab { display:flex; position:absolute; left:-56px; top:var(--rail-tab-top, 76px); width:52px; height:64px; padding:0 0 0 4px; align-items:center; justify-content:center;
+      border:2px solid #B8482A; border-right:0; border-radius:32px 0 0 32px; background:#FFFBF5; box-shadow:-4px 4px 14px rgba(43,38,34,.3); cursor:pointer;
+      transition:transform .2s ease, background-color .2s ease, box-shadow .2s ease; }
+    html:not(.is-mobile) #topui > #bar #railTab svg { width:34px; height:41px; transform-origin:50% 90%; animation:amg-bob 3.4s ease-in-out infinite; }
+    html:not(.is-mobile) #topui > #bar #railTab:hover, html:not(.is-mobile) #topui > #bar #railTab:focus-visible { background:#F3D9CF; transform:translateX(-4px) scale(1.06); box-shadow:-6px 6px 18px rgba(184,72,42,.4); outline:none; }
+    html:not(.is-mobile) #topui > #bar:hover #railTab svg, html:not(.is-mobile) #topui > #bar:focus-within #railTab svg, html:not(.is-mobile) #topui > #bar.rail-open #railTab svg { animation-play-state:paused; }
+    @keyframes amg-bob { 0%,100% { transform:translateY(0) rotate(-4deg); } 50% { transform:translateY(-4px) rotate(4deg); } }
+    @media (prefers-reduced-motion: reduce) { html:not(.is-mobile) #topui > #bar, html:not(.is-mobile) #topui > #bar #railTab, html:not(.is-mobile) #topui > #bar button { transition:none !important; } html:not(.is-mobile) #topui > #bar #railTab svg { animation:none; } }
   }
+  /* ---- Крупные кнопки-баннеры («Путешествуем по Грузии», «Развлечения») — отдельно от чипов категорий ---- */
+  #feature { display:flex; gap:10px; align-self:flex-start; max-width:100%; pointer-events:auto; }
+  #feature .feat { position:relative; flex:0 1 auto; min-width:0; width:270px; height:76px; box-sizing:border-box; display:flex; flex-direction:column; justify-content:flex-end; gap:1px;
+    padding:9px 14px; border:2px solid rgba(43,36,32,.85); border-radius:16px; overflow:hidden; text-align:left; cursor:pointer; color:#fff;
+    font-family:'Playfair Display','Noto Serif Georgian',Georgia,serif; font-weight:700; font-size:17px; line-height:1.15; text-shadow:0 1px 3px rgba(0,0,0,.5);
+    background-size:100% 100%, cover; background-position:0 0, 100% center; background-repeat:no-repeat; box-shadow:0 4px 14px rgba(43,38,34,.3);
+    transition:transform .18s ease, box-shadow .18s ease, filter .18s ease, background-position .35s ease; }
+  #feature .feat::after { content:attr(data-sub); display:block; font-family:Manrope,system-ui,sans-serif; font-weight:600; font-size:11.5px; letter-spacing:.2px; opacity:.94; text-shadow:0 1px 2px rgba(0,0,0,.45); }
+  #feature .feat:not([data-sub=""])::after { content:attr(data-sub); }
+  #feature .feat[data-sub=""]::after { display:none; }
+  #feature .feat-trips { background-color:#B8482A; background-image:linear-gradient(90deg, rgba(24,10,4,.72) 0%, rgba(24,10,4,.42) 46%, rgba(24,10,4,0) 78%), url("icons/banners/trips.svg"); }
+  #feature .feat-fun { background-color:#1F6F78; background-image:linear-gradient(90deg, rgba(24,10,4,.72) 0%, rgba(24,10,4,.42) 46%, rgba(24,10,4,0) 78%), url("icons/banners/fun.svg"); }
+  #feature .feat:hover, #feature .feat:focus-visible { transform:translateY(-3px) scale(1.02); box-shadow:0 10px 22px rgba(43,38,34,.4); filter:brightness(1.08) saturate(1.06); background-position:0 0, 78% center; outline:none; }
+  #feature .feat:focus-visible { box-shadow:0 0 0 3px #FFFBF5, 0 0 0 5.5px #B8482A, 0 10px 22px rgba(43,38,34,.4); }
+  #feature .feat:active { transform:translateY(-1px) scale(.99); box-shadow:0 3px 8px rgba(43,38,34,.3); }
+  #feature .feat.on { box-shadow:0 0 0 3px #FBF3DC, 0 0 0 5.5px #E6B422, 0 4px 14px rgba(43,38,34,.3); }
+  @media (max-width:768px), (pointer: coarse) {
+    #feature { align-self:stretch; gap:8px; }
+    #feature .feat { flex:1 1 0; width:auto; height:60px; padding:7px 10px; font-size:14px; }
+    #feature .feat::after { display:none !important; }
+  }
+  /* ---- Чипы категорий (Все, Муралы, Мозаики…): тот же язык, что у кнопок выезжающего меню ---- */
+  #chips { padding:5px 2px 9px; margin-top:-1px; }
+  #chips .chip { display:inline-flex; align-items:center; gap:8px; padding:8px 15px; background:#fff; border:1.5px solid #E0D0B8; border-radius:999px; color:#2B2420; font-size:13px; font-weight:600;
+    box-shadow:0 2px 0 #E6D9C6; transition:transform .16s ease, background-color .16s ease, border-color .16s ease, color .16s ease, box-shadow .16s ease; }
+  #chips .chip::before { content:''; flex:none; width:11px; height:11px; border-radius:50%; background:var(--dot,#B8482A); border:1.5px solid rgba(43,36,32,.55); transition:transform .2s ease, border-color .16s ease; }
+  #chips .chip[data-all]::before { background:conic-gradient(#B8482A 0 25%, #E6B422 0 50%, #1F6F78 0 75%, #6E2639 0); }
+  #chips .chip[data-cat="mural"] { --dot:#B8482A; } #chips .chip[data-cat="street_art"] { --dot:#A0640F; } #chips .chip[data-cat="mosaic"] { --dot:#1F6F78; }
+  #chips .chip[data-cat="sculpture"] { --dot:#4E5B66; } #chips .chip[data-cat="installation"] { --dot:#6E2639; } #chips .chip[data-cat="architecture"] { --dot:#8A5A2B; }
+  #chips .chip[data-cat="unusual"] { --dot:#B07A1E; } #chips .chip[data-cat="other"] { --dot:#5A4636; }
+  #chips .chip:hover, #chips .chip:focus-visible { transform:translateY(-2px); background:#F3D9CF; border-color:#B8482A; color:#9A3B22; box-shadow:0 6px 12px rgba(184,72,42,.25); outline:none; }
+  #chips .chip:hover::before { transform:scale(1.25); }
+  #chips .chip:active { transform:translateY(0) scale(.97); }
+  #chips .chip.on { background:#B8482A; border-color:#9A3B22; color:#fff; box-shadow:0 4px 10px rgba(184,72,42,.4); }
+  #chips .chip.on::before { border-color:#fff; }
+  #chips .chip.on:hover { background:#9A3B22; }
+  @media (pointer: coarse) { #chips .chip { min-height:44px; padding:9px 16px; } }
+  @media (prefers-reduced-motion: reduce) { #feature .feat, #chips .chip, #chips .chip::before { transition:none; } #feature .feat:hover, #chips .chip:hover { transform:none; } }
+  /* ---- Панели «Развлечения» и «Транспорт»: вместо чекбоксов — кнопки-переключатели (как в меню с шаром) ---- */
+  #transit .row, #experiences .row { position:relative; display:flex; align-items:center; gap:11px; margin:0 0 8px; padding:10px 14px; background:#fff; border:1.5px solid #E0D0B8; border-radius:12px;
+    box-shadow:0 2px 0 #E6D9C6; font-size:14px; font-weight:600; cursor:pointer; transition:transform .16s ease, background-color .16s ease, border-color .16s ease, color .16s ease, box-shadow .16s ease; }
+  /* Индикатор — сам чекбокс, оформленный кругом (не зависит от :has); клик ловит вся строка (label) */
+  #transit .row input[type=checkbox], #experiences .row input[type=checkbox] { -webkit-appearance:none; appearance:none; flex:none; order:3; margin:0 0 0 auto; width:22px; height:22px; box-sizing:border-box; border-radius:50%;
+    border:2px solid #D9C4A6; background-color:#fff; background-repeat:no-repeat; background-position:center; background-size:14px; pointer-events:none; transition:background-color .16s ease, border-color .16s ease; }
+  #transit .row .row-ico, #experiences .row .row-ico { flex:none; width:32px; height:32px; transition:transform .2s ease; }
+  #transit .row:hover, #experiences .row:hover { transform:translateX(4px); background:#FFF3EB; border-color:#B8482A; box-shadow:0 6px 12px rgba(184,72,42,.22); }
+  #transit .row:hover .row-ico, #experiences .row:hover .row-ico { transform:rotate(-8deg) scale(1.12); }
+  #transit .row:active, #experiences .row:active { transform:translateX(2px) scale(.99); }
+  #transit .row:focus-within, #experiences .row:focus-within { outline:2px solid #B8482A; outline-offset:2px; }
+  #transit .row:has(input:checked), #experiences .row:has(input:checked) { background:#F3D9CF; border-color:#B8482A; color:#9A3B22; }
+  #transit .row input[type=checkbox]:checked, #experiences .row input[type=checkbox]:checked { background-color:#B8482A; border-color:#B8482A; background-image:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%23fff%22 stroke-width=%223.4%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M5 12.5l4.5 4.5L19 7.5%22/%3E%3C/svg%3E"); animation:amg-pop .28s cubic-bezier(.2,1.5,.4,1); }
+  @keyframes amg-pop { 0% { transform:scale(.4); } 100% { transform:scale(1); } }
+  @media (prefers-reduced-motion: reduce) { #transit .row, #experiences .row, #transit .row .row-ico, #experiences .row .row-ico { transition:none; } #transit .row:hover, #experiences .row:hover { transform:none; } #transit .row input[type=checkbox]:checked, #experiences .row input[type=checkbox]:checked { animation:none; } }
   /* ---- Подсказка «скачайте карту города» и справка по маршрутам ---- */
   #packHint { position:fixed; left:50%; transform:translateX(-50%); bottom:calc(14px + env(safe-area-inset-bottom,0px)); z-index:16;
     width:min(460px, calc(100vw - 24px)); box-sizing:border-box; display:flex; flex-direction:column; gap:10px;
@@ -595,7 +662,7 @@
     <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke="#2a2622" stroke-width="2" stroke-linecap="round"/></svg>
   </button>
   <div id="bar">
-    <button id="railTab" type="button" aria-label="Меню" title="Меню" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5 8 12l7 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <button id="railTab" type="button" aria-label="Меню" title="Меню" aria-expanded="false"><svg viewBox="0 0 40 48" aria-hidden="true"><g stroke="#2B2420" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"><path d="M20 3C10 3 4 10 4 18c0 7 6 13 11 18h10c5-5 11-11 11-18C36 10 30 3 20 3z" fill="#B8482A"/><path d="M20 3c-6 5-6 25-5 33h10c1-8 1-28-5-33z" fill="#F3D9CF"/><path d="M15 36l3 6M25 36l-3 6" fill="none"/><rect x="16" y="42" width="8" height="5" rx="1" fill="#8a5a3b"/></g></svg></button>
     <select id="flavor"></select>
     <select id="lang">
       <option value="ru">Русский</option>
@@ -611,7 +678,8 @@
       <button type="button" id="amgFeedbackBtn">Обратная связь</button>
     </div>
   </div>
-  <div id="chips"><button class="chip" id="btnExplore" type="button" aria-haspopup="dialog">Путешествуем по Грузии</button><span class="chip-sep" aria-hidden="true"></span><span id="chipsCat"></span><span class="chip-sep" aria-hidden="true"></span><button class="chip" id="btnExp" type="button" aria-haspopup="dialog">Впечатления</button></div>
+  <div id="feature"><button class="feat feat-trips" id="btnExplore" type="button" aria-haspopup="dialog" data-sub="">Путешествуем по Грузии</button><button class="feat feat-fun" id="btnExp" type="button" aria-haspopup="dialog" data-sub="">Развлечения</button></div>
+  <div id="chips"><span id="chipsCat"></span></div>
   <div id="exploreReturn" hidden><button type="button" class="er-go" data-er-go="1"></button><button type="button" class="er-x" data-er-x="1">×</button></div>
 </div>
 <div id="scrim" hidden></div>
@@ -633,7 +701,7 @@
   <div class="btns"><button class="btn" id="transitClose" type="button">Закрыть</button></div>
 </div>
 <div id="experiences" hidden>
-  <h2 id="expTitle">Впечатления на карте</h2>
+  <h2 id="expTitle">Развлечения на карте</h2>
   <div class="small" id="expHint">Экстрим и природа: парапланы, каньоны, зиплайны, рафтинг, байк, канатки. По умолчанию выключено.</div>
   <label class="row"><input type="checkbox" id="exParaglide"> <span id="exParaglideLabel">Парапланы</span></label>
   <label class="row"><input type="checkbox" id="exCanyon"> <span id="exCanyonLabel">Каньоны, водопады, смотровые</span></label>
@@ -1075,8 +1143,10 @@ const LB = {
   offline:    { ru:'Офлайн', en:'Offline', ka:'ოფლაინ' },
   // --- транспорт: подключаемые слои ---
   transit:      { ru:'Транспорт', en:'Transit', ka:'ტრანსპორტი' },
-  exp:          { ru:'Впечатления', en:'Experiences', ka:'შთაბეჭდილებები' },
-  expTitle:     { ru:'Впечатления на карте', en:'Experiences on the map', ka:'შთაბეჭდილებები რუკაზე' },
+  exp:          { ru:'Развлечения', en:'Activities', ka:'გართობა' },
+  featTripsSub: { ru:'Готовые маршруты и свои', en:'Ready routes & your own', ka:'მზა და საკუთარი მარშრუტები' },
+  featFunSub:   { ru:'Парапланы, каньоны, бани…', en:'Paragliding, canyons, spas…', ka:'პარაპლანერიზმი, კანიონები, აბანოები…' },
+  expTitle:     { ru:'Развлечения на карте', en:'Activities on the map', ka:'გართობა რუკაზე' },
   expHint:      { ru:'Экстрим и природа: парапланы, каньоны, зиплайны, рафтинг, байк, канатки. По умолчанию выключено.',
     en:'Adventure and nature: paragliding, canyons, ziplines, rafting, biking, cable cars. Off by default.',
     ka:'ექსტრიმი და ბუნება: პარაპლანი, კანიონები, ზიპლაინი, რაფტინგი, ველო, საბაგირო. ნაგულისხმევად გამორთულია.' },
@@ -2498,6 +2568,11 @@ function relocateBar() {
   const bar = document.getElementById('bar'), tab = document.getElementById('railTab');
   if (!bar || !tab) return;
   const set = on => { bar.classList.toggle('rail-open', on); tab.setAttribute('aria-expanded', on ? 'true' : 'false'); };
+  // Язычок встаёт ниже фактического края ряда чипов (высота шапки зависит от языка и ширины)
+  const topui = document.getElementById('topui'), chips = document.getElementById('chips');
+  const sync = () => { if (!chips || bar.parentElement !== topui) return; bar.style.setProperty('--rail-tab-top', Math.max(0, Math.ceil(chips.getBoundingClientRect().bottom + 8 - bar.getBoundingClientRect().top)) + 'px'); };
+  if (window.ResizeObserver && topui) new ResizeObserver(sync).observe(topui);
+  window.addEventListener('resize', sync); if (document.fonts && document.fonts.ready) document.fonts.ready.then(sync); sync();
   tab.addEventListener('click', e => { e.stopPropagation(); set(!bar.classList.contains('rail-open')); });
   document.addEventListener('click', e => { if (bar.classList.contains('rail-open') && !bar.contains(e.target)) set(false); });
 })();
@@ -3087,6 +3162,17 @@ function setExpKind(k, on) {
 $('btnExp').onclick = () => { Overlays.hide('menu'); syncExpPanel(); Overlays.show('experiences'); renderExpBtn(); };
 for (const t of EXP_UI) { const el = $(t.box); if (el) el.onchange = e => setExpKind(t.key, e.target.checked); }
 $('expClose').onclick = () => { Overlays.hide('experiences'); renderExpBtn(); };
+// Иконки строк панелей «Развлечения» и «Транспорт»: те же рисунки, что на карте (EXP_SVGS), и четыре значка транспорта
+{
+  const ico = svg => 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+  const add = (boxId, src) => { const box = $(boxId); if (!box) return; const img = document.createElement('img'); img.className = 'row-ico'; img.alt = ''; img.src = src; box.after(img); };
+  for (const t of EXP_UI) { const svg = EXP_SVGS['amg-exp-' + t.key]; if (svg) add(t.box, ico(svg)); }
+  const L = (path, c) => ico(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><circle cx="16" cy="16" r="15" fill="#F3E6D0" stroke="#E0D0B8" stroke-width="1.5"/><g transform="translate(6 6) scale(.83)" fill="none" stroke="${c}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${path}</g></svg>`);
+  add('trMetro', L('<rect x="5" y="3" width="14" height="14" rx="4"/><path d="M5 12h14M9 20l-2 1.5M15 20l2 1.5M9 20h6"/>', '#B8482A'));
+  add('trTrain', L('<rect x="5" y="4" width="14" height="13" rx="3"/><path d="M5 11h14M8 20l1.5-3M16 20l-1.5-3M8 20h8"/><circle cx="9" cy="14" r=".7" fill="#1F6F78"/><circle cx="15" cy="14" r=".7" fill="#1F6F78"/>', '#1F6F78'));
+  add('trBus', L('<rect x="4" y="4" width="16" height="13" rx="3"/><path d="M4 11h16M8 20v-3M16 20v-3"/><circle cx="8" cy="14" r=".7" fill="#6E2639"/><circle cx="16" cy="14" r=".7" fill="#6E2639"/>', '#6E2639'));
+  add('trAir', L('<path d="M12 3c1.2 0 2 .9 2 2v5l7 4v2l-7-2v4l2 1.5V21l-4-1-4 1v-1.5l2-1.5v-4l-7 2v-2l7-4V5c0-1.1.8-2 2-2z"/>', '#A0640F'));
+}
 renderExpBtn();
 
 // ---------- UGC Этап 1: «Что рядом» + share + deep-link (только клиент, без сервера) ----------
@@ -3110,6 +3196,7 @@ function applyStaticLabels() {
   T('trAirLabel', pick(LB.transitAir));
   // витрина «Путешествуем по Грузии»
   T('btnExplore', pick(LB.explore));
+  { const bt = $('btnExplore'), bf = $('btnExp'); if (bt) bt.setAttribute('data-sub', pick(LB.featTripsSub)); if (bf) bf.setAttribute('data-sub', pick(LB.featFunSub)); }
   { const ex = $('explore'); if (ex) ex.setAttribute('aria-label', pick(LB.explore)); }
   if (exploreVisible()) renderExplore();
   try { exploreSyncPill(); } catch (_) {}            // при первом вызове (до объявления explore) — пропустить
@@ -4478,7 +4565,8 @@ function exploreFit(r) {
   if (!pts.length) return;
   const all = pts.length > 1 ? arcLegs(pts).flat() : pts;   // дуги выгибаются за точки — вписываем их тоже
   const mob = isMobileUI(), H = window.innerHeight;
-  const padding = mob ? { top: 150, bottom: Math.round(H * 0.46) + 24, left: 36, right: 36 } : { top: 150, bottom: 70, left: 540, right: 190 };   // справа — колонка кнопок
+  const chipsEl = $('chips'), top = chipsEl ? Math.ceil(chipsEl.getBoundingClientRect().bottom) + 16 : 215;      // под реальной шапкой (баннер, ряд баннеров, чипы)
+  const padding = mob ? { top, bottom: Math.round(H * 0.46) + 24, left: 36, right: 36 } : { top, bottom: 70, left: 540, right: 190 };   // справа — колонка кнопок
   if (pts.length === 1) { map.flyTo({ center: pts[0], zoom: 14 }); return; }
   map.fitBounds(all.reduce((bb, p) => bb.extend(p), new maplibregl.LngLatBounds(all[0], all[0])), { padding, maxZoom: 15, duration: 900 });
 }

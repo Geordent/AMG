@@ -31,13 +31,14 @@ const measure = (p, { rail }) => p.evaluate(({ rail }) => {
   const add = (name, e) => { if (vis(e)) { const r = e.getBoundingClientRect(); items.push({ name, l: r.left, t: r.top, r: r.right, b: r.bottom }); } };
   add('brand', document.getElementById('brand')); add('search', document.getElementById('searchBtn')); add('burger', document.getElementById('menuBtn'));
   add('flavor', document.querySelector('#topSel #flavor')); add('lang', document.querySelector('#topSel #lang'));
+  add('feat-trips', document.getElementById('btnExplore')); add('feat-fun', document.getElementById('btnExp'));
   add('chips', document.getElementById('chips')); add('eye', document.getElementById('amgHits')); add('tab', document.getElementById('railTab'));
   if (rail) document.querySelectorAll('#topui > #bar > *:not(#railTab)').forEach(e => add('bar:' + (e.id || e.tagName), e));
   const bad = [];
   for (let i = 0; i < items.length; i++) for (let j = i + 1; j < items.length; j++) {
     const a = items[i], d = items[j];
     if ((a.name === 'brand' && d.name === 'eye') || (a.name === 'eye' && d.name === 'brand')) continue;   // счётчик нарочно внутри баннера (проверяется отдельно: eyeInBrand)
-    if (rail && (a.name === 'chips' || d.name === 'chips') && (a.name.startsWith('bar:') || d.name.startsWith('bar:') || a.name === 'tab' || d.name === 'tab')) continue;   // открытая панель временно перекрывает ряд тем справа — так задумано
+    if (rail && (a.name === 'chips' || d.name === 'chips' || a.name.startsWith('feat-') || d.name.startsWith('feat-')) && (a.name.startsWith('bar:') || d.name.startsWith('bar:') || a.name === 'tab' || d.name === 'tab')) continue;   // открытая панель временно перекрывает ряд тем справа — так задумано
     if (Math.min(a.r, d.r) - Math.max(a.l, d.l) > 1 && Math.min(a.b, d.b) - Math.max(a.t, d.t) > 1) bad.push(`${a.name}×${d.name}`);
   }
   const outside = items.filter(i => i.r > innerWidth + 1 || i.l < -1 || i.b > innerHeight + 1).map(i => i.name);
@@ -65,6 +66,10 @@ for (const c of cases) {
   const closed = await measure(p, { rail: false });
   ok(`${tag}: закрытое состояние — нет пересечений и выхода за экран`, closed.bad.length === 0 && closed.outside.length === 0, `${closed.n} эл.${closed.bad.length ? ' пересекаются: ' + closed.bad.join(', ') : ''}${closed.outside.length ? ' за экраном: ' + closed.outside.join(', ') : ''}`);
   ok(`${tag}: счётчик просмотров внутри баннера`, closed.eyeInBrand);
+  const ft = await p.evaluate(() => { const f = document.getElementById('feature'), t = document.getElementById('btnExplore'), e = document.getElementById('btnExp'), ch = document.getElementById('chips'), r = el => el.getBoundingClientRect();
+    return { sep: !!f && f.contains(t) && f.contains(e) && !ch.contains(t) && !ch.contains(e), above: !!f && r(f).bottom <= r(ch).top + 1, w: [r(t).width, r(e).width], h: [r(t).height, r(e).height], label: e.textContent.trim(), vis: r(f).right <= innerWidth + 1 }; });
+  ok(`${tag}: «Путешествуем» и «Развлечения» — отдельный ряд над чипами, не в ряду категорий`, ft.sep && ft.above && ft.vis, JSON.stringify({ w: ft.w.map(Math.round), h: ft.h.map(Math.round) }));
+  ok(`${tag}: баннеры крупнее чипов (высота ≥ 56 px, ширина ≥ 150 px)`, Math.min(...ft.h) >= 56 && Math.min(...ft.w) >= 150);
   if (!c.mobile) {
     ok(`${tag}: язык и стиль карты — справа от баннера, в одной строке`, closed.selRight);
     ok(`${tag}: кнопки спрятаны за правым краем, виден только язычок`, closed.barVisible === 0 && closed.n >= 6);
