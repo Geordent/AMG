@@ -8,7 +8,6 @@
 | Файл | Автор | Лицензия | Страница файла |
 |---|---|---|---|
 | `abanotubani-baths.jpg` | Marcin Konsek | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File%3A2014_Tbilisi%2C_%C5%81a%C5%BAnie_siarkowe_w_Abanotubani_%2801%29.jpg |
-| `sololaki-old-town.jpg` | FingerWiki | CC BY 4.0 | https://commons.wikimedia.org/wiki/File:2026-09-17_18_Amaghleba_Street,_Tbilisi_-_wooden_gallery.jpg |
 | `medieval-samtskhe.jpg` | Alexkom000 | CC BY 4.0 | https://commons.wikimedia.org/wiki/File:2025-05-25_Vardzia_9.jpg |
 | `imereti-underground.jpg` | Marcin Konsek | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:2014_Imeretia,_Jaskinia_Prometeusza_(16).jpg |
 | `mineral-springs.jpg` | Alexey Komarov | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File%3ABorjomi_Sulfur_Pools.jpg |

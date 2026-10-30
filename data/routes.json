@@ -18,7 +18,7 @@
       "theme_key": "murals",
       "desc": { "ru": "Памятник Свободы, муралы Тбилиси Мурал Феста на улицах Асатиани и Атонели и стрит-арт старого города.", "en": "Freedom Monument, Tbilisi Mural Fest walls on Asatiani and Atoneli streets and Old Town street art.", "ka": "თავისუფლების ძეგლი, Tbilisi Mural Fest-ის მურალები ასათიანისა და ათონელის ქუჩებზე და ძველი ქალაქის სტრიტ-არტი." },
       "teaser": { "ru": "Пройдите от площади Свободы вглубь Сололаки: стены здесь рассказывают истории, а во дворах прячутся работы художников со всего мира.", "en": "Walk from Freedom Square into Sololaki: the walls tell stories, and courtyards hide works by artists from around the world.", "ka": "გაიარეთ თავისუფლების მოედნიდან სოლოლაკში: კედლები ისტორიებს ყვებიან, ეზოებში კი მსოფლიოს სხვადასხვა კუთხის მხატვრების ნამუშევრები იმალება." },
-      "cover": { "type": "photo", "src": "icons/covers/sololaki-old-town.jpg", "credit": "FingerWiki", "license": "CC BY 4.0", "source_url": "https://commons.wikimedia.org/wiki/File:2026-09-17_18_Amaghleba_Street,_Tbilisi_-_wooden_gallery.jpg" },
+      "cover": { "type": "art", "src": "icons/covers/sololaki-old-town.svg" },
       "stops": ["site-0022", "site-0533", "site-0428", "site-0355", "site-0482", "site-0415", "site-0534", "site-0009", "site-0461", "site-0010", "site-0035", "site-0003", "site-0450", "site-0425", "site-0508"]
     },
     {
