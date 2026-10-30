@@ -41,22 +41,6 @@
   <path d="M0 129 H640" stroke="#FBF3DC" stroke-width="2.2" stroke-dasharray="14 12"/>
   <path d="M250 120 C330 108 402 104 528 106" fill="none" stroke="#FBF3DC" stroke-width="2.6" stroke-linecap="round" stroke-dasharray="0.1 9" opacity=".7"/>
 
-  <!-- автодом -->
-  <g transform="translate(500 86) scale(.95)" stroke="#3B332B" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round">
-    <ellipse cx="40" cy="34" rx="44" ry="5" fill="#2B2420" opacity=".2"/>
-    <path d="M2 28 V10 C2 5 6 2 12 2 H54 C60 2 64 4 68 8 L82 22 C85 25 87 29 87 33 V38 H2Z" fill="#FBF3DC"/>
-    <path d="M2 26 H87 V34 H2Z" fill="#B8482A"/>
-    <rect x="10" y="8" width="17" height="12" rx="2" fill="#BFE3F2"/>
-    <rect x="32" y="8" width="17" height="12" rx="2" fill="#BFE3F2"/>
-    <path d="M56 8 L68 21 H51 V8Z" fill="#BFE3F2"/>
-    <path d="M52 6 V28" fill="none"/>
-    <path d="M14 2 H44" fill="none"/>
-    <rect x="16" y="-5" width="24" height="8" rx="2" fill="#E6B422"/>
-    <circle cx="24" cy="37" r="8" fill="#2B2420"/><circle cx="24" cy="37" r="3" fill="#FBF3DC" stroke="none"/>
-    <circle cx="68" cy="37" r="8" fill="#2B2420"/><circle cx="68" cy="37" r="3" fill="#FBF3DC" stroke="none"/>
-    <circle cx="86" cy="28" r="2" fill="#E6B422" stroke="none"/>
-  </g>
-
   <!-- воздушный шар -->
   <g transform="translate(598 20) scale(.66)" stroke="#3B332B" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round">
     <path d="M0 -40 C-22 -40 -35 -24 -35 -6 C-35 12 -22 26 -10 36 L10 36 C22 26 35 12 35 -6 C35 -24 22 -40 0 -40Z" fill="#B8482A"/>

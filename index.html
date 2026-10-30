@@ -581,6 +581,24 @@
   #feature .feat-fun { background-color:rgba(31,111,120,.72); }
   #feature .feat-trips::before { background-image:linear-gradient(90deg, rgba(24,10,4,.72) 0%, rgba(24,10,4,.42) 46%, rgba(24,10,4,0) 78%), url("icons/banners/trips.svg"); }
   #feature .feat-fun::before { background-image:linear-gradient(90deg, rgba(24,10,4,.72) 0%, rgba(24,10,4,.42) 46%, rgba(24,10,4,0) 78%), url("icons/banners/fun.svg"); }
+  #feature .feat-anim { position:absolute; inset:0; z-index:-1; width:100%; height:100%; pointer-events:none; overflow:hidden; }
+  #feature .van-body { transition:transform .9s cubic-bezier(.2,.8,.3,1); }
+  #feature .feat:hover .van-body, #feature .feat:focus-visible .van-body { transform:translateX(48px); }
+  #feature .wheel { transform-box:fill-box; transform-origin:center; }
+  #feature .feat:hover .wheel, #feature .feat:focus-visible .wheel { animation:amg-van-wheel .55s linear infinite; }
+  @keyframes amg-van-wheel { to { transform:rotate(360deg); } }
+  #feature .van-smoke { opacity:0; }
+  #feature .feat:hover .van-smoke, #feature .feat:focus-visible .van-smoke { opacity:1; }
+  #feature .van-smoke circle { transform-box:fill-box; transform-origin:center; }
+  #feature .feat:hover .van-smoke circle, #feature .feat:focus-visible .van-smoke circle { animation:amg-van-smoke 1.15s ease-out infinite; }
+  #feature .feat:hover .van-smoke circle:nth-child(2), #feature .feat:focus-visible .van-smoke circle:nth-child(2) { animation-delay:.28s; }
+  #feature .feat:hover .van-smoke circle:nth-child(3), #feature .feat:focus-visible .van-smoke circle:nth-child(3) { animation-delay:.56s; }
+  @keyframes amg-van-smoke { 0% { opacity:.8; transform:translate(0,0) scale(.4); } 100% { opacity:0; transform:translate(-22px,-12px) scale(1.6); } }
+  #feature .paraglider { transform-box:fill-box; transform-origin:center; transition:transform 1.15s cubic-bezier(.2,.8,.3,1); }
+  #feature .feat:hover .paraglider, #feature .feat:focus-visible .paraglider { transform:translate(26px,10px) scale(1.16); }
+  #feature .ferris-rotor { transform-box:fill-box; transform-origin:center; }
+  #feature .feat:hover .ferris-rotor, #feature .feat:focus-visible .ferris-rotor { animation:amg-ferris 7s linear infinite; }
+  @keyframes amg-ferris { to { transform:rotate(360deg); } }
   #feature .feat:hover, #feature .feat:focus-visible { transform:translateY(-3px) scale(1.02); box-shadow:0 10px 22px rgba(43,38,34,.4); outline:none; }
   #feature .feat:hover::before, #feature .feat:focus-visible::before { opacity:.84; filter:brightness(1.08) saturate(1.06); background-position:0 0, 88% center; transform:scale(1.08); }
   #feature .feat:focus-visible { box-shadow:0 0 0 3px #FFFBF5, 0 0 0 5.5px #B8482A, 0 10px 22px rgba(43,38,34,.4); }
@@ -617,7 +635,7 @@
     #chips .chip-ico { width:30px; height:30px; border-width:0; }
     #chips .chip-lbl, #chips .chip .cnt, #chips .chip-x { display:none; }
   }
-  @media (prefers-reduced-motion: reduce) { #feature .feat, #feature .feat::before, #chips .chip, #chips .chip::before { transition:none; } #feature .feat:hover, #feature .feat:hover::before, #chips .chip:hover { transform:none; } }
+  @media (prefers-reduced-motion: reduce) { #feature .feat, #feature .feat::before, #feature .feat-anim *, #chips .chip, #chips .chip::before { transition:none; animation:none !important; } #feature .feat:hover, #feature .feat:hover::before, #feature .feat:hover .van-body, #feature .feat:hover .paraglider, #chips .chip:hover { transform:none; } }
   /* ---- Панели «Развлечения» и «Транспорт»: вместо чекбоксов — кнопки-переключатели (как в меню с шаром) ---- */
   #transit .row, #experiences .row { position:relative; display:flex; align-items:center; gap:11px; margin:0 0 8px; padding:10px 14px; background:#fff; border:1.5px solid #E0D0B8; border-radius:12px;
     box-shadow:0 2px 0 #E6D9C6; font-size:14px; font-weight:600; cursor:pointer; transition:transform .16s ease, background-color .16s ease, border-color .16s ease, color .16s ease, box-shadow .16s ease; }
@@ -738,7 +756,49 @@
     </div>
   </div>
   <div id="chips"><span id="chipsCat"></span></div>
-  <div id="feature"><button class="feat feat-trips" id="btnExplore" type="button" aria-haspopup="dialog" data-sub="">Путешествуем по Грузии</button><button class="feat feat-fun" id="btnExp" type="button" aria-haspopup="dialog" data-sub="">Развлечения</button></div>
+  <div id="feature"><button class="feat feat-trips" id="btnExplore" type="button" aria-haspopup="dialog" data-sub=""><span class="feat-label">Путешествуем по Грузии</span><svg class="feat-anim" viewBox="0 0 640 136" preserveAspectRatio="xMaxYMid slice" aria-hidden="true">
+        <g transform="translate(500 86) scale(.95)" stroke="#3B332B" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round">
+          <g class="van-smoke" fill="#FFF8EA" stroke="none"><circle cx="-2" cy="28" r="5"/><circle cx="-8" cy="24" r="3.5"/><circle cx="-13" cy="20" r="2.5"/></g>
+          <g class="van-body">
+            <ellipse cx="40" cy="34" rx="44" ry="5" fill="#2B2420" opacity=".2"/>
+            <path d="M2 28 V10 C2 5 6 2 12 2 H54 C60 2 64 4 68 8 L82 22 C85 25 87 29 87 33 V38 H2Z" fill="#FBF3DC"/>
+            <path d="M2 26 H87 V34 H2Z" fill="#B8482A"/>
+            <rect x="10" y="8" width="17" height="12" rx="2" fill="#BFE3F2"/>
+            <rect x="32" y="8" width="17" height="12" rx="2" fill="#BFE3F2"/>
+            <path d="M56 8 L68 21 H51 V8Z" fill="#BFE3F2"/>
+            <path d="M52 6 V28" fill="none"/>
+            <path d="M14 2 H44" fill="none"/>
+            <rect x="16" y="-5" width="24" height="8" rx="2" fill="#E6B422"/>
+            <g class="wheel wheel-rear"><circle cx="24" cy="37" r="8" fill="#2B2420"/><circle cx="24" cy="37" r="3" fill="#FBF3DC" stroke="none"/><path d="M17 37H31M24 30V44" fill="none" stroke="#FBF3DC" stroke-width="1.8"/></g>
+            <g class="wheel wheel-front"><circle cx="68" cy="37" r="8" fill="#2B2420"/><circle cx="68" cy="37" r="3" fill="#FBF3DC" stroke="none"/><path d="M61 37H75M68 30V44" fill="none" stroke="#FBF3DC" stroke-width="1.8"/></g>
+            <circle cx="86" cy="28" r="2" fill="#E6B422" stroke="none"/>
+          </g>
+        </g>
+      </svg></button><button class="feat feat-fun" id="btnExp" type="button" aria-haspopup="dialog" data-sub=""><span class="feat-label">Развлечения</span><svg class="feat-anim" viewBox="0 0 640 136" preserveAspectRatio="xMaxYMid slice" aria-hidden="true">
+        <g transform="translate(544 72)" stroke="#2B2420" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+          <g class="ferris-rotor">
+            <circle r="47" fill="#FBF3DC" fill-opacity=".16"/>
+            <circle r="43" fill="none"/>
+            <circle r="31" fill="none"/>
+            <g fill="none"><path d="M0 0 L43 0 M0 0 L37.2 21.5 M0 0 L21.5 37.2 M0 0 L0 43 M0 0 L-21.5 37.2 M0 0 L-37.2 21.5 M0 0 L-43 0 M0 0 L-37.2 -21.5 M0 0 L-21.5 -37.2 M0 0 L0 -43 M0 0 L21.5 -37.2 M0 0 L37.2 -21.5"/></g>
+            <circle r="5" fill="#2B2420"/>
+            <g stroke-width="2">
+              <circle cx="43" cy="0" r="5.2" fill="#B8482A"/><circle cx="37.2" cy="21.5" r="5.2" fill="#E6B422"/><circle cx="21.5" cy="37.2" r="5.2" fill="#6E2639"/><circle cx="0" cy="43" r="5.2" fill="#CFE7E6"/><circle cx="-21.5" cy="37.2" r="5.2" fill="#B8482A"/><circle cx="-37.2" cy="21.5" r="5.2" fill="#E6B422"/><circle cx="-43" cy="0" r="5.2" fill="#6E2639"/><circle cx="-37.2" cy="-21.5" r="5.2" fill="#CFE7E6"/><circle cx="-21.5" cy="-37.2" r="5.2" fill="#B8482A"/><circle cx="0" cy="-43" r="5.2" fill="#E6B422"/><circle cx="21.5" cy="-37.2" r="5.2" fill="#6E2639"/><circle cx="37.2" cy="-21.5" r="5.2" fill="#CFE7E6"/>
+            </g>
+          </g>
+          <path d="M0 43 L-22 64 M0 43 L22 64" fill="none" stroke-width="3"/>
+          <path d="M-28 64 H28" fill="none" stroke-width="3"/>
+        </g>
+        <g transform="translate(370 86)" stroke="#2B2420" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round">
+          <g class="paraglider">
+            <path d="M-52 0 C-38 -22 -16 -30 0 -20 C16 -30 38 -22 52 0 C32 -8 16 -6 0 2 C-16 -6 -32 -8 -52 0Z" fill="#B8482A"/>
+            <path d="M-44 -8 C-28 -16 -12 -16 0 -8 C12 -16 28 -16 44 -8" fill="none" stroke="#F3D9CF" stroke-width="2.2" opacity=".7"/>
+            <path d="M-38 0 L-8 26 M38 0 L8 26 M-20 4 L-5 26 M20 4 L5 26" fill="none" stroke-width="1.8"/>
+            <circle cx="0" cy="30" r="5" fill="#F3D9CF"/>
+            <path d="M0 35 L0 42" fill="none" stroke-width="2"/>
+          </g>
+        </g>
+      </svg></button></div>
   <div id="exploreReturn" hidden><button type="button" class="er-go" data-er-go="1"></button><button type="button" class="er-x" data-er-x="1">×</button></div>
 </div>
 <div id="scrim" hidden></div>
@@ -3252,8 +3312,9 @@ const EXP_UI = [
 function saveExpPref() { try { localStorage.setItem('amg-exp', JSON.stringify([...state.exp])); } catch (_) {} }
 function renderExpBtn() {
   const b = $('btnExp'); if (!b) return;
-  const n = state.exp.size;
-  b.textContent = n ? `${pick(LB.exp)} · ${n}` : pick(LB.exp);
+  const n = state.exp.size, v = n ? `${pick(LB.exp)} · ${n}` : pick(LB.exp);
+  const l = b.querySelector('.feat-label');
+  if (l) l.textContent = v; else b.textContent = v;
   b.classList.toggle('on', n > 0);
   b.setAttribute('aria-expanded', Overlays.isOpen('experiences') ? 'true' : 'false');
 }
@@ -3283,6 +3344,7 @@ renderExpBtn();
 function applyStaticLabels() {
   document.documentElement.lang = state.lang;                 // <html lang="…">
   const T = (id, v) => { const el = $(id); if (el) el.textContent = v; };
+  const TL = (id, v) => { const el = $(id), l = el && el.querySelector('.feat-label'); if (l) l.textContent = v; else T(id, v); };
   T('btnNearby', pick(LB.nearby));
   T('btnPacks', pick(LB.offline));
   T('btnClose', pick(LB.close));
@@ -3299,14 +3361,14 @@ function applyStaticLabels() {
   T('trBusLabel', pick(LB.transitBus));
   T('trAirLabel', pick(LB.transitAir));
   // витрина «Путешествуем по Грузии»
-  T('btnExplore', pick(LB.explore));
+  TL('btnExplore', pick(LB.explore));
   { const bt = $('btnExplore'), bf = $('btnExp'); if (bt) bt.setAttribute('data-sub', pick(LB.featTripsSub)); if (bf) bf.setAttribute('data-sub', pick(LB.featFunSub)); }
   { const ex = $('explore'); if (ex) ex.setAttribute('aria-label', pick(LB.explore)); }
   if (exploreVisible()) renderExplore();
   try { exploreSyncPill(); } catch (_) {}            // при первом вызове (до объявления explore) — пропустить
   if (Overlays.isOpen('myroutes')) renderMy();
   // впечатления: подписи панели + кнопки
-  T('btnExp', pick(LB.exp));
+  TL('btnExp', pick(LB.exp));
   T('expTitle', pick(LB.expTitle));
   T('expHint', pick(LB.expHint));
   T('expClose', pick(LB.close));

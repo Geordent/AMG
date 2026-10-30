@@ -29,42 +29,6 @@
   <path d="M0 96 L70 64 L126 92 L192 46 L254 84 L326 58 L390 96 L458 54 L530 90 L594 66 L640 82 L640 136 L0 136Z" fill="url(#far)" opacity=".75"/>
   <path d="M0 112 L86 88 L156 110 L230 78 L304 108 L380 86 L456 114 L534 84 L606 110 L640 98 L640 136 L0 136Z" fill="url(#near)" opacity=".9"/>
 
-  <!-- колесо обозрения -->
-  <g transform="translate(544 72)" stroke="#2B2420" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
-    <circle r="47" fill="#FBF3DC" fill-opacity=".16"/>
-    <circle r="43" fill="none"/>
-    <circle r="31" fill="none"/>
-    <g fill="none">
-      <path d="M0 0 L43 0 M0 0 L37.2 21.5 M0 0 L21.5 37.2 M0 0 L0 43 M0 0 L-21.5 37.2 M0 0 L-37.2 21.5 M0 0 L-43 0 M0 0 L-37.2 -21.5 M0 0 L-21.5 -37.2 M0 0 L0 -43 M0 0 L21.5 -37.2 M0 0 L37.2 -21.5"/>
-    </g>
-    <circle r="5" fill="#2B2420"/>
-    <g stroke-width="2">
-      <circle cx="43" cy="0" r="5.2" fill="#B8482A"/>
-      <circle cx="37.2" cy="21.5" r="5.2" fill="#E6B422"/>
-      <circle cx="21.5" cy="37.2" r="5.2" fill="#6E2639"/>
-      <circle cx="0" cy="43" r="5.2" fill="#CFE7E6"/>
-      <circle cx="-21.5" cy="37.2" r="5.2" fill="#B8482A"/>
-      <circle cx="-37.2" cy="21.5" r="5.2" fill="#E6B422"/>
-      <circle cx="-43" cy="0" r="5.2" fill="#6E2639"/>
-      <circle cx="-37.2" cy="-21.5" r="5.2" fill="#CFE7E6"/>
-      <circle cx="-21.5" cy="-37.2" r="5.2" fill="#B8482A"/>
-      <circle cx="0" cy="-43" r="5.2" fill="#E6B422"/>
-      <circle cx="21.5" cy="-37.2" r="5.2" fill="#6E2639"/>
-      <circle cx="37.2" cy="-21.5" r="5.2" fill="#CFE7E6"/>
-    </g>
-    <path d="M0 43 L-22 64 M0 43 L22 64" fill="none" stroke-width="3"/>
-    <path d="M-28 64 H28" fill="none" stroke-width="3"/>
-  </g>
-
-  <!-- параплан -->
-  <g transform="translate(370 86)" stroke="#2B2420" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round">
-    <path d="M-52 0 C-38 -22 -16 -30 0 -20 C16 -30 38 -22 52 0 C32 -8 16 -6 0 2 C-16 -6 -32 -8 -52 0Z" fill="#B8482A"/>
-    <path d="M-44 -8 C-28 -16 -12 -16 0 -8 C12 -16 28 -16 44 -8" fill="none" stroke="#F3D9CF" stroke-width="2.2" opacity=".7"/>
-    <path d="M-38 0 L-8 26 M38 0 L8 26 M-20 4 L-5 26 M20 4 L5 26" fill="none" stroke-width="1.8"/>
-    <circle cx="0" cy="30" r="5" fill="#F3D9CF"/>
-    <path d="M0 35 L0 42" fill="none" stroke-width="2"/>
-  </g>
-
   <!-- змей -->
   <g transform="translate(608 26)" stroke="#2B2420" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round">
     <path d="M0 -18 L18 0 L0 18 L-18 0Z" fill="#E6B422"/>
