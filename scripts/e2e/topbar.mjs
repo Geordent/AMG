@@ -67,9 +67,10 @@ for (const c of cases) {
   ok(`${tag}: закрытое состояние — нет пересечений и выхода за экран`, closed.bad.length === 0 && closed.outside.length === 0, `${closed.n} эл.${closed.bad.length ? ' пересекаются: ' + closed.bad.join(', ') : ''}${closed.outside.length ? ' за экраном: ' + closed.outside.join(', ') : ''}`);
   ok(`${tag}: счётчик просмотров — ${c.mobile ? 'внутри бургер-меню' : 'внутри баннера проекта'}`, c.mobile ? await p.evaluate(() => !!document.querySelector('#menu #amgHits')) : closed.eyeInBrand);
   const ft = await p.evaluate(() => { const f = document.getElementById('feature'), t = document.getElementById('btnExplore'), e = document.getElementById('btnExp'), ch = document.getElementById('chips'), r = el => el.getBoundingClientRect();
-    return { sep: !!f && f.contains(t) && f.contains(e) && !ch.contains(t) && !ch.contains(e), below: !!f && r(f).top >= r(ch).bottom - 1, w: [r(t).width, r(e).width], h: [r(t).height, r(e).height], label: e.textContent.trim(), vis: r(f).right <= innerWidth + 1 }; });
+    return { sep: !!f && f.contains(t) && f.contains(e) && !ch.contains(t) && !ch.contains(e), below: !!f && r(f).top >= r(ch).bottom - 1, w: [r(t).width, r(e).width], h: [r(t).height, r(e).height], label: e.textContent.trim(), vis: r(f).right <= innerWidth + 1, lf: [t, e].map(el => { const l = el.querySelector('.feat-label'); return [l.scrollWidth - l.clientWidth, l.scrollHeight - l.clientHeight]; }) }; });
   ok(`${tag}: «Путешествуем» и «Развлечения» — отдельные кнопки под рядом категорий, не среди чипов`, ft.sep && ft.below && ft.vis, JSON.stringify({ w: ft.w.map(Math.round), h: ft.h.map(Math.round) }));
   ok(`${tag}: баннеры крупнее чипов (высота ≥ ${c.mobile ? 52 : 60} px, ширина ≥ 150 px)`, Math.min(...ft.h) >= (c.mobile ? 52 : 60) && Math.min(...ft.w) >= 150);
+  ok(`${tag}: названия баннеров не обрезаны (ru/ka/en)`, ft.lf.every(([x, y]) => x <= 1 && y <= 2), JSON.stringify(ft.lf));
   if (!c.mobile) {
     ok(`${tag}: язык и стиль карты — справа от баннера, в одной строке`, closed.selRight);
     ok(`${tag}: кнопки спрятаны за правым краем, виден только язычок`, closed.barVisible === 0 && closed.n >= 6);

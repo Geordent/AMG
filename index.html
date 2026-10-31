@@ -573,7 +573,8 @@
     padding:8px 14px; border:2px solid rgba(43,36,32,.85); border-radius:16px; overflow:hidden; text-align:left; cursor:pointer; color:#fff;
     font-family:'Playfair Display','Noto Serif Georgian',Georgia,serif; font-weight:700; font-size:17px; line-height:1.15; text-shadow:0 1px 3px rgba(0,0,0,.5);
     box-shadow:0 4px 14px rgba(43,38,34,.3); transition:transform .18s ease, box-shadow .18s ease; }
-  #feature .feat::before { content:""; position:absolute; inset:0; z-index:-1; background-position:0 0, 78% center; background-size:100% 100%, cover; background-repeat:no-repeat; opacity:.68; transform:scale(1.02); transform-origin:78% 50%; transition:opacity .2s ease, filter .2s ease, background-position .8s ease, transform .8s cubic-bezier(.2,.8,.3,1); }
+  html[lang="ka"]:not(.is-mobile) #feature .feat { font-size:15px; }
+  #feature .feat::before { content:""; position:absolute; inset:0; z-index:-1; background-position:0 0, 78% center; background-size:100% 100%, cover; background-repeat:no-repeat; opacity:.68; transform:scale(1.02); transform-origin:78% 50%; transition:opacity .2s ease; }
   #feature .feat::after { content:attr(data-sub); display:block; font-family:Manrope,system-ui,sans-serif; font-weight:600; font-size:11.5px; letter-spacing:.2px; opacity:.94; text-shadow:0 1px 2px rgba(0,0,0,.45); }
   #feature .feat:not([data-sub=""])::after { content:attr(data-sub); }
   #feature .feat[data-sub=""]::after { display:none; }
@@ -582,32 +583,40 @@
   #feature .feat-trips::before { background-image:linear-gradient(90deg, rgba(24,10,4,.72) 0%, rgba(24,10,4,.42) 46%, rgba(24,10,4,0) 78%), url("icons/banners/trips.svg"); }
   #feature .feat-fun::before { background-image:linear-gradient(90deg, rgba(24,10,4,.72) 0%, rgba(24,10,4,.42) 46%, rgba(24,10,4,0) 78%), url("icons/banners/fun.svg"); }
   #feature .feat-anim { position:absolute; inset:0; z-index:-1; width:100%; height:100%; pointer-events:none; overflow:hidden; }
-  #feature .van-body { transition:transform .9s cubic-bezier(.2,.8,.3,1); }
+  #feature .van-body { transition:transform .9s cubic-bezier(.2,.8,.3,1); will-change:transform; }
   #feature .feat:hover .van-body, #feature .feat:focus-visible .van-body { transform:translateX(48px); }
-  #feature .wheel { transform-box:fill-box; transform-origin:center; }
-  #feature .feat:hover .wheel, #feature .feat:focus-visible .wheel { animation:amg-van-wheel .55s linear infinite; }
-  @keyframes amg-van-wheel { to { transform:rotate(360deg); } }
   #feature .van-smoke { opacity:0; }
-  #feature .feat:hover .van-smoke, #feature .feat:focus-visible .van-smoke { opacity:1; }
-  #feature .van-smoke circle { transform-box:fill-box; transform-origin:center; }
-  #feature .feat:hover .van-smoke circle, #feature .feat:focus-visible .van-smoke circle { animation:amg-van-smoke 1.15s ease-out infinite; }
-  #feature .feat:hover .van-smoke circle:nth-child(2), #feature .feat:focus-visible .van-smoke circle:nth-child(2) { animation-delay:.28s; }
-  #feature .feat:hover .van-smoke circle:nth-child(3), #feature .feat:focus-visible .van-smoke circle:nth-child(3) { animation-delay:.56s; }
-  @keyframes amg-van-smoke { 0% { opacity:.8; transform:translate(0,0) scale(.4); } 100% { opacity:0; transform:translate(-22px,-12px) scale(1.6); } }
-  #feature .paraglider { transform-box:fill-box; transform-origin:center; transition:transform 1.15s cubic-bezier(.2,.8,.3,1); }
+  #feature .paraglider { transform-box:fill-box; transform-origin:center; transition:transform 1.15s cubic-bezier(.2,.8,.3,1); will-change:transform; }
   #feature .feat:hover .paraglider, #feature .feat:focus-visible .paraglider { transform:translate(26px,10px) scale(1.16); }
-  #feature .ferris-rotor { transform-box:fill-box; transform-origin:center; }
-  #feature .feat:hover .ferris-rotor, #feature .feat:focus-visible .ferris-rotor { animation:amg-ferris 7s linear infinite; }
+  #feature .ferris-rotor { transform-box:fill-box; transform-origin:center; will-change:transform; }
+  #feature .feat:hover .ferris-rotor, #feature .feat:focus-visible .ferris-rotor { animation:amg-ferris 10s linear infinite; }
   @keyframes amg-ferris { to { transform:rotate(360deg); } }
-  #feature .feat:hover, #feature .feat:focus-visible { transform:translateY(-3px) scale(1.02); box-shadow:0 10px 22px rgba(43,38,34,.4); outline:none; }
-  #feature .feat:hover::before, #feature .feat:focus-visible::before { opacity:.84; filter:brightness(1.08) saturate(1.06); background-position:0 0, 88% center; transform:scale(1.08); }
+  #feature .feat:hover, #feature .feat:focus-visible { transform:translateY(-3px); box-shadow:0 10px 22px rgba(43,38,34,.4); outline:none; }
+  #feature .feat:hover::before, #feature .feat:focus-visible::before { opacity:.84; }
   #feature .feat:focus-visible { box-shadow:0 0 0 3px #FFFBF5, 0 0 0 5.5px #B8482A, 0 10px 22px rgba(43,38,34,.4); }
   #feature .feat:active { transform:translateY(-1px) scale(.99); box-shadow:0 3px 8px rgba(43,38,34,.3); }
   #feature .feat.on { box-shadow:0 0 0 3px #FBF3DC, 0 0 0 5.5px #E6B422, 0 4px 14px rgba(43,38,34,.3); }
   @media (max-width:768px), (pointer: coarse) {
-    #feature { align-self:stretch; width:100%; gap:6px; }
-    #feature .feat { width:100%; height:54px; padding:6px 12px; font-size:14px; }
+    #feature { display:grid; grid-template-columns:1fr 1fr; align-self:stretch; width:100%; gap:6px; }
+    #feature .feat { width:100%; height:58px; flex-direction:row; align-items:center; justify-content:flex-start; gap:6px; padding:6px; border-radius:14px;
+      font-size:clamp(11px,3.2vw,12.5px); line-height:1.12; }
+    #feature .feat::before { opacity:.30; background-position:0 0, 72% center; background-size:100% 100%, cover;
+      background-image:linear-gradient(90deg, rgba(24,10,4,.35) 0%, rgba(24,10,4,.10) 38%, rgba(24,10,4,.58) 100%), url("icons/banners/trips.svg"); }
+    #feature .feat-fun::before { background-image:linear-gradient(90deg, rgba(24,10,4,.35) 0%, rgba(24,10,4,.10) 38%, rgba(24,10,4,.58) 100%), url("icons/banners/fun.svg"); }
     #feature .feat::after { display:none !important; }
+    #feature .feat-anim { position:static; order:1; flex:none; width:30px; height:30px; border-radius:50%; overflow:hidden; z-index:0;
+      background:#FFF8EA; box-shadow:inset 0 0 0 2px rgba(255,255,255,.6), 0 2px 5px rgba(0,0,0,.25); }
+    #feature .feat-label { order:2; min-width:0; display:block; overflow-wrap:break-word; }
+  }
+  @media (orientation: landscape) and (max-height: 520px) {
+    #feature { width:min(100%, 460px); }
+  }
+  @media (hover: none) {
+    #feature .feat:hover, #feature .feat:focus-visible { transform:none; }
+    #feature .feat:hover::before, #feature .feat:focus-visible::before { opacity:.68; filter:none; background-position:0 0, 72% center; transform:scale(1.02); }
+    #feature .feat:hover .van-body, #feature .feat:focus-visible .van-body, #feature .feat:hover .paraglider, #feature .feat:focus-visible .paraglider { transform:none; }
+    #feature .feat:hover .wheel, #feature .feat:focus-visible .wheel, #feature .feat:hover .ferris-rotor, #feature .feat:focus-visible .ferris-rotor { animation:none; }
+    #feature .feat:hover .van-smoke, #feature .feat:focus-visible .van-smoke { opacity:0; }
   }
   /* ---- Чипы категорий (Все, Муралы, Мозаики…): тот же язык, что у кнопок выезжающего меню ---- */
   #chips { padding:5px 2px 9px; margin-top:-1px; }
@@ -2685,6 +2694,16 @@ const mqLand   = window.matchMedia('(orientation: landscape)');
 const mqShort  = window.matchMedia('(max-height: 500px)');
 const isMobileUI = () => mqCoarse.matches || mqNarrow.matches;
 function applyMobileClass() { document.documentElement.classList.toggle('is-mobile', isMobileUI()); }
+const FEAT_ART_MOBILE = { btnExplore: '470 55 140 86', btnExp: '470 10 140 132' };
+function applyFeatArt() {
+  const narrow = isMobileUI();
+  for (const [id, mobile] of Object.entries(FEAT_ART_MOBILE)) {
+    const el = document.getElementById(id), svg = el && el.querySelector('.feat-anim');
+    if (!svg) continue;
+    svg.setAttribute('viewBox', narrow ? mobile : '0 0 640 136');
+    svg.setAttribute('preserveAspectRatio', narrow ? 'xMidYMid meet' : 'xMaxYMid slice');
+  }
+}
 
 // Mobile menu: existing #bar перемещается в #menu (без дублей/новых id), обратно при wide.
 function relocateBar() {
@@ -2753,7 +2772,7 @@ const rhClose = document.getElementById('rhClose');
 if (rhClose) rhClose.onclick = () => { try { localStorage.setItem('amg-rotate-dismiss', '1'); } catch (_) {} updateRotateHint(); };
 
 function applyLayoutMode() {
-  applyMobileClass(); relocateBar(); updateRotateHint();
+  applyMobileClass(); applyFeatArt(); relocateBar(); updateRotateHint();
   if (!isMobileUI() && Overlays.isOpen('menu')) Overlays.hide('menu');
 }
 applyLayoutMode();
